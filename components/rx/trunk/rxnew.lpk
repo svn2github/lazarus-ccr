@@ -23,9 +23,9 @@
     </CompilerOptions>
     <Description Value="Delphi VCL Extensions (RX) 
 Copyright (c) 1998 Master-Bank
-translate to Lazarus by alexs in 2005 - 2017"/>
+translate to Lazarus by alexs in 2005 - 2018"/>
     <License Value="LGPL"/>
-    <Version Major="3" Minor="1" Release="1" Build="210"/>
+    <Version Major="3" Minor="2" Release="1" Build="210"/>
     <Files Count="72">
       <Item1>
         <Filename Value="registerrx.pas"/>
@@ -316,7 +316,7 @@ translate to Lazarus by alexs in 2005 - 2017"/>
       </Item71>
       <Item72>
         <Filename Value="rxcontrols\rxrangesel.pas"/>
-        <UnitName Value="rxrangesel"/>
+        <UnitName Value="RxRangeSel"/>
       </Item72>
     </Files>
     <LazDoc Paths="docs;\usr\local\share\lazarus\components\rxnew\docs"/>

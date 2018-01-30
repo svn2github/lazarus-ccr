@@ -388,6 +388,8 @@ type
 
   TRxColumnFilter = class(TPersistent)
   private
+    FIsFontStored:Boolean;
+    FIsEmptyFontStored:Boolean;
     FAllValue: string;
     FCurrentValues: TStringList;
     FEnabled: boolean;
@@ -405,7 +407,11 @@ type
     FColor: TColor;
     function GetDisplayFilterValue: string;
     function GetItemIndex: integer;
+    function IsEmptyFontStored: Boolean;
+    function IsFontStored: Boolean;
+    procedure FontChanged(Sender: TObject);
     procedure SetColor(const AValue: TColor);
+    procedure SetEmptyFont(AValue: TFont);
     procedure SetFont(const AValue: TFont);
     procedure SetItemIndex(const AValue: integer);
   public
@@ -418,7 +424,7 @@ type
     property ManulEditValue : string read FManulEditValue write FManulEditValue;
     property DisplayFilterValue:string read GetDisplayFilterValue;
   published
-    property Font: TFont read FFont write SetFont;
+    property Font: TFont read FFont write SetFont stored IsFontStored;
     property Alignment: TAlignment read FAlignment write FAlignment default
       taLeftJustify;
     property DropDownRows: integer read FDropDownRows write FDropDownRows;
@@ -427,7 +433,7 @@ type
     property EmptyValue: string read FEmptyValue write FEmptyValue;
     property NotEmptyValue: string read FNotEmptyValue write FNotEmptyValue;
     property AllValue: string read FAllValue write FAllValue;
-    property EmptyFont: TFont read FEmptyFont write FEmptyFont;
+    property EmptyFont: TFont read FEmptyFont write SetEmptyFont stored IsEmptyFontStored;
     property ItemIndex: integer read GetItemIndex write SetItemIndex;
     property Enabled:boolean read FEnabled write FEnabled default true;
     property Style : TRxFilterStyle read FStyle write FStyle default rxfstSimple;
@@ -740,10 +746,12 @@ type
   TRxDBGrid = class(TCustomDBGrid)
   private
     FColumnDefValues: TRxDBGridColumnDefValues;
+    FIsSelectedDefaultFont:boolean;
 
     FFooterOptions: TRxDBGridFooterOptions;
     FOnCalcRowHeight: TRxDBGridCalcRowHeight;
     FSearchOptions: TRxDBGridSearchOptions;
+    FSelectedFont: TFont;
     FSortColumns: TRxDbGridColumnsSortList;
     FSortingNow:Boolean;
     FInProcessCalc: integer;
@@ -817,6 +825,8 @@ type
     function GetTitleButtons: boolean;
     function IsColumnsStored: boolean;
 
+    procedure SelectedFontChanged(Sender: TObject);
+    function IsSelectedFontStored: Boolean;
     procedure SetAutoSort(const AValue: boolean);
     procedure SetColumnDefValues(AValue: TRxDBGridColumnDefValues);
     procedure SetColumns(const AValue: TRxDbGridColumns);
@@ -827,6 +837,7 @@ type
     procedure SetOptionsRx(const AValue: TOptionsRx);
     procedure SetPropertyStorage(const AValue: TCustomPropertyStorage);
     procedure SetSearchOptions(AValue: TRxDBGridSearchOptions);
+    procedure SetSelectedFont(AValue: TFont);
     procedure SetTitleButtons(const AValue: boolean);
     procedure TrackButton(X, Y: integer);
     function GetDrawFullLine: boolean;
@@ -834,6 +845,7 @@ type
     procedure StopTracking;
     procedure CalcTitle;
     procedure ClearMLCaptionPointers;
+    procedure FillDefaultFonts;
     function getFilterRect(bRect: TRect): TRect;
     function getTitleRect(bRect: TRect): TRect;
     procedure OutCaptionCellText(aCol, aRow: integer; const aRect: TRect;
@@ -1017,6 +1029,7 @@ type
     property FooterOptions:TRxDBGridFooterOptions read FFooterOptions write SetFooterOptions;
     property SearchOptions:TRxDBGridSearchOptions read FSearchOptions write SetSearchOptions;
     property OnCalcRowHeight:TRxDBGridCalcRowHeight read FOnCalcRowHeight write FOnCalcRowHeight;
+    property SelectedFont:TFont read FSelectedFont write SetSelectedFont stored IsSelectedFontStored;
 
     //storage
     property PropertyStorage: TCustomPropertyStorage read GetPropertyStorage write SetPropertyStorage;
@@ -1316,7 +1329,7 @@ end;
 
 procedure TRxColumnGroupParam.FontChanged(Sender: TObject);
 begin
-  FisDefaultFont := False;
+  FisDefaultFont := FFont.IsDefault;
   FColumn.ColumnChanged;
 end;
 
@@ -1828,7 +1841,7 @@ end;
 
 procedure TRxColumnFooterItem.FontChanged(Sender: TObject);
 begin
-  FisDefaultFont := False;
+  FisDefaultFont := Font.IsDefault;
   FOwner.ColumnChanged;
 end;
 
@@ -3173,6 +3186,17 @@ begin
   Result := TRxDbGridColumns(TCustomDrawGrid(Self).Columns).Enabled;
 end;
 
+procedure TRxDBGrid.SelectedFontChanged(Sender: TObject);
+begin
+  FIsSelectedDefaultFont:=FSelectedFont.IsDefault;
+  VisualChange;
+end;
+
+function TRxDBGrid.IsSelectedFontStored: Boolean;
+begin
+  Result:=not FIsSelectedDefaultFont
+end;
+
 procedure TRxDBGrid.SetColumns(const AValue: TRxDbGridColumns);
 begin
   inherited Columns := TDBGridColumns(AValue);
@@ -3243,6 +3267,12 @@ end;
 procedure TRxDBGrid.SetSearchOptions(AValue: TRxDBGridSearchOptions);
 begin
   FSearchOptions.Assign(AValue);
+end;
+
+procedure TRxDBGrid.SetSelectedFont(AValue: TFont);
+begin
+  if not FSelectedFont.IsEqual(AValue) then
+    FSelectedFont.Assign(AValue);
 end;
 
 function TRxDBGrid.DatalinkActive: boolean;
@@ -3492,6 +3522,13 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TRxDBGrid.FillDefaultFonts;
+begin
+  FSelectedFont.Assign(Font);
+  //FSelectedFont.Color:=clHighlightText;
+  FIsSelectedDefaultFont := True;
 end;
 
 function TRxDBGrid.getFilterRect(bRect: TRect): TRect;
@@ -6612,6 +6649,15 @@ begin
 end;
 
 procedure TRxDBGrid.PrepareCanvas(aCol, aRow: Integer; AState: TGridDrawState);
+function  IsCellButtonColumn(ACell: TPoint): boolean;
+var
+  Column: TGridColumn;
+begin
+  Column := ColumnFromGridColumn(ACell.X);
+  result := (Column<>nil) and (Column.ButtonStyle=cbsButtonColumn) and
+            (ACell.y>=FixedRows);
+end;
+
 var
   L, R, RR: Integer;
   C: TRxColumn;
@@ -6622,6 +6668,18 @@ begin
         if (aCol >= L) and (aCol <= R) then
           AState := AState + [gdSelected, gdFocused];
   inherited PrepareCanvas(aCol, aRow, AState);
+
+
+  if (gdSelected in AState) then
+  begin
+    if not IsCellButtonColumn(point(aCol,aRow)) then
+      if not FIsSelectedDefaultFont then
+      begin
+        Canvas.Font:=FSelectedFont;
+        if FSelectedFont.Color = clDefault then
+          Canvas.Font.Color := clHighlightText;
+      end;
+  end;
 end;
 
 {$IFDEF DEVELOPER_RX}
@@ -6948,6 +7006,9 @@ begin
   FRxDbGridDateEditor.Name := 'RxDbGridDateEditor';
   FRxDbGridDateEditor.Visible := False;
 
+  FSelectedFont:=TFont.Create;
+  FSelectedFont.OnChange:=@SelectedFontChanged;
+  FillDefaultFonts;
   UpdateJMenuKeys;
 
 end;
@@ -6955,6 +7016,7 @@ end;
 destructor TRxDBGrid.Destroy;
 begin
   CleanDSEvent;
+  FreeAndNil(FSelectedFont);
   FreeAndNil(FFilterSimpleEdit);
   FreeAndNil(FFooterOptions);
   FreeAndNil(FRxDbGridLookupComboEditor);
@@ -7366,6 +7428,25 @@ begin
     Result := -1;
 end;
 
+function TRxColumnFilter.IsEmptyFontStored: Boolean;
+begin
+  Result:=FIsEmptyFontStored;
+end;
+
+function TRxColumnFilter.IsFontStored: Boolean;
+begin
+  Result:=FIsFontStored;
+end;
+
+procedure TRxColumnFilter.FontChanged(Sender: TObject);
+begin
+  if Sender = FFont then
+    FIsFontStored:=not FFont.IsDefault
+  else
+    FIsEmptyFontStored:=not FEmptyFont.IsDefault;
+  FOwner.ColumnChanged;
+end;
+
 function TRxColumnFilter.GetDisplayFilterValue: string;
 begin
   Result:='';
@@ -7397,10 +7478,16 @@ begin
   FOwner.ColumnChanged;
 end;
 
+procedure TRxColumnFilter.SetEmptyFont(AValue: TFont);
+begin
+  if not FEmptyFont.IsEqual(AValue) then
+    FEmptyFont.Assign(AValue);
+end;
+
 procedure TRxColumnFilter.SetFont(const AValue: TFont);
 begin
-  FFont.Assign(AValue);
-  FOwner.ColumnChanged;
+  if not FFont.IsEqual(AValue) then
+    FFont.Assign(AValue);
 end;
 
 procedure TRxColumnFilter.SetItemIndex(const AValue: integer);
@@ -7419,8 +7506,12 @@ constructor TRxColumnFilter.Create(Owner: TRxColumn);
 begin
   inherited Create;
   FOwner := Owner;
+
   FFont := TFont.Create;
+  FFont.OnChange:=@FontChanged;
   FEmptyFont := TFont.Create;
+  FEmptyFont.OnChange:=@FontChanged;
+
   FValueList := TStringList.Create;
   FValueList.Sorted := True;
   FCurrentValues:=TStringList.Create;
