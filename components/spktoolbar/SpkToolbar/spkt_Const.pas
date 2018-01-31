@@ -24,6 +24,9 @@ const
   DPI_AWARE = false;   // use lcl scaling instead
   {$ENDIF}
 
+var
+  DesignDPI: Integer;
+
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 function SpkScaleX(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;
 function SpkScaleY(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;
@@ -39,7 +42,7 @@ const
   LARGEBUTTON_MIN_WIDTH = 24;
   LARGEBUTTON_RADIUS = 4;
   LARGEBUTTON_BORDER_SIZE = 2;
-  LARGEBUTTON_CHEVRON_HMARGIN = 4;
+  LARGEBUTTON_CHEVRON_VMARGIN = 2;
   LARGEBUTTON_CAPTION_TOP_RAIL = 45;
   LARGEBUTTON_CAPTION_BOTTOM_RAIL = 58;
 
@@ -151,7 +154,7 @@ var
   LargeButtonMinWidth: Integer;
   LargeButtonRadius: Integer;
   LargeButtonBorderSize: Integer;
-  LargeButtonChevronHMargin: Integer;
+  LargeButtonChevronVMargin: Integer;
   LargeButtonCaptionTopRail: Integer;
   LargeButtonCaptionButtomRail: Integer;
 
@@ -268,9 +271,12 @@ var
 implementation
 
 uses
-  LCLType;
+  LCLType, Types, Themes;
 
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
+var
+  detail: TThemedElementDetails;
+  detailSize: TSize;
 begin
   if not DPI_AWARE then
     ToDPI := FromDPI;
@@ -285,7 +291,7 @@ begin
   LargeButtonMinWidth := SpkScaleX(LARGEBUTTON_MIN_WIDTH, FromDPI, ToDPI);
   LargeButtonRadius := LARGEBUTTON_RADIUS;
   LargeButtonBorderSize := SpkScaleX(LARGEBUTTON_BORDER_SIZE, FromDPI, ToDPI);
-  LargeButtonChevronHMargin := SpkScaleX(LARGEBUTTON_CHEVRON_HMARGIN, FromDPI, ToDPI);
+  LargeButtonChevronVMargin := SpkScaleY(LARGEBUTTON_CHEVRON_VMARGIN, FromDPI, ToDPI);
   LargeButtonCaptionTopRail := SpkScaleY(LARGEBUTTON_CAPTION_TOP_RAIL, FromDPI, ToDPI);
   LargeButtonCaptionButtomRail := SpkScaleY(LARGEBUTTON_CAPTION_BOTTOM_RAIL, FromDPI, ToDPI);
 
@@ -296,6 +302,12 @@ begin
   SmallButtonDropdownWidth := SpkScaleX(SMALLBUTTON_DROPDOWN_WIDTH, FromDPI, ToDPI);
   SmallButtonRadius := SMALLBUTTON_RADIUS;
   SmallButtonMinWidth := 2 * SmallButtonPadding + SmallButtonGlyphWidth;
+
+  // Make sure that dropdown button is not too narrow
+  detail := ThemeServices.GetElementDetails(ttbSplitButtonDropDownNormal);
+  detailsize := ThemeServices.GetDetailSize(detail);
+  if SmallButtonDropdownWidth < detailSize.CX then
+    SmallButtondropdownWidth := detailSize.CX;
 
   MaxElementHeight := SpkScaleY(MAX_ELEMENT_HEIGHT, FromDPI, ToDPI);
   PaneRowHeight := SpkScaleY(PANE_ROW_HEIGHT, FromDPI, ToDPI);

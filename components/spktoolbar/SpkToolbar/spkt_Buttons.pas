@@ -16,7 +16,7 @@ unit spkt_Buttons;
 interface
 
 uses
-  Graphics, Classes, Controls, Menus, ActnList, Math,
+  Graphics, Classes, Types, Controls, Menus, ActnList, Math,
   Dialogs, ImgList, Forms,
   SpkGUITools, SpkGraphTools, SpkMath,
   spkt_Const, spkt_BaseItem, spkt_Exceptions, spkt_Tools;
@@ -84,13 +84,13 @@ type
     FAllowAllUp: Boolean;
     FDropdownMenu: TPopupMenu;
 
-    // *** Obs³uga rysowania ***
-    /// <summary>Zadaniem metody w odziedziczonych klasach jest obliczenie
-    /// rectów przycisku i menu dropdown w zale¿noœci od FButtonState</summary>
+    // *** Drawing support ***
+    // The task of the method in inherited classes is to calculate the
+    // button's rectangle and the dropdown menu depending on FButtonState
     procedure CalcRects; virtual; abstract;
     function GetDropdownPoint: T2DIntPoint; virtual; abstract;
 
-    // *** Obs³uga akcji ***
+    // *** Action support ***
     procedure ActionChange(Sender: TObject; CheckDefaults: Boolean); virtual;
     procedure Click; virtual;
     procedure DoActionChange(Sender: TObject);
@@ -98,6 +98,8 @@ type
 
     function SiblingsChecked: Boolean; virtual;
     procedure UncheckSiblings; virtual;
+
+    procedure DrawDropdownArrow(ABuffer: TBitmap; ARect: TRect; AColor: TColor);
 
     // Getters and Setters
     function GetChecked: Boolean; virtual;
@@ -201,7 +203,9 @@ type
 implementation
 
 uses
-  LCLType, LCLIntf, LCLProc, SysUtils, spkt_Pane, spkt_Appearance;
+  LCLType, LCLIntf, LCLProc, SysUtils, Themes,
+  spkt_Pane, spkt_Appearance;
+
 
 { TSpkButtonActionLink }
 
@@ -372,6 +376,38 @@ procedure TSpkBaseButton.DoActionChange(Sender: TObject);
 begin
   if Sender = Action then
     ActionChange(Sender, False);
+end;
+
+procedure TSpkBaseButton.DrawDropdownArrow(ABuffer: TBitmap; ARect: TRect;
+  AColor: TColor);
+const
+  w = 8;
+  h = 8;
+var
+  details: TThemedElementDetails;
+  arrowState: TThemedToolBar;
+  P: array[0..3] of TPoint;
+  wsc, hsc: Integer;
+begin
+  if ThemeServices.ThemesEnabled then begin
+    if Enabled then
+      arrowState := ttbSplitButtonDropdownNormal
+    else
+      arrowState := ttbSplitButtonDropDownDisabled;
+    details := ThemeServices.GetElementDetails(arrowState);
+    ThemeServices.DrawElement(ABuffer.Canvas.Handle, details, ARect);
+  end else begin
+    wsc := ScaleX(w, DesignDPI);                 // 0   1
+    hsc := ScaleY(h, DesignDPI);                 //   2
+    P[2].x := ARect.Left + (ARect.Right - ARect.Left) div 2;
+    P[2].y := ARect.Top + (ARect.Bottom - ARect.Top + hsc) div 2 - 1;
+    P[0] := Point(P[2].x - wsc div 2, P[2].y - hsc div 2);
+    P[1] := Point(P[2].x + wsc div 2, P[0].y);
+    P[3] := P[0];
+    ABuffer.Canvas.Brush.Color := AColor;
+    ABuffer.Canvas.Pen.Style := psClear;
+    ABuffer.Canvas.Polygon(P);
+  end;
 end;
 
 function TSpkBaseButton.GetAction: TBasicAction;
@@ -908,6 +944,7 @@ var
   s: String;
   P: T2DIntPoint;
   drawBtn: Boolean;
+  R: TRect;
 begin
   if FToolbarDispatch = nil then
     exit;
@@ -1102,29 +1139,24 @@ begin
     TGUITools.DrawText(ABuffer.Canvas, x, y, s, fontColor, ClipRect);
   end else
   begin
-    // Tekst nie z³amany
+    // The text is not broken
     x := FButtonRect.Left + (FButtonRect.Width - ABuffer.Canvas.Textwidth(FCaption)) div 2;
     y := FRect.Top + LargeButtonCaptionTopRail - txtHeight div 2;
     TGUITools.DrawText(ABuffer.Canvas, x, y, FCaption, FontColor, ClipRect);
   end;
 
-  // Chevron
-  ABuffer.Canvas.Font.Charset := DEFAULT_CHARSET;
-  ABuffer.Canvas.Font.Name := 'Marlett';
-  ABuffer.Canvas.Font.Style := [];
-  ABuffer.Canvas.Font.Orientation := 0;
-
+  // Dropdown arrow
   if FButtonKind = bkDropdown then
   begin
-    x := FButtonRect.Left + (FButtonRect.width - ABuffer.Canvas.Textwidth('u')) div 2;
-    y := FButtonRect.bottom - ABuffer.Canvas.Textheight('u') - LargeButtonChevronHMargin;
-    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
+    y := FButtonRect.Bottom - ABuffer.Canvas.TextHeight('Tg') - 1;
+    R := Classes.Rect(FButtonRect.Left, y, FButtonRect.Right, FButtonRect.Bottom);
+    DrawDropdownArrow(ABuffer, R, fontcolor);
   end else
   if FButtonKind = bkButtonDropdown then
   begin
-    x := FDropdownRect.Left + (FDropdownRect.width - ABuffer.Canvas.Textwidth('u')) div 2;
-    y := FDropdownRect.bottom - ABuffer.Canvas.Textheight('u') - LargeButtonChevronHMargin;
-    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
+    y := FDropdownRect.Bottom - ABuffer.Canvas.TextHeight('Tg') - 1;
+    R := Classes.Rect(FDropdownRect.Left, y, FDropDownRect.Right, FDropdownRect.Bottom);
+    DrawDropdownArrow(ABuffer, R, fontcolor);
   end;
 end;
 
@@ -1427,6 +1459,8 @@ var
   cornerRadius: Integer;
   imgList: TImageList;
   drawBtn: Boolean;
+  R: TRect;
+  dx: Integer;
 begin
   if (FToolbarDispatch = nil) or (FAppearance = nil) then
     exit;
@@ -1608,29 +1642,18 @@ begin
     end;
   end;
 
-  // Chevron
-  ABuffer.Canvas.Font.Charset := DEFAULT_CHARSET;
-  ABuffer.Canvas.Font.Name := 'Marlett';
-  ABuffer.Canvas.Font.Style := [];
-  ABuffer.Canvas.Font.Orientation := 0;
-
-  if FButtonKind = bkDropdown then
-  begin
+  // Dropdown arrow
+  if FButtonKind in [bkDropdown, bkButtonDropdown] then begin
+    dx := SmallButtonDropdownWidth;
     if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
-      x := FButtonRect.Right - SmallButtonHalfBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1
+      inc(dx, SmallButtonHalfBorderWidth)
     else
-      x := FButtonRect.Right - SmallButtonBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1;
-    y := FButtonRect.top + (FButtonRect.height - ABuffer.Canvas.Textheight('u')) div 2;
-    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', fontColor, ClipRect);
-  end else
-  if FButtonKind = bkButtonDropdown then
-  begin
-    if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
-      x := FDropdownRect.Right - SmallButtonHalfBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1
+      inc(dx, SmallButtonBorderWidth);
+    if FButtonKind = bkDropdown then
+      R := Classes.Rect(FButtonRect.Right-dx, FButtonRect.Top, FButtonRect.Right, FButtonRect.Bottom)
     else
-      x := FDropdownRect.Right - SmallButtonBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1;
-    y := FDropdownRect.top + (FDropdownRect.Height - ABuffer.Canvas.Textheight('u')) div 2;
-    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
+      R := Classes.Rect(FDropdownRect.Right-dx, FDropdownRect.Top, FDropdownRect.Right, FDropdownRect.Bottom);
+    DrawdropdownArrow(ABuffer, R, fontcolor);
   end;
 end;
 

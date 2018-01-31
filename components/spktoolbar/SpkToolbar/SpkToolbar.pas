@@ -526,8 +526,6 @@ begin
 end;
 
 constructor TSpkToolbar.Create(AOwner: TComponent);
-var
-  DesignDPI: Integer;
 begin
   inherited Create(AOwner);
 
@@ -1812,7 +1810,7 @@ begin
   LargeButtonMinWidth := round(LARGEBUTTON_MIN_WIDTH * AXProportion);
   LargeButtonRadius := LARGEBUTTON_RADIUS;
   LargeButtonBorderSize := round(LARGEBUTTON_BORDER_SIZE * AXProportion);
-  LargeButtonChevronHMargin := round(LARGEBUTTON_CHEVRON_HMARGIN * AXProportion);
+  LargeButtonChevronVMargin := round(LARGEBUTTON_CHEVRON_VMARGIN * AYProportion);
   LargeButtonCaptionTopRail := round(LARGEBUTTON_CAPTION_TOP_RAIL * AYProportion);
   LargeButtonCaptionButtomRail := round(LARGEBUTTON_CAPTION_BOTTOM_RAIL * AYProportion);
 

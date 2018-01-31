@@ -5,11 +5,11 @@ unit spkt_Tools;
 
 (*******************************************************************************
 *                                                                              *
-*  Plik: spkt_Tools.pas                                                        *
-*  Opis: Klasy narzêdziowe u³atwiaj¹ce renderowanie toolbara.                  *
-*  Copyright: (c) 2009 by Spook.                                               *
-*  License:   Modified LGPL (with linking exception, like Lazarus LCL)         *
-'             See "license.txt" in this installation                           *
+*  Unit:        spkt_Tools.pas                                                 *
+*  Description: Tool classes for easier rendering of the toolbar.              *
+*  Copyright:   (c) 2009 by Spook.                                             *
+*  License:     Modified LGPL (with linking exception, like Lazarus LCL)       *
+'               See "license.txt" in this installation                         *
 *                                                                              *
 *******************************************************************************)
 
