@@ -37,7 +37,7 @@ interface
 
 uses
   Classes, SysUtils, LCLType, LMessages, Graphics, MaskEdit, Controls, EditBtn,
-  rxpickdate, rxdateutil;
+  LCLVersion, rxpickdate, rxdateutil;
 
 type
   { TCustomDateEdit }
@@ -114,6 +114,7 @@ type
     procedure EditKeyDown(var Key: word; Shift: TShiftState); override;
     procedure EditKeyPress( var Key: char); override;
 
+    function GetDefaultGlyph: TBitmap; override;
     function GetDefaultGlyphName: String; override;
     function CreatePopupForm:TPopupCalendar;
     procedure DoEnter; override;
@@ -152,6 +153,8 @@ type
   { TRxDateEdit }
 
   TRxDateEdit = class(TCustomRxDateEdit)
+  protected
+    procedure Loaded; override;
   public
     constructor Create(AOwner: TComponent); override;
     property PopupVisible;
@@ -180,7 +183,7 @@ type
     property Glyph;
     property MaxLength;
     property NotInThisMonthColor;
-    property NumGlyphs;
+    property NumGlyphs default {$IF lcl_fullversion >= 1090000} 1 {$ELSE} 2 {$ENDIF};
     property OKCaption;
     property ParentFont;
     property ParentShowHint;
@@ -223,6 +226,7 @@ type
 function PaintComboEdit(Editor: TCustomMaskEdit; const AText: string;
   AAlignment: TAlignment; StandardPaint: Boolean;
   var ACanvas: TControlCanvas; var Message: TLMPaint): Boolean;
+
 function EditorTextMargins(Editor: TCustomMaskEdit): TPoint;
 
 implementation
@@ -374,6 +378,16 @@ end;
 
 { TRxDateEdit }
 
+procedure TRxDateEdit.Loaded;
+begin
+  inherited Loaded;
+  {$IF lcl_fullversion >= 1090000}
+{  if Assigned(Glyph)
+      and (Glyph.Equals(RxDateGlyph)) then}
+    NumGlyphs:=1;
+  {$ENDIF}
+end;
+
 constructor TRxDateEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -398,15 +412,6 @@ begin
   UpdateMask;
 end;
 
-{
-function TCustomRxDateEdit.GetCalendarStyle: TCalendarStyle;
-begin
-  if FPopup <> nil then
-    Result := csPopup
-  else
-    Result := csDialog;
-end;
-}
 function TCustomRxDateEdit.GetDate: TDateTime;
 begin
   if DefaultToday then Result := SysUtils.Date
@@ -699,11 +704,6 @@ begin
       if Focused then inherited SelectAll;
     end;
   end;
-
-{  FPopup.Show(AOrigin);
-  SetWindowPos(Handle, HWND_TOP, Origin.X, Origin.Y, 0, 0,
-    SWP_NOACTIVATE or SWP_SHOWWINDOW or SWP_NOSIZE);
-  Visible := True;}
 end;
 
 procedure TCustomRxDateEdit.ApplyDate(Value: TDateTime);
@@ -849,16 +849,32 @@ begin
   end;
 end;
 
+function TCustomRxDateEdit.GetDefaultGlyph: TBitmap;
+var
+  R: TRect;
+  B: TCustomBitmap;
+begin
+  {$IF lcl_fullversion < 01090000}
+  Result := nil;
+  {$ELSE}
+  Result := DateGlyph;
+  {$ENDIF}
+end;
+
 function TCustomRxDateEdit.GetDefaultGlyphName: String;
 begin
-  {$IFDEF LINUX}
-  Result:='picDateEdit';
+  {$IF lcl_fullversion < 01090000}
+    {$IFDEF LINUX}
+    Result:='picDateEdit';
+    {$ELSE}
+    {$IFDEF WINDOWS}
+    Result:='picDateEdit';
+    {$ELSE}
+    Result:='';
+    {$ENDIF}
+    {$ENDIF}
   {$ELSE}
-  {$IFDEF WINDOWS}
-  Result:='picDateEdit';
-  {$ELSE}
-  Result:='';
-  {$ENDIF}
+    Result:=ResBtnCalendar
   {$ENDIF}
 end;
 
@@ -893,23 +909,13 @@ begin
   ControlState := ControlState + [csCreating];
   try
     UpdateFormat;
-(*
-{$IFDEF DEFAULT_POPUP_CALENDAR}
-    FPopup := CreatePopupCalendar(Self {$IFDEF USED_BiDi}, BiDiMode {$ENDIF});
-    FPopup.OnCloseUp := @PopupCloseUp;
-    FPopup.Color := FPopupColor;
-    FPopup.Visible:=false;
-{$ELSE}
     FPopup:=nil;
-{$ENDIF DEFAULT_POPUP_CALENDAR}
-*)
-    FPopup:=nil;
-//    GlyphKind := gkDefault; { force update }
   finally
     ControlState := ControlState - [csCreating];
   end;
-//  Glyph:=LoadBitmapFromLazarusResource('picDateEdit');
+  {$IF lcl_fullversion < 01090000}
   NumGlyphs := 2;
+  {$ENDIF}
 end;
 
 destructor TCustomRxDateEdit.Destroy;

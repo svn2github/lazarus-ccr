@@ -123,6 +123,9 @@ end;
 
 { TRxColInfo }
 
+Type
+  THackRxDBGrid = class(TRxDBGrid);
+
 constructor TRxColInfo.Create;
 begin
   inherited Create;
@@ -380,21 +383,24 @@ begin
           TfrMemoView(View).FillColor:=C;
         end;
 
-        S:= FDataField.DisplayText; //F.Col.Field.DisplayText;
+{        S:= FDataField.DisplayText; //F.Col.Field.DisplayText;
         if Assigned(FDataCollumn) and (FDataCollumn.KeyList.Count > 0) and (FDataCollumn.PickList.Count > 0) then
         begin
           J := FDataCollumn.KeyList.IndexOf(S);
           if (J >= 0) and (J < FDataCollumn.PickList.Count) then
             S := FDataCollumn.PickList[j];
         end
-        else
+        else}
         if (rxpoHideZeroValues in FOptions) and Assigned(FDataField) and (FDataField.DataType in [ftSmallint, ftInteger, ftWord,
                ftFloat, ftCurrency, ftLargeint]) and (FDataField.AsFloat = 0) then
-          S:='';
+          S:=''
+        else
+          S:=THackRxDBGrid(RxDBGrid).GetFieldDisplayText(FDataField, FDataCollumn);
 
         Memo[0] := S;
         TfrMemoView(View).Alignment:=FDataCollumn.Alignment;
-      end                                            else
+      end
+      else
       if Copy(S, 1, 7) = 'Header_' then
       begin
         TfrMemoView(View).Alignment:=F.Col.Title.Alignment;

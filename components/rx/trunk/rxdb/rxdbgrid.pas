@@ -878,7 +878,6 @@ type
     procedure RemoveTools(ATools:TRxDBGridAbstractTools);
 
     procedure OnDataSetScrolled(aDataSet:TDataSet; Distance: Integer);
-    function GetFieldDisplayText(AField:TField; ACollumn:TRxColumn):string;
     procedure FillFilterData;
   protected
     FRxDbGridLookupComboEditor: TCustomControl;
@@ -895,6 +894,7 @@ type
     procedure AdjustEditorBounds(NewCol,NewRow:Integer); override;
     procedure LinkActive(Value: Boolean); override;
 
+    function GetFieldDisplayText(AField:TField; ACollumn:TRxColumn):string;
     procedure DefaultDrawCellA(aCol, aRow: integer; aRect: TRect;
       aState: TGridDrawState);
     procedure DefaultDrawTitle(aCol, aRow: integer; aRect: TRect;
@@ -910,6 +910,8 @@ type
     procedure DrawRow(ARow: Integer); override;
     procedure DrawFocusRect(aCol,aRow:Integer; ARect:TRect); override;
     procedure DrawFooterRows; virtual;
+    procedure DrawCellBitmap(RxColumn: TRxColumn; aRect: TRect;
+      aState: TGridDrawState; AImageIndex: integer); virtual;
 
     procedure DoTitleClick(ACol: longint; ACollumn: TRxColumn; Shift: TShiftState); virtual;
     procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
@@ -919,8 +921,6 @@ type
     procedure KeyPress(var Key: char); override;
     procedure UTF8KeyPress(var UTF8Key: TUTF8Char); override;
     function CreateColumns: TGridColumns; override;
-    procedure DrawCellBitmap(RxColumn: TRxColumn; aRect: TRect;
-      aState: TGridDrawState; AImageIndex: integer); virtual;
     procedure SetEditText(ACol, ARow: longint; const Value: string); override;
 
     procedure ColRowMoved(IsColumn: boolean; FromIndex, ToIndex: integer); override;
@@ -5424,8 +5424,11 @@ begin
     aRect.Top := (aRect.Top + aRect.Bottom - H) div 2;
     aRect.Bottom := aRect.Top + H;
   end;
-
+  {$IFDEF lcl_version < '1.9.0.0'}
   RxColumn.ImageList.StretchDraw(Canvas, AImageIndex, aRect);
+  {$ELSE}
+  RxColumn.ImageList.Draw(Canvas, aRect.Left, aRect.Top, AImageIndex);
+  {$ENDIF}
 end;
 
 procedure TRxDBGrid.SetEditText(ACol, ARow: longint; const Value: string);
