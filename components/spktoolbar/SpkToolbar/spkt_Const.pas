@@ -271,12 +271,9 @@ var
 implementation
 
 uses
-  LCLType, Types, Themes;
+  LCLType, Types;
 
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
-var
-  detail: TThemedElementDetails;
-  detailSize: TSize;
 begin
   if not DPI_AWARE then
     ToDPI := FromDPI;
@@ -302,12 +299,6 @@ begin
   SmallButtonDropdownWidth := SpkScaleX(SMALLBUTTON_DROPDOWN_WIDTH, FromDPI, ToDPI);
   SmallButtonRadius := SMALLBUTTON_RADIUS;
   SmallButtonMinWidth := 2 * SmallButtonPadding + SmallButtonGlyphWidth;
-
-  // Make sure that dropdown button is not too narrow
-  detail := ThemeServices.GetElementDetails(ttbSplitButtonDropDownNormal);
-  detailsize := ThemeServices.GetDetailSize(detail);
-  if SmallButtonDropdownWidth < detailSize.CX then
-    SmallButtondropdownWidth := detailSize.CX;
 
   MaxElementHeight := SpkScaleY(MAX_ELEMENT_HEIGHT, FromDPI, ToDPI);
   PaneRowHeight := SpkScaleY(PANE_ROW_HEIGHT, FromDPI, ToDPI);

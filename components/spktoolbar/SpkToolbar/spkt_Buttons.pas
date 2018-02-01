@@ -203,7 +203,7 @@ type
 implementation
 
 uses
-  LCLType, LCLIntf, LCLProc, SysUtils, Themes,
+  LCLType, LCLIntf, LCLProc, SysUtils,
   spkt_Pane, spkt_Appearance;
 
 
@@ -384,30 +384,19 @@ const
   w = 8;
   h = 8;
 var
-  details: TThemedElementDetails;
-  arrowState: TThemedToolBar;
   P: array[0..3] of TPoint;
   wsc, hsc: Integer;
 begin
-  if ThemeServices.ThemesEnabled then begin
-    if Enabled then
-      arrowState := ttbSplitButtonDropdownNormal
-    else
-      arrowState := ttbSplitButtonDropDownDisabled;
-    details := ThemeServices.GetElementDetails(arrowState);
-    ThemeServices.DrawElement(ABuffer.Canvas.Handle, details, ARect);
-  end else begin
-    wsc := ScaleX(w, DesignDPI);                 // 0   1
-    hsc := ScaleY(h, DesignDPI);                 //   2
-    P[2].x := ARect.Left + (ARect.Right - ARect.Left) div 2;
-    P[2].y := ARect.Top + (ARect.Bottom - ARect.Top + hsc) div 2 - 1;
-    P[0] := Point(P[2].x - wsc div 2, P[2].y - hsc div 2);
-    P[1] := Point(P[2].x + wsc div 2, P[0].y);
-    P[3] := P[0];
-    ABuffer.Canvas.Brush.Color := AColor;
-    ABuffer.Canvas.Pen.Style := psClear;
-    ABuffer.Canvas.Polygon(P);
-  end;
+  wsc := ScaleX(w, DesignDPI);                 // 0   1
+  hsc := ScaleY(h, DesignDPI);                 //   2
+  P[2].x := ARect.Left + (ARect.Right - ARect.Left) div 2;
+  P[2].y := ARect.Top + (ARect.Bottom - ARect.Top + hsc) div 2 - 1;
+  P[0] := Point(P[2].x - wsc div 2, P[2].y - hsc div 2);
+  P[1] := Point(P[2].x + wsc div 2, P[0].y);
+  P[3] := P[0];
+  ABuffer.Canvas.Brush.Color := AColor;
+  ABuffer.Canvas.Pen.Style := psClear;
+  ABuffer.Canvas.Polygon(P);
 end;
 
 function TSpkBaseButton.GetAction: TBasicAction;
