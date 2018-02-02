@@ -5424,11 +5424,7 @@ begin
     aRect.Top := (aRect.Top + aRect.Bottom - H) div 2;
     aRect.Bottom := aRect.Top + H;
   end;
-  {$IFDEF lcl_version < '1.9.0.0'}
-  RxColumn.ImageList.StretchDraw(Canvas, AImageIndex, aRect);
-  {$ELSE}
   RxColumn.ImageList.Draw(Canvas, aRect.Left, aRect.Top, AImageIndex);
-  {$ENDIF}
 end;
 
 procedure TRxDBGrid.SetEditText(ACol, ARow: longint; const Value: string);

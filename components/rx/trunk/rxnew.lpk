@@ -26,7 +26,7 @@ Copyright (c) 1998 Master-Bank
 translate to Lazarus by alexs in 2005 - 2018"/>
     <License Value="LGPL"/>
     <Version Major="3" Minor="2" Release="1" Build="210"/>
-    <Files Count="72">
+    <Files Count="73">
       <Item1>
         <Filename Value="registerrx.pas"/>
         <HasRegisterProc Value="True"/>
@@ -318,6 +318,10 @@ translate to Lazarus by alexs in 2005 - 2018"/>
         <Filename Value="rxcontrols\rxrangesel.pas"/>
         <UnitName Value="RxRangeSel"/>
       </Item72>
+      <Item73>
+        <Filename Value="rxcontrols\rxxmlpropstorage.pas"/>
+        <UnitName Value="RxXMLPropStorage"/>
+      </Item73>
     </Files>
     <LazDoc Paths="docs;\usr\local\share\lazarus\components\rxnew\docs"/>
     <i18n>

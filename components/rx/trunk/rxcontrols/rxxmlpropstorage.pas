@@ -1,4 +1,4 @@
-{ RxIniPropStorage unit
+{ RxXMLPropStorage unit
 
   Copyright (C) 2005-2018 Lagunov Aleksey alexs75@yandex.ru and Lazarus team
   original conception from rx library for Delphi (c)
@@ -29,67 +29,70 @@
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit RxIniPropStorage;
+unit RxXMLPropStorage;
 
 {$I rx.inc}
 
 interface
 
 uses
-  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, IniPropStorage;
+  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, XMLPropStorage;
+
+const
+  defCFGFileExt = '.xcfg';
 
 type
 
-  { TRxIniPropStorage }
+  { TRxXMLPropStorage }
 
-  TRxIniPropStorage = class(TIniPropStorage)
+  TRxXMLPropStorage = class(TXMLPropStorage)
   private
     FSeparateFiles: boolean;
   protected
-    function GetIniFileName: string; override;
+    function GetXMLFileName: string; override;
   public
-    procedure StorageNeeded(ReadOnly: Boolean); override;
-    { Public declarations }
+
   published
     property SeparateFiles:boolean read FSeparateFiles write FSeparateFiles;
   end;
 
+
 implementation
-uses rxapputils, LazUTF8, FileUtil, LazFileUtils, IniFiles;
+uses LazFileUtils, LazUTF8, rxapputils;
 
-{ TRxIniPropStorage }
-
-function TRxIniPropStorage.GetIniFileName: string;
+function GetDefaultCfgName: string;
 var
   S:string;
 begin
-  if ExtractFileDir(IniFileName) <> '' then
-    Result:=IniFileName
+  Result := ExtractFileName(ChangeFileExt(Application.ExeName, defCFGFileExt));
+  S:=RxGetAppConfigDir(false);
+  S:=SysToUTF8(S);
+  ForceDirectoriesUTF8(S);
+  Result:=S+Result;
+end;
+
+{ TRxXMLPropStorage }
+
+function TRxXMLPropStorage.GetXMLFileName: string;
+var
+  S: String;
+begin
+  if ExtractFileDir(FileName) <> '' then
+    Result:=FileName
   else
   begin
     S:=GetDefaultIniName;
-    if IniFileName <> '' then
-      Result:=AppendPathDelim(ExtractFileDir(S)) + IniFileName
+    if FileName <> '' then
+      Result:=AppendPathDelim(ExtractFileDir(S)) + FileName
     else
     begin
       if FSeparateFiles then
-        Result:=AppendPathDelim(ExtractFileDir(S)) + RootSection + '.cfg'
+        Result:=AppendPathDelim(ExtractFileDir(S)) + RootSection + defCFGFileExt
       else
         Result:=S;
     end;
   end;
   Result:=UTF8ToSys(Result);
-end;
-
-procedure TRxIniPropStorage.StorageNeeded(ReadOnly: Boolean);
-var
-  F: Boolean;
-begin
-  F:=Assigned(IniFile);
-  inherited StorageNeeded(ReadOnly);
-  if Assigned(IniFile) and (not F) then
-    if IniFile is TIniFile then
-      TIniFile(IniFile).CacheUpdates:=true;
 end;
 
 end.

@@ -217,9 +217,11 @@ procedure TRxDBGrid_PopUpFilterForm.CheckBox1Change(Sender: TObject);
 var
   i: Integer;
 begin
+  CheckListBox1.OnClickCheck:=nil;
   for i:=0 to CheckListBox1.Items.Count - 1 do
     CheckListBox1.Checked[i]:=CheckBox1.Checked;
-  CheckListBox1ClickCheck(nil);
+  CheckListBox1.OnClickCheck:=@CheckListBox1ClickCheck;
+//  CheckListBox1ClickCheck(nil);
 end;
 
 procedure TRxDBGrid_PopUpFilterForm.CheckListBox1ClickCheck(Sender: TObject);
@@ -237,6 +239,7 @@ begin
       AU:=false;
   end;
 
+  CheckBox1.OnChange:=nil;
   if AC then
     CheckBox1.Checked:=true
   else
@@ -244,6 +247,7 @@ begin
     CheckBox1.Checked:=false
   else
     CheckBox1.State:=cbGrayed;
+  CheckBox1.OnChange:=@CheckBox1Change;
 end;
 
 procedure TRxDBGrid_PopUpFilterForm.FormClose(Sender: TObject;

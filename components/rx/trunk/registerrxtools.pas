@@ -41,7 +41,7 @@ uses
 procedure Register;
 
 implementation
-uses RxSystemServices, RxLogin, RxVersInfo, RxCloseFormValidator, RxIniPropStorage;
+uses RxSystemServices, RxLogin, RxVersInfo, RxCloseFormValidator, RxIniPropStorage, RxXMLPropStorage;
 
 const
   sRxToolsPage = 'RX Tools';
@@ -71,6 +71,11 @@ begin
   RegisterComponents(sRxToolsPage,[TRxIniPropStorage]);
 end;
 
+procedure RegisterRxXMLPropStorage;
+begin
+  RegisterComponents(sRxToolsPage,[TRxXMLPropStorage]);
+end;
+
 procedure Register;
 begin
   RegisterUnit('RxLogin', @RegisterRxLogin);
@@ -78,6 +83,7 @@ begin
   RegisterUnit('RxSystemServices', @RegisterRxSystemServices);
   RegisterUnit('RxCloseFormValidator', @RegisterCloseFormValidator);
   RegisterUnit('RxIniPropStorage', @RegisterRxIniPropStorage);
+  RegisterUnit('RxXMLPropStorage', @RegisterRxXMLPropStorage);
 end;
 
 end.
