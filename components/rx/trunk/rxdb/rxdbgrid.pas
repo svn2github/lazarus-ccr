@@ -4429,7 +4429,7 @@ begin
   Inc(aRect.Top, 1);
   Dec(aRect.Bottom, 1);
 
-  if Columns.Count > (aCol - 1) then
+  if Columns.Count > (aCol - ord(dgIndicator in Options)) then
   begin
     bg := Canvas.Brush.Color;
     al := Canvas.TextStyle.Alignment;
@@ -4438,7 +4438,7 @@ begin
     ft.Assign(Canvas.Font);
     TxS := Canvas.TextStyle;
 
-    MyCol := Columns.RealIndex(aCol - 1);
+    MyCol := Columns.RealIndex(aCol - ord(dgIndicator in Options));
     with TRxColumn(Columns[MyCol]).Filter do
     begin
       if (TitleStyle <> tsNative) then
@@ -5068,7 +5068,7 @@ begin
       Rect := getFilterRect(CellRect(Cell.x, Cell.y));
       if (Cell.Y = 0) and (Cell.X >= Ord(dgIndicator in Options)) and (Rect.Top < Y) then
       begin
-        C:=TRxColumn (Columns[Columns.RealIndex(Cell.x - 1)]);
+        C:=TRxColumn (Columns[Columns.RealIndex(Cell.x - ord(dgIndicator in Options))]);
         if (C.Filter.Enabled) and (C.Filter.ValueList.Count > 0)  then
         begin
           if C.Filter.Style = rxfstSimple then
@@ -5093,7 +5093,7 @@ begin
               FFilterListEditor.Text := C.Filter.CurrentValues[0]
             else
               FFilterListEditor.Text := '';
-            FFilterListEditor.Show(Self, Cell.x - 1);
+            FFilterListEditor.Show(Self, Cell.x - ord(dgIndicator in Options));
           end
           else
           if C.Filter.Style = rxfstManualEdit then
@@ -5108,7 +5108,7 @@ begin
             FFilterSimpleEdit.Width := Rect.Right - Rect.Left;
             FFilterSimpleEdit.Height := Rect.Bottom - Rect.Top;
             FFilterSimpleEdit.BoundsRect := Rect;
-            FFilterSimpleEdit.Show(Self, Cell.x - 1);
+            FFilterSimpleEdit.Show(Self, Cell.x - ord(dgIndicator in Options));
 {            if C.Filter.CurrentValues.Count>0 then
               FFilterSimpleEdit.Text := C.Filter.CurrentValues[C.Filter.CurrentValues.Count - 1]
             else}
@@ -5128,7 +5128,7 @@ begin
             FFilterColDlgButton.Height := Rect.Bottom - Rect.Top;
             FFilterColDlgButton.Top := Rect.Top;
             FFilterColDlgButton.Left := Rect.Right - FFilterColDlgButton.Width;
-            FFilterColDlgButton.Show(Self, Cell.x - 1);
+            FFilterColDlgButton.Show(Self, Cell.x - ord(dgIndicator in Options));
           end
           else
           if C.Filter.Style = rxfstBoth then
@@ -5141,14 +5141,14 @@ begin
             FFilterColDlgButton.Height := Rect.Bottom - Rect.Top;
             FFilterColDlgButton.Top := Rect.Top;
             FFilterColDlgButton.Left := Rect.Right - FFilterColDlgButton.Width;
-            FFilterColDlgButton.Show(Self, Cell.x - 1);
+            FFilterColDlgButton.Show(Self, Cell.x - ord(dgIndicator in Options));
 
             FFilterSimpleEdit.Parent := Self;
             FFilterSimpleEdit.Width := Rect.Right - Rect.Left - FFilterColDlgButton.Width;
             FFilterSimpleEdit.Height := Rect.Bottom - Rect.Top;
             Rect.Width:=Rect.Width - FFilterColDlgButton.Width;
             FFilterSimpleEdit.BoundsRect := Rect;
-            FFilterSimpleEdit.Show(Self, Cell.x - 1);
+            FFilterSimpleEdit.Show(Self, Cell.x - ord(dgIndicator in Options));
 {            if C.Filter.CurrentValues.Count>0 then
               FFilterSimpleEdit.Text := C.Filter.CurrentValues[0]
             else}
