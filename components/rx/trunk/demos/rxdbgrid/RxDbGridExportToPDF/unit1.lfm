@@ -11,32 +11,47 @@ object Form1: TForm1
   LCLVersion = '1.9.0.0'
   object Panel1: TPanel
     Left = 0
-    Height = 37
-    Top = 360
+    Height = 50
+    Top = 347
     Width = 1043
     Align = alBottom
     AutoSize = True
-    ClientHeight = 37
+    ClientHeight = 50
     ClientWidth = 1043
     TabOrder = 0
     object Button1: TButton
       AnchorSideLeft.Control = Panel1
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Panel1
-      Left = 481
-      Height = 23
+      Left = 477
+      Height = 36
       Top = 7
-      Width = 81
+      Width = 88
       AutoSize = True
       BorderSpacing.Around = 6
       Caption = 'Create PDF'
       OnClick = Button1Click
       TabOrder = 0
     end
+    object CheckBox1: TCheckBox
+      AnchorSideLeft.Control = Button1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 571
+      Height = 24
+      Top = 13
+      Width = 105
+      Caption = 'Enable tools'
+      Checked = True
+      OnChange = CheckBox1Change
+      State = cbChecked
+      TabOrder = 1
+    end
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 360
+    Height = 347
     Top = 0
     Width = 1043
     ActivePage = TabSheet1
@@ -45,13 +60,13 @@ object Form1: TForm1
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Test data'
-      ClientHeight = 334
-      ClientWidth = 1035
+      ClientHeight = 313
+      ClientWidth = 1033
       object RxDBGrid1: TRxDBGrid
         Left = 0
-        Height = 334
+        Height = 313
         Top = 0
-        Width = 1035
+        Width = 1033
         ColumnDefValues.BlobText = '(данные)'
         TitleButtons = True
         AutoSort = True
@@ -63,10 +78,9 @@ object Form1: TForm1
             Width = 50
             FieldName = 'ID'
             EditButtons = <>
-            Filter.IsNull = False
-            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.NotEmptyValue = '(Не пусто)'
             Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
@@ -80,10 +94,9 @@ object Form1: TForm1
             Width = 120
             FieldName = 'PDATE'
             EditButtons = <>
-            Filter.IsNull = False
-            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.NotEmptyValue = '(Не пусто)'
             Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
@@ -98,10 +111,9 @@ object Form1: TForm1
             Width = 364
             FieldName = 'NAME'
             EditButtons = <>
-            Filter.IsNull = False
-            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.NotEmptyValue = '(Не пусто)'
             Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
@@ -133,10 +145,9 @@ object Form1: TForm1
             Width = 100
             FieldName = 'SUM'
             EditButtons = <>
-            Filter.IsNull = False
-            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.NotEmptyValue = '(Не пусто)'
             Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
@@ -172,10 +183,9 @@ object Form1: TForm1
             Width = 60
             FieldName = 'FLAG'
             EditButtons = <>
-            Filter.IsNull = False
-            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.NotEmptyValue = '(Не пусто)'
             Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
@@ -196,10 +206,9 @@ object Form1: TForm1
             Width = 200
             FieldName = 'Country'
             EditButtons = <>
-            Filter.IsNull = False
-            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.NotEmptyValue = '(Не пусто)'
             Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
@@ -212,10 +221,9 @@ object Form1: TForm1
             Width = 200
             FieldName = 'Sity'
             EditButtons = <>
-            Filter.IsNull = False
-            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.NotEmptyValue = '(Не пусто)'
             Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
@@ -295,7 +303,6 @@ object Form1: TForm1
         DataSource = DataSource1
         Flat = True
         Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderPushedLook]
-        ParentColor = False
         TabOrder = 0
         TitleStyle = tsNative
       end
@@ -396,8 +403,6 @@ object Form1: TForm1
       ProviderFlags = [pfInUpdate, pfInWhere]
       ReadOnly = False
       Required = False
-      MaxValue = 0
-      MinValue = 0
       Precision = 2
     end
     object RxMemoryData1Country: TStringField
@@ -438,6 +443,7 @@ object Form1: TForm1
   object RxDBGridExportPDF1: TRxDBGridExportPDF
     RxDBGrid = RxDBGrid1
     Caption = 'Export to PDF file'
+    Enabled = True
     FileName = 'test111.pdf'
     Options = [repExportTitle, repExportColors, repExportFooter, repOverwriteExisting, repExportImages]
     PdfOptions.PaperOrientation = ppoLandscape
@@ -553,6 +559,9 @@ object Form1: TForm1
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000FF0000000000000000000000000000
       0000000000000000000000000000
+    }
+    BitmapAdv = {
+      4C6900000000
     }
   end
 end

@@ -15,6 +15,7 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
+    CheckBox1: TCheckBox;
     DataSource1: TDataSource;
     ImageList1: TImageList;
     Memo1: TMemo;
@@ -33,6 +34,7 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     procedure Button1Click(Sender: TObject);
+    procedure CheckBox1Change(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
   private
@@ -137,6 +139,11 @@ begin
   RxDBGridExportPDF1.ShowSetupForm:=false;
   RxDBGridExportPDF1.Execute;
   RxDBGridExportPDF1.ShowSetupForm:=true;
+end;
+
+procedure TForm1.CheckBox1Change(Sender: TObject);
+begin
+  RxDBGridExportPDF1.Enabled:=CheckBox1.Checked;
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);

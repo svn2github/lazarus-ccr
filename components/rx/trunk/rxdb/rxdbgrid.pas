@@ -876,6 +876,7 @@ type
     procedure DoSetColEdtBtn;
     procedure AddTools(ATools:TRxDBGridAbstractTools);
     procedure RemoveTools(ATools:TRxDBGridAbstractTools);
+    procedure UpdateToolsState(ATools:TRxDBGridAbstractTools);
 
     procedure OnDataSetScrolled(aDataSet:TDataSet; Distance: Integer);
     procedure FillFilterData;
@@ -1154,10 +1155,12 @@ type
 
   TRxDBGridAbstractTools = class(TComponent)
   private
+    FEnabled: boolean;
     FOnAfterExecute: TNotifyEvent;
     FOnBeforeExecute: TNotifyEvent;
     FShowSetupForm: boolean;
     procedure ExecTools(Sender:TObject);
+    procedure SetEnabled(AValue: boolean);
   protected
     FRxDBGrid: TRxDBGrid;
     FCaption:string;
@@ -1177,6 +1180,7 @@ type
     property ShowSetupForm:boolean read FShowSetupForm write FShowSetupForm default false;
     property OnBeforeExecute:TNotifyEvent read FOnBeforeExecute write FOnBeforeExecute;
     property OnAfterExecute:TNotifyEvent read FOnAfterExecute write FOnAfterExecute;
+    property Enabled:boolean read FEnabled write SetEnabled default true;
   end;
 
 procedure RegisterRxDBGridSortEngine(RxDBGridSortEngineClass: TRxDBGridSortEngineClass;
@@ -2332,12 +2336,20 @@ begin
   Execute;
 end;
 
+procedure TRxDBGridAbstractTools.SetEnabled(AValue: boolean);
+begin
+  if FEnabled=AValue then Exit;
+  FEnabled:=AValue;
+  FRxDBGrid.UpdateToolsState(Self);
+end;
+
 constructor TRxDBGridAbstractTools.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FToolsEvents:=[];
   FCaption:=Name;
   FShowSetupForm:=false;
+  FEnabled:=true;
 end;
 
 destructor TRxDBGridAbstractTools.Destroy;
@@ -4065,6 +4077,8 @@ var
   i:integer;
   R: TMenuItem;
 begin
+  if not Assigned(ATools) then Exit;
+
   for i:=8 to F_PopupMenu.Items.Count - 1 do
     if F_PopupMenu.Items[i].Tag = IntPtr(ATools) then
       exit;
@@ -4074,6 +4088,7 @@ begin
   R.Caption := ATools.FCaption;
   R.OnClick := @(ATools.ExecTools);
   R.Tag:=IntPtr(ATools);
+  R.Enabled:=ATools.Enabled;
 
   if Assigned(FToolsList) and (FToolsList.IndexOf(ATools)<0) then
     FToolsList.Add(ATools);
@@ -4095,6 +4110,19 @@ begin
 
   if Assigned(FToolsList) then
     FToolsList.Remove(ATools);
+end;
+
+procedure TRxDBGrid.UpdateToolsState(ATools: TRxDBGridAbstractTools);
+var
+  i: Integer;
+begin
+  if not Assigned(ATools) then Exit;
+  for i:=8 to F_PopupMenu.Items.Count - 1 do
+    if F_PopupMenu.Items[i].Tag = IntPtr(ATools) then
+    begin
+      F_PopupMenu.Items[i].Enabled:=ATools.Enabled;
+      exit;
+    end;
 end;
 
 procedure TRxDBGrid.OnDataSetScrolled(aDataSet: TDataSet; Distance: Integer);
