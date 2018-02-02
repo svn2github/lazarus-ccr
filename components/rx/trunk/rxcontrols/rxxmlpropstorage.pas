@@ -48,6 +48,7 @@ type
   TRxXMLPropStorage = class(TXMLPropStorage)
   private
     FSeparateFiles: boolean;
+    function FixPath2(const APath: String): String;
   protected
     function GetXMLFileName: string; override;
   public
@@ -60,18 +61,23 @@ type
 implementation
 uses LazFileUtils, LazUTF8, rxapputils;
 
+
 function GetDefaultCfgName: string;
 var
   S:string;
 begin
   Result := ExtractFileName(ChangeFileExt(Application.ExeName, defCFGFileExt));
-  S:=RxGetAppConfigDir(false);
-  S:=SysToUTF8(S);
+  S:=SysToUTF8(RxGetAppConfigDir(false));
   ForceDirectoriesUTF8(S);
   Result:=S+Result;
 end;
 
 { TRxXMLPropStorage }
+
+function TRxXMLPropStorage.FixPath2(const APath: String): String;
+begin
+  Result:=StringReplace(APath,'/', '.', [rfReplaceAll]);
+end;
 
 function TRxXMLPropStorage.GetXMLFileName: string;
 var
@@ -81,13 +87,13 @@ begin
     Result:=FileName
   else
   begin
-    S:=GetDefaultIniName;
+    S:=GetDefaultCfgName;
     if FileName <> '' then
       Result:=AppendPathDelim(ExtractFileDir(S)) + FileName
     else
     begin
       if FSeparateFiles then
-        Result:=AppendPathDelim(ExtractFileDir(S)) + RootSection + defCFGFileExt
+        Result:=AppendPathDelim(ExtractFileDir(S)) + FixPath2(RootSection) + defCFGFileExt
       else
         Result:=S;
     end;
