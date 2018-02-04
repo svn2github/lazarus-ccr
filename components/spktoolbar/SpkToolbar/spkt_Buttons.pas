@@ -5,11 +5,11 @@ unit spkt_Buttons;
 
 (*******************************************************************************
 *                                                                              *
-*  Plik: spkt_Buttons.pas                                                      *
-*  Opis: Modu³ zawieraj¹cy komponenty przycisków dla toolbara.                 *
-*  Copyright: (c) 2009 by Spook.                                               *
-*  License:   Modified LGPL (with linking exception, like Lazarus LCL)         *
-'             See "license.txt" in this installation                           *
+*  File:        spkt_Buttons.pas                                               *
+*  Description: A module containing button components for the toolbar.         *
+*  Copyright:   (c) 2009 by Spook.                                             *
+*  License:     Modified LGPL (with linking exception, like Lazarus LCL)       *
+'               See "license.txt" in this installation                         *
 *                                                                              *
 *******************************************************************************)
 
@@ -77,6 +77,7 @@ type
     FGroupIndex: Integer;
     FAllowAllUp: Boolean;
     FDropdownMenu: TPopupMenu;
+    FMouseUp: Boolean;
 
     // *** Drawing support ***
     // The task of the method in inherited classes is to calculate the
@@ -233,12 +234,6 @@ begin
             (FClient.GroupIndex = (Action as TCustomAction).GroupIndex);
 end;
 
-function TSpkButtonActionLink.IsOnExecuteLinked: Boolean;
-begin
-  Result := inherited IsOnExecuteLinked and
-            (@TSpkBaseButton(FClient).OnClick = @Action.OnExecute);
-end;
-
 function TSpkButtonActionLink.IsImageIndexLinked: Boolean;
 begin
   Result := inherited IsImageIndexLinked;
@@ -249,6 +244,13 @@ begin
     Result := Result and (TSpkLargeButton(FClient).LargeImageIndex = (Action as TCustomAction).ImageIndex)
   else
     Result := false;
+end;
+
+function TSpkButtonActionLink.IsOnExecuteLinked: Boolean;
+begin
+  Result := inherited IsOnExecuteLinked;
+  //and
+  //          (@TSpkBaseButton(FClient).OnClick = @Action.OnExecute);
 end;
 
 function TSpkButtonActionLink.IsVisibleLinked: Boolean;
@@ -294,8 +296,8 @@ end;
 
 procedure TSpkButtonActionLink.SetOnExecute(Value: TNotifyEvent);
 begin
-  if IsOnExecuteLinked then
-    FClient.OnClick := Value;
+// Note: formerly this changed FClient.OnClick, but that is unneeded, because
+//       TControl.Click executes Action
 end;
 
 procedure TSpkButtonActionLink.SetVisible(Value: Boolean);
@@ -331,13 +333,62 @@ begin
 end;
 
 procedure TSpkBaseButton.ActionChange(Sender: TObject; CheckDefaults: Boolean);
+var
+  newAction: TCustomAction;
 begin
-  if Sender is TCustomAction then
+  if Sender is TCustomAction then begin
+    newAction := TCustomAction(Sender);
+    if (not CheckDefaults) or (Caption = '') or (Caption = Name) then
+      Caption := newAction.Caption;
+    if not CheckDefaults or Enabled then
+      Enabled := newAction.Enabled;
+
+    {  wp: !!! Hints not yet supported !!!
+
+    if not CheckDefaults or (Hint = '') then
+      Hint := newAction.Hint;
+    }
+
+    if not CheckDefaults or Visible then
+      Visible := newAction.Visible;
+    if not CheckDefaults or Checked then
+      Checked := newAction.Checked;
+    if not CheckDefaults or (GroupIndex > 0) then
+      GroupIndex := newAction.GroupIndex;
+
+    {   !!! wp: Actions don't have an AllowAllUp property !!!
+
+    if not CheckDefaults or not AllowAllUp then
+      AllowAllUp := newAction.AllowAllUp;
+    }
+
+    if self is TSpkSmallButton then begin
+      if not CheckDefaults or (TSpkSmallButton(self).ImageIndex < 0) then
+        TSpkSmallButton(self).ImageIndex := newAction.ImageIndex;
+    end;
+    if self is TSpkLargeButton then begin
+      if not CheckDefaults or (TSpkLargeButton(self).LargeImageIndex < 0) then
+        TSpkLargeButton(self).LargeImageIndex := newAction.ImageIndex;
+    end;
+
+    { wp: !!! Helpcontext not yet supported !!!
+
+    if not CheckDefaults or (Self.HelpContext = 0) then
+      Self.HelpContext := HelpContext;
+    if not CheckDefaults or (Self.HelpKeyword = '') then
+      Self.HelpKeyword := HelpKeyword;
+    // HelpType is set implicitly when assigning HelpContext or HelpKeyword
+    }
+  end;
+end;
+
+(*   wp: Thid is the old part (before avoiding OnExecute = OnClick) - just for reference.
+
     with TCustomAction(Sender) do
     begin
       if not CheckDefaults or (Self.Caption = '') or (Self.Caption = GetDefaultCaption) then
          Self.Caption := Caption;
-      if not CheckDefaults or (Self.Enabled = True) then
+      if not CheckDefaults or Self.Enabled then
          Self.Enabled := Enabled;
       if not CheckDefaults or (Self.Visible = True) then
          Self.Visible := Visible;
@@ -347,8 +398,10 @@ begin
         Self.GroupIndex := GroupIndex;
       if not CheckDefaults or not Self.AllowAllUp then
         Self.AllowAllUp := AllowAllUp;
+{
       if not CheckDefaults or not Assigned(Self.OnClick) then
          Self.OnClick := OnExecute;
+}
       if self is TSpkSmallButton then begin
         if not CheckDefaults or (TSpkSmallButton(self).ImageIndex < 0) then
           TSpkSmallButton(self).ImageIndex := ImageIndex;
@@ -359,11 +412,16 @@ begin
       end;
     end;
 end;
+*)
 
 procedure TSpkBaseButton.Click;
 begin
+  // first call our own OnClick
   if Assigned(FOnClick) then
-    FOnClick(self)
+    FOnClick(Self);
+  // then trigger the Action
+  if (not (csDesigning in ComponentState)) and (FActionLink <> nil) then //and not FMouseUp then
+    FActionLink.Execute(Self);
 end;
 
 procedure TSpkBaseButton.DoActionChange(Sender: TObject);
@@ -434,11 +492,13 @@ procedure TSpkBaseButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
 begin
   if FEnabled then
   begin
-    // Przyciski reaguj¹ tylko na lewy przycisk myszy
+    // The buttons react only to the left mouse button
     if Button <> mbLeft then
       exit;
 
-    if FButtonKind = bkToggle then
+    if (FButtonKind = bkToggle) and ((Action = nil) or
+       ((Action is TCustomAction) and not TCustomAction(Action).AutoCheck))
+    then
       Checked := not Checked;
 
     if FMouseActiveElement = beButton then
@@ -504,11 +564,11 @@ begin
     begin
       if FMouseHoverElement = beButton then
       begin
-        // Placeholder, gdyby zasz³a potrzeba obs³ugi tego zdarzenia
+        // Placeholder, if there is a need to handle this event
       end else
       if FMouseHoverElement = beDropdown then
       begin
-        // Placeholder, gdyby zasz³a potrzeba obs³ugi tego zdarzenia
+        // Placeholder, if there is a need to handle this event
       end;
     end;
     if FButtonState <> bsIdle then
@@ -588,8 +648,8 @@ begin
     end else
     if FMouseActiveElement = beNone then
     begin
-      // Z uwagi na uproszczon¹ obs³ugê myszy w przycisku, nie ma potrzeby
-      // informowaæ poprzedniego elementu o tym, ¿e mysz opuœci³a jego obszar.
+      // Due to the simplified mouse support in the button, there is no need to
+      // inform the previous element that the mouse has left its area.
       if NewMouseHoverElement = beButton then
       begin
         if FButtonState <> bsBtnHottrack then
@@ -609,7 +669,6 @@ begin
         end;
       end;
     end;
-
     FMouseHoverElement := NewMouseHoverElement;
   end    // if FEnabled
   else
@@ -633,7 +692,7 @@ var
 begin
   if FEnabled then
   begin
-    // Przyciski reaguj¹ tylko na lewy przycisk myszy
+    // The buttons react only to the left mouse button
     if Button <> mbLeft then
       exit;
 
@@ -641,13 +700,14 @@ begin
 
     if FMouseActiveElement = beButton then
     begin
-      // Zdarzenie zadzia³a tylko wtedy, gdy przycisk myszy zosta³ puszczony nad
-      // przyciskiem
+      // The event only works when the mouse button is released above the button
       if FMouseHoverElement = beButton then
       begin
         if FButtonKind in [bkButton, bkButtonDropdown, bkToggle] then
         begin
+          FMouseUp := true;
           Click;
+          FMouseUp := false;
           FButtonState := bsBtnHottrack;
           if Assigned(FToolbarDispatch) then
             FToolbarDispatch.NotifyVisualsChanged;
@@ -667,8 +727,8 @@ begin
     end else
     if FMouseActiveElement = beDropDown then
     begin
-      // Zdarzenie zadzia³a tylko wtedy, gdy przycisk myszy zosta³ puszczony nad
-      // przyciskiem DropDown
+      // The event only works if the mouse button has been released above the
+      // DropDown button
       if FMouseHoverElement = beDropDown then
       begin
         if Assigned(FDropdownMenu) then
@@ -684,8 +744,8 @@ begin
 
     if ClearActive and (FMouseActiveElement <> FMouseHoverElement) then
     begin
-      // Z uwagi na uproszczon¹ obs³ugê, nie ma potrzeby informowaæ poprzedniego
-      // elementu o tym, ¿e mysz opuœci³a jego obszar.
+      // Due to the simplified handling, there is no need to inform the
+      // previous element that the mouse has left its area.
       if FMouseHoverElement = beButton then
       begin
         if FButtonState <> bsBtnHottrack then
@@ -801,6 +861,12 @@ begin
   inherited;
   if not FEnabled then
   begin
+    // If the button has been switched off, it is immediately switched into
+    // the Idle state and the active and under the mouse are reset.
+    // If it has been enabled, its status will change during the first
+    // mouse action.
+
+    // Original comment:
     // Jeœli przycisk zosta³ wy³¹czony, zostaje natychmiast prze³¹czony
     // w stan Idle i zerowane s¹ elementy aktywne i pod mysz¹. Jeœli zosta³
     // w³¹czony, jego stan zmieni siê podczas pierwszej akcji myszy.
@@ -1318,19 +1384,19 @@ begin
   if not Assigned(Bitmap) then
     exit;
 
-  // *** Niezale¿nie od rodzaju, musi byæ miejsce dla ikony i/lub tekstu ***
+  // *** Regardless of the type, there must be room for the icon and / or text ***
 
   BtnWidth := 0;
   AdditionalPadding := false;
 
-  // Ikona
+  // Icon
   if FImageIndex <> -1 then
   begin
     BtnWidth := BtnWidth + SmallButtonPadding + SmallButtonGlyphWidth;
     AdditionalPadding := true;
   end;
 
-  // Tekst
+  // Text
   if FShowCaption then
   begin
     Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
@@ -1340,24 +1406,24 @@ begin
     AdditionalPadding := true;
   end;
 
-  // Padding za tekstem lub ikon¹
+  // Padding behind the text or icon
   if AdditionalPadding then
     BtnWidth := BtnWidth + SmallButtonPadding;
 
-  // Szerokoœæ zawartoœci przycisku musi wynosiæ co najmniej SMALLBUTTON_MIN_WIDTH
+  // The width of the button content must be at least SMALLBUTTON_MIN_WIDTH
   BtnWidth := Max(SmallButtonMinWidth, BtnWidth);
 
   // *** Dropdown ***
   case FButtonKind of
     bkButton, bkToggle:
       begin
-        // Lewa krawêdŸ przycisku
+        // Left edge of the button
         if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
           BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
         else
           BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
-        // Prawa krawêdŸ przycisku
+        // Right edge of the button
         if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
           BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
         else
@@ -1374,19 +1440,19 @@ begin
 
     bkButtonDropdown:
       begin
-        // Lewa krawêdŸ przycisku
+        // Left edge of the button
         if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
           BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
         else
           BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
-        // Prawa krawêdŸ przycisku
+        // Right edge of the button
         BtnWidth := BtnWidth + SmallButtonHalfBorderWidth;
 
-        // Lewa krawêdŸ i zawartoœæ pola dropdown
+        // Left edge and dropdown field content
         DropdownWidth := SmallButtonHalfBorderWidth + SmallButtonDropdownWidth;
 
-        // Prawa krawêdŸ pola dropdown
+        // Right edge of the dropdown field
         if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
           DropdownWidth := DropdownWidth + SmallButtonHalfBorderWidth
         else
@@ -1403,20 +1469,20 @@ begin
 
     bkDropdown:
       begin
-        // Lewa krawêdŸ przycisku
+        // Left edge of the button
         if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
           BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
         else
           BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
-        // Prawa krawêdŸ przycisku
+        // Right edge of the button
         if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
           BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
         else
           BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
-        // Dodatkowy obszar na dropdown + miejsce na œrodkow¹ krawêdŸ,
-        // dla kompatybilnoœci wymiarów z dkButtonDropdown
+        // Additional area for dropdown + place for the central edge,
+        // for dimensional compatibility with dkButtonDropdown
         BtnWidth := BtnWidth + SmallButtonBorderWidth + SmallButtonDropdownWidth;
 
         {$IFDEF EnhancedRecordSupport}

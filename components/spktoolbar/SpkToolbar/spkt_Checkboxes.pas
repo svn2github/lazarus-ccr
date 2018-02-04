@@ -319,6 +319,8 @@ begin
   begin
     FState := AValue;
     inherited SetChecked(Checked);
+    if Assigned(FToolbarDispatch) then
+      FToolbarDispatch.NotifyVisualsChanged;
   end;
 end;
 
