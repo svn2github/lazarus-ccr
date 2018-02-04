@@ -1,1122 +1,1739 @@
 object Form1: TForm1
   Left = 280
-  Height = 660
+  Height = 667
   Top = 130
-  Width = 506
+  Width = 664
   Caption = 'spkToolbar Styles'
-  ClientHeight = 660
-  ClientWidth = 506
+  ClientHeight = 667
+  ClientWidth = 664
   Color = clMedGray
   LCLVersion = '1.9.0.0'
-  object SpkToolbar1: TSpkToolbar
+  object ScrollBox1: TScrollBox
     Left = 0
+    Height = 667
     Top = 0
-    Width = 506
-    Color = clMedGray
-    Appearance.Tab.TabHeaderFont.Color = 9126421
-    Appearance.Tab.BorderColor = 14922381
-    Appearance.Tab.GradientFromColor = 16115934
-    Appearance.Tab.GradientToColor = 15587527
-    Appearance.Tab.GradientType = bkConcave
-    Appearance.Tab.InactiveTabHeaderFontColor = 9126421
-    Appearance.Pane.BorderDarkColor = 14335646
-    Appearance.Pane.BorderLightColor = 16315117
-    Appearance.Pane.CaptionBgColor = 15849922
-    Appearance.Pane.CaptionFont.Color = 9126421
-    Appearance.Pane.GradientFromColor = 16115934
-    Appearance.Pane.GradientToColor = 15587527
-    Appearance.Pane.GradientType = bkConcave
-    Appearance.Element.CaptionFont.Color = clMenuText
-    Appearance.Element.IdleFrameColor = 14727067
-    Appearance.Element.IdleGradientFromColor = 15653832
-    Appearance.Element.IdleGradientToColor = 15323324
-    Appearance.Element.IdleGradientType = bkConcave
-    Appearance.Element.IdleInnerLightColor = 15852501
-    Appearance.Element.IdleInnerDarkColor = 15520702
-    Appearance.Element.IdleCaptionColor = 11631958
-    Appearance.Element.HotTrackFrameColor = 10211293
-    Appearance.Element.HotTrackGradientFromColor = 14351615
-    Appearance.Element.HotTrackGradientToColor = 5101567
-    Appearance.Element.HotTrackGradientType = bkConcave
-    Appearance.Element.HotTrackInnerLightColor = 12972543
-    Appearance.Element.HotTrackInnerDarkColor = 8045272
-    Appearance.Element.HotTrackCaptionColor = 8864367
-    Appearance.Element.HotTrackBrightnessChange = 40
-    Appearance.Element.ActiveFrameColor = 5535371
-    Appearance.Element.ActiveGradientFromColor = 7126014
-    Appearance.Element.ActiveGradientToColor = 4035324
-    Appearance.Element.ActiveGradientType = bkConcave
-    Appearance.Element.ActiveInnerLightColor = 961020
-    Appearance.Element.ActiveInnerDarkColor = 961020
-    Appearance.Element.ActiveCaptionColor = 8405614
-    Appearance.Element.Style = esRounded
-    TabIndex = 0
-    Images = SmallImages
-    LargeImages = LargeImages
-    Tabs = (
-      'SpkTab1'
-    )
-    object SpkTab1: TSpkTab
-      CustomAppearance.Tab.TabHeaderFont.Color = 9126421
-      CustomAppearance.Tab.BorderColor = 14922381
-      CustomAppearance.Tab.GradientFromColor = 16115934
-      CustomAppearance.Tab.GradientToColor = 15587527
-      CustomAppearance.Tab.GradientType = bkConcave
-      CustomAppearance.Tab.InactiveTabHeaderFontColor = 9126421
-      CustomAppearance.Pane.BorderDarkColor = 14335646
-      CustomAppearance.Pane.BorderLightColor = 16315117
-      CustomAppearance.Pane.CaptionBgColor = 15849922
-      CustomAppearance.Pane.CaptionFont.Color = 9126421
-      CustomAppearance.Pane.GradientFromColor = 16115934
-      CustomAppearance.Pane.GradientToColor = 15587527
-      CustomAppearance.Pane.GradientType = bkConcave
-      CustomAppearance.Element.CaptionFont.Color = clMenuText
-      CustomAppearance.Element.IdleFrameColor = 14727067
-      CustomAppearance.Element.IdleGradientFromColor = 15653832
-      CustomAppearance.Element.IdleGradientToColor = 15323324
-      CustomAppearance.Element.IdleGradientType = bkConcave
-      CustomAppearance.Element.IdleInnerLightColor = 15852501
-      CustomAppearance.Element.IdleInnerDarkColor = 15520702
-      CustomAppearance.Element.IdleCaptionColor = 11631958
-      CustomAppearance.Element.HotTrackFrameColor = 10211293
-      CustomAppearance.Element.HotTrackGradientFromColor = 14351615
-      CustomAppearance.Element.HotTrackGradientToColor = 5101567
-      CustomAppearance.Element.HotTrackGradientType = bkConcave
-      CustomAppearance.Element.HotTrackInnerLightColor = 12972543
-      CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
-      CustomAppearance.Element.HotTrackCaptionColor = 8864367
-      CustomAppearance.Element.HotTrackBrightnessChange = 40
-      CustomAppearance.Element.ActiveFrameColor = 5535371
-      CustomAppearance.Element.ActiveGradientFromColor = 7126014
-      CustomAppearance.Element.ActiveGradientToColor = 4035324
-      CustomAppearance.Element.ActiveGradientType = bkConcave
-      CustomAppearance.Element.ActiveInnerLightColor = 961020
-      CustomAppearance.Element.ActiveInnerDarkColor = 961020
-      CustomAppearance.Element.ActiveCaptionColor = 8405614
-      CustomAppearance.Element.Style = esRounded
-      Caption = 'Office2007 Blue'
-      OverrideAppearance = False
-      Visible = True
-      Panes = (
-        'SpkPane1'
-        'SpkPane10'
+    Width = 664
+    HorzScrollBar.Page = 75
+    VertScrollBar.Page = 660
+    Align = alClient
+    ClientHeight = 663
+    ClientWidth = 660
+    TabOrder = 0
+    object SpkToolbar1: TSpkToolbar
+      Left = 0
+      Top = 0
+      Width = 660
+      Color = clMedGray
+      Appearance.Tab.TabHeaderFont.Color = 9126421
+      Appearance.Tab.BorderColor = 14922381
+      Appearance.Tab.GradientFromColor = 16115934
+      Appearance.Tab.GradientToColor = 15587527
+      Appearance.Tab.GradientType = bkConcave
+      Appearance.Tab.InactiveTabHeaderFontColor = 9126421
+      Appearance.Pane.BorderDarkColor = 14335646
+      Appearance.Pane.BorderLightColor = 16315117
+      Appearance.Pane.CaptionBgColor = 15849922
+      Appearance.Pane.CaptionFont.Color = 9126421
+      Appearance.Pane.GradientFromColor = 16115934
+      Appearance.Pane.GradientToColor = 15587527
+      Appearance.Pane.GradientType = bkConcave
+      Appearance.Element.CaptionFont.Color = clMenuText
+      Appearance.Element.IdleFrameColor = 14727067
+      Appearance.Element.IdleGradientFromColor = 15653832
+      Appearance.Element.IdleGradientToColor = 15323324
+      Appearance.Element.IdleGradientType = bkConcave
+      Appearance.Element.IdleInnerLightColor = 15852501
+      Appearance.Element.IdleInnerDarkColor = 15520702
+      Appearance.Element.IdleCaptionColor = 11631958
+      Appearance.Element.HotTrackFrameColor = 10211293
+      Appearance.Element.HotTrackGradientFromColor = 14351615
+      Appearance.Element.HotTrackGradientToColor = 5101567
+      Appearance.Element.HotTrackGradientType = bkConcave
+      Appearance.Element.HotTrackInnerLightColor = 12972543
+      Appearance.Element.HotTrackInnerDarkColor = 8045272
+      Appearance.Element.HotTrackCaptionColor = 8864367
+      Appearance.Element.HotTrackBrightnessChange = 40
+      Appearance.Element.ActiveFrameColor = 5535371
+      Appearance.Element.ActiveGradientFromColor = 7126014
+      Appearance.Element.ActiveGradientToColor = 4035324
+      Appearance.Element.ActiveGradientType = bkConcave
+      Appearance.Element.ActiveInnerLightColor = 961020
+      Appearance.Element.ActiveInnerDarkColor = 961020
+      Appearance.Element.ActiveCaptionColor = 8405614
+      Appearance.Element.Style = esRounded
+      TabIndex = 0
+      Images = SmallImages
+      LargeImages = LargeImages
+      Tabs = (
+        'SpkTab1'
       )
-      object SpkPane1: TSpkPane
-        Caption = 'File commands'
+      object SpkTab1: TSpkTab
+        CustomAppearance.Tab.TabHeaderFont.Color = 9126421
+        CustomAppearance.Tab.BorderColor = 14922381
+        CustomAppearance.Tab.GradientFromColor = 16115934
+        CustomAppearance.Tab.GradientToColor = 15587527
+        CustomAppearance.Tab.GradientType = bkConcave
+        CustomAppearance.Tab.InactiveTabHeaderFontColor = 9126421
+        CustomAppearance.Pane.BorderDarkColor = 14335646
+        CustomAppearance.Pane.BorderLightColor = 16315117
+        CustomAppearance.Pane.CaptionBgColor = 15849922
+        CustomAppearance.Pane.CaptionFont.Color = 9126421
+        CustomAppearance.Pane.GradientFromColor = 16115934
+        CustomAppearance.Pane.GradientToColor = 15587527
+        CustomAppearance.Pane.GradientType = bkConcave
+        CustomAppearance.Element.CaptionFont.Color = clMenuText
+        CustomAppearance.Element.IdleFrameColor = 14727067
+        CustomAppearance.Element.IdleGradientFromColor = 15653832
+        CustomAppearance.Element.IdleGradientToColor = 15323324
+        CustomAppearance.Element.IdleGradientType = bkConcave
+        CustomAppearance.Element.IdleInnerLightColor = 15852501
+        CustomAppearance.Element.IdleInnerDarkColor = 15520702
+        CustomAppearance.Element.IdleCaptionColor = 11631958
+        CustomAppearance.Element.HotTrackFrameColor = 10211293
+        CustomAppearance.Element.HotTrackGradientFromColor = 14351615
+        CustomAppearance.Element.HotTrackGradientToColor = 5101567
+        CustomAppearance.Element.HotTrackGradientType = bkConcave
+        CustomAppearance.Element.HotTrackInnerLightColor = 12972543
+        CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
+        CustomAppearance.Element.HotTrackCaptionColor = 8864367
+        CustomAppearance.Element.HotTrackBrightnessChange = 40
+        CustomAppearance.Element.ActiveFrameColor = 5535371
+        CustomAppearance.Element.ActiveGradientFromColor = 7126014
+        CustomAppearance.Element.ActiveGradientToColor = 4035324
+        CustomAppearance.Element.ActiveGradientType = bkConcave
+        CustomAppearance.Element.ActiveInnerLightColor = 961020
+        CustomAppearance.Element.ActiveInnerDarkColor = 961020
+        CustomAppearance.Element.ActiveCaptionColor = 8405614
+        CustomAppearance.Element.Style = esRounded
+        Caption = 'Office2007 Blue'
+        OverrideAppearance = False
         Visible = True
-        Items = (
-          'SpkLargeButton1'
-          'SpkLargeButton14'
-          'SpkSmallButton29'
-          'SpkSmallButton30'
-          'SpkLargeButton15'
+        Panes = (
+          'SpkPane1'
+          'SpkPane10'
+          'SpkPane16'
+          'SpkPane11'
         )
-        object SpkLargeButton1: TSpkLargeButton
+        object SpkPane1: TSpkPane
+          Caption = 'File commands'
           Visible = True
-          Enabled = True
-          Caption = 'New'
-          LargeImageIndex = 0
-          ButtonKind = bkDropdown
+          Items = (
+            'SpkLargeButton1'
+            'SpkLargeButton14'
+            'SpkSmallButton29'
+            'SpkSmallButton30'
+            'SpkLargeButton15'
+          )
+          object SpkLargeButton1: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'New'
+            LargeImageIndex = 0
+            ButtonKind = bkDropdown
+          end
+          object SpkLargeButton14: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'Open file...'
+            LargeImageIndex = 1
+            ButtonKind = bkButtonDropdown
+          end
+          object SpkSmallButton29: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 0
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButtonDropdown
+          end
+          object SpkSmallButton30: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save as...'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 1
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkLargeButton15: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'Exit program'
+            LargeImageIndex = 3
+            ButtonKind = bkButton
+          end
         end
-        object SpkLargeButton14: TSpkLargeButton
+        object SpkPane10: TSpkPane
+          Caption = 'Edit commands'
           Visible = True
-          Enabled = True
-          Caption = 'Open file...'
-          LargeImageIndex = 1
-          ButtonKind = bkButtonDropdown
+          Items = (
+            'SpkSmallButton31'
+            'SpkSmallButton32'
+            'SpkSmallButton33'
+            'SpkSmallButton34'
+            'SpkSmallButton35'
+          )
+          object SpkSmallButton31: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Cut'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 2
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton32: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Copy'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 3
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton33: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Paste'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 4
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton34: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Select all'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsColumn
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton35: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Unselect'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
         end
-        object SpkSmallButton29: TSpkSmallButton
+        object SpkPane16: TSpkPane
+          Caption = 'Format commands'
           Visible = True
-          Enabled = True
-          Caption = 'Save'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 0
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButtonDropdown
+          Items = (
+            'SpkSmallButton41'
+            'SpkSmallButton42'
+            'SpkSmallButton44'
+            'SpkSmallButton43'
+            'SpkSmallButton45'
+            'SpkSmallButton46'
+            'SpkSmallButton47'
+          )
+          object SpkSmallButton41: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbBeginsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 5
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton42: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 6
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton44: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 7
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton43: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbEndsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 8
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton45: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbBeginsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 9
+            ShowCaption = False
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkToggle
+            Checked = True
+            GroupIndex = 1
+          end
+          object SpkSmallButton46: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 10
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+            GroupIndex = 1
+          end
+          object SpkSmallButton47: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbEndsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 11
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+            GroupIndex = 1
+          end
         end
-        object SpkSmallButton30: TSpkSmallButton
+        object SpkPane11: TSpkPane
+          Caption = 'Settings'
           Visible = True
-          Enabled = True
-          Caption = 'Save as...'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 1
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkLargeButton15: TSpkLargeButton
-          Visible = True
-          Enabled = True
-          Caption = 'Exit program'
-          LargeImageIndex = 3
-          ButtonKind = bkButton
-        end
-      end
-      object SpkPane10: TSpkPane
-        Caption = 'Edit commands'
-        Visible = True
-        Items = (
-          'SpkSmallButton31'
-          'SpkSmallButton32'
-          'SpkSmallButton33'
-          'SpkSmallButton34'
-          'SpkSmallButton35'
-        )
-        object SpkSmallButton31: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Cut'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 2
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton32: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Copy'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 3
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton33: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Paste'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 4
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton34: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Select all'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
-          ShowCaption = True
-          TableBehaviour = tbBeginsColumn
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton35: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Unselect'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
+          Items = (
+            'SpkSmallButton36'
+            'SpkCheckbox1'
+          )
+          object SpkSmallButton36: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save now'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkCheckbox1: TSpkCheckbox
+            Visible = True
+            Enabled = True
+            Caption = 'Auto save'
+            State = cbUnchecked
+            TableBehaviour = tbBeginsRow
+          end
         end
       end
     end
-  end
-  object SpkToolbar2: TSpkToolbar
-    Left = 0
-    Top = 137
-    Width = 506
-    Color = clMedGray
-    Style = spkOffice2007Silver
-    Appearance.Tab.TabHeaderFont.Color = 8016716
-    Appearance.Tab.BorderColor = 12500670
-    Appearance.Tab.GradientFromColor = 16052978
-    Appearance.Tab.GradientToColor = 15722209
-    Appearance.Tab.GradientType = bkConcave
-    Appearance.Tab.InactiveTabHeaderFontColor = 8016716
-    Appearance.Pane.BorderDarkColor = 10921638
-    Appearance.Pane.BorderLightColor = clWhite
-    Appearance.Pane.CaptionBgColor = 15000804
-    Appearance.Pane.CaptionFont.Color = 3552822
-    Appearance.Pane.GradientFromColor = 16316664
-    Appearance.Pane.GradientToColor = 15329769
-    Appearance.Pane.GradientType = bkConcave
-    Appearance.Element.CaptionFont.Color = 9126421
-    Appearance.Element.IdleFrameColor = 12104105
-    Appearance.Element.IdleGradientFromColor = 16053490
-    Appearance.Element.IdleGradientToColor = 15132131
-    Appearance.Element.IdleGradientType = bkConcave
-    Appearance.Element.IdleInnerLightColor = 16184048
-    Appearance.Element.IdleInnerDarkColor = 13091002
-    Appearance.Element.IdleCaptionColor = 6317407
-    Appearance.Element.HotTrackFrameColor = 10211293
-    Appearance.Element.HotTrackGradientFromColor = 14351615
-    Appearance.Element.HotTrackGradientToColor = 5101567
-    Appearance.Element.HotTrackGradientType = bkConcave
-    Appearance.Element.HotTrackInnerLightColor = 12972543
-    Appearance.Element.HotTrackInnerDarkColor = 8045272
-    Appearance.Element.HotTrackCaptionColor = 8864367
-    Appearance.Element.HotTrackBrightnessChange = 40
-    Appearance.Element.ActiveFrameColor = 5535371
-    Appearance.Element.ActiveGradientFromColor = 7126014
-    Appearance.Element.ActiveGradientToColor = 4035324
-    Appearance.Element.ActiveGradientType = bkConcave
-    Appearance.Element.ActiveInnerLightColor = 961020
-    Appearance.Element.ActiveInnerDarkColor = 961020
-    Appearance.Element.ActiveCaptionColor = 8405614
-    Appearance.Element.Style = esRounded
-    TabIndex = 0
-    Images = SmallImages
-    LargeImages = LargeImages
-    Tabs = (
-      'SpkTab2'
-    )
-    object SpkTab2: TSpkTab
-      CustomAppearance.Tab.TabHeaderFont.Color = 9126421
-      CustomAppearance.Tab.BorderColor = 14922381
-      CustomAppearance.Tab.GradientFromColor = 16115934
-      CustomAppearance.Tab.GradientToColor = 15587527
-      CustomAppearance.Tab.GradientType = bkConcave
-      CustomAppearance.Tab.InactiveTabHeaderFontColor = 9126421
-      CustomAppearance.Pane.BorderDarkColor = 14335646
-      CustomAppearance.Pane.BorderLightColor = 16315117
-      CustomAppearance.Pane.CaptionBgColor = 15849922
-      CustomAppearance.Pane.CaptionFont.Color = 9126421
-      CustomAppearance.Pane.GradientFromColor = 16115934
-      CustomAppearance.Pane.GradientToColor = 15587527
-      CustomAppearance.Pane.GradientType = bkConcave
-      CustomAppearance.Element.CaptionFont.Color = clMenuText
-      CustomAppearance.Element.IdleFrameColor = 14727067
-      CustomAppearance.Element.IdleGradientFromColor = 15653832
-      CustomAppearance.Element.IdleGradientToColor = 15323324
-      CustomAppearance.Element.IdleGradientType = bkConcave
-      CustomAppearance.Element.IdleInnerLightColor = 15852501
-      CustomAppearance.Element.IdleInnerDarkColor = 15520702
-      CustomAppearance.Element.IdleCaptionColor = 11631958
-      CustomAppearance.Element.HotTrackFrameColor = 10211293
-      CustomAppearance.Element.HotTrackGradientFromColor = 14351615
-      CustomAppearance.Element.HotTrackGradientToColor = 5101567
-      CustomAppearance.Element.HotTrackGradientType = bkConcave
-      CustomAppearance.Element.HotTrackInnerLightColor = 12972543
-      CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
-      CustomAppearance.Element.HotTrackCaptionColor = 8864367
-      CustomAppearance.Element.HotTrackBrightnessChange = 40
-      CustomAppearance.Element.ActiveFrameColor = 5535371
-      CustomAppearance.Element.ActiveGradientFromColor = 7126014
-      CustomAppearance.Element.ActiveGradientToColor = 4035324
-      CustomAppearance.Element.ActiveGradientType = bkConcave
-      CustomAppearance.Element.ActiveInnerLightColor = 961020
-      CustomAppearance.Element.ActiveInnerDarkColor = 961020
-      CustomAppearance.Element.ActiveCaptionColor = 8405614
-      CustomAppearance.Element.Style = esRounded
-      Caption = 'Office2007 Silver'
-      OverrideAppearance = False
-      Visible = True
-      Panes = (
-        'SpkPane2'
-        'SpkPane3'
+    object SpkToolbar2: TSpkToolbar
+      Left = 0
+      Top = 137
+      Width = 660
+      Color = clMedGray
+      Style = spkOffice2007Silver
+      Appearance.Tab.TabHeaderFont.Color = 8016716
+      Appearance.Tab.BorderColor = 12500670
+      Appearance.Tab.GradientFromColor = 16052978
+      Appearance.Tab.GradientToColor = 15722209
+      Appearance.Tab.GradientType = bkConcave
+      Appearance.Tab.InactiveTabHeaderFontColor = 8016716
+      Appearance.Pane.BorderDarkColor = 10921638
+      Appearance.Pane.BorderLightColor = clWhite
+      Appearance.Pane.CaptionBgColor = 15000804
+      Appearance.Pane.CaptionFont.Color = 3552822
+      Appearance.Pane.GradientFromColor = 16316664
+      Appearance.Pane.GradientToColor = 15329769
+      Appearance.Pane.GradientType = bkConcave
+      Appearance.Element.CaptionFont.Color = 9126421
+      Appearance.Element.IdleFrameColor = 12104105
+      Appearance.Element.IdleGradientFromColor = 16053490
+      Appearance.Element.IdleGradientToColor = 15132131
+      Appearance.Element.IdleGradientType = bkConcave
+      Appearance.Element.IdleInnerLightColor = 16184048
+      Appearance.Element.IdleInnerDarkColor = 13091002
+      Appearance.Element.IdleCaptionColor = 6317407
+      Appearance.Element.HotTrackFrameColor = 10211293
+      Appearance.Element.HotTrackGradientFromColor = 14351615
+      Appearance.Element.HotTrackGradientToColor = 5101567
+      Appearance.Element.HotTrackGradientType = bkConcave
+      Appearance.Element.HotTrackInnerLightColor = 12972543
+      Appearance.Element.HotTrackInnerDarkColor = 8045272
+      Appearance.Element.HotTrackCaptionColor = 8864367
+      Appearance.Element.HotTrackBrightnessChange = 40
+      Appearance.Element.ActiveFrameColor = 5535371
+      Appearance.Element.ActiveGradientFromColor = 7126014
+      Appearance.Element.ActiveGradientToColor = 4035324
+      Appearance.Element.ActiveGradientType = bkConcave
+      Appearance.Element.ActiveInnerLightColor = 961020
+      Appearance.Element.ActiveInnerDarkColor = 961020
+      Appearance.Element.ActiveCaptionColor = 8405614
+      Appearance.Element.Style = esRounded
+      TabIndex = 0
+      Images = SmallImages
+      LargeImages = LargeImages
+      Tabs = (
+        'SpkTab2'
       )
-      object SpkPane2: TSpkPane
-        Caption = 'File commands'
+      object SpkTab2: TSpkTab
+        CustomAppearance.Tab.TabHeaderFont.Color = 9126421
+        CustomAppearance.Tab.BorderColor = 14922381
+        CustomAppearance.Tab.GradientFromColor = 16115934
+        CustomAppearance.Tab.GradientToColor = 15587527
+        CustomAppearance.Tab.GradientType = bkConcave
+        CustomAppearance.Tab.InactiveTabHeaderFontColor = 9126421
+        CustomAppearance.Pane.BorderDarkColor = 14335646
+        CustomAppearance.Pane.BorderLightColor = 16315117
+        CustomAppearance.Pane.CaptionBgColor = 15849922
+        CustomAppearance.Pane.CaptionFont.Color = 9126421
+        CustomAppearance.Pane.GradientFromColor = 16115934
+        CustomAppearance.Pane.GradientToColor = 15587527
+        CustomAppearance.Pane.GradientType = bkConcave
+        CustomAppearance.Element.CaptionFont.Color = clMenuText
+        CustomAppearance.Element.IdleFrameColor = 14727067
+        CustomAppearance.Element.IdleGradientFromColor = 15653832
+        CustomAppearance.Element.IdleGradientToColor = 15323324
+        CustomAppearance.Element.IdleGradientType = bkConcave
+        CustomAppearance.Element.IdleInnerLightColor = 15852501
+        CustomAppearance.Element.IdleInnerDarkColor = 15520702
+        CustomAppearance.Element.IdleCaptionColor = 11631958
+        CustomAppearance.Element.HotTrackFrameColor = 10211293
+        CustomAppearance.Element.HotTrackGradientFromColor = 14351615
+        CustomAppearance.Element.HotTrackGradientToColor = 5101567
+        CustomAppearance.Element.HotTrackGradientType = bkConcave
+        CustomAppearance.Element.HotTrackInnerLightColor = 12972543
+        CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
+        CustomAppearance.Element.HotTrackCaptionColor = 8864367
+        CustomAppearance.Element.HotTrackBrightnessChange = 40
+        CustomAppearance.Element.ActiveFrameColor = 5535371
+        CustomAppearance.Element.ActiveGradientFromColor = 7126014
+        CustomAppearance.Element.ActiveGradientToColor = 4035324
+        CustomAppearance.Element.ActiveGradientType = bkConcave
+        CustomAppearance.Element.ActiveInnerLightColor = 961020
+        CustomAppearance.Element.ActiveInnerDarkColor = 961020
+        CustomAppearance.Element.ActiveCaptionColor = 8405614
+        CustomAppearance.Element.Style = esRounded
+        Caption = 'Office2007 Silver'
+        OverrideAppearance = False
         Visible = True
-        Items = (
-          'SpkLargeButton2'
-          'SpkLargeButton12'
-          'SpkSmallButton22'
-          'SpkSmallButton23'
-          'SpkLargeButton13'
+        Panes = (
+          'SpkPane2'
+          'SpkPane3'
+          'SpkPane17'
+          'SpkPane12'
         )
-        object SpkLargeButton2: TSpkLargeButton
+        object SpkPane2: TSpkPane
+          Caption = 'File commands'
           Visible = True
-          Enabled = True
-          Caption = 'New'
-          LargeImageIndex = 0
-          ButtonKind = bkDropdown
+          Items = (
+            'SpkLargeButton2'
+            'SpkLargeButton12'
+            'SpkSmallButton22'
+            'SpkSmallButton23'
+            'SpkLargeButton13'
+          )
+          object SpkLargeButton2: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'New'
+            LargeImageIndex = 0
+            ButtonKind = bkDropdown
+          end
+          object SpkLargeButton12: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'Open file...'
+            LargeImageIndex = 1
+            ButtonKind = bkButtonDropdown
+          end
+          object SpkSmallButton22: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 0
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButtonDropdown
+          end
+          object SpkSmallButton23: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save as...'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 1
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkLargeButton13: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'Exit program'
+            LargeImageIndex = 3
+            ButtonKind = bkButton
+          end
         end
-        object SpkLargeButton12: TSpkLargeButton
+        object SpkPane3: TSpkPane
+          Caption = 'Edit commands'
           Visible = True
-          Enabled = True
-          Caption = 'Open file...'
-          LargeImageIndex = 1
-          ButtonKind = bkButtonDropdown
+          Items = (
+            'SpkSmallButton24'
+            'SpkSmallButton25'
+            'SpkSmallButton26'
+            'SpkSmallButton27'
+            'SpkSmallButton28'
+          )
+          object SpkSmallButton24: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Cut'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 2
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton25: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Copy'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 3
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton26: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Paste'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 4
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton27: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Select all'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsColumn
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton28: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Unselect'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
         end
-        object SpkSmallButton22: TSpkSmallButton
+        object SpkPane17: TSpkPane
+          Caption = 'Format commands'
           Visible = True
-          Enabled = True
-          Caption = 'Save'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 0
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButtonDropdown
+          Items = (
+            'SpkSmallButton48'
+            'SpkSmallButton49'
+            'SpkSmallButton50'
+            'SpkSmallButton51'
+            'SpkSmallButton52'
+            'SpkSmallButton53'
+            'SpkSmallButton54'
+          )
+          object SpkSmallButton48: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbBeginsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 5
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton49: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 6
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton50: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 7
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton51: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbEndsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 8
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton52: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbBeginsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 9
+            ShowCaption = False
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkToggle
+            Checked = True
+            GroupIndex = 1
+          end
+          object SpkSmallButton53: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 10
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+            GroupIndex = 1
+          end
+          object SpkSmallButton54: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbEndsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 11
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+            GroupIndex = 1
+          end
         end
-        object SpkSmallButton23: TSpkSmallButton
+        object SpkPane12: TSpkPane
+          Caption = 'Settings'
           Visible = True
-          Enabled = True
-          Caption = 'Save as...'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 1
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkLargeButton13: TSpkLargeButton
-          Visible = True
-          Enabled = True
-          Caption = 'Exit program'
-          LargeImageIndex = 3
-          ButtonKind = bkButton
-        end
-      end
-      object SpkPane3: TSpkPane
-        Caption = 'Edit commands'
-        Visible = True
-        Items = (
-          'SpkSmallButton24'
-          'SpkSmallButton25'
-          'SpkSmallButton26'
-          'SpkSmallButton27'
-          'SpkSmallButton28'
-        )
-        object SpkSmallButton24: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Cut'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 2
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton25: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Copy'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 3
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton26: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Paste'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 4
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton27: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Select all'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
-          ShowCaption = True
-          TableBehaviour = tbBeginsColumn
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton28: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Unselect'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
+          Items = (
+            'SpkSmallButton37'
+            'SpkCheckbox2'
+          )
+          object SpkSmallButton37: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save now'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButton
+          end
+          object SpkCheckbox2: TSpkCheckbox
+            Visible = True
+            Enabled = True
+            Caption = 'Auto save'
+            State = cbUnchecked
+            TableBehaviour = tbBeginsRow
+          end
         end
       end
     end
-  end
-  object SpkToolbar3: TSpkToolbar
-    Left = 0
-    Top = 274
-    Width = 506
-    Color = clMedGray
-    Style = spkOffice2007SilverTurquoise
-    Appearance.Tab.TabHeaderFont.Color = 8016716
-    Appearance.Tab.BorderColor = 12500670
-    Appearance.Tab.GradientFromColor = 16052978
-    Appearance.Tab.GradientToColor = 15722209
-    Appearance.Tab.GradientType = bkConcave
-    Appearance.Tab.InactiveTabHeaderFontColor = 8016716
-    Appearance.Pane.BorderDarkColor = 10921638
-    Appearance.Pane.BorderLightColor = clWhite
-    Appearance.Pane.CaptionBgColor = 15000804
-    Appearance.Pane.CaptionFont.Color = 3552822
-    Appearance.Pane.GradientFromColor = 16316664
-    Appearance.Pane.GradientToColor = 15329769
-    Appearance.Pane.GradientType = bkConcave
-    Appearance.Element.CaptionFont.Color = 9126421
-    Appearance.Element.IdleFrameColor = 12104105
-    Appearance.Element.IdleGradientFromColor = 16053490
-    Appearance.Element.IdleGradientToColor = 15132131
-    Appearance.Element.IdleGradientType = bkConcave
-    Appearance.Element.IdleInnerLightColor = 16184048
-    Appearance.Element.IdleInnerDarkColor = 13091002
-    Appearance.Element.IdleCaptionColor = 6317407
-    Appearance.Element.HotTrackFrameColor = 10386702
-    Appearance.Element.HotTrackGradientFromColor = 16511440
-    Appearance.Element.HotTrackGradientToColor = 16047498
-    Appearance.Element.HotTrackGradientType = bkConcave
-    Appearance.Element.HotTrackInnerLightColor = 16445385
-    Appearance.Element.HotTrackInnerDarkColor = 12687889
-    Appearance.Element.HotTrackCaptionColor = 8864367
-    Appearance.Element.HotTrackBrightnessChange = 40
-    Appearance.Element.ActiveFrameColor = 7823883
-    Appearance.Element.ActiveGradientFromColor = 16046978
-    Appearance.Element.ActiveGradientToColor = 15516990
-    Appearance.Element.ActiveGradientType = bkConcave
-    Appearance.Element.ActiveInnerLightColor = 15980666
-    Appearance.Element.ActiveInnerDarkColor = 7559947
-    Appearance.Element.ActiveCaptionColor = 8405614
-    Appearance.Element.Style = esRounded
-    TabIndex = 0
-    Images = SmallImages
-    LargeImages = LargeImages
-    Tabs = (
-      'SpkTab4'
-    )
-    object SpkTab4: TSpkTab
-      CustomAppearance.Tab.TabHeaderFont.Color = 9126421
-      CustomAppearance.Tab.BorderColor = 14922381
-      CustomAppearance.Tab.GradientFromColor = 16115934
-      CustomAppearance.Tab.GradientToColor = 15587527
-      CustomAppearance.Tab.GradientType = bkConcave
-      CustomAppearance.Tab.InactiveTabHeaderFontColor = 9126421
-      CustomAppearance.Pane.BorderDarkColor = 14335646
-      CustomAppearance.Pane.BorderLightColor = 16315117
-      CustomAppearance.Pane.CaptionBgColor = 15849922
-      CustomAppearance.Pane.CaptionFont.Color = 9126421
-      CustomAppearance.Pane.GradientFromColor = 16115934
-      CustomAppearance.Pane.GradientToColor = 15587527
-      CustomAppearance.Pane.GradientType = bkConcave
-      CustomAppearance.Element.CaptionFont.Color = clMenuText
-      CustomAppearance.Element.IdleFrameColor = 14727067
-      CustomAppearance.Element.IdleGradientFromColor = 15653832
-      CustomAppearance.Element.IdleGradientToColor = 15323324
-      CustomAppearance.Element.IdleGradientType = bkConcave
-      CustomAppearance.Element.IdleInnerLightColor = 15852501
-      CustomAppearance.Element.IdleInnerDarkColor = 15520702
-      CustomAppearance.Element.IdleCaptionColor = 11631958
-      CustomAppearance.Element.HotTrackFrameColor = 10211293
-      CustomAppearance.Element.HotTrackGradientFromColor = 14351615
-      CustomAppearance.Element.HotTrackGradientToColor = 5101567
-      CustomAppearance.Element.HotTrackGradientType = bkConcave
-      CustomAppearance.Element.HotTrackInnerLightColor = 12972543
-      CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
-      CustomAppearance.Element.HotTrackCaptionColor = 8864367
-      CustomAppearance.Element.HotTrackBrightnessChange = 40
-      CustomAppearance.Element.ActiveFrameColor = 5535371
-      CustomAppearance.Element.ActiveGradientFromColor = 7126014
-      CustomAppearance.Element.ActiveGradientToColor = 4035324
-      CustomAppearance.Element.ActiveGradientType = bkConcave
-      CustomAppearance.Element.ActiveInnerLightColor = 961020
-      CustomAppearance.Element.ActiveInnerDarkColor = 961020
-      CustomAppearance.Element.ActiveCaptionColor = 8405614
-      CustomAppearance.Element.Style = esRounded
-      Caption = 'Office2007 Silver/turquoise'
-      OverrideAppearance = False
-      Visible = True
-      Panes = (
-        'SpkPane4'
-        'SpkPane9'
+    object SpkToolbar3: TSpkToolbar
+      Left = 0
+      Top = 274
+      Width = 660
+      Color = clMedGray
+      Style = spkOffice2007SilverTurquoise
+      Appearance.Tab.TabHeaderFont.Color = 8016716
+      Appearance.Tab.BorderColor = 12500670
+      Appearance.Tab.GradientFromColor = 16052978
+      Appearance.Tab.GradientToColor = 15722209
+      Appearance.Tab.GradientType = bkConcave
+      Appearance.Tab.InactiveTabHeaderFontColor = 8016716
+      Appearance.Pane.BorderDarkColor = 10921638
+      Appearance.Pane.BorderLightColor = clWhite
+      Appearance.Pane.CaptionBgColor = 15000804
+      Appearance.Pane.CaptionFont.Color = 3552822
+      Appearance.Pane.GradientFromColor = 16316664
+      Appearance.Pane.GradientToColor = 15329769
+      Appearance.Pane.GradientType = bkConcave
+      Appearance.Element.CaptionFont.Color = 9126421
+      Appearance.Element.IdleFrameColor = 12104105
+      Appearance.Element.IdleGradientFromColor = 16053490
+      Appearance.Element.IdleGradientToColor = 15132131
+      Appearance.Element.IdleGradientType = bkConcave
+      Appearance.Element.IdleInnerLightColor = 16184048
+      Appearance.Element.IdleInnerDarkColor = 13091002
+      Appearance.Element.IdleCaptionColor = 6317407
+      Appearance.Element.HotTrackFrameColor = 10386702
+      Appearance.Element.HotTrackGradientFromColor = 16511440
+      Appearance.Element.HotTrackGradientToColor = 16047498
+      Appearance.Element.HotTrackGradientType = bkConcave
+      Appearance.Element.HotTrackInnerLightColor = 16445385
+      Appearance.Element.HotTrackInnerDarkColor = 12687889
+      Appearance.Element.HotTrackCaptionColor = 8864367
+      Appearance.Element.HotTrackBrightnessChange = 40
+      Appearance.Element.ActiveFrameColor = 7823883
+      Appearance.Element.ActiveGradientFromColor = 16046978
+      Appearance.Element.ActiveGradientToColor = 15516990
+      Appearance.Element.ActiveGradientType = bkConcave
+      Appearance.Element.ActiveInnerLightColor = 15980666
+      Appearance.Element.ActiveInnerDarkColor = 7559947
+      Appearance.Element.ActiveCaptionColor = 8405614
+      Appearance.Element.Style = esRounded
+      TabIndex = 0
+      Images = SmallImages
+      LargeImages = LargeImages
+      Tabs = (
+        'SpkTab4'
       )
-      object SpkPane4: TSpkPane
-        Caption = 'File commands'
+      object SpkTab4: TSpkTab
+        CustomAppearance.Tab.TabHeaderFont.Color = 9126421
+        CustomAppearance.Tab.BorderColor = 14922381
+        CustomAppearance.Tab.GradientFromColor = 16115934
+        CustomAppearance.Tab.GradientToColor = 15587527
+        CustomAppearance.Tab.GradientType = bkConcave
+        CustomAppearance.Tab.InactiveTabHeaderFontColor = 9126421
+        CustomAppearance.Pane.BorderDarkColor = 14335646
+        CustomAppearance.Pane.BorderLightColor = 16315117
+        CustomAppearance.Pane.CaptionBgColor = 15849922
+        CustomAppearance.Pane.CaptionFont.Color = 9126421
+        CustomAppearance.Pane.GradientFromColor = 16115934
+        CustomAppearance.Pane.GradientToColor = 15587527
+        CustomAppearance.Pane.GradientType = bkConcave
+        CustomAppearance.Element.CaptionFont.Color = clMenuText
+        CustomAppearance.Element.IdleFrameColor = 14727067
+        CustomAppearance.Element.IdleGradientFromColor = 15653832
+        CustomAppearance.Element.IdleGradientToColor = 15323324
+        CustomAppearance.Element.IdleGradientType = bkConcave
+        CustomAppearance.Element.IdleInnerLightColor = 15852501
+        CustomAppearance.Element.IdleInnerDarkColor = 15520702
+        CustomAppearance.Element.IdleCaptionColor = 11631958
+        CustomAppearance.Element.HotTrackFrameColor = 10211293
+        CustomAppearance.Element.HotTrackGradientFromColor = 14351615
+        CustomAppearance.Element.HotTrackGradientToColor = 5101567
+        CustomAppearance.Element.HotTrackGradientType = bkConcave
+        CustomAppearance.Element.HotTrackInnerLightColor = 12972543
+        CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
+        CustomAppearance.Element.HotTrackCaptionColor = 8864367
+        CustomAppearance.Element.HotTrackBrightnessChange = 40
+        CustomAppearance.Element.ActiveFrameColor = 5535371
+        CustomAppearance.Element.ActiveGradientFromColor = 7126014
+        CustomAppearance.Element.ActiveGradientToColor = 4035324
+        CustomAppearance.Element.ActiveGradientType = bkConcave
+        CustomAppearance.Element.ActiveInnerLightColor = 961020
+        CustomAppearance.Element.ActiveInnerDarkColor = 961020
+        CustomAppearance.Element.ActiveCaptionColor = 8405614
+        CustomAppearance.Element.Style = esRounded
+        Caption = 'Office2007 Silver/turquoise'
+        OverrideAppearance = False
         Visible = True
-        Items = (
-          'SpkLargeButton3'
-          'SpkLargeButton10'
-          'SpkSmallButton15'
-          'SpkSmallButton16'
-          'SpkLargeButton11'
+        Panes = (
+          'SpkPane4'
+          'SpkPane9'
+          'SpkPane18'
+          'SpkPane13'
         )
-        object SpkLargeButton3: TSpkLargeButton
+        object SpkPane4: TSpkPane
+          Caption = 'File commands'
           Visible = True
-          Enabled = True
-          Caption = 'New'
-          LargeImageIndex = 0
-          ButtonKind = bkDropdown
+          Items = (
+            'SpkLargeButton3'
+            'SpkLargeButton10'
+            'SpkSmallButton15'
+            'SpkSmallButton16'
+            'SpkLargeButton11'
+          )
+          object SpkLargeButton3: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'New'
+            LargeImageIndex = 0
+            ButtonKind = bkDropdown
+          end
+          object SpkLargeButton10: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'Open file...'
+            LargeImageIndex = 1
+            ButtonKind = bkButtonDropdown
+          end
+          object SpkSmallButton15: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 0
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButtonDropdown
+          end
+          object SpkSmallButton16: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save as...'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 1
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkLargeButton11: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'Exit program'
+            LargeImageIndex = 3
+            ButtonKind = bkButton
+          end
         end
-        object SpkLargeButton10: TSpkLargeButton
+        object SpkPane9: TSpkPane
+          Caption = 'Edit commands'
           Visible = True
-          Enabled = True
-          Caption = 'Open file...'
-          LargeImageIndex = 1
-          ButtonKind = bkButtonDropdown
+          Items = (
+            'SpkSmallButton17'
+            'SpkSmallButton18'
+            'SpkSmallButton19'
+            'SpkSmallButton20'
+            'SpkSmallButton21'
+          )
+          object SpkSmallButton17: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Cut'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 2
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton18: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Copy'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 3
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton19: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Paste'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 4
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton20: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Select all'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsColumn
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton21: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Unselect'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
         end
-        object SpkSmallButton15: TSpkSmallButton
+        object SpkPane18: TSpkPane
+          Caption = 'Format commands'
           Visible = True
-          Enabled = True
-          Caption = 'Save'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 0
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButtonDropdown
+          Items = (
+            'SpkSmallButton55'
+            'SpkSmallButton56'
+            'SpkSmallButton57'
+            'SpkSmallButton58'
+            'SpkSmallButton59'
+            'SpkSmallButton60'
+            'SpkSmallButton61'
+          )
+          object SpkSmallButton55: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbBeginsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 5
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton56: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 6
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton57: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 7
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton58: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbEndsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 8
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton59: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbBeginsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 9
+            ShowCaption = False
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkToggle
+            Checked = True
+            GroupIndex = 1
+          end
+          object SpkSmallButton60: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 10
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+            GroupIndex = 1
+          end
+          object SpkSmallButton61: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbEndsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 11
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+            GroupIndex = 1
+          end
         end
-        object SpkSmallButton16: TSpkSmallButton
+        object SpkPane13: TSpkPane
+          Caption = 'Settings'
           Visible = True
-          Enabled = True
-          Caption = 'Save as...'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 1
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkLargeButton11: TSpkLargeButton
-          Visible = True
-          Enabled = True
-          Caption = 'Exit program'
-          LargeImageIndex = 3
-          ButtonKind = bkButton
-        end
-      end
-      object SpkPane9: TSpkPane
-        Caption = 'Edit commands'
-        Visible = True
-        Items = (
-          'SpkSmallButton17'
-          'SpkSmallButton18'
-          'SpkSmallButton19'
-          'SpkSmallButton20'
-          'SpkSmallButton21'
-        )
-        object SpkSmallButton17: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Cut'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 2
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton18: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Copy'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 3
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton19: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Paste'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 4
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton20: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Select all'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
-          ShowCaption = True
-          TableBehaviour = tbBeginsColumn
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton21: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Unselect'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
+          Items = (
+            'SpkSmallButton38'
+            'SpkCheckbox3'
+          )
+          object SpkSmallButton38: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save now'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButton
+          end
+          object SpkCheckbox3: TSpkCheckbox
+            Visible = True
+            Enabled = True
+            Caption = 'Auto save'
+            State = cbUnchecked
+            TableBehaviour = tbBeginsRow
+          end
         end
       end
     end
-  end
-  object SpkToolbar4: TSpkToolbar
-    Left = 0
-    Top = 411
-    Width = 506
-    Color = clMedGray
-    Style = spkMetroLight
-    Appearance.Tab.TabHeaderFont.Color = 9787178
-    Appearance.Tab.BorderColor = 13816015
-    Appearance.Tab.GradientFromColor = 15856113
-    Appearance.Tab.GradientToColor = 15856113
-    Appearance.Tab.GradientType = bkSolid
-    Appearance.Tab.InactiveTabHeaderFontColor = 6908265
-    Appearance.Pane.BorderDarkColor = 13816015
-    Appearance.Pane.BorderLightColor = 16315117
-    Appearance.Pane.CaptionBgColor = 15856113
-    Appearance.Pane.CaptionFont.Color = 6908265
-    Appearance.Pane.GradientFromColor = 15856113
-    Appearance.Pane.GradientToColor = 15856113
-    Appearance.Pane.GradientType = bkSolid
-    Appearance.Pane.HotTrackBrightnessChange = 0
-    Appearance.Pane.Style = psDividerFlat
-    Appearance.Element.CaptionFont.Color = 4144959
-    Appearance.Element.IdleFrameColor = 13487565
-    Appearance.Element.IdleGradientFromColor = 14671839
-    Appearance.Element.IdleGradientToColor = 14671839
-    Appearance.Element.IdleGradientType = bkSolid
-    Appearance.Element.IdleInnerLightColor = 15461355
-    Appearance.Element.IdleInnerDarkColor = 13487565
-    Appearance.Element.IdleCaptionColor = 6908265
-    Appearance.Element.HotTrackFrameColor = 16371364
-    Appearance.Element.HotTrackGradientFromColor = 16248808
-    Appearance.Element.HotTrackGradientToColor = 16248808
-    Appearance.Element.HotTrackGradientType = bkSolid
-    Appearance.Element.HotTrackInnerLightColor = 16248808
-    Appearance.Element.HotTrackInnerDarkColor = 16248808
-    Appearance.Element.HotTrackCaptionColor = 4144959
-    Appearance.Element.ActiveFrameColor = 14983778
-    Appearance.Element.ActiveGradientFromColor = 16244937
-    Appearance.Element.ActiveGradientToColor = 16244937
-    Appearance.Element.ActiveGradientType = bkSolid
-    Appearance.Element.ActiveInnerLightColor = 16244937
-    Appearance.Element.ActiveInnerDarkColor = 16244937
-    Appearance.Element.ActiveCaptionColor = 2894892
-    Appearance.Element.Style = esRectangle
-    TabIndex = 0
-    Images = SmallImages
-    LargeImages = LargeImages
-    Tabs = (
-      'SpkTab5'
-    )
-    object SpkTab5: TSpkTab
-      CustomAppearance.Tab.TabHeaderFont.Color = 9126421
-      CustomAppearance.Tab.BorderColor = 14922381
-      CustomAppearance.Tab.GradientFromColor = 16115934
-      CustomAppearance.Tab.GradientToColor = 15587527
-      CustomAppearance.Tab.GradientType = bkConcave
-      CustomAppearance.Tab.InactiveTabHeaderFontColor = 9126421
-      CustomAppearance.Pane.BorderDarkColor = 14335646
-      CustomAppearance.Pane.BorderLightColor = 16315117
-      CustomAppearance.Pane.CaptionBgColor = 15849922
-      CustomAppearance.Pane.CaptionFont.Color = 9126421
-      CustomAppearance.Pane.GradientFromColor = 16115934
-      CustomAppearance.Pane.GradientToColor = 15587527
-      CustomAppearance.Pane.GradientType = bkConcave
-      CustomAppearance.Element.CaptionFont.Color = clMenuText
-      CustomAppearance.Element.IdleFrameColor = 14727067
-      CustomAppearance.Element.IdleGradientFromColor = 15653832
-      CustomAppearance.Element.IdleGradientToColor = 15323324
-      CustomAppearance.Element.IdleGradientType = bkConcave
-      CustomAppearance.Element.IdleInnerLightColor = 15852501
-      CustomAppearance.Element.IdleInnerDarkColor = 15520702
-      CustomAppearance.Element.IdleCaptionColor = 11631958
-      CustomAppearance.Element.HotTrackFrameColor = 10211293
-      CustomAppearance.Element.HotTrackGradientFromColor = 14351615
-      CustomAppearance.Element.HotTrackGradientToColor = 5101567
-      CustomAppearance.Element.HotTrackGradientType = bkConcave
-      CustomAppearance.Element.HotTrackInnerLightColor = 12972543
-      CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
-      CustomAppearance.Element.HotTrackCaptionColor = 8864367
-      CustomAppearance.Element.HotTrackBrightnessChange = 40
-      CustomAppearance.Element.ActiveFrameColor = 5535371
-      CustomAppearance.Element.ActiveGradientFromColor = 7126014
-      CustomAppearance.Element.ActiveGradientToColor = 4035324
-      CustomAppearance.Element.ActiveGradientType = bkConcave
-      CustomAppearance.Element.ActiveInnerLightColor = 961020
-      CustomAppearance.Element.ActiveInnerDarkColor = 961020
-      CustomAppearance.Element.ActiveCaptionColor = 8405614
-      CustomAppearance.Element.Style = esRounded
-      Caption = 'Metro light'
-      OverrideAppearance = False
-      Visible = True
-      Panes = (
-        'SpkPane5'
-        'SpkPane8'
+    object Panel1: TPanel
+      Left = 0
+      Height = 25
+      Top = 112
+      Width = 660
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 3
+    end
+    object Panel4: TPanel
+      Left = 0
+      Height = 25
+      Top = 523
+      Width = 660
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 4
+    end
+    object Panel3: TPanel
+      Left = 0
+      Height = 25
+      Top = 386
+      Width = 660
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 5
+    end
+    object SpkToolbar4: TSpkToolbar
+      Left = 0
+      Top = 411
+      Width = 660
+      Color = clMedGray
+      Style = spkMetroLight
+      Appearance.Tab.TabHeaderFont.Color = 9787178
+      Appearance.Tab.BorderColor = 13816015
+      Appearance.Tab.GradientFromColor = 15856113
+      Appearance.Tab.GradientToColor = 15856113
+      Appearance.Tab.GradientType = bkSolid
+      Appearance.Tab.InactiveTabHeaderFontColor = 6908265
+      Appearance.Pane.BorderDarkColor = 13816015
+      Appearance.Pane.BorderLightColor = 16315117
+      Appearance.Pane.CaptionBgColor = 15856113
+      Appearance.Pane.CaptionFont.Color = 6908265
+      Appearance.Pane.GradientFromColor = 15856113
+      Appearance.Pane.GradientToColor = 15856113
+      Appearance.Pane.GradientType = bkSolid
+      Appearance.Pane.HotTrackBrightnessChange = 0
+      Appearance.Pane.Style = psDividerFlat
+      Appearance.Element.CaptionFont.Color = 4144959
+      Appearance.Element.IdleFrameColor = 13487565
+      Appearance.Element.IdleGradientFromColor = 14671839
+      Appearance.Element.IdleGradientToColor = 14671839
+      Appearance.Element.IdleGradientType = bkSolid
+      Appearance.Element.IdleInnerLightColor = 15461355
+      Appearance.Element.IdleInnerDarkColor = 13487565
+      Appearance.Element.IdleCaptionColor = 6908265
+      Appearance.Element.HotTrackFrameColor = 16371364
+      Appearance.Element.HotTrackGradientFromColor = 16248808
+      Appearance.Element.HotTrackGradientToColor = 16248808
+      Appearance.Element.HotTrackGradientType = bkSolid
+      Appearance.Element.HotTrackInnerLightColor = 16248808
+      Appearance.Element.HotTrackInnerDarkColor = 16248808
+      Appearance.Element.HotTrackCaptionColor = 4144959
+      Appearance.Element.ActiveFrameColor = 14983778
+      Appearance.Element.ActiveGradientFromColor = 16244937
+      Appearance.Element.ActiveGradientToColor = 16244937
+      Appearance.Element.ActiveGradientType = bkSolid
+      Appearance.Element.ActiveInnerLightColor = 16244937
+      Appearance.Element.ActiveInnerDarkColor = 16244937
+      Appearance.Element.ActiveCaptionColor = 2894892
+      Appearance.Element.Style = esRectangle
+      TabIndex = 0
+      Images = SmallImages
+      LargeImages = LargeImages
+      Tabs = (
+        'SpkTab5'
       )
-      object SpkPane5: TSpkPane
-        Caption = 'File commands'
+      object SpkTab5: TSpkTab
+        CustomAppearance.Tab.TabHeaderFont.Color = 9126421
+        CustomAppearance.Tab.BorderColor = 14922381
+        CustomAppearance.Tab.GradientFromColor = 16115934
+        CustomAppearance.Tab.GradientToColor = 15587527
+        CustomAppearance.Tab.GradientType = bkConcave
+        CustomAppearance.Tab.InactiveTabHeaderFontColor = 9126421
+        CustomAppearance.Pane.BorderDarkColor = 14335646
+        CustomAppearance.Pane.BorderLightColor = 16315117
+        CustomAppearance.Pane.CaptionBgColor = 15849922
+        CustomAppearance.Pane.CaptionFont.Color = 9126421
+        CustomAppearance.Pane.GradientFromColor = 16115934
+        CustomAppearance.Pane.GradientToColor = 15587527
+        CustomAppearance.Pane.GradientType = bkConcave
+        CustomAppearance.Element.CaptionFont.Color = clMenuText
+        CustomAppearance.Element.IdleFrameColor = 14727067
+        CustomAppearance.Element.IdleGradientFromColor = 15653832
+        CustomAppearance.Element.IdleGradientToColor = 15323324
+        CustomAppearance.Element.IdleGradientType = bkConcave
+        CustomAppearance.Element.IdleInnerLightColor = 15852501
+        CustomAppearance.Element.IdleInnerDarkColor = 15520702
+        CustomAppearance.Element.IdleCaptionColor = 11631958
+        CustomAppearance.Element.HotTrackFrameColor = 10211293
+        CustomAppearance.Element.HotTrackGradientFromColor = 14351615
+        CustomAppearance.Element.HotTrackGradientToColor = 5101567
+        CustomAppearance.Element.HotTrackGradientType = bkConcave
+        CustomAppearance.Element.HotTrackInnerLightColor = 12972543
+        CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
+        CustomAppearance.Element.HotTrackCaptionColor = 8864367
+        CustomAppearance.Element.HotTrackBrightnessChange = 40
+        CustomAppearance.Element.ActiveFrameColor = 5535371
+        CustomAppearance.Element.ActiveGradientFromColor = 7126014
+        CustomAppearance.Element.ActiveGradientToColor = 4035324
+        CustomAppearance.Element.ActiveGradientType = bkConcave
+        CustomAppearance.Element.ActiveInnerLightColor = 961020
+        CustomAppearance.Element.ActiveInnerDarkColor = 961020
+        CustomAppearance.Element.ActiveCaptionColor = 8405614
+        CustomAppearance.Element.Style = esRounded
+        Caption = 'Metro light'
+        OverrideAppearance = False
         Visible = True
-        Items = (
-          'SpkLargeButton4'
-          'SpkLargeButton8'
-          'SpkSmallButton8'
-          'SpkSmallButton9'
-          'SpkLargeButton9'
+        Panes = (
+          'SpkPane5'
+          'SpkPane8'
+          'SpkPane19'
+          'SpkPane14'
         )
-        object SpkLargeButton4: TSpkLargeButton
+        object SpkPane5: TSpkPane
+          Caption = 'File commands'
           Visible = True
-          Enabled = True
-          Caption = 'New'
-          LargeImageIndex = 0
-          ButtonKind = bkDropdown
+          Items = (
+            'SpkLargeButton4'
+            'SpkLargeButton8'
+            'SpkSmallButton8'
+            'SpkSmallButton9'
+            'SpkLargeButton9'
+          )
+          object SpkLargeButton4: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'New'
+            LargeImageIndex = 0
+            ButtonKind = bkDropdown
+          end
+          object SpkLargeButton8: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'Open file...'
+            LargeImageIndex = 1
+            ButtonKind = bkButtonDropdown
+          end
+          object SpkSmallButton8: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 0
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButtonDropdown
+          end
+          object SpkSmallButton9: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save as...'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 1
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkLargeButton9: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'Exit program'
+            LargeImageIndex = 3
+            ButtonKind = bkButton
+          end
         end
-        object SpkLargeButton8: TSpkLargeButton
+        object SpkPane8: TSpkPane
+          Caption = 'Edit commands'
           Visible = True
-          Enabled = True
-          Caption = 'Open file...'
-          LargeImageIndex = 1
-          ButtonKind = bkButtonDropdown
+          Items = (
+            'SpkSmallButton10'
+            'SpkSmallButton11'
+            'SpkSmallButton12'
+            'SpkSmallButton13'
+            'SpkSmallButton14'
+          )
+          object SpkSmallButton10: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Cut'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 2
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton11: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Copy'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 3
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton12: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Paste'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 4
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton13: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Select all'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsColumn
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton14: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Unselect'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
         end
-        object SpkSmallButton8: TSpkSmallButton
+        object SpkPane19: TSpkPane
+          Caption = 'Format commands'
           Visible = True
-          Enabled = True
-          Caption = 'Save'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 0
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButtonDropdown
+          Items = (
+            'SpkSmallButton68'
+            'SpkSmallButton62'
+            'SpkSmallButton63'
+            'SpkSmallButton64'
+            'SpkSmallButton65'
+            'SpkSmallButton66'
+            'SpkSmallButton67'
+          )
+          object SpkSmallButton68: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbBeginsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 5
+            ShowCaption = False
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton62: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 6
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton63: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 7
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton64: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbEndsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 8
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton65: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbBeginsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 9
+            ShowCaption = False
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkToggle
+            Checked = True
+            GroupIndex = 1
+          end
+          object SpkSmallButton66: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbContinuesGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 10
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+            GroupIndex = 1
+          end
+          object SpkSmallButton67: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbEndsGroup
+            HideFrameWhenIdle = False
+            ImageIndex = 11
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+            GroupIndex = 1
+          end
         end
-        object SpkSmallButton9: TSpkSmallButton
+        object SpkPane14: TSpkPane
+          Caption = 'Settings'
           Visible = True
-          Enabled = True
-          Caption = 'Save as...'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 1
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkLargeButton9: TSpkLargeButton
-          Visible = True
-          Enabled = True
-          Caption = 'Exit program'
-          LargeImageIndex = 3
-          ButtonKind = bkButton
-        end
-      end
-      object SpkPane8: TSpkPane
-        Caption = 'Edit commands'
-        Visible = True
-        Items = (
-          'SpkSmallButton10'
-          'SpkSmallButton11'
-          'SpkSmallButton12'
-          'SpkSmallButton13'
-          'SpkSmallButton14'
-        )
-        object SpkSmallButton10: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Cut'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 2
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton11: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Copy'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 3
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton12: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Paste'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 4
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton13: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Select all'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
-          ShowCaption = True
-          TableBehaviour = tbBeginsColumn
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton14: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Unselect'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
+          Items = (
+            'SpkSmallButton39'
+            'SpkCheckbox4'
+          )
+          object SpkSmallButton39: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save now'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButton
+          end
+          object SpkCheckbox4: TSpkCheckbox
+            Visible = True
+            Enabled = True
+            Caption = 'Auto save'
+            State = cbUnchecked
+            TableBehaviour = tbBeginsRow
+          end
         end
       end
     end
-  end
-  object SpkToolbar5: TSpkToolbar
-    Left = 0
-    Top = 548
-    Width = 506
-    Color = clMedGray
-    Style = spkMetroDark
-    Appearance.Tab.TabHeaderFont.Color = clWhite
-    Appearance.Tab.BorderColor = clBlack
-    Appearance.Tab.GradientFromColor = 4605510
-    Appearance.Tab.GradientToColor = 4605510
-    Appearance.Tab.GradientType = bkSolid
-    Appearance.Tab.InactiveTabHeaderFontColor = 7895160
-    Appearance.Pane.BorderDarkColor = 9208962
-    Appearance.Pane.BorderLightColor = 10657179
-    Appearance.Pane.CaptionBgColor = 4605510
-    Appearance.Pane.CaptionFont.Color = clWhite
-    Appearance.Pane.GradientFromColor = 4605510
-    Appearance.Pane.GradientToColor = 15856113
-    Appearance.Pane.GradientType = bkSolid
-    Appearance.Pane.HotTrackBrightnessChange = 0
-    Appearance.Pane.Style = psDividerFlat
-    Appearance.Element.CaptionFont.Color = 4144959
-    Appearance.Element.IdleFrameColor = 9208962
-    Appearance.Element.IdleGradientFromColor = 4473924
-    Appearance.Element.IdleGradientToColor = 4473924
-    Appearance.Element.IdleGradientType = bkSolid
-    Appearance.Element.IdleInnerLightColor = 4473924
-    Appearance.Element.IdleInnerDarkColor = 9208962
-    Appearance.Element.IdleCaptionColor = 11974326
-    Appearance.Element.HotTrackFrameColor = 12876092
-    Appearance.Element.HotTrackGradientFromColor = 8411965
-    Appearance.Element.HotTrackGradientToColor = 8411965
-    Appearance.Element.HotTrackGradientType = bkSolid
-    Appearance.Element.HotTrackInnerLightColor = 8411965
-    Appearance.Element.HotTrackInnerDarkColor = 8411965
-    Appearance.Element.HotTrackCaptionColor = 15921906
-    Appearance.Element.HotTrackBrightnessChange = 10
-    Appearance.Element.ActiveFrameColor = clBlack
-    Appearance.Element.ActiveGradientFromColor = clBlack
-    Appearance.Element.ActiveGradientToColor = clBlack
-    Appearance.Element.ActiveGradientType = bkSolid
-    Appearance.Element.ActiveInnerLightColor = clBlack
-    Appearance.Element.ActiveInnerDarkColor = clBlack
-    Appearance.Element.ActiveCaptionColor = 15000804
-    Appearance.Element.Style = esRectangle
-    TabIndex = 0
-    Images = SmallImages
-    LargeImages = LargeImages
-    Tabs = (
-      'SpkTab6'
-    )
-    object SpkTab6: TSpkTab
-      CustomAppearance.Tab.TabHeaderFont.Color = 9126421
-      CustomAppearance.Tab.BorderColor = 14922381
-      CustomAppearance.Tab.GradientFromColor = 16115934
-      CustomAppearance.Tab.GradientToColor = 15587527
-      CustomAppearance.Tab.GradientType = bkConcave
-      CustomAppearance.Tab.InactiveTabHeaderFontColor = 9126421
-      CustomAppearance.Pane.BorderDarkColor = 14335646
-      CustomAppearance.Pane.BorderLightColor = 16315117
-      CustomAppearance.Pane.CaptionBgColor = 15849922
-      CustomAppearance.Pane.CaptionFont.Color = 9126421
-      CustomAppearance.Pane.GradientFromColor = 16115934
-      CustomAppearance.Pane.GradientToColor = 15587527
-      CustomAppearance.Pane.GradientType = bkConcave
-      CustomAppearance.Element.CaptionFont.Color = clMenuText
-      CustomAppearance.Element.IdleFrameColor = 14727067
-      CustomAppearance.Element.IdleGradientFromColor = 15653832
-      CustomAppearance.Element.IdleGradientToColor = 15323324
-      CustomAppearance.Element.IdleGradientType = bkConcave
-      CustomAppearance.Element.IdleInnerLightColor = 15852501
-      CustomAppearance.Element.IdleInnerDarkColor = 15520702
-      CustomAppearance.Element.IdleCaptionColor = 11631958
-      CustomAppearance.Element.HotTrackFrameColor = 10211293
-      CustomAppearance.Element.HotTrackGradientFromColor = 14351615
-      CustomAppearance.Element.HotTrackGradientToColor = 5101567
-      CustomAppearance.Element.HotTrackGradientType = bkConcave
-      CustomAppearance.Element.HotTrackInnerLightColor = 12972543
-      CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
-      CustomAppearance.Element.HotTrackCaptionColor = 8864367
-      CustomAppearance.Element.HotTrackBrightnessChange = 40
-      CustomAppearance.Element.ActiveFrameColor = 5535371
-      CustomAppearance.Element.ActiveGradientFromColor = 7126014
-      CustomAppearance.Element.ActiveGradientToColor = 4035324
-      CustomAppearance.Element.ActiveGradientType = bkConcave
-      CustomAppearance.Element.ActiveInnerLightColor = 961020
-      CustomAppearance.Element.ActiveInnerDarkColor = 961020
-      CustomAppearance.Element.ActiveCaptionColor = 8405614
-      CustomAppearance.Element.Style = esRounded
-      Caption = 'Metro dark'
-      OverrideAppearance = False
-      Visible = True
-      Panes = (
-        'SpkPane6'
-        'SpkPane7'
+    object Panel2: TPanel
+      Left = 0
+      Height = 25
+      Top = 249
+      Width = 660
+      Align = alTop
+      BevelOuter = bvNone
+      Color = clMedGray
+      ParentColor = False
+      TabOrder = 7
+    end
+    object SpkToolbar5: TSpkToolbar
+      Left = 0
+      Top = 548
+      Width = 660
+      Color = clMedGray
+      Style = spkMetroDark
+      Appearance.Tab.TabHeaderFont.Color = clWhite
+      Appearance.Tab.BorderColor = clBlack
+      Appearance.Tab.GradientFromColor = 4605510
+      Appearance.Tab.GradientToColor = 4605510
+      Appearance.Tab.GradientType = bkSolid
+      Appearance.Tab.InactiveTabHeaderFontColor = 7895160
+      Appearance.Pane.BorderDarkColor = 9208962
+      Appearance.Pane.BorderLightColor = 10657179
+      Appearance.Pane.CaptionBgColor = 4605510
+      Appearance.Pane.CaptionFont.Color = clWhite
+      Appearance.Pane.GradientFromColor = 4605510
+      Appearance.Pane.GradientToColor = 15856113
+      Appearance.Pane.GradientType = bkSolid
+      Appearance.Pane.HotTrackBrightnessChange = 0
+      Appearance.Pane.Style = psDividerFlat
+      Appearance.Element.CaptionFont.Color = 4144959
+      Appearance.Element.IdleFrameColor = 9208962
+      Appearance.Element.IdleGradientFromColor = 4473924
+      Appearance.Element.IdleGradientToColor = 4473924
+      Appearance.Element.IdleGradientType = bkSolid
+      Appearance.Element.IdleInnerLightColor = 4473924
+      Appearance.Element.IdleInnerDarkColor = 9208962
+      Appearance.Element.IdleCaptionColor = 11974326
+      Appearance.Element.HotTrackFrameColor = 12876092
+      Appearance.Element.HotTrackGradientFromColor = 8411965
+      Appearance.Element.HotTrackGradientToColor = 8411965
+      Appearance.Element.HotTrackGradientType = bkSolid
+      Appearance.Element.HotTrackInnerLightColor = 8411965
+      Appearance.Element.HotTrackInnerDarkColor = 8411965
+      Appearance.Element.HotTrackCaptionColor = 15921906
+      Appearance.Element.HotTrackBrightnessChange = 10
+      Appearance.Element.ActiveFrameColor = clBlack
+      Appearance.Element.ActiveGradientFromColor = clBlack
+      Appearance.Element.ActiveGradientToColor = clBlack
+      Appearance.Element.ActiveGradientType = bkSolid
+      Appearance.Element.ActiveInnerLightColor = clBlack
+      Appearance.Element.ActiveInnerDarkColor = clBlack
+      Appearance.Element.ActiveCaptionColor = 15000804
+      Appearance.Element.Style = esRectangle
+      TabIndex = 0
+      Images = SmallImages
+      LargeImages = LargeImages
+      Tabs = (
+        'SpkTab6'
       )
-      object SpkPane6: TSpkPane
-        Caption = 'File commands'
+      object SpkTab6: TSpkTab
+        CustomAppearance.Tab.TabHeaderFont.Color = 9126421
+        CustomAppearance.Tab.BorderColor = 14922381
+        CustomAppearance.Tab.GradientFromColor = 16115934
+        CustomAppearance.Tab.GradientToColor = 15587527
+        CustomAppearance.Tab.GradientType = bkConcave
+        CustomAppearance.Tab.InactiveTabHeaderFontColor = 9126421
+        CustomAppearance.Pane.BorderDarkColor = 14335646
+        CustomAppearance.Pane.BorderLightColor = 16315117
+        CustomAppearance.Pane.CaptionBgColor = 15849922
+        CustomAppearance.Pane.CaptionFont.Color = 9126421
+        CustomAppearance.Pane.GradientFromColor = 16115934
+        CustomAppearance.Pane.GradientToColor = 15587527
+        CustomAppearance.Pane.GradientType = bkConcave
+        CustomAppearance.Element.CaptionFont.Color = clMenuText
+        CustomAppearance.Element.IdleFrameColor = 14727067
+        CustomAppearance.Element.IdleGradientFromColor = 15653832
+        CustomAppearance.Element.IdleGradientToColor = 15323324
+        CustomAppearance.Element.IdleGradientType = bkConcave
+        CustomAppearance.Element.IdleInnerLightColor = 15852501
+        CustomAppearance.Element.IdleInnerDarkColor = 15520702
+        CustomAppearance.Element.IdleCaptionColor = 11631958
+        CustomAppearance.Element.HotTrackFrameColor = 10211293
+        CustomAppearance.Element.HotTrackGradientFromColor = 14351615
+        CustomAppearance.Element.HotTrackGradientToColor = 5101567
+        CustomAppearance.Element.HotTrackGradientType = bkConcave
+        CustomAppearance.Element.HotTrackInnerLightColor = 12972543
+        CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
+        CustomAppearance.Element.HotTrackCaptionColor = 8864367
+        CustomAppearance.Element.HotTrackBrightnessChange = 40
+        CustomAppearance.Element.ActiveFrameColor = 5535371
+        CustomAppearance.Element.ActiveGradientFromColor = 7126014
+        CustomAppearance.Element.ActiveGradientToColor = 4035324
+        CustomAppearance.Element.ActiveGradientType = bkConcave
+        CustomAppearance.Element.ActiveInnerLightColor = 961020
+        CustomAppearance.Element.ActiveInnerDarkColor = 961020
+        CustomAppearance.Element.ActiveCaptionColor = 8405614
+        CustomAppearance.Element.Style = esRounded
+        Caption = 'Metro dark'
+        OverrideAppearance = False
         Visible = True
-        Items = (
-          'SpkLargeButton7'
-          'SpkLargeButton5'
-          'SpkSmallButton2'
-          'SpkSmallButton1'
-          'SpkLargeButton6'
+        Panes = (
+          'SpkPane6'
+          'SpkPane7'
+          'SpkPane20'
+          'SpkPane15'
         )
-        object SpkLargeButton7: TSpkLargeButton
+        object SpkPane6: TSpkPane
+          Caption = 'File commands'
           Visible = True
-          Enabled = True
-          Caption = 'New'
-          LargeImageIndex = 0
-          ButtonKind = bkDropdown
+          Items = (
+            'SpkLargeButton7'
+            'SpkLargeButton5'
+            'SpkSmallButton2'
+            'SpkSmallButton1'
+            'SpkLargeButton6'
+          )
+          object SpkLargeButton7: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'New'
+            LargeImageIndex = 0
+            ButtonKind = bkDropdown
+          end
+          object SpkLargeButton5: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'Open file...'
+            LargeImageIndex = 1
+            ButtonKind = bkButtonDropdown
+          end
+          object SpkSmallButton2: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 0
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButtonDropdown
+          end
+          object SpkSmallButton1: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save as...'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 1
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkLargeButton6: TSpkLargeButton
+            Visible = True
+            Enabled = True
+            Caption = 'Exit program'
+            LargeImageIndex = 3
+            ButtonKind = bkButton
+          end
         end
-        object SpkLargeButton5: TSpkLargeButton
+        object SpkPane7: TSpkPane
+          Caption = 'Edit commands'
           Visible = True
-          Enabled = True
-          Caption = 'Open file...'
-          LargeImageIndex = 1
-          ButtonKind = bkButtonDropdown
+          Items = (
+            'SpkSmallButton3'
+            'SpkSmallButton4'
+            'SpkSmallButton5'
+            'SpkSmallButton6'
+            'SpkSmallButton7'
+          )
+          object SpkSmallButton3: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Cut'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 2
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton4: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Copy'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 3
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton5: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Paste'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = True
+            ImageIndex = 4
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton6: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Select all'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsColumn
+            ButtonKind = bkButton
+          end
+          object SpkSmallButton7: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Unselect'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkButton
+          end
         end
-        object SpkSmallButton2: TSpkSmallButton
+        object SpkPane20: TSpkPane
+          Caption = 'Format commands'
           Visible = True
-          Enabled = True
-          Caption = 'Save'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 0
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButtonDropdown
+          Items = (
+            'SpkSmallButton69'
+            'SpkSmallButton70'
+            'SpkSmallButton71'
+            'SpkSmallButton72'
+            'SpkSmallButton73'
+            'SpkSmallButton74'
+            'SpkSmallButton75'
+          )
+          object SpkSmallButton69: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ImageIndex = 5
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton70: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ImageIndex = 6
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton71: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ImageIndex = 7
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton72: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ImageIndex = 8
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+          end
+          object SpkSmallButton73: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ImageIndex = 9
+            ShowCaption = False
+            TableBehaviour = tbBeginsRow
+            ButtonKind = bkToggle
+            Checked = True
+            GroupIndex = 1
+          end
+          object SpkSmallButton74: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ImageIndex = 10
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+            GroupIndex = 1
+          end
+          object SpkSmallButton75: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Button'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ImageIndex = 11
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkToggle
+            GroupIndex = 1
+          end
         end
-        object SpkSmallButton1: TSpkSmallButton
+        object SpkPane15: TSpkPane
+          Caption = 'Settings'
           Visible = True
-          Enabled = True
-          Caption = 'Save as...'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 1
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkLargeButton6: TSpkLargeButton
-          Visible = True
-          Enabled = True
-          Caption = 'Exit program'
-          LargeImageIndex = 3
-          ButtonKind = bkButton
-        end
-      end
-      object SpkPane7: TSpkPane
-        Caption = 'Edit commands'
-        Visible = True
-        Items = (
-          'SpkSmallButton3'
-          'SpkSmallButton4'
-          'SpkSmallButton5'
-          'SpkSmallButton6'
-          'SpkSmallButton7'
-        )
-        object SpkSmallButton3: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Cut'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 2
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton4: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Copy'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 3
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton5: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Paste'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = True
-          ImageIndex = 4
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton6: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Select all'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
-          ShowCaption = True
-          TableBehaviour = tbBeginsColumn
-          ButtonKind = bkButton
-        end
-        object SpkSmallButton7: TSpkSmallButton
-          Visible = True
-          Enabled = True
-          Caption = 'Unselect'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
+          Items = (
+            'SpkSmallButton40'
+            'SpkCheckbox5'
+          )
+          object SpkSmallButton40: TSpkSmallButton
+            Visible = True
+            Enabled = True
+            Caption = 'Save now'
+            GroupBehaviour = gbSingleItem
+            HideFrameWhenIdle = False
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
+            ButtonKind = bkButton
+          end
+          object SpkCheckbox5: TSpkCheckbox
+            Visible = True
+            Enabled = True
+            Caption = 'auto ssave'
+            State = cbUnchecked
+            TableBehaviour = tbBeginsRow
+          end
         end
       end
     end
-  end
-  object Panel1: TPanel
-    Left = 0
-    Height = 25
-    Top = 112
-    Width = 506
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 5
-  end
-  object Panel2: TPanel
-    Left = 0
-    Height = 25
-    Top = 523
-    Width = 506
-    Align = alTop
-    BevelOuter = bvNone
-    Color = clMedGray
-    ParentColor = False
-    TabOrder = 6
-  end
-  object Panel3: TPanel
-    Left = 0
-    Height = 25
-    Top = 386
-    Width = 506
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 7
-  end
-  object Panel4: TPanel
-    Left = 0
-    Height = 25
-    Top = 249
-    Width = 506
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 8
   end
   object LargeImages: TImageList
     Height = 32
@@ -1638,12 +2255,15 @@ object Form1: TForm1
       0000000000000000000000000000000000000000000000000003000000090000
       0010000000150000001100000006
     }
+    BitmapAdv = {
+      4C6900000000
+    }
   end
   object SmallImages: TImageList
     left = 456
     top = 112
     Bitmap = {
-      4C69050000001000000010000000B782187CB78114FFB57E0FFFB57C0BFFB57C
+      4C690C0000001000000010000000B782187CB78114FFB57E0FFFB57C0BFFB57C
       09FFB57C09FFB57C09FFB57C09FFB57C09FFB57C09FFB57C09FFB57C09FFB57C
       0BFFB57E0FFFB78114FFB782187CB78115FFFFECCDFFFCE7C3FFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
@@ -1803,7 +2423,234 @@ object Form1: TForm1
       003300000033BBB7B0ECB1B0AEFFAEAEABFFADADABFFADADABFFADADABFFADAD
       ABFFAEAEABFFAFAFADFFB1B1AFF2000000000000000000000000000000000000
       0000000000000000002E00000033000000330000003300000033000000330000
-      0033000000330000003300000030
+      0033000000330000003300000030A5A5A5EFA2A2A2FFA0A0A0FF9F9F9FFF9F9F
+      9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F
+      9FFFA0A0A0FFA2A2A2FFA5A5A5EFA2A2A2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFA2A2A2FFA0A0A0FFFFFFFFFFE1E0DEFFE4E2E1FFE9E8
+      E7FFEDECEBFFEEEDECFFEDECEBFFEDECEBFFECEBEAFFE8E7E6FFE3E2E1FFE1E0
+      DFFFE1DFDEFFFFFFFFFFA0A0A0FF9F9F9FFFFFFFFFFFE4E4E3FFEAEAE9FF6664
+      64FF514F4EFF535150FF4F4D4CFF4F4D4CFF504E4CFFABAAA9FFEBEBEAFFE5E5
+      E4FFE3E3E2FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFE7E6E5FFECEAE9FFF8F7
+      F6FF63605FFF646160FFFEFDFDFFDFDEDDFF625F5EFF5D5B5AFFF2F1F1FFE9E8
+      E7FFE7E6E5FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFE9E9E8FFECECEBFFF7F7
+      F6FF6D6B69FF6E6B69FFFBFBFAFFFAFBFAFF92908FFF6A6866FFF5F5F4FFEBEC
+      EBFFE9E9E8FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFEDEBEAFFEFEEEDFFF8F7
+      F6FF787674FF7B7976FFFFFFFFFFEEEEEDFF787674FF908E8BFFF8F7F6FFEFEE
+      EDFFEDEBEAFFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFEFEFEEFFF1F1F0FFFAFB
+      FAFF7F7D7BFF83817FFF7B7977FF7A7775FF7F7D7AFFA8A6A5FFEDECEBFFF3F4
+      F3FFEFEFEEFFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF2F1F0FFF4F3F2FFFFFE
+      FDFF6D6B6AFF6F6D6CFFFFFFFFFFF9F8F7FFBAB9B7FF6E6C6BFF7C7A78FFFBFA
+      F9FFF4F2F1FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF4F4F3FFF6F7F5FFFFFF
+      FFFF5D5B5AFF5E5B5AFFFFFFFFFFFFFFFFFFFFFFFFFF5F5D5CFF5A5857FFFFFF
+      FFFFF6F6F5FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF7F7F7FFFBFBFBFFFFFF
+      FFFF514E4DFF52504FFFFFFFFFFFDAD9D9FFA3A2A1FF514F4EFF565453FFFFFF
+      FFFFF8F8F8FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFFBFAFAFFFFFEFEFF6461
+      62FF4A4847FF4D4A49FF474544FF474443FF494645FF6E6C6BFFE5E4E4FFFFFE
+      FEFFFBFAFAFFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFFEFEFEFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFE
+      FEFFFEFEFEFFFFFFFFFF9F9F9FFFA2A2A2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFA2A2A2FF979797C0A2A2A2FF9F9F9FFF9F9F9FFF9F9F
+      9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F
+      9FFF9F9F9FFFA2A2A2FF979797C0000000230000003300000033000000330000
+      0033000000330000003300000033000000330000003300000033000000330000
+      0033000000330000003300000023A5A5A5EFA2A2A2FFA0A0A0FF9F9F9FFF9F9F
+      9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F
+      9FFFA0A0A0FFA2A2A2FFA5A5A5EFA2A2A2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFA2A2A2FFA0A0A0FFFFFFFFFFE1DFDEFFE1E0DFFFE1E0
+      DFFFE2E0DFFFE5E4E3FFEBE9E8FFEEEDECFFEEEDECFFEAE9E8FFE5E4E2FFE1E0
+      DFFFE1DFDEFFFFFFFFFFA0A0A0FF9F9F9FFFFFFFFFFFE3E3E2FFE4E4E3FFE4E5
+      E4FFE6E6E5FFECEDEBFF454342FF4E4C4BFF4D4B4AFF43403FFFEBEBEAFFE5E5
+      E4FFE3E3E2FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFE7E6E5FFE8E7E6FFE8E7
+      E6FFE9E8E7FFF0EFEEFFCCCBCAFF676564FF646161FFF8F7F7FFEDECEBFFE8E7
+      E6FFE7E6E5FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFE9E9E8FFEAEAE9FFEAEA
+      E9FFEBECEBFFF2F2F1FFAAA9A8FF716F6DFF908F8DFFF4F4F3FFECECEBFFEAEA
+      E9FFE9E9E8FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFEDEBEAFFEDECEBFFEDEC
+      EBFFEFEEEDFFF7F6F5FF898785FF7B7978FFC1C0BEFFF3F2F1FFEEEDECFFEDEC
+      EBFFEDEBEAFFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFEFEFEEFFEFEFEEFFEFEF
+      EEFFF2F3F2FFEBEAEAFF7E7C79FF7E7C79FFE3E3E2FFF2F3F2FFEFEFEEFFEFEF
+      EEFFEFEFEEFFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF2F1F0FFF2F1F0FFF3F2
+      F1FFF9F8F7FFBFBEBDFF706E6BFF7F7D7CFFFEFDFCFFF4F3F2FFF2F1F0FFF2F1
+      F0FFF2F1F0FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF4F4F3FFF4F4F3FFF6F6
+      F5FFFFFFFFFF908E8DFF5F5D5CFF9A9A98FFFEFEFDFFF6F6F5FFF4F4F3FFF4F4
+      F3FFF4F4F3FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF6F6F6FFF6F6F6FFFBFB
+      FBFFFFFFFFFF504D4CFF545251FFD2D2D2FFFFFFFFFFF7F8F8FFF6F6F6FFF6F6
+      F6FFF6F6F6FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFFAF9F9FFFAF9F9FFFFFF
+      FFFF3F3D3CFF4C4948FF4D4A49FF42403EFFFFFFFFFFFBF9FAFFF9F8F8FFF9F8
+      F8FFFAF9F9FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFFDFDFEFFFDFDFDFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFDFDFFFDFDFDFFFDFD
+      FDFFFDFDFEFFFFFFFFFF9F9F9FFFA2A2A2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFA2A2A2FF979797C0A2A2A2FF9F9F9FFF9F9F9FFF9F9F
+      9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F
+      9FFF9F9F9FFFA2A2A2FF979797C0000000230000003300000033000000330000
+      0033000000330000003300000033000000330000003300000033000000330000
+      0033000000330000003300000023A5A5A5EFA2A2A2FFA0A0A0FF9F9F9FFF9F9F
+      9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F
+      9FFFA0A0A0FFA2A2A2FFA5A5A5EFA2A2A2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFA2A2A2FFA0A0A0FFFFFFFFFFE1E0DEFFE4E3E2FFE9E8
+      E7FFEDECEBFFEDECEBFFEAE9E7FFE7E6E5FFEAE8E7FFECEBEAFFE9E8E7FFE4E3
+      E2FFE1E0DEFFFFFFFFFFA0A0A0FF9F9F9FFFFFFFFFFFE4E4E3FFEAEAE9FF5D5B
+      5AFF514F4EFF514F4EFF5E5C5BFFF0F1F0FF5E5B5AFF4D4B4AFF5D5A59FFEAEA
+      E9FFE4E4E3FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFE8E6E5FFECEBEAFFEEED
+      EDFF656361FF656361FFEEEDEEFFF1F0EFFFEDECECFF5D5B59FFEDECECFFECEB
+      EAFFE8E6E5FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFE9E9E8FFECECEBFFF7F7
+      F6FF706E6CFF706E6CFFF7F7F6FFEFEFEEFFF5F5F4FF676563FFF5F5F4FFECEC
+      EBFFE9E9E8FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFEDEBEAFFEFEEEDFFF8F7
+      F6FF7D7B79FF7D7B79FFF8F7F6FFF0EFEEFFF6F5F4FF74716FFFF6F5F4FFEFEE
+      EDFFEDEBEAFFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFEFEFEEFFF1F1F0FFFBFB
+      FAFF747270FF747270FFFCFCFBFFF3F3F2FFF9F9F8FF696764FFF8F8F7FFF1F1
+      F0FFEFEFEEFFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF2F1F0FFF4F3F2FFFEFD
+      FCFF5D5B5AFF605E5DFFFFFFFFFFFBFAF9FFFFFEFDFF7D7C7AFFFBFAF9FFF4F3
+      F2FFF2F1F0FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF4F4F3FFF5F5F4FFFDFD
+      FCFF858281FF4E4B4AFFC3C2C0FFFBFAFBFFB0AFAEFF7C7B7AFFFCFCFBFFF5F5
+      F4FFF4F4F3FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF6F7F7FFF7F7F7FFFCFC
+      FCFFFAFAF9FF929190FF484544FF52504FFF686665FFF8F8F7FFFBFBFCFFF7F7
+      F7FFF6F7F7FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFFBF9F9FFFCFBFBFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFB
+      FBFFFBF9F9FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFFEFEFEFFFFFFFFFF504E
+      4BFF565452FF585553FF595654FF595654FF585653FF565452FF504E4BFFFFFF
+      FFFFFEFEFEFFFFFFFFFF9F9F9FFFA2A2A2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFA2A2A2FF979797C0A2A2A2FF9F9FA0FFA0A0A0FFA1A1
+      A1FFA1A1A1FFA1A1A2FFA1A1A2FFA1A1A2FFA1A1A2FFA1A1A1FFA1A1A1FFA0A0
+      A0FF9F9FA0FFA2A2A2FF979797C0000000230000003300000033000000330000
+      0033000000330000003300000033000000330000003300000033000000330000
+      0033000000330000003300000023A5A5A5EFA2A2A2FFA0A0A0FF9F9F9FFF9F9F
+      9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F
+      9FFFA0A0A0FFA2A2A2FFA5A5A5EFA2A2A2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFA2A2A2FFA0A0A0FFFFFFFFFFE1DFDEFFE1E0DFFFE1E0
+      DFFFE2E1E0FFE3E2E0FFE3E2E1FFE3E2E1FFE3E2E1FFE3E1E0FFE2E0DFFFE1E0
+      DFFFE1DFDEFFFFFFFFFFA0A0A0FF9F9F9FFFFFFFFFFFE3E3E2FFE4E5E4FFE7E7
+      E6FFEAEBEAFFEEEEEDFFEEEEEDFFEDEDECFFEDEDECFFECECEBFFE8E8E7FFE5E5
+      E4FFE3E3E2FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFE7E6E5FFE9E7E6FFEEED
+      ECFFB7B6B5FF585655FF767372FF73706FFF8A8986FF474443FFEFEEEDFFE9E8
+      E7FFE7E6E5FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFEAEAE9FFEDEDECFFF5F5
+      F4FF615F5EFF8F8D8CFFFFFFFFFFFAFAF9FFF8F9F8FF9B9A99FFF2F2F1FFECEC
+      EBFFEAEAE9FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF0EEEDFFF6F5F4FFFFFF
+      FEFF807D7DFF7B7977FF898785FFC3C2C2FFF6F5F6FFFEFDFCFFFAF9F8FFF5F4
+      F3FFF0EEEDFFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF5F5F4FF52504EFF5B58
+      56FF615F5DFF63615FFF646260FF646260FF646260FF62605DFF5B5856FF5250
+      4DFFF5F5F4FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF5F4F3FFFBFAF9FFFFFF
+      FFFFEFEEEFFFFFFFFFFFCDCCCBFF949291FF6E6C6BFF6A6867FFFFFFFFFFFBFA
+      F9FFF5F4F3FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF5F5F4FFF7F7F6FFFFFF
+      FEFF5B5959FFFBFAFAFFFFFFFFFFFFFFFFFF6C6A69FF4E4B4AFFFFFFFFFFF7F7
+      F6FFF5F5F4FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFF6F6F6FFF7F7F8FFFFFF
+      FFFF595655FF676563FF727070FF696766FF525050FFBEBDBCFFFDFDFDFFF7F7
+      F7FFF6F6F6FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFFAF9F9FFFAF8F8FFFDFB
+      FBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFAFAFFF9F8
+      F8FFFAF9F9FFFFFFFFFF9F9F9FFF9F9F9FFFFFFFFFFFFDFDFEFFFDFDFDFFFDFD
+      FDFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFDFDFEFFFDFDFDFFFDFD
+      FDFFFDFDFEFFFFFFFFFF9F9F9FFFA2A2A2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFA2A2A2FF979797C0A2A2A2FF9F9F9FFF9F9F9FFF9F9F
+      9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F9FFF9F9F
+      9FFF9F9F9FFFA2A2A2FF979797C0000000230000003300000033000000330000
+      0033000000330000003300000033000000330000003300000033000000330000
+      0033000000330000003300000023B5B5B5EFB2B2B2FFB0B0B0FFB0B0B0FFB0B0
+      B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0
+      B0FFB0B0B0FFB2B2B2FFB5B5B5EFB2B2B2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB2B2B2FFB1B1B1FFFFFFFFFFE8E7E6FFEBEAE9FFEAE9
+      E8FFEAE9E8FFE9E9E7FFEAE9E8FFEBEAE9FFE9E8E6FFE4E3E2FFE1E0DFFFE1DF
+      DEFFE0DFDEFFFFFFFFFFB0B0B0FFB1B1B1FFFFFFFFFF444241FF595654FF6664
+      62FF74706FFF767472FF696765FF5B5958FF494746FFECECEBFFE7E7E6FFE6E6
+      E5FFE5E5E4FFFFFFFFFFB0B0B0FFB1B1B1FFFFFFFFFFF7F6F5FFFCFCFBFFFCFB
+      FBFFFBFAF9FFFAF9F9FFFAFAF9FFFBFAF9FFF9F8F7FFF5F4F3FFF3F2F1FFF2F1
+      F0FFEFEEEDFFFFFFFFFFB0B0B0FFB1B1B1FFFFFFFFFF444241FF54524FFF5D5B
+      59FF656361FF6E6C6AFF777573FF7A7876FF706E6CFF666462FF5C5A58FF5250
+      4EFF444140FFFFFFFFFFB1B1B1FFB1B1B1FFFFFFFFFFFDFCFBFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFEFFFFFFFEFFFFFFFFFFFEFEFDFFFAF9F8FFF8F7F6FFF7F6
+      F5FFF5F4F3FFFFFFFFFFB0B0B0FFB1B1B1FFFFFFFFFF454342FF595755FF6664
+      62FF747170FF777572FF6A6765FF5B5958FF494746FFF9F9F8FFF4F4F3FFF2F3
+      F2FFF2F2F1FFFFFFFFFFB0B0B0FFB1B1B1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFEFDFCFFFDFC
+      FBFFFBFAF8FFFFFFFFFFB0B0B0FFB1B1B1FFFFFFFFFF434140FF52504DFF5C59
+      57FF646260FF6C6A68FF757371FF787674FF6E6C6AFF64625FFF5A5856FF504E
+      4CFF43403FFFFFFFFFFFB1B1B1FFB1B1B1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB0B0B0FFB1B1B1FFFFFFFFFF42403EFF555351FF6360
+      5EFF706D6CFF73716EFF666461FF575554FF454342FFFFFFFFFFFCFBFBFFFBFA
+      FAFFFBFAFAFFFFFFFFFFAFAFAFFFB0B0B0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFDFDFFFCFC
+      FCFFFDFDFDFFFFFFFFFFB0B0B0FFB2B2B2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB2B2B2FFA6A6A6C0B2B2B2FFB0B0B0FFAFAFB0FFAFAF
+      B0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAF
+      B0FFB0B0B0FFB2B2B2FFA6A6A6C0000000230000003300000033000000330000
+      0033000000330000003300000033000000330000003300000033000000330000
+      0033000000330000003300000023B5B5B5EFB2B2B2FFB0B0B0FFB0B0B0FFB0B0
+      B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0
+      B0FFB0B0B0FFB2B2B2FFB5B5B5EFB2B2B2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB2B2B2FFB0B0B0FFFFFFFFFFE3E2E1FFE9E8E6FFEBEA
+      E9FFEBEAE9FFEAE9E8FFE9E8E7FFE9E8E7FFEAE9E8FFEBEAE9FFEBEAE9FFE9E8
+      E6FFE3E2E1FFFFFFFFFFB0B0B0FFB0B0B0FFFFFFFFFFEAEAE9FF444241FF5553
+      51FF605E5CFF696766FF757270FF787573FF6D6B68FF62605FFF585553FF4744
+      43FFE9EAE9FFFFFFFFFFB0B0B0FFB0B0B0FFFFFFFFFFEDECEBFFF8F7F6FFFDFC
+      FBFFFCFCFBFFFBFAF9FFFAF9F8FFF9F9F8FFFBFAF9FFFCFBFAFFFCFCFBFFF8F7
+      F6FFEDECEBFFFFFFFFFFB0B0B0FFB0B0B0FFFFFFFFFFF0F0EFFF454342FF5654
+      52FF615F5DFF6B6968FF767471FF787674FF6E6C6AFF636160FF595754FF4745
+      44FFF0F0EFFFFFFFFFFFB0B0B0FFB0B0B0FFFFFFFFFFF3F2F1FFFEFDFCFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFDFC
+      FCFFF3F2F1FFFFFFFFFFB0B0B0FFB0B0B0FFFFFFFFFFF6F6F5FF444241FF5654
+      51FF605E5CFF6A6767FF757370FF787673FF6E6B69FF636160FF585654FF4644
+      43FFF6F6F5FFFFFFFFFFB0B0B0FFB0B0B0FFFFFFFFFFF9F7F6FFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFF8F7F6FFFFFFFFFFB0B0B0FFB0B0B0FFFFFFFFFFFCFCFBFF43403FFF5553
+      50FF605D5BFF696766FF747270FF777472FF6D6A68FF62605FFF575553FF4543
+      42FFFCFCFBFFFFFFFFFFB0B0B0FFAFAFAFFFFFFFFFFFFDFEFEFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFDFDFEFFFFFFFFFFAFAFAFFFAFAFAFFFFFFFFFFFFFFFFFFF403E3CFF5250
+      4DFF5D5A58FF666463FF716F6DFF74726FFF6A6765FF5F5D5CFF54524FFF4340
+      3FFFFFFFFFFFFFFFFFFFAFAFAFFFB0B0B0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB0B0B0FFB2B2B2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB2B2B2FFA6A6A6C0B2B2B2FFB0B0B0FFAFAFB0FFAFAF
+      B0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAF
+      B0FFB0B0B0FFB2B2B2FFA6A6A6C0000000230000003300000033000000330000
+      0033000000330000003300000033000000330000003300000033000000330000
+      0033000000330000003300000023B5B5B5EFB2B2B2FFB0B0B0FFB0B0B0FFB0B0
+      B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0B0FFB0B0
+      B0FFB0B0B0FFB2B2B2FFB5B5B5EFB2B2B2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB2B2B2FFB0B0B0FFFFFFFFFFE0DFDEFFE1DFDEFFE1E0
+      DFFFE4E3E2FFE9E8E7FFEBEAE9FFEAE9E8FFEAE9E8FFE9E8E7FFEAE9E8FFEAE9
+      E8FFE8E7E6FFFFFFFFFFB1B1B1FFB0B0B0FFFFFFFFFFE5E5E4FFE6E6E5FFE7E8
+      E7FFECECEBFF464443FF595654FF666363FF74716FFF767472FF6A6765FF5B59
+      58FF484645FFFFFFFFFFB1B1B1FFB0B0B0FFFFFFFFFFEFEEEDFFF2F1F0FFF3F2
+      F1FFF5F4F3FFF9F8F7FFFBFAF9FFFBFAF9FFFAF9F9FFFBFAF9FFFCFBFAFFFCFB
+      FAFFF7F6F5FFFFFFFFFFB1B1B1FFB1B1B1FFFFFFFFFF413F3EFF504E4DFF5A58
+      57FF64615FFF6E6C69FF777573FF797674FF716D6CFF676464FF5F5C5BFF5654
+      52FF454342FFFFFFFFFFB1B1B1FFB0B0B0FFFFFFFFFFF5F4F3FFF7F6F5FFF8F7
+      F6FFFAF9F9FFFFFEFDFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFDFCFBFFFFFFFFFFB1B1B1FFB0B0B0FFFFFFFFFFF2F2F1FFF3F3F2FFF4F4
+      F3FFF9F9F8FF464342FF595754FF666463FF74726FFF777572FF6A6866FF5B59
+      58FF484645FFFFFFFFFFB1B1B1FFB0B0B0FFFFFFFFFFFBFAF9FFFDFCFBFFFEFD
+      FCFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB1B1B1FFB1B1B1FFFFFFFFFF403D3CFF4E4C4BFF5856
+      55FF625F5DFF6C6A67FF767371FF777572FF6F6B6AFF656362FF5D5B59FF5553
+      50FF444241FFFFFFFFFFB1B1B1FFB0B0B0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB1B1B1FFAFAFAFFFFFFFFFFFFBFAFAFFFBFAFAFFFCFB
+      FBFFFFFFFFFF423F3EFF555350FF62605FFF706E6CFF73716EFF666462FF5855
+      54FF464342FFFFFFFFFFB1B1B1FFB0B0B0FFFFFFFFFFFDFDFDFFFCFCFCFFFDFD
+      FDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB0B0B0FFB2B2B2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFB2B2B2FFA6A6A6C0B2B2B2FFB0B0B0FFAFAFB0FFAFAF
+      B0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAFB0FFAFAF
+      B0FFB0B0B0FFB2B2B2FFA6A6A6C0000000230000003300000033000000330000
+      0033000000330000003300000033000000330000003300000033000000330000
+      0033000000330000003300000023
+    }
+    BitmapAdv = {
+      4C6900000000
     }
   end
 end

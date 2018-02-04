@@ -568,7 +568,6 @@ object Form1: TForm1
           OnClick = AcClassicalGUIExecute
           State = cbUnchecked
           TableBehaviour = tbBeginsRow
-          GroupBehaviour = gbSingleItem
         end
         object SpkRadioButton2: TSpkRadioButton
           Visible = True
@@ -579,7 +578,6 @@ object Form1: TForm1
           Checked = True
           State = cbChecked
           TableBehaviour = tbBeginsRow
-          GroupBehaviour = gbSingleItem
         end
         object SpkSmallButton3: TSpkSmallButton
           Visible = True
@@ -623,7 +621,6 @@ object Form1: TForm1
           Checked = True
           State = cbChecked
           TableBehaviour = tbBeginsRow
-          GroupBehaviour = gbSingleItem
         end
       end
     end
