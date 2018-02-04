@@ -20,8 +20,11 @@ type
   TBackgroundKind = (bkSolid, bkVerticalGradient, bkHorizontalGradient,
                     bkConcave);
 
+  TSpkButtonState = (bsIdle,
+    bsBtnHottrack, bsBtnPressed, bsDropdownHottrack, bsDropdownPressed);
+
   TSpkCheckboxStyle = (cbsCheckbox, cbsRadioButton);
-  TSpkCheckboxState = (cbsIdle, cbsHotTrack, cbsPressed, cbsDisabled);
+//  TSpkCheckboxState = (cbsIdle, cbsHotTrack, cbsPressed, cbsDisabled);
 
   TGUITools = class(TObject)
   protected
@@ -294,12 +297,12 @@ type
     class procedure DrawCheckbox(ACanvas: TCanvas;
                                  x,y: Integer;
                                  AState: TCheckboxState;
-                                 ACheckboxState: TSpkCheckboxState;
+                                 AButtonState: TSpkButtonState;
                                  AStyle: TSpkCheckboxStyle); overload;
     class procedure DrawCheckbox(ACanvas: TCanvas;
                                  x,y: Integer;
                                  AState: TCheckboxState;
-                                 ACheckboxState: TSpkCheckboxState;
+                                 AButtonState: TSpkButtonState;
                                  AStyle: TSpkCheckboxStyle;
                                  ClipRect: T2DIntRect); overload;
 
@@ -2833,7 +2836,7 @@ begin
 end;
 
 class procedure TGUITools.DrawCheckbox(ACanvas:TCanvas; x,y: Integer;
-  AState: TCheckboxState; ACheckboxState:TSpkCheckboxState;
+  AState: TCheckboxState; AButtonState:TSpkButtonState;
   AStyle: TSpkCheckboxStyle; ClipRect:T2DIntRect);
 var
   UseOrgClipRgn: Boolean;
@@ -2847,27 +2850,29 @@ begin
   if UseOrgClipRgn then
     CombineRgn(ClipRgn, ClipRgn, OrgRgn, RGN_AND);
   SelectClipRgn(ACanvas.Handle, ClipRgn);
-  DrawCheckbox(ACanvas, x,y, AState, ACheckboxState, AStyle);
+  DrawCheckbox(ACanvas, x,y, AState, AButtonState, AStyle);
   RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
   DeleteObject(ClipRgn);
 end;
 
 class procedure TGUITools.DrawCheckbox(ACanvas: TCanvas; x,y: Integer;
-  AState: TCheckboxState; ACheckboxState: TSpkCheckboxState;
-  AStyle:TSpkCheckboxStyle);
+  AState: TCheckboxState; AButtonState: TSpkButtonState;
+  AStyle: TSpkCheckboxStyle);
+const
+  NOT_USED = tbCheckboxCheckedNormal;
 const
   UNTHEMED_FLAGS: array [TSpkCheckboxStyle, TCheckboxState] of Integer = (
     (DFCS_BUTTONCHECK, DFCS_BUTTONCHECK or DFCS_CHECKED, DFCS_BUTTONCHECK or DFCS_BUTTON3STATE),
     (DFCS_BUTTONRADIO, DFCS_BUTTONRADIO or DFCS_CHECKED, DFCS_BUTTONRADIO or DFCS_BUTTON3STATE)
   );
-  THEMED_FLAGS: array [TSpkCheckboxStyle, TCheckboxState, TSpkCheckboxState] of TThemedButton = (
-    ( (tbCheckboxUncheckedNormal, tbCheckboxUncheckedHot, tbCheckboxUncheckedPressed, tbCheckboxUncheckedDisabled),
-      (tbCheckboxCheckedNormal, tbCheckboxCheckedHot, tbCheckboxCheckedPressed, tbCheckboxCheckedDisabled),
-      (tbCheckboxMixedNormal, tbCheckboxMixedHot, tbCheckboxMixedPressed, tbCheckboxMixedDisabled)
+  THEMED_FLAGS: array [TSpkCheckboxStyle, TCheckboxState, TSpkButtonState] of TThemedButton = (
+    ( (tbCheckboxUncheckedNormal, tbCheckboxUncheckedHot, tbCheckboxUncheckedPressed, tbCheckboxUncheckedDisabled, NOT_USED),
+      (tbCheckboxCheckedNormal, tbCheckboxCheckedHot, tbCheckboxCheckedPressed, tbCheckboxCheckedDisabled, NOT_USED),
+      (tbCheckboxMixedNormal, tbCheckboxMixedHot, tbCheckboxMixedPressed, tbCheckboxMixedDisabled, NOT_USED)
     ),
-    ( (tbRadioButtonUncheckedNormal, tbRadioButtonUncheckedHot, tbRadioButtonUncheckedPressed, tbRadioButtonUncheckedDisabled),
-      (tbRadioButtonCheckedNormal, tbRadioButtonCheckedHot, tbRadioButtonCheckedPressed, tbRadioButtonCheckedDisabled),
-      (tbRadioButtonCheckedNormal, tbRadioButtonCheckedHot, tbRadioButtonCheckedPressed, tbRadioButtonCheckedDisabled)
+    ( (tbRadioButtonUncheckedNormal, tbRadioButtonUncheckedHot, tbRadioButtonUncheckedPressed, tbRadioButtonUncheckedDisabled, NOT_USED),
+      (tbRadioButtonCheckedNormal, tbRadioButtonCheckedHot, tbRadioButtonCheckedPressed, tbRadioButtonCheckedDisabled, NOT_USED),
+      (tbRadioButtonCheckedNormal, tbRadioButtonCheckedHot, tbRadioButtonCheckedPressed, tbRadioButtonCheckedDisabled, NOT_USED)
     )
   );
 var
@@ -2877,7 +2882,7 @@ var
   te: TThemedElementDetails;
 begin
   if ThemeServices.ThemesEnabled then begin
-    te := ThemeServices.GetElementDetails(THEMED_FLAGS[AStyle, AState, ACheckboxState]);
+    te := ThemeServices.GetElementDetails(THEMED_FLAGS[AStyle, AState, AButtonState]);
     sz := ThemeServices.GetDetailSize(te);
     R := Bounds(x, y, sz.cx, sz.cy);
     InflateRect(R, 1, 1);

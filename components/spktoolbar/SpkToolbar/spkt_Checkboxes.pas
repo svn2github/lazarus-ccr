@@ -9,36 +9,20 @@ uses
   SpkMath, SpkGUITools, spkt_BaseItem, spkt_Buttons;
 
 type
-  TSpkCustomCheckbox = class;
-
-  TSpkCheckboxActionLink = class(TSpkButtonActionLink)
-  protected
-    procedure SetChecked(Value: Boolean); override;
-  public
-    function IsCheckedLinked: Boolean; override;
-  end;
-
   TSpkCustomCheckBox = class(TSPkBaseButton)
   private
     FState: TCheckboxState;              // unchecked, checked, grayed
-    FCheckboxState: TSpkCheckboxState;   // incl Hot, Pressed, Disabled
     FHideFrameWhenIdle : boolean;
     FTableBehaviour : TSpkItemTableBehaviour;
     FGroupBehaviour : TSPkItemGroupBehaviour;
     FCheckboxStyle: TSpkCheckboxStyle;
-    procedure SetGroupBehaviour(const Value: TSpkItemGroupBehaviour);
     procedure SetTableBehaviour(const Value: TSpkItemTableBehaviour);
   protected
-    procedure ActionChange(Sender : TObject);
-    procedure BtnStateToCheckboxState;
     procedure CalcRects; override;
-    procedure Click; override;
     procedure ConstructRect(var BtnRect: T2DIntRect);
     function  GetChecked: Boolean; override;
     function GetDefaultCaption: String; override;
-    procedure SetAction(const AValue: TBasicAction); override;
     procedure SetChecked(const AValue: Boolean); override;
-    procedure SetEnabled(const AValue: Boolean); override;
     procedure SetState(AValue: TCheckboxState); virtual;
   public
     constructor Create(AOwner: TComponent); override;
@@ -46,18 +30,11 @@ type
     function GetGroupBehaviour : TSpkItemGroupBehaviour; override;
     function GetSize: TSpkItemSize; override;
     function GetTableBehaviour : TSpkItemTableBehaviour; override;
-    function GetWidth : integer; override;
-    procedure MouseLeave; override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
-      X, Y: Integer); override;
-    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
-      X, Y: Integer); override;
+    function GetWidth: integer; override;
   published
     property Checked;
     property State: TCheckboxState read FState write SetState;
-    property TableBehaviour : TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour;
-    property GroupBehaviour : TSpkItemGroupBehaviour read FGroupBehaviour write SetGroupBehaviour;
+    property TableBehaviour: TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour;
   end;
 
   TSpkCheckbox = class(TSpkCustomCheckbox)
@@ -72,6 +49,9 @@ type
     procedure UncheckSiblings; override;
   public
     constructor Create(AOwner: TComponent); override;
+  published
+    property AllowAllUp;
+    property GroupIndex;
   end;
 
 
@@ -82,69 +62,17 @@ uses
   SpkGraphTools, spkt_Const, spkt_Tools, spkt_Pane, spkt_Appearance;
 
 
-{ TSpkCheckboxActionLink }
-
-function TSpkCheckboxActionLink.IsCheckedLinked: Boolean;
-var
-  cb: TSpkCustomCheckbox;
-begin
-  cb := FClient as TSpkCustomCheckbox;
-  result := (inherited IsCheckedLinked) and
-    Assigned(cb) and (cb.Checked = (Action as TCustomAction).Checked);
-end;
-
-procedure TSpkCheckboxActionLink.SetChecked(Value: Boolean);
-var
-  cb: TSpkCustomCheckbox;
-begin
-  if IsCheckedLinked then
-  begin
-    cb := TSpkCustomCheckbox(FClient);
-    cb.Checked := Value;
-  end;
-end;
-
-
 { TSpkCustomCheckbox }
 
 constructor TSpkCustomCheckbox.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  ButtonKind := bkToggle;
   FHideFrameWhenIdle := true;
   FTableBehaviour := tbContinuesRow;
   FGroupBehaviour := gbSingleItem;
   FCheckboxStyle := cbsCheckbox;
   FState := cbUnchecked;
-end;
-
-procedure TSpkCustomCheckbox.ActionChange(Sender: TObject);
-begin
-  if Sender is TCustomAction then
-    with TCustomAction(Sender) do
-    begin
-      if (Self.Caption = '') or (Self.Caption = GetDefaultCaption) then
-        Self.Caption := Caption;
-      if (Self.Enabled = True) then
-        Self.Enabled := Enabled;
-      if (Self.Visible = True) then
-        Self.Visible := Visible;
-      if not Assigned(Self.OnClick) then
-        Self.OnClick := OnExecute;
-      if (Self.Checked = false) then
-        Self.Checked := Checked;
-    end;
-end;
-
-procedure TSpkCustomCheckbox.BtnStateToCheckboxState;
-begin
-  if FEnabled then
-    case FButtonState of
-      bsIdle        : FCheckboxState := cbsIdle;
-      bsBtnHotTrack : FCheckboxState := cbsHotTrack;
-      bsBtnPressed  : FCheckboxState := cbsPressed;
-    end
-  else
-    FCheckboxState := cbsDisabled;
 end;
 
 procedure TSpkCustomCheckbox.CalcRects;
@@ -160,22 +88,6 @@ begin
   RectVector.Create(FRect.Left, FRect.Top);
  {$ENDIF}
   FButtonRect := FButtonRect + RectVector;
-end;
-
-procedure TSpkCustomCheckbox.Click;
-begin
-  if Enabled then begin
-    case FState of
-      cbGrayed    : Checked := true;
-      cbChecked   : Checked := false;
-      cbUnchecked : Checked := true;
-    end;
-    if not (csDesigning in ComponentState) and (FActionLink <> nil) then
-      FActionLink.Execute(Self)
-    else
-    if Assigned(FOnClick) and ((Action = nil) or (FOnClick <> Action.OnExecute)) then
-      FOnClick(Self);
-  end;
 end;
 
 procedure TSpkCustomCheckbox.ConstructRect(var BtnRect: T2DIntRect);
@@ -326,7 +238,7 @@ begin
     ABuffer.Canvas,
     x,y,
     FState,
-    FCheckboxState,
+    FButtonState,
     FCheckboxStyle,
     ClipRect
   );
@@ -366,7 +278,7 @@ end;
 
 function TSpkCustomCheckbox.GetGroupBehaviour: TSpkItemGroupBehaviour;
 begin
-  Result := FGroupBehaviour;
+  Result := gbSingleitem; //FGroupBehaviour;
 end;
 
 function TSpkCustomCheckbox.GetSize: TSpkItemSize;
@@ -392,68 +304,13 @@ begin
   Result := BtnRect.Right + 1;
 end;
 
-procedure TSpkCustomCheckbox.MouseDown(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
-begin
-  inherited;
-  BtnStateToCheckboxState;
-end;
-
-procedure TSpkCustomCheckbox.MouseLeave;
-begin
-  inherited MouseLeave;
-  if FEnabled then
-    FCheckboxState := cbsIdle
-  else
-    FCheckboxState := cbsDisabled;
-end;
-
-procedure TSpkCustomCheckbox.MouseMove(Shift: TShiftState; X, Y: Integer);
-begin
-  inherited MouseMove(Shift, X, Y);
-  BtnStateToCheckboxState;
-end;
-
-procedure TSpkCustomCheckbox.MouseUp(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
-begin
-  inherited MouseUp(Button, Shift, X, Y);
-  BtnStateToCheckboxState;
-end;
-
-procedure TSpkCustomCheckbox.SetAction(const AValue: TBasicAction);
-begin
-  if AValue = nil then begin
-    FActionLink.Free;
-    FActionLink := nil;
-  end else begin
-    if FActionLink = nil then
-      FActionLink := TSpkCheckboxActionLink.Create(self);
-    FActionLink.Action := AValue;
-    FActionLink.OnChange := @ActionChange;
-    ActionChange(AValue);
-  end;
-end;
-
 procedure TSpkCustomCheckbox.SetChecked(const AValue: Boolean);
 begin
-  if AValue then
+  inherited SetChecked(AValue);
+  if FChecked then
     SetState(cbChecked)
   else
     SetState(cbUnchecked);
-end;
-
-procedure TSpkCustomCheckbox.SetEnabled(const AValue: Boolean);
-begin
-  inherited SetEnabled(AValue);
-  BtnStateToCheckboxState;
-end;
-
-procedure TSpkCustomCheckbox.SetGroupBehaviour(const Value: TSpkItemGroupBehaviour);
-begin
-  FGroupBehaviour := Value;
-  if Assigned(FToolbarDispatch) then
-    FToolbarDispatch.NotifyMetricsChanged;
 end;
 
 procedure TSpkCustomCheckbox.SetState(AValue:TCheckboxState);
@@ -461,10 +318,6 @@ begin
   if AValue <> FState then
   begin
     FState := AValue;
-    {
-    if Assigned(FToolbarDispatch) then
-      FToolbarDispatch.NotifyVisualsChanged;
-      }
     inherited SetChecked(Checked);
   end;
 end;
@@ -518,8 +371,10 @@ begin
       if (pane.Items[i] is TSpkRadioButton) then
       begin
         rb := TSpkRadioButton(pane.Items[i]);
-        if (rb <> self) and (rb.GroupIndex = GroupIndex) then
-          rb.State := cbUnchecked;
+        if (rb <> self) and (rb.GroupIndex = GroupIndex) then begin
+          rb.FChecked := false;
+          rb.FState := cbUnchecked;
+        end;
       end;
   end;
 end;

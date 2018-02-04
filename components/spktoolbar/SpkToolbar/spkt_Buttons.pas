@@ -22,12 +22,6 @@ uses
   spkt_Const, spkt_BaseItem, spkt_Exceptions, spkt_Tools;
 
 type
-  TSpkButtonState = (
-    bsIdle,
-    bsBtnHottrack, bsBtnPressed,
-    bsDropdownHottrack, bsDropdownPressed
-  );
-
   TSpkMouseButtonElement = (beNone, beButton, beDropdown);
 
   TSpkButtonKind = (bkButton, bkButtonDropdown, bkDropdown, bkToggle);
