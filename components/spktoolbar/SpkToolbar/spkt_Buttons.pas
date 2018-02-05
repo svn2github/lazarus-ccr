@@ -77,7 +77,6 @@ type
     FGroupIndex: Integer;
     FAllowAllUp: Boolean;
     FDropdownMenu: TPopupMenu;
-    FMouseUp: Boolean;
 
     // *** Drawing support ***
     // The task of the method in inherited classes is to calculate the
@@ -420,7 +419,7 @@ begin
   if Assigned(FOnClick) then
     FOnClick(Self);
   // then trigger the Action
-  if (not (csDesigning in ComponentState)) and (FActionLink <> nil) then //and not FMouseUp then
+  if (not (csDesigning in ComponentState)) and (FActionLink <> nil) then
     FActionLink.Execute(Self);
 end;
 
@@ -705,9 +704,7 @@ begin
       begin
         if FButtonKind in [bkButton, bkButtonDropdown, bkToggle] then
         begin
-          FMouseUp := true;
           Click;
-          FMouseUp := false;
           FButtonState := bsBtnHottrack;
           if Assigned(FToolbarDispatch) then
             FToolbarDispatch.NotifyVisualsChanged;
