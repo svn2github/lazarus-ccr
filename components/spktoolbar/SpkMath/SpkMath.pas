@@ -112,7 +112,7 @@ type
     function Contains(APoint : T2DIntPoint) : boolean;
     function Contains(Ax, Ay : Integer) : boolean;
     function IntersectsWith(ARect : T2DIntRect) : boolean; overload;
-    function IntersectsWith(ARect : T2DIntRect; var Intersection : T2DIntRect) : boolean; overload;
+    function IntersectsWith(ARect : T2DIntRect; out Intersection : T2DIntRect) : boolean; overload;
     procedure Move(dx, dy : integer); overload;
     procedure Move(AVector : T2DIntVector); overload;
     function Moved(dx, dy : integer) : T2DIntRect; overload;
@@ -1192,7 +1192,7 @@ begin
 end;
 
 function T2DIntRect.IntersectsWith(ARect : T2DIntRect;
-  var Intersection: T2DIntRect): boolean;
+  out Intersection: T2DIntRect): boolean;
 
 var XStart, XWidth, YStart, YWidth : integer;
 
@@ -1249,7 +1249,7 @@ if self.top<=ARect.top then
   //todo: is it possible to call constructor directly like object?
   Intersection:=T2DIntRect.create(XStart, YStart, XStart+XWidth-1, YStart+YWidth-1);
   {$else}
-  Intersection.create(XStart, YStart, XStart+XWidth-1, YStart+YWidth-1);
+  Intersection.Create(XStart, YStart, XStart+XWidth-1, YStart+YWidth-1);
   {$endif}
   result:=(XWidth>0) and (YWidth>0);
 end;

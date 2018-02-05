@@ -30,7 +30,7 @@ type
   protected
     class procedure FillGradientRectangle(ACanvas: TCanvas; Rect: T2DIntRect;
       ColorFrom, ColorTo: TColor; GradientKind: TBackgroundKind);
-    class procedure SaveClipRgn(DC: HDC; var OrgRgnExists: boolean; var OrgRgn: HRGN);
+    class procedure SaveClipRgn(DC: HDC; out OrgRgnExists: boolean; out OrgRgn: HRGN);
     class procedure RestoreClipRgn(DC: HDC; OrgRgnExists: boolean; var OrgRgn: HRGN);
   public
     // *** Lines ***
@@ -390,7 +390,7 @@ end;
 implementation
 
 uses
- types, LCLIntf, IntfGraphics, Math, Themes;
+  Types, LCLIntf, IntfGraphics, Themes;
 
 { TSpkGUITools }
 
@@ -498,8 +498,8 @@ begin
       begin
         SrcLine := SrcImg.GetDataLineStart(y);
         DstLine := DestImg.GetDataLineStart(y+Offset.y);
-        SrcPtr := pointer(PtrInt(SrcLine) + 3*SrcRect.Left);
-        DstPtr := pointer(PtrInt(DstLine) + 3*(SrcRect.Left + Offset.x));
+        SrcPtr := {%H-}pointer({%H-}PtrInt(SrcLine) + SrcRect.Left*3);
+        DstPtr := {%H-}pointer({%H-}PtrInt(DstLine) + 3*(SrcRect.Left + Offset.x));
         for x := SrcRect.Left to SrcRect.Right do
         begin
           {$ifdef EnhancedRecordSupport}
@@ -527,8 +527,8 @@ begin
       begin
         SrcLine := SrcImg.GetDataLineStart(y);
         DstLine := DestImg.GetDataLineStart(y+Offset.y);
-        SrcPtr := pointer(PtrInt(SrcLine) + 3*SrcRect.Left);
-        DstPtr := pointer(PtrInt(DstLine) + 3*(SrcRect.Left + Offset.x));
+        SrcPtr := {%H-}pointer({%H-}PtrInt(SrcLine) + 3*SrcRect.Left);
+        DstPtr := {%H-}pointer({%H-}PtrInt(DstLine) + 3*(SrcRect.Left + Offset.x));
         for x := SrcRect.Left to SrcRect.Right do
         begin
           {$ifdef EnhancedRecordSupport}
@@ -974,8 +974,8 @@ begin
     begin
       SrcLine := SrcImg.GetDataLineStart(y);
       DstLine := DestImg.GetDataLineStart(y+Offset.y);
-      Move(pointer(PtrInt(SrcLine) + 3*ClippedSrcRect.Left)^,
-           pointer(PtrInt(DstLine) + 3*(ClippedSrcRect.Left + Offset.x))^,
+      Move({%H-}pointer({%H-}PtrInt(SrcLine) + 3*ClippedSrcRect.Left)^,
+           {%H-}pointer({%H-}PtrInt(DstLine) + 3*(ClippedSrcRect.Left + Offset.x))^,
            3*ClippedSrcRect.Width);
     end;
     ABitmap.LoadFromIntfImage(DestImg);
@@ -1081,18 +1081,18 @@ begin
     for y := ClippedSrcRect.Top to ClippedSrcRect.Bottom do
     begin
       SrcLine := SrcImg.GetDataLineStart(y);
-      SrcLine := pointer(PtrInt(SrcLine) + 3 * ClippedSrcRect.left);
+      SrcLine := {%H-}pointer({%H-}PtrInt(SrcLine) + 3 * ClippedSrcRect.left);
       MaskLine := MaskImg.GetDataLineStart(y);
-      MaskLine := pointer(PtrInt(MaskLine) + ClippedSrcRect.left);
+      MaskLine := {%H-}pointer({%H-}PtrInt(MaskLine) + ClippedSrcRect.left);
       DstLine := DestImg.GetDataLineStart(y+Offset.y);
-      DstLine := pointer(PtrInt(DstLine) + 3 * (ClippedSrcRect.left + Offset.x));
+      DstLine := {%H-}pointer({%H-}PtrInt(DstLine) + 3 * (ClippedSrcRect.left + Offset.x));
       for i := 0 to ClippedSrcRect.Width - 1 do
       begin
         if PByte(MaskLine)^ < 128 then
           Move(SrcLine^, DstLine^, 3);
-        SrcLine := pointer(PtrInt(SrcLine)+3);
-        DstLine := pointer(PtrInt(DstLine)+3);
-        MaskLine := pointer(PtrInt(MaskLine)+1);
+        SrcLine := {%H-}pointer({%H-}PtrInt(SrcLine)+3);
+        DstLine := {%H-}pointer({%H-}PtrInt(DstLine)+3);
+        MaskLine := {%H-}pointer({%H-}PtrInt(MaskLine)+1);
       end;
     end;
     ABitmap.LoadFromIntfImage(DestImg);
@@ -1191,22 +1191,22 @@ begin
    for y := ClippedSrcRect.top to ClippedSrcRect.bottom do
        begin
        SrcLine:=SrcImg.GetDataLineStart(y);
-       SrcLine:=pointer(PtrInt(SrcLine) + 3 * ClippedSrcRect.left);
+       SrcLine:={%H-}pointer({%H-}PtrInt(SrcLine) + 3 * ClippedSrcRect.left);
 
        MaskLine:=MaskImg.GetDataLineStart(y);
-       MaskLine:=pointer(PtrInt(MaskLine) + ClippedSrcRect.left);
+       MaskLine:={%H-}pointer({%H-}PtrInt(MaskLine) + ClippedSrcRect.left);
 
        DstLine:=DestImg.GetDataLineStart(y+Offset.y);
-       DstLine:=pointer(PtrInt(DstLine) + 3 * (ClippedSrcRect.left + Offset.x));
+       DstLine:={%H-}pointer({%H-}PtrInt(DstLine) + 3 * (ClippedSrcRect.left + Offset.x));
 
        for i := 0 to ClippedSrcRect.width - 1 do
            begin
            if PByte(MaskLine)^<128 then
               Move(SrcLine^, DstLine^, 3);
 
-           SrcLine:=pointer(PtrInt(SrcLine)+3);
-           DstLine:=pointer(PtrInt(DstLine)+3);
-           MaskLine:=pointer(PtrInt(MaskLine)+1);
+           SrcLine:={%H-}pointer({%H-}PtrInt(SrcLine)+3);
+           DstLine:={%H-}pointer({%H-}PtrInt(DstLine)+3);
+           MaskLine:={%H-}pointer({%H-}PtrInt(MaskLine)+1);
            end;
        end;
    ABitmap.LoadFromIntfImage(DestImg);
@@ -1295,8 +1295,8 @@ begin
        SrcLine:=SrcImg.GetDataLineStart(y);
        DstLine:=DestImg.GetDataLineStart(y+Offset.y);
 
-       Move(pointer(PtrInt(SrcLine) + 3*ClippedSrcRect.left)^,
-            pointer(PtrInt(DstLine) + 3*(ClippedSrcRect.left + Offset.x))^,
+       Move({%H-}pointer({%H-}PtrInt(SrcLine) + 3*ClippedSrcRect.left)^,
+            {%H-}pointer({%H-}PtrInt(DstLine) + 3*(ClippedSrcRect.left + Offset.x))^,
             3*ClippedSrcRect.Width);
        end;
   ABitmap.LoadFromIntfImage(DestImg);
@@ -1398,8 +1398,8 @@ if Convex then
           SrcLine:=SrcImg.GetDataLineStart(y);
           DstLine:=DestImg.GetDataLineStart(y+Offset.y);
 
-          SrcPtr:=pointer(PtrInt(SrcLine) + 3*SrcRect.left);
-          DstPtr:=pointer(PtrInt(DstLine) + 3*(SrcRect.left + Offset.x));
+          SrcPtr:={%H-}pointer({%H-}PtrInt(SrcLine) + 3*SrcRect.left);
+          DstPtr:={%H-}pointer({%H-}PtrInt(DstLine) + 3*(SrcRect.left + Offset.x));
           for x := SrcRect.left to SrcRect.right do
               begin
               {$IFDEF EnhancedRecordSupport}
@@ -1430,8 +1430,8 @@ else
           SrcLine:=SrcImg.GetDataLineStart(y);
           DstLine:=DestImg.GetDataLineStart(y+Offset.y);
 
-          SrcPtr:=pointer(PtrInt(SrcLine) + 3*SrcRect.left);
-          DstPtr:=pointer(PtrInt(DstLine) + 3*(SrcRect.left + Offset.x));
+          SrcPtr:={%H-}pointer({%H-}PtrInt(SrcLine) + 3*SrcRect.left);
+          DstPtr:={%H-}pointer({%H-}PtrInt(DstLine) + 3*(SrcRect.left + Offset.x));
           for x := SrcRect.left to SrcRect.right do
               begin
               {$IFDEF EnhancedRecordSupport}
@@ -1458,8 +1458,6 @@ class procedure TGUITools.DrawAARoundCorner(ABitmap: TBitmap; Point: T2DIntVecto
 var
   CornerRect: T2DIntRect;
   Center: T2DIntVector;
-  Line: PByte;
-  Ptr: PByte;
   colorR, colorG, colorB: byte;
   x, y: integer;
   RadiusDist: double;
@@ -1561,8 +1559,6 @@ class procedure TGUITools.DrawAARoundCorner(ABitmap: TBitmap;
 var
   CornerRect: T2DIntRect;
   Center: T2DIntVector;
-  Line: PByte;
-  Ptr: PByte;
   colorR, colorG, colorB: byte;
   x, y: integer;
   RadiusDist: double;
@@ -1829,6 +1825,7 @@ var
 begin
   with ABitmap.Canvas do
   begin
+    Font.Color := TextColor;
     s := AText;
     tw := TextWidth(s);
     if tw <= x2-x1+1 then
@@ -1921,7 +1918,7 @@ begin
   above in order to fix the "handle leak" of
   https://sourceforge.net/p/lazarus-ccr/bugs/35/
   Not daring to touch the ImageList.Draw which would have worked as well. }
-{
+(*
   // avoid exclusive draw. draw with local canvas itself.
   //ImageList.Draw(ACanvas, Point.x, Point.y, ImageIndex);
   {$IfDef LCLWin32}
@@ -1935,7 +1932,7 @@ begin
   ACanvas.Draw(Point.x, Point.y, ImageBitmap);
   ImageBitmap.Free;
   {$EndIf}
-}
+*)
   RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
   DeleteObject(ClipRgn);
 end;
@@ -1944,8 +1941,8 @@ class procedure TGUITools.DrawMarkedText(ACanvas: TCanvas; x, y: integer; const 
   AMarkPhrase: string; TextColor : TColor; ClipRect: T2DIntRect; CaseSensitive: boolean);
 var
   UseOrgClipRgn: Boolean;
-  OrgRgn: HRGN;
-  ClipRgn: HRGN;
+  OrgRgn: HRGN = 0;
+  ClipRgn: HRGN = 0;
 begin
   // Store the original ClipRgn and set a new one
   SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
@@ -2540,6 +2537,7 @@ var
 begin
   with ACanvas do
   begin
+    Font.Color := TextColor;
     s := AText;
     tw := TextWidth(s);
     // We draw if the text is changed
@@ -2616,8 +2614,8 @@ begin
   DeleteObject(OrgRgn);
 end;
 
-class procedure TGUITools.SaveClipRgn(DC: HDC; var OrgRgnExists: boolean;
-  var OrgRgn: HRGN);
+class procedure TGUITools.SaveClipRgn(DC: HDC; out OrgRgnExists: boolean;
+  out OrgRgn: HRGN);
 var
   i: integer;
 begin
@@ -2842,8 +2840,6 @@ var
   UseOrgClipRgn: Boolean;
   OrgRgn: HRGN;
   ClipRgn: HRGN;
-  te: TThemedElementDetails;
-  Rect: TRect;
 begin
   SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
   ClipRgn := CreateRectRgn(ClipRect.left, ClipRect.Top, ClipRect.Right+1, ClipRect.Bottom+1);

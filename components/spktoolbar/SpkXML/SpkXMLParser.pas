@@ -2,6 +2,7 @@ unit SpkXMLParser;
 
 {$mode Delphi}
 {$DEFINE SPKXMLPARSER}
+{$WARN 4055 off : Conversion between ordinals and pointers is not portable}
 
 interface
 
@@ -1500,7 +1501,7 @@ try
 
                            // Oczekujemy nazwy taga, która jest postaci
                            // [a-zA-Z]([a-zA-Z0-9_]|([\-:][a-zA-Z0-9_]))*
-                           if not(input^ in ['a'..'z','A'..'Z']) then
+                           if not (input^ in ['a'..'z','A'..'Z']) then
                               raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owa nazwa taga!');
 
                            TokenStart:=input;
@@ -1515,8 +1516,8 @@ try
                               end;
                            until not(input^ in ['a'..'z','A'..'Z','0'..'9','_']);
 
-                           setlength(s,integer(input)-integer(TokenStart));
-                           StrLCopy(PChar(s),TokenStart,integer(input)-integer(TokenStart));
+                           SetLength(s, PtrUInt(input)-PtrUInt(TokenStart));
+                           StrLCopy(PChar(s),TokenStart, PtrUInt(input)-PtrUInt(TokenStart));
                            Node.Name:=s;
 
                            // Plik nie mo¿e siê tu koñczyæ.
@@ -1546,8 +1547,8 @@ try
                                  increment(input)
                                  until not(input^ in ['a'..'z','A'..'Z','0'..'9','_']);
 
-                                 setlength(s,integer(input)-integer(TokenStart));
-                                 StrLCopy(PChar(s),TokenStart,integer(input)-integer(TokenStart));
+                                 SetLength(s, {%H-}PtrUInt(input)-{%H-}PtrUInt(TokenStart));
+                                 StrLCopy(PChar(s), TokenStart, {%H-}PtrUInt(input)-{%H-}PtrUInt(TokenStart));
 
                                  // Pomijamy bia³e znaki
                                  while input^ in [#32,#9,#13,#10] do increment(input);
@@ -1676,8 +1677,8 @@ try
                              until input^='-';
                            until StrLComp(input,'-->',3)=0;
 
-                           setlength(s,integer(input)-integer(TokenStart));
-                           StrLCopy(PChar(s),TokenStart,integer(input)-integer(TokenStart));
+                           setlength(s, PtrUInt(input)-PtrUInt(TokenStart));
+                           StrLCopy(PChar(s),TokenStart, PtrUInt(input)-PtrUInt(TokenStart));
                            Node.Text:=s;
 
                            // Pomijamy znaki zakoñczenia komentarza
@@ -1721,8 +1722,8 @@ try
                               end;
                            until not(input^ in ['a'..'z','A'..'Z','0'..'9','_']);
 
-                           setlength(s,integer(input)-integer(TokenStart));
-                           StrLCopy(PChar(s),TokenStart,integer(input)-integer(TokenStart));
+                           SetLength(s, PtrUInt(input)-PtrUInt(TokenStart));
+                           StrLCopy(PChar(s),TokenStart, PtrUInt(input)-PtrUInt(TokenStart));
 
                            // Pomijamy zbêdne znaki bia³e
                            while input^ in [#32,#9,#10,#13] do increment(input);

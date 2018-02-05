@@ -30,7 +30,7 @@ type
 
     // *** Metody reakcji na zmiany w liœcie ***
     // *** Methods responding to changes in list ***
-    procedure Notify(Item: TComponent; Operation: TOperation); virtual;
+    procedure Notify({%H-}Item: TComponent; {%H-}Operation: TOperation); virtual;
     procedure Update; virtual;
 
     // *** Wewnêtrzne metody dodawania i wstawiania elementów ***

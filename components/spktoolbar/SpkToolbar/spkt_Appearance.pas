@@ -17,7 +17,7 @@ interface
 uses
   Graphics, Classes, Forms, SysUtils,
   SpkGUITools, SpkXMLParser, SpkXMLTools,
-  spkt_Dispatch, spkt_Exceptions, spkt_Const;
+  spkt_Dispatch, spkt_Exceptions;
 
 type
   TSpkPaneStyle = (
@@ -1605,7 +1605,7 @@ end;
 
 procedure SetDefaultFont(AFont: TFont);
 begin
-//  AFont.Assign(Screen.MenuFont);
+  //AFont.Assign(Screen.MenuFont);  // wp: why is this harmful?
 end;
 
 end.

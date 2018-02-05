@@ -161,9 +161,9 @@ begin
   c1 := TRgbColor(ColorToRGB(AColor1));
   c2 := TRgbColor(ColorToRGB(AColor2));
   result := rgb(
-    max(0, min(255, c1.R + c2.R)),
-    max(0, min(255, c1.G + c2.G)),
-    max(0, min(255, c1.B + c2.B))
+    max(0, min(255, Integer(c1.R) + c2.R)),
+    max(0, min(255, Integer(c1.G) + c2.G)),
+    max(0, min(255, Integer(c1.B) + c2.B))
   );
 end;
 
@@ -174,9 +174,9 @@ begin
   c1 := TRgbColor(ColorToRGB(AColor1));
   c2 := TRgbColor(ColorToRGB(AColor2));
   result := rgb(
-    max(0, min(255, c1.R * c2.R)),
-    max(0, min(255, c1.G * c2.G)),
-    max(0, min(255, c1.B * c2.B))
+    max(0, min(255, Integer(c1.R) * c2.R)),
+    max(0, min(255, Integer(c1.G) * c2.G)),
+    max(0, min(255, Integer(c1.B) * c2.B))
   );
 end;
 
@@ -186,9 +186,9 @@ var
 begin
   c := TRgbColor(ColorToRGB(AColor));
   result := rgb(
-    max(0, min(255, c.R * AScalar)),
-    max(0, min(255, c.G * AScalar)),
-    max(0, min(255, c.B * AScalar))
+    max(0, min(255, AScalar * c.R)),
+    max(0, min(255, AScalar * c.G)),
+    max(0, min(255, AScalar * c.B))
   );
 end;
 

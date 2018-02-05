@@ -214,10 +214,9 @@ type
 
     { The Change of component size }
     procedure DoOnResize; override;
-    procedure EraseBackground(DC: HDC); override;
 
     { Method called when mouse pointer left component region }
-    procedure MouseLeave;
+    procedure MouseLeave; override;
 
     { Method called when mouse button is pressed }
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -246,16 +245,16 @@ type
 
     { Method called when the mouse button is pressed
       and at the same time the mouse pointer is over the region of tabs }
-    procedure TabMouseDown(Button: TMouseButton; Shift: TShiftState;
+    procedure TabMouseDown(Button: TMouseButton; {%H-}Shift: TShiftState;
       X, Y: integer);
 
     { Method called when the mouse will move over the region of tab "handles" }
-    procedure TabMouseMove(Shift: TShiftState; X, Y: integer);
+    procedure TabMouseMove({%H-}Shift: TShiftState; X, Y: integer);
 
     { Method called when one of the mouse buttons is released
       and at the same time the region of tabs was active element of toolbar }
-    procedure TabMouseUp(Button: TMouseButton; Shift: TShiftState;
-      X, Y: integer);
+    procedure TabMouseUp({%H-}Button: TMouseButton; {%H-}Shift: TShiftState;
+      {%H-}X, {%H-}Y: integer);
 
     // *********************
     // *** Extra support ***
@@ -295,7 +294,7 @@ type
     function GetColor: TColor;
 
     { Setter for property Color }
-    procedure SetColor(const Value: TColor);
+    procedure SetColor(Value: TColor);
 
     { Setter for property TabIndex }
     procedure SetTabIndex(const Value: integer);
@@ -361,6 +360,8 @@ type
     // ***************
     // *** Drawing ***
     // ***************
+
+    procedure EraseBackground(DC: HDC); override;
 
     { Method draws the content of the component }
     procedure Paint; override;
@@ -1081,7 +1082,7 @@ begin
   FBufferValid := False;
 end;
 
-procedure TSpkToolbar.SetColor(const Value: TColor);
+procedure TSpkToolbar.SetColor(Value: TColor);
 begin
   inherited Color := Value;
   SetBufferInvalid;
@@ -1390,7 +1391,7 @@ procedure TSpkToolbar.ValidateBuffer;
   procedure DrawTabs;
   var
     i: integer;
-    TabRect: T2DIntRect;
+//    TabRect: T2DIntRect;
     CurrentAppearance: TSpkToolbarAppearance;
     FocusedAppearance: TSpkToolbarAppearance;
 
@@ -1617,7 +1618,7 @@ procedure TSpkToolbar.ValidateBuffer;
             delta := 0 else
             delta := 50;
 
-          TabRect := FTabRects[i];
+          //TabRect := FTabRects[i];
 
           // Tab is drawn
           if i = FTabIndex then      // active tab

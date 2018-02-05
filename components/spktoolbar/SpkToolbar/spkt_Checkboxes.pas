@@ -19,9 +19,10 @@ type
     procedure SetTableBehaviour(const Value: TSpkItemTableBehaviour);
   protected
     procedure CalcRects; override;
-    procedure ConstructRect(var BtnRect: T2DIntRect);
+    procedure ConstructRect(out BtnRect: T2DIntRect);
     function  GetChecked: Boolean; override;
     function GetDefaultCaption: String; override;
+    function GetDropdownPoint: T2DIntPoint; override;
     procedure SetChecked(const AValue: Boolean); override;
     procedure SetState(AValue: TCheckboxState); virtual;
   public
@@ -90,7 +91,7 @@ begin
   FButtonRect := FButtonRect + RectVector;
 end;
 
-procedure TSpkCustomCheckbox.ConstructRect(var BtnRect: T2DIntRect);
+procedure TSpkCustomCheckbox.ConstructRect(out BtnRect: T2DIntRect);
 var
   BtnWidth: integer;
   Bitmap: TBitmap;
@@ -276,6 +277,15 @@ begin
   Result := 'Checkbox';
 end;
 
+function TSpkCustomCheckbox.GetDropdownPoint: T2DIntPoint;
+begin
+ {$IFDEF EnhancedRecordSupport}
+  Result := T2DIntPoint.Create(0,0);
+ {$ELSE}
+  Result.Create(0,0);
+ {$ENDIF}
+end;
+
 function TSpkCustomCheckbox.GetGroupBehaviour: TSpkItemGroupBehaviour;
 begin
   Result := gbSingleitem; //FGroupBehaviour;
@@ -293,7 +303,7 @@ end;
 
 function TSpkCustomCheckbox.GetWidth: integer;
 var
-  BtnRect, DropRect: T2DIntRect;
+  BtnRect: T2DIntRect;
 begin
   Result := -1;
   if FToolbarDispatch = nil then

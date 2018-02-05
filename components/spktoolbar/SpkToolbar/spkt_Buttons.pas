@@ -19,7 +19,7 @@ uses
   Graphics, Classes, Types, Controls, Menus, ActnList, Math,
   Dialogs, ImgList, Forms,
   SpkGUITools, SpkGraphTools, SpkMath,
-  spkt_Const, spkt_BaseItem, spkt_Exceptions, spkt_Tools;
+  spkt_Const, spkt_BaseItem, spkt_Tools;
 
 type
   TSpkMouseButtonElement = (beNone, beButton, beDropdown);
@@ -39,7 +39,7 @@ type
     procedure SetGroupIndex(Value: Integer); override;
     procedure SetImageIndex(Value: integer); override;
     procedure SetVisible(Value: Boolean); override;
-    procedure SetOnExecute(Value: TNotifyEvent); override;
+    procedure SetOnExecute({%H-}Value: TNotifyEvent); override;
   public
     function IsCaptionLinked: Boolean; override;
     function IsCheckedLinked: Boolean; override;
@@ -113,11 +113,11 @@ type
     destructor Destroy; override;
 
     procedure MouseLeave; override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
-      X, Y: Integer); override;
-    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; {%H-}Shift: TShiftState;
+      {%H-}X, {%H-}Y: Integer); override;
+    procedure MouseMove({%H-}Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
-      X, Y: Integer); override;
+      {%H-}X, {%H-}Y: Integer); override;
 
     function GetRootComponent: TComponent;
 

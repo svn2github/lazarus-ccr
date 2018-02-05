@@ -5,8 +5,8 @@ unit spkte_EditWindow;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, {DesignIntf, DesignEditors,} StdCtrls, ImgList, ComCtrls, ToolWin,
+  LCLIntf, LCLType, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, {DesignIntf, DesignEditors,} StdCtrls, ImgList, ComCtrls,
   ActnList, Menus, ComponentEditors, PropEdits,
   SpkToolbar, spkt_Tab, spkt_Pane, spkt_BaseItem, spkt_Buttons, spkt_Types, spkt_Checkboxes;
 
@@ -85,7 +85,7 @@ type
     procedure tvStructureDeletion(Sender:TObject; Node:TTreeNode);
     procedure tvStructureEdited(Sender: TObject; Node: TTreeNode; var S: string);
     procedure tvStructureKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+      {%H-}Shift: TShiftState);
     procedure FormActivate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
@@ -1002,8 +1002,6 @@ end;
 procedure TfrmEditWindow.tvStructureDeletion(Sender:TObject; Node:TTreeNode);
 var
   RunNode: TTreeNode;
-  index: Integer;
-  comp: TSpkComponent;
 begin
   if Node = nil then
     exit;

@@ -291,13 +291,13 @@ type
     FScreenshotForm: TForm;
     function PickColor(APanel: TPanel): Boolean;
     procedure ScreenshotKeyDown(Sender: TObject;
-      var Key: Word; Shift: TShiftState);
-    procedure ScreenshotMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: integer);
+      var Key: Word; {%H-}Shift: TShiftState);
+    procedure ScreenshotMouseDown(Sender: TObject; {%H-}Button: TMouseButton;
+      {%H-}Shift: TShiftState; X, Y: integer);
     procedure ScreenshotMouseMove(Sender: TObject;
-      Shift: TShiftState; X, Y: integer);
-    procedure ScreenshotMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: integer);
+      {%H-}Shift: TShiftState; X, Y: integer);
+    procedure ScreenshotMouseUp(Sender: TObject; {%H-}Button: TMouseButton;
+      {%H-}Shift: TShiftState; {%H-}X, {%H-}Y: integer);
 
   private
     procedure UpdateImages;
@@ -321,7 +321,7 @@ implementation
 {$R *.lfm}
 
 uses
-  Types, clipbrd, Spkt_Const;
+  Types, clipbrd;
 
 var
   CurrPageIndex: Integer = 0;
@@ -1411,7 +1411,7 @@ end;
 
 procedure TfrmAppearanceEditWindow.UpdateSizes;
 var
-  w, h, dist: Integer;
+  w, h: Integer;
 
   procedure AddToHeight(var AHeight: Integer; AControl: TControl);
   begin

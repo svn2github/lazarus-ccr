@@ -271,7 +271,7 @@ var
 implementation
 
 uses
-  LCLType, Types;
+  LCLType;
 
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 begin

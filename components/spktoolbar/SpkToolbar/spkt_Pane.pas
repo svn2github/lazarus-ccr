@@ -236,7 +236,6 @@ var
   i: Integer;
   R: T2DIntRect;
   delta: Integer;
-  cornerRadius: Integer;
 begin
   // W niektórych warunkach nie jesteœmy w stanie rysowaæ:
   // * Brak dyspozytora
