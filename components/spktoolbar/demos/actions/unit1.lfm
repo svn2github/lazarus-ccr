@@ -161,7 +161,7 @@ object Form1: TForm1
     Appearance.Element.ActiveInnerDarkColor = 961020
     Appearance.Element.ActiveCaptionColor = 8405614
     Appearance.Element.Style = esRounded
-    TabIndex = 4
+    TabIndex = 0
     Images = ImageList
     LargeImages = LargeImageList
     Tabs = (
@@ -234,7 +234,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcOpen
           Caption = 'Open file'
-          OnClick = AcOpenExecute
           LargeImageIndex = 1
           ButtonKind = bkButton
         end
@@ -243,7 +242,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcSave
           Caption = 'Save file'
-          OnClick = AcSaveExecute
           LargeImageIndex = 2
           ButtonKind = bkButton
         end
@@ -252,7 +250,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcQuit
           Caption = 'Quit program'
-          OnClick = AcQuitExecute
           LargeImageIndex = 0
           ButtonKind = bkButton
         end
@@ -321,7 +318,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcEditCut
           Caption = 'Cut'
-          OnClick = AcEditCutExecute
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 3
@@ -334,7 +330,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcEditCopy
           Caption = 'Copy'
-          OnClick = AcEditCopyExecute
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 4
@@ -347,7 +342,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcEditPaste
           Caption = 'Paste'
-          OnClick = AcEditPasteExecute
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 5
@@ -423,7 +417,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcBold
           Caption = 'Bold'
-          OnClick = AcBoldExecute
           GroupBehaviour = gbBeginsGroup
           HideFrameWhenIdle = False
           ImageIndex = 7
@@ -436,7 +429,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcItalic
           Caption = 'Italic'
-          OnClick = AcItalicExecute
           GroupBehaviour = gbContinuesGroup
           HideFrameWhenIdle = False
           ImageIndex = 8
@@ -449,7 +441,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcUnderline
           Caption = 'Underline'
-          OnClick = AcUnderlineExecute
           GroupBehaviour = gbEndsGroup
           HideFrameWhenIdle = False
           ImageIndex = 9
@@ -462,7 +453,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcLeftJustify
           Caption = 'Left justify'
-          OnClick = AcLeftJustifyExecute
           GroupBehaviour = gbBeginsGroup
           HideFrameWhenIdle = False
           ImageIndex = 10
@@ -476,7 +466,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcCenter
           Caption = 'Centered'
-          OnClick = AcCenterExecute
           GroupBehaviour = gbContinuesGroup
           HideFrameWhenIdle = False
           ImageIndex = 11
@@ -490,7 +479,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcRightJustify
           Caption = 'Right justify'
-          OnClick = AcRightJustifyExecute
           GroupBehaviour = gbEndsGroup
           HideFrameWhenIdle = False
           ImageIndex = 12
@@ -565,7 +553,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcClassicalGUI
           Caption = 'Classical'
-          OnClick = AcClassicalGUIExecute
           State = cbUnchecked
           TableBehaviour = tbBeginsRow
         end
@@ -574,7 +561,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcRibbonGUI
           Caption = 'Ribbon'
-          OnClick = AcRibbonGUIExecute
           Checked = True
           State = cbChecked
           TableBehaviour = tbBeginsRow
@@ -604,7 +590,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcSaveNow
           Caption = 'Save now'
-          OnClick = AcSaveNowExecute
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 2
@@ -617,7 +602,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcAutoSave
           Caption = 'Autosave'
-          OnClick = AcAutoSaveExecute
           Checked = True
           State = cbChecked
           TableBehaviour = tbBeginsRow
@@ -685,7 +669,6 @@ object Form1: TForm1
           Enabled = True
           Action = AcAbout
           Caption = 'About...'
-          OnClick = AcAboutExecute
           LargeImageIndex = 6
           ButtonKind = bkButton
         end
@@ -1437,6 +1420,9 @@ object Form1: TForm1
       B1ED0000002E0000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000002E00000033000000330000
       002E000000000000000000000000
+    }
+    BitmapAdv = {
+      4C6900000000
     }
   end
   object LargeImageList: TImageList
@@ -2342,6 +2328,9 @@ object Form1: TForm1
       0011000000150000001600000016000000160000001600000015000000110000
       0009000000030000000000000000000000000000000000000000000000000000
       0000000000000000000000000000
+    }
+    BitmapAdv = {
+      4C6900000000
     }
   end
 end

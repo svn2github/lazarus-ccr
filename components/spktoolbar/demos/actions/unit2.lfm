@@ -7,7 +7,7 @@ object AboutForm: TAboutForm
   ClientHeight = 185
   ClientWidth = 320
   Position = poMainFormCenter
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object Label1: TLabel
     Left = 0
     Height = 30
@@ -57,7 +57,7 @@ object AboutForm: TAboutForm
     Cancel = True
     Caption = 'Close'
     Default = True
-    ModalResult = 11
+    ModalResult = 1
     TabOrder = 0
   end
 end

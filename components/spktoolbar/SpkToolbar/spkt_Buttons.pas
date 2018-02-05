@@ -417,8 +417,9 @@ procedure TSpkBaseButton.Click;
 begin
   // first call our own OnClick
   if Assigned(FOnClick) then
-    FOnClick(Self);
-  // then trigger the Action
+    FOnClick(Self)
+  else
+  // otherwise trigger the action
   if (not (csDesigning in ComponentState)) and (FActionLink <> nil) then
     FActionLink.Execute(Self);
 end;
@@ -704,10 +705,10 @@ begin
       begin
         if FButtonKind in [bkButton, bkButtonDropdown, bkToggle] then
         begin
-          Click;
           FButtonState := bsBtnHottrack;
           if Assigned(FToolbarDispatch) then
             FToolbarDispatch.NotifyVisualsChanged;
+          Click;
         end else
         if FButtonKind = bkDropdown then
         begin
