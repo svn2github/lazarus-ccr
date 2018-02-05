@@ -294,7 +294,7 @@ type
     function GetColor: TColor;
 
     { Setter for property Color }
-    procedure SetColor(Value: TColor);
+    procedure {%H-}SetColor(Value: TColor);  // "override" will overflow the stack --> {%H-}
 
     { Setter for property TabIndex }
     procedure SetTabIndex(const Value: integer);

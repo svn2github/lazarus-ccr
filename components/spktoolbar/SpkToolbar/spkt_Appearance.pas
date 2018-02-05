@@ -1605,7 +1605,7 @@ end;
 
 procedure SetDefaultFont(AFont: TFont);
 begin
-  //AFont.Assign(Screen.MenuFont);  // wp: why is this harmful?
+  //AFont.Assign(Screen.MenuFont);  // wp: If this really is harmful this proc should be removed.
 end;
 
 end.
