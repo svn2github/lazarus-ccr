@@ -34,8 +34,8 @@ type
     function GetWidth: integer; override;
   published
     property Checked;
-    property State: TCheckboxState read FState write SetState;
-    property TableBehaviour: TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour;
+    property State: TCheckboxState read FState write SetState default cbUnchecked;
+    property TableBehaviour: TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour default tbContinuesRow;
   end;
 
   TSpkCheckbox = class(TSpkCustomCheckbox)

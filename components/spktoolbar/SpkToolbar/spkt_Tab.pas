@@ -122,8 +122,8 @@ type
   published
     property CustomAppearance: TSpkToolbarAppearance read FCustomAppearance write SetCustomAppearance;
     property Caption: string read FCaption write SetCaption;
-    property OverrideAppearance: boolean read FOverrideAppearance write SetOverrideAppearance;
-    property Visible: boolean read FVisible write SetVisible;
+    property OverrideAppearance: boolean read FOverrideAppearance write SetOverrideAppearance default false;
+    property Visible: boolean read FVisible write SetVisible default true;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
   end;
 

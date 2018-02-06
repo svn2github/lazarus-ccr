@@ -106,7 +106,7 @@ type
 
   published
     property Caption: string read FCaption write SetCaption;
-    property Visible: boolean read FVisible write SetVisible;
+    property Visible: boolean read FVisible write SetVisible default true;
   end;
 
   TSpkPanes = class(TSpkCollection)

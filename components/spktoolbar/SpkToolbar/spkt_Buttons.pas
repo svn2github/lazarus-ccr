@@ -103,7 +103,7 @@ type
     procedure SetRect(const Value: T2DIntRect); override;
 
     property AllowAllUp: Boolean read FAllowAllUp write SetAllowAllUp default false;
-    property ButtonKind: TSpkButtonKind read FButtonKind write SetButtonKind;
+    property ButtonKind: TSpkButtonKind read FButtonKind write SetButtonKind default bkButton;
     property Checked: Boolean read GetChecked write SetChecked default false;
     property DropdownMenu: TPopupMenu read FDropdownMenu write SetDropdownMenu;
     property GroupIndex: Integer read FGroupIndex write SetGroupIndex default 0;
@@ -146,7 +146,8 @@ type
     function GetTableBehaviour: TSpkItemTableBehaviour; override;
     function GetWidth: integer; override;
   published
-    property LargeImageIndex: TImageIndex read FLargeImageIndex write SetLargeImageIndex default -1;
+    property LargeImageIndex: TImageIndex
+      read FLargeImageIndex write SetLargeImageIndex default -1;
     property AllowAllUp;
     property ButtonKind;
     property Checked;
@@ -181,11 +182,16 @@ type
     function GetTableBehaviour: TSpkItemTableBehaviour; override;
     function GetWidth: integer; override;
   published
-    property GroupBehaviour: TSpkItemGroupBehaviour read FGroupBehaviour write SetGroupBehaviour;
-    property HideFrameWhenIdle: boolean read FHideFrameWhenIdle write SetHideFrameWhenIdle;
-    property ImageIndex: TImageIndex read FImageIndex write SetImageIndex default -1;
-    property ShowCaption: boolean read FShowCaption write SetShowCaption;
-    property TableBehaviour: TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour;
+    property GroupBehaviour: TSpkItemGroupBehaviour
+      read FGroupBehaviour write SetGroupBehaviour default gbSingleItem;
+    property HideFrameWhenIdle: boolean
+      read FHideFrameWhenIdle write SetHideFrameWhenIdle default false;
+    property ImageIndex: TImageIndex
+      read FImageIndex write SetImageIndex default -1;
+    property ShowCaption: boolean
+      read FShowCaption write SetShowCaption default true;
+    property TableBehaviour: TSpkItemTableBehaviour
+      read FTableBehaviour write SetTableBehaviour default tbContinuesRow;
     property AllowAllUp;
     property ButtonKind;
     property Checked;

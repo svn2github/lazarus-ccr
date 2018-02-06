@@ -75,8 +75,8 @@ type
     property Rect: T2DIntRect read FRect write SetRect;
 
   published
-    property Visible: boolean read FVisible write SetVisible;
-    property Enabled: boolean read FEnabled write SetEnabled;
+    property Visible: boolean read FVisible write SetVisible default true;
+    property Enabled: boolean read FEnabled write SetEnabled default true;
   end;
 
   TSpkBaseItemClass = class of TSpkBaseItem;

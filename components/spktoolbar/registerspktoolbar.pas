@@ -59,8 +59,20 @@ begin
   //todo: register Caption Editor
 end;
 
+procedure SkipObsoleteProperties;
+const
+  GROUPBEHAVIOUR_NOTE = 'GroupBehaviour is not needed.';
+begin
+  RegisterPropertyToSkip(TSpkCheckbox, 'Groupbehaviour', GROUPBEHAVIOUR_NOTE, '');
+  RegisterPropertyToSkip(TSpkRadioButton, 'GroupBehaviour', GROUPBEHAVIOUR_NOTE, '');
+end;
+
+
 initialization
 {$I SpkToolbar.lrs}
 
+  SkipObsoleteProperties;
+
 end.
+
 
