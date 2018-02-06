@@ -410,7 +410,7 @@ type
   end;
   
 implementation
-uses rxlclutils, Math, rxdconst;
+uses rxlclutils, Math, rxdconst, LCLVersion;
 
 type
 {  TDbGridAccess = class(TDbGrid)
@@ -1533,7 +1533,11 @@ begin
   begin
     if Enabled then
     begin
+      {$IF lcl_fullversion >= 1090000}
       if MouseInClient then
+      {$ELSE}
+      if MouseEntered then
+      {$ENDIF}
       begin
         if FMouseDown then
         begin
