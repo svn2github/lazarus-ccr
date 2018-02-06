@@ -24,6 +24,7 @@ type
     Label1: TLabel;
     Label2: TLabel;
     RadioGroup1: TRadioGroup;
+    RadioGroup2: TRadioGroup;
     rxData1ID: TLongintField;
     RxDBLookupCombo1: TRxDBLookupCombo;
     rxData1: TRxMemoryData;
@@ -67,6 +68,11 @@ begin
   case RadioGroup1.ItemIndex of
     0:RxDBLookupCombo1.BorderStyle:=bsNone;
     1:RxDBLookupCombo1.BorderStyle:=bsSingle;
+  end;
+
+  case RadioGroup2.ItemIndex of
+    0:RxDBLookupCombo1.Style:=rxcsDropDown;
+    1:RxDBLookupCombo1.Style:=rxcsDropDownList;
   end;
 end;
 
