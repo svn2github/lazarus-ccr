@@ -974,12 +974,17 @@ begin
     begin
       R1:=R;
       R1.Left:=R1.Left + Max(0, X);
+      if R1.Right > ARight then
+        R1.Right:=ARight;
       ThemeServices.DrawText(ACanvas, AThemedDetails^, S, R1, DT_LEFT or DT_VCENTER or DT_SINGLELINE, 0)
     end
     else
       ACanvas.TextRect(R, R.Left + Max(0, X), ATop, S);
 
     Inc(R.Left, W);
+    if R.Left >= ARight then
+      Break;
+
     if I < LastIndex then
     begin
       if ThemeServices.ThemesEnabled and (FStyle = rxcsDropDownList) then
@@ -995,8 +1000,6 @@ begin
       end;
       Inc(R.Left);
     end;
-    if R.Left >= ARight then
-      Break;
   end;
 end;
 

@@ -87,7 +87,7 @@ begin
   rxLookUpData.AppendRecord([4, 'MS Windows XP', 150]);
   rxLookUpData.AppendRecord([5, 'MS Windows Vista', 100]);
   rxLookUpData.AppendRecord([6, 'MS Windows 7', 200]);
-  rxLookUpData.AppendRecord([7, 'Fedora Linux 11', 0]);
+  rxLookUpData.AppendRecord([7, 'Fedora Linux 11 - 27', 0]);
   Label2.Caption:='';
 end;
 
