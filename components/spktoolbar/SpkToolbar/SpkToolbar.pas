@@ -361,7 +361,7 @@ type
     // *** Drawing ***
     // ***************
 
-    procedure EraseBackground(DC: HDC); override;
+//    procedure EraseBackground(DC: HDC); override;
 
     { Method draws the content of the component }
     procedure Paint; override;
@@ -429,6 +429,17 @@ type
     property OnTabChanging: TSpkTabChangingEvent
       read FOnTabChanging write FOnTabChanging;
     property OnTabChanged: TNotifyEvent read FOnTabChanged write FOnTabChanged;
+
+    { inherited properties }
+    property Align default alTop;
+    property BorderSpacing;
+    property Anchors;
+    property Hint;
+    property ParentShowHint;
+    property ShowHint;
+    property Visible;
+    property OnResize;
+
   end;
 
 
@@ -531,7 +542,9 @@ begin
   inherited Create(AOwner);
 
   // Initialization of inherited property
-  inherited Align := alTop;
+  Align := alTop;
+  DoubleBuffered := true;  // required after Laz 1.9
+
   //todo: not found in lcl
   //inherited AlignWithMargins:=true;
 
@@ -1067,7 +1080,7 @@ begin
 
   inherited;
 end;
-
+                      (*
 procedure TSpkToolbar.EraseBackground(DC: HDC);
 begin
   // The correct implementation is doing nothing
@@ -1075,7 +1088,7 @@ begin
     inherited;   // wp: this calls FillRect!
   // "inherited" removed in case of no themes to fix issue #0025047 (flickering
   // when using standard windows theme or when manifest file is off)
-end;
+end;                    *)
 
 procedure TSpkToolbar.SetBufferInvalid;
 begin

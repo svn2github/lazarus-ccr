@@ -1,11 +1,11 @@
 object Form2: TForm2
   Left = 311
-  Height = 352
+  Height = 340
   Top = 214
-  Width = 782
+  Width = 777
   Caption = 'Form2'
-  ClientHeight = 352
-  ClientWidth = 782
+  ClientHeight = 340
+  ClientWidth = 777
   Color = clBtnFace
   Font.Color = clWindowText
   Font.Height = -11
@@ -14,7 +14,7 @@ object Form2: TForm2
   object SpkToolbar1: TSpkToolbar
     Left = 0
     Top = 0
-    Width = 782
+    Width = 777
     Color = clBtnFace
     Appearance.Tab.TabHeaderFont.Color = 2763306
     Appearance.Tab.BorderColor = 10921638
@@ -105,8 +105,6 @@ object Form2: TForm2
       CustomAppearance.Element.ActiveCaptionColor = 8405614
       CustomAppearance.Element.Style = esRounded
       Caption = 'Narzedzia glówne'
-      OverrideAppearance = False
-      Visible = True
       Panes = (
         'SpkPane2'
         'SpkPane3'
@@ -116,7 +114,6 @@ object Form2: TForm2
       )
       object SpkPane2: TSpkPane
         Caption = 'Plik'
-        Visible = True
         Items = (
           'SpkLargeButton4'
           'SpkSmallButton2'
@@ -124,50 +121,31 @@ object Form2: TForm2
           'SpkSmallButton4'
         )
         object SpkLargeButton4: TSpkLargeButton
-          Visible = True
-          Enabled = True
           Caption = 'Nowy'
           LargeImageIndex = 3
-          ButtonKind = bkButton
         end
         object SpkSmallButton2: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Otwórz'
-          GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 16
-          ShowCaption = True
           TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
           DropdownMenu = PopupMenu2
         end
         object SpkSmallButton3: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Zapisz'
-          GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 56
-          ShowCaption = True
           TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
         end
         object SpkSmallButton4: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Zapisz jako...'
-          GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 57
-          ShowCaption = True
           TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
         end
       end
       object SpkPane3: TSpkPane
         Caption = 'Edycja'
-        Visible = True
         Items = (
           'SpkSmallButton1'
           'SpkSmallButton5'
@@ -176,128 +154,81 @@ object Form2: TForm2
           'SpkSmallButton8'
         )
         object SpkSmallButton1: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Button'
           GroupBehaviour = gbBeginsGroup
-          HideFrameWhenIdle = False
           ImageIndex = 0
           ShowCaption = False
-          TableBehaviour = tbContinuesRow
           ButtonKind = bkButtonDropdown
           DropdownMenu = PopupMenu2
         end
         object SpkSmallButton5: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Button'
           GroupBehaviour = gbEndsGroup
-          HideFrameWhenIdle = False
           ImageIndex = 31
           ShowCaption = False
-          TableBehaviour = tbContinuesRow
           ButtonKind = bkButtonDropdown
           DropdownMenu = PopupMenu2
         end
         object SpkSmallButton6: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Button'
           GroupBehaviour = gbBeginsGroup
-          HideFrameWhenIdle = False
           ImageIndex = 53
           ShowCaption = False
           TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
         end
         object SpkSmallButton7: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Button'
           GroupBehaviour = gbContinuesGroup
-          HideFrameWhenIdle = False
           ImageIndex = 51
           ShowCaption = False
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButton
         end
         object SpkSmallButton8: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Button'
           GroupBehaviour = gbEndsGroup
-          HideFrameWhenIdle = False
           ImageIndex = 11
           ShowCaption = False
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButton
         end
       end
       object SpkPane4: TSpkPane
         Caption = 'Szukanie'
-        Visible = True
         Items = (
           'SpkLargeButton5'
           'SpkSmallButton9'
           'SpkSmallButton10'
         )
         object SpkLargeButton5: TSpkLargeButton
-          Visible = True
-          Enabled = True
           Caption = 'Szukaj'
           LargeImageIndex = 4
-          ButtonKind = bkButton
         end
         object SpkSmallButton9: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Szukaj dalej'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
           ImageIndex = 41
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButton
         end
         object SpkSmallButton10: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Zamień'
-          GroupBehaviour = gbSingleItem
-          HideFrameWhenIdle = False
           ImageIndex = 55
-          ShowCaption = True
           TableBehaviour = tbBeginsRow
-          ButtonKind = bkButton
         end
       end
       object SpkPane1: TSpkPane
         Caption = 'Large buttons'
-        Visible = True
         Items = (
           'SpkLargeButton1'
           'SpkLargeButton2'
           'SpkLargeButton3'
         )
         object SpkLargeButton1: TSpkLargeButton
-          Visible = True
-          Enabled = True
           Caption = 'Button'
           LargeImageIndex = 0
-          ButtonKind = bkButton
           DropdownMenu = PopupMenu2
         end
         object SpkLargeButton2: TSpkLargeButton
-          Visible = True
-          Enabled = True
           Caption = 'ButtonDropdown'
           LargeImageIndex = 1
           ButtonKind = bkButtonDropdown
           DropdownMenu = PopupMenu2
         end
         object SpkLargeButton3: TSpkLargeButton
-          Visible = True
-          Enabled = True
           Caption = 'Dropdown'
           LargeImageIndex = 2
           ButtonKind = bkDropdown
@@ -306,44 +237,29 @@ object Form2: TForm2
       end
       object SpkPane6: TSpkPane
         Caption = 'Small buttons'
-        Visible = True
         Items = (
           'SpkSmallButton11'
           'SpkSmallButton12'
           'SpkSmallButton13'
         )
         object SpkSmallButton11: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Button'
-          GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 20
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
-          ButtonKind = bkButton
           DropdownMenu = PopupMenu2
         end
         object SpkSmallButton12: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'ButtonDropdown'
-          GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 21
-          ShowCaption = True
           TableBehaviour = tbBeginsRow
           ButtonKind = bkButtonDropdown
           DropdownMenu = PopupMenu2
         end
         object SpkSmallButton13: TSpkSmallButton
-          Visible = True
-          Enabled = True
           Caption = 'Dropdown'
-          GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 22
-          ShowCaption = True
           TableBehaviour = tbBeginsRow
           ButtonKind = bkDropdown
           DropdownMenu = PopupMenu2
@@ -395,40 +311,28 @@ object Form2: TForm2
       CustomAppearance.Element.ActiveCaptionColor = 8405614
       CustomAppearance.Element.Style = esRounded
       Caption = 'Katalogi'
-      OverrideAppearance = False
-      Visible = True
       Panes = (
         'SpkPane5'
       )
       object SpkPane5: TSpkPane
         Caption = 'Tafla'
-        Visible = True
         Items = (
           'SpkLargeButton6'
           'SpkLargeButton7'
           'SpkLargeButton8'
         )
         object SpkLargeButton6: TSpkLargeButton
-          Visible = True
-          Enabled = True
           Caption = 'Blender'
           LargeImageIndex = 2
-          ButtonKind = bkButton
         end
         object SpkLargeButton7: TSpkLargeButton
-          Visible = True
-          Enabled = True
           Caption = 'Dokumenty'
           LargeImageIndex = 1
-          ButtonKind = bkButton
           DropdownMenu = PopupMenu1
         end
         object SpkLargeButton8: TSpkLargeButton
-          Visible = True
-          Enabled = True
           Caption = 'Lazarus'
           LargeImageIndex = 0
-          ButtonKind = bkButton
         end
       end
     end

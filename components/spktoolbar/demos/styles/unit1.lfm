@@ -2,27 +2,27 @@ object Form1: TForm1
   Left = 280
   Height = 667
   Top = 130
-  Width = 664
+  Width = 636
   Caption = 'spkToolbar Styles'
   ClientHeight = 667
-  ClientWidth = 664
+  ClientWidth = 636
   Color = clMedGray
   LCLVersion = '1.9.0.0'
   object ScrollBox1: TScrollBox
     Left = 0
     Height = 667
     Top = 0
-    Width = 664
+    Width = 636
     HorzScrollBar.Page = 75
     VertScrollBar.Page = 660
     Align = alClient
     ClientHeight = 663
-    ClientWidth = 660
+    ClientWidth = 632
     TabOrder = 0
     object SpkToolbar1: TSpkToolbar
       Left = 0
       Top = 0
-      Width = 660
+      Width = 632
       Color = clMedGray
       Appearance.Tab.TabHeaderFont.Color = 9126421
       Appearance.Tab.BorderColor = 14922381
@@ -106,8 +106,6 @@ object Form1: TForm1
         CustomAppearance.Element.ActiveCaptionColor = 8405614
         CustomAppearance.Element.Style = esRounded
         Caption = 'Office2007 Blue'
-        OverrideAppearance = False
-        Visible = True
         Panes = (
           'SpkPane1'
           'SpkPane10'
@@ -116,7 +114,6 @@ object Form1: TForm1
         )
         object SpkPane1: TSpkPane
           Caption = 'File commands'
-          Visible = True
           Items = (
             'SpkLargeButton1'
             'SpkLargeButton14'
@@ -125,52 +122,34 @@ object Form1: TForm1
             'SpkLargeButton15'
           )
           object SpkLargeButton1: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'New'
             LargeImageIndex = 0
             ButtonKind = bkDropdown
           end
           object SpkLargeButton14: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Open file...'
             LargeImageIndex = 1
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton29: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 0
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton30: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save as...'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 1
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkLargeButton15: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Exit program'
             LargeImageIndex = 3
-            ButtonKind = bkButton
           end
         end
         object SpkPane10: TSpkPane
           Caption = 'Edit commands'
-          Visible = True
           Items = (
             'SpkSmallButton31'
             'SpkSmallButton32'
@@ -179,62 +158,33 @@ object Form1: TForm1
             'SpkSmallButton35'
           )
           object SpkSmallButton31: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Cut'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 2
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton32: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Copy'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 3
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton33: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Paste'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 4
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton34: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Select all'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsColumn
-            ButtonKind = bkButton
           end
           object SpkSmallButton35: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Unselect'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
         end
         object SpkPane16: TSpkPane
           Caption = 'Format commands'
-          Visible = True
           Items = (
             'SpkSmallButton41'
             'SpkSmallButton42'
@@ -245,55 +195,36 @@ object Form1: TForm1
             'SpkSmallButton47'
           )
           object SpkSmallButton41: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbBeginsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 5
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton42: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 6
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton44: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 7
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton43: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbEndsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 8
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton45: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbBeginsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 9
             ShowCaption = False
             TableBehaviour = tbBeginsRow
@@ -302,52 +233,34 @@ object Form1: TForm1
             GroupIndex = 1
           end
           object SpkSmallButton46: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 10
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
             GroupIndex = 1
           end
           object SpkSmallButton47: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbEndsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 11
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
             GroupIndex = 1
           end
         end
         object SpkPane11: TSpkPane
           Caption = 'Settings'
-          Visible = True
           Items = (
             'SpkSmallButton36'
             'SpkCheckbox1'
           )
           object SpkSmallButton36: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save now'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkCheckbox1: TSpkCheckbox
-            Visible = True
-            Enabled = True
             Caption = 'Auto save'
-            State = cbUnchecked
             TableBehaviour = tbBeginsRow
           end
         end
@@ -356,7 +269,7 @@ object Form1: TForm1
     object SpkToolbar2: TSpkToolbar
       Left = 0
       Top = 137
-      Width = 660
+      Width = 632
       Color = clMedGray
       Style = spkOffice2007Silver
       Appearance.Tab.TabHeaderFont.Color = 8016716
@@ -441,8 +354,6 @@ object Form1: TForm1
         CustomAppearance.Element.ActiveCaptionColor = 8405614
         CustomAppearance.Element.Style = esRounded
         Caption = 'Office2007 Silver'
-        OverrideAppearance = False
-        Visible = True
         Panes = (
           'SpkPane2'
           'SpkPane3'
@@ -451,7 +362,6 @@ object Form1: TForm1
         )
         object SpkPane2: TSpkPane
           Caption = 'File commands'
-          Visible = True
           Items = (
             'SpkLargeButton2'
             'SpkLargeButton12'
@@ -460,52 +370,34 @@ object Form1: TForm1
             'SpkLargeButton13'
           )
           object SpkLargeButton2: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'New'
             LargeImageIndex = 0
             ButtonKind = bkDropdown
           end
           object SpkLargeButton12: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Open file...'
             LargeImageIndex = 1
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton22: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 0
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton23: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save as...'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 1
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkLargeButton13: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Exit program'
             LargeImageIndex = 3
-            ButtonKind = bkButton
           end
         end
         object SpkPane3: TSpkPane
           Caption = 'Edit commands'
-          Visible = True
           Items = (
             'SpkSmallButton24'
             'SpkSmallButton25'
@@ -514,62 +406,33 @@ object Form1: TForm1
             'SpkSmallButton28'
           )
           object SpkSmallButton24: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Cut'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 2
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton25: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Copy'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 3
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton26: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Paste'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 4
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton27: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Select all'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsColumn
-            ButtonKind = bkButton
           end
           object SpkSmallButton28: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Unselect'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
         end
         object SpkPane17: TSpkPane
           Caption = 'Format commands'
-          Visible = True
           Items = (
             'SpkSmallButton48'
             'SpkSmallButton49'
@@ -580,55 +443,36 @@ object Form1: TForm1
             'SpkSmallButton54'
           )
           object SpkSmallButton48: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbBeginsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 5
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton49: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 6
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton50: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 7
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton51: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbEndsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 8
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton52: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbBeginsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 9
             ShowCaption = False
             TableBehaviour = tbBeginsRow
@@ -637,52 +481,33 @@ object Form1: TForm1
             GroupIndex = 1
           end
           object SpkSmallButton53: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 10
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
             GroupIndex = 1
           end
           object SpkSmallButton54: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbEndsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 11
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
             GroupIndex = 1
           end
         end
         object SpkPane12: TSpkPane
           Caption = 'Settings'
-          Visible = True
           Items = (
             'SpkSmallButton37'
             'SpkCheckbox2'
           )
           object SpkSmallButton37: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save now'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkCheckbox2: TSpkCheckbox
-            Visible = True
-            Enabled = True
             Caption = 'Auto save'
-            State = cbUnchecked
             TableBehaviour = tbBeginsRow
           end
         end
@@ -691,7 +516,7 @@ object Form1: TForm1
     object SpkToolbar3: TSpkToolbar
       Left = 0
       Top = 274
-      Width = 660
+      Width = 632
       Color = clMedGray
       Style = spkOffice2007SilverTurquoise
       Appearance.Tab.TabHeaderFont.Color = 8016716
@@ -776,8 +601,6 @@ object Form1: TForm1
         CustomAppearance.Element.ActiveCaptionColor = 8405614
         CustomAppearance.Element.Style = esRounded
         Caption = 'Office2007 Silver/turquoise'
-        OverrideAppearance = False
-        Visible = True
         Panes = (
           'SpkPane4'
           'SpkPane9'
@@ -786,7 +609,6 @@ object Form1: TForm1
         )
         object SpkPane4: TSpkPane
           Caption = 'File commands'
-          Visible = True
           Items = (
             'SpkLargeButton3'
             'SpkLargeButton10'
@@ -795,52 +617,34 @@ object Form1: TForm1
             'SpkLargeButton11'
           )
           object SpkLargeButton3: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'New'
             LargeImageIndex = 0
             ButtonKind = bkDropdown
           end
           object SpkLargeButton10: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Open file...'
             LargeImageIndex = 1
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton15: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 0
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton16: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save as...'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 1
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkLargeButton11: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Exit program'
             LargeImageIndex = 3
-            ButtonKind = bkButton
           end
         end
         object SpkPane9: TSpkPane
           Caption = 'Edit commands'
-          Visible = True
           Items = (
             'SpkSmallButton17'
             'SpkSmallButton18'
@@ -849,62 +653,33 @@ object Form1: TForm1
             'SpkSmallButton21'
           )
           object SpkSmallButton17: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Cut'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 2
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton18: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Copy'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 3
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton19: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Paste'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 4
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton20: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Select all'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsColumn
-            ButtonKind = bkButton
           end
           object SpkSmallButton21: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Unselect'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
         end
         object SpkPane18: TSpkPane
           Caption = 'Format commands'
-          Visible = True
           Items = (
             'SpkSmallButton55'
             'SpkSmallButton56'
@@ -915,55 +690,36 @@ object Form1: TForm1
             'SpkSmallButton61'
           )
           object SpkSmallButton55: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbBeginsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 5
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton56: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 6
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton57: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 7
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton58: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbEndsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 8
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton59: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbBeginsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 9
             ShowCaption = False
             TableBehaviour = tbBeginsRow
@@ -972,52 +728,33 @@ object Form1: TForm1
             GroupIndex = 1
           end
           object SpkSmallButton60: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 10
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
             GroupIndex = 1
           end
           object SpkSmallButton61: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbEndsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 11
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
             GroupIndex = 1
           end
         end
         object SpkPane13: TSpkPane
           Caption = 'Settings'
-          Visible = True
           Items = (
             'SpkSmallButton38'
             'SpkCheckbox3'
           )
           object SpkSmallButton38: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save now'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkCheckbox3: TSpkCheckbox
-            Visible = True
-            Enabled = True
             Caption = 'Auto save'
-            State = cbUnchecked
             TableBehaviour = tbBeginsRow
           end
         end
@@ -1027,7 +764,7 @@ object Form1: TForm1
       Left = 0
       Height = 25
       Top = 112
-      Width = 660
+      Width = 632
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
@@ -1036,7 +773,7 @@ object Form1: TForm1
       Left = 0
       Height = 25
       Top = 523
-      Width = 660
+      Width = 632
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 4
@@ -1045,7 +782,7 @@ object Form1: TForm1
       Left = 0
       Height = 25
       Top = 386
-      Width = 660
+      Width = 632
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 5
@@ -1053,7 +790,7 @@ object Form1: TForm1
     object SpkToolbar4: TSpkToolbar
       Left = 0
       Top = 411
-      Width = 660
+      Width = 632
       Color = clMedGray
       Style = spkMetroLight
       Appearance.Tab.TabHeaderFont.Color = 9787178
@@ -1139,8 +876,6 @@ object Form1: TForm1
         CustomAppearance.Element.ActiveCaptionColor = 8405614
         CustomAppearance.Element.Style = esRounded
         Caption = 'Metro light'
-        OverrideAppearance = False
-        Visible = True
         Panes = (
           'SpkPane5'
           'SpkPane8'
@@ -1149,7 +884,6 @@ object Form1: TForm1
         )
         object SpkPane5: TSpkPane
           Caption = 'File commands'
-          Visible = True
           Items = (
             'SpkLargeButton4'
             'SpkLargeButton8'
@@ -1158,52 +892,34 @@ object Form1: TForm1
             'SpkLargeButton9'
           )
           object SpkLargeButton4: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'New'
             LargeImageIndex = 0
             ButtonKind = bkDropdown
           end
           object SpkLargeButton8: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Open file...'
             LargeImageIndex = 1
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton8: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 0
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton9: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save as...'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 1
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkLargeButton9: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Exit program'
             LargeImageIndex = 3
-            ButtonKind = bkButton
           end
         end
         object SpkPane8: TSpkPane
           Caption = 'Edit commands'
-          Visible = True
           Items = (
             'SpkSmallButton10'
             'SpkSmallButton11'
@@ -1212,62 +928,33 @@ object Form1: TForm1
             'SpkSmallButton14'
           )
           object SpkSmallButton10: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Cut'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 2
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton11: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Copy'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 3
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton12: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Paste'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 4
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton13: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Select all'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsColumn
-            ButtonKind = bkButton
           end
           object SpkSmallButton14: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Unselect'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
         end
         object SpkPane19: TSpkPane
           Caption = 'Format commands'
-          Visible = True
           Items = (
             'SpkSmallButton68'
             'SpkSmallButton62'
@@ -1278,55 +965,37 @@ object Form1: TForm1
             'SpkSmallButton67'
           )
           object SpkSmallButton68: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbBeginsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 5
             ShowCaption = False
             TableBehaviour = tbBeginsRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton62: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 6
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton63: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 7
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton64: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbEndsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 8
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton65: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbBeginsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 9
             ShowCaption = False
             TableBehaviour = tbBeginsRow
@@ -1335,52 +1004,33 @@ object Form1: TForm1
             GroupIndex = 1
           end
           object SpkSmallButton66: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 10
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
             GroupIndex = 1
           end
           object SpkSmallButton67: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbEndsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 11
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
             GroupIndex = 1
           end
         end
         object SpkPane14: TSpkPane
           Caption = 'Settings'
-          Visible = True
           Items = (
             'SpkSmallButton39'
             'SpkCheckbox4'
           )
           object SpkSmallButton39: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save now'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkCheckbox4: TSpkCheckbox
-            Visible = True
-            Enabled = True
             Caption = 'Auto save'
-            State = cbUnchecked
             TableBehaviour = tbBeginsRow
           end
         end
@@ -1390,7 +1040,7 @@ object Form1: TForm1
       Left = 0
       Height = 25
       Top = 249
-      Width = 660
+      Width = 632
       Align = alTop
       BevelOuter = bvNone
       Color = clMedGray
@@ -1400,7 +1050,7 @@ object Form1: TForm1
     object SpkToolbar5: TSpkToolbar
       Left = 0
       Top = 548
-      Width = 660
+      Width = 632
       Color = clMedGray
       Style = spkMetroDark
       Appearance.Tab.TabHeaderFont.Color = clWhite
@@ -1487,8 +1137,6 @@ object Form1: TForm1
         CustomAppearance.Element.ActiveCaptionColor = 8405614
         CustomAppearance.Element.Style = esRounded
         Caption = 'Metro dark'
-        OverrideAppearance = False
-        Visible = True
         Panes = (
           'SpkPane6'
           'SpkPane7'
@@ -1497,7 +1145,6 @@ object Form1: TForm1
         )
         object SpkPane6: TSpkPane
           Caption = 'File commands'
-          Visible = True
           Items = (
             'SpkLargeButton7'
             'SpkLargeButton5'
@@ -1506,52 +1153,34 @@ object Form1: TForm1
             'SpkLargeButton6'
           )
           object SpkLargeButton7: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'New'
             LargeImageIndex = 0
             ButtonKind = bkDropdown
           end
           object SpkLargeButton5: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Open file...'
             LargeImageIndex = 1
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton2: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 0
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton1: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save as...'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 1
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkLargeButton6: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Exit program'
             LargeImageIndex = 3
-            ButtonKind = bkButton
           end
         end
         object SpkPane7: TSpkPane
           Caption = 'Edit commands'
-          Visible = True
           Items = (
             'SpkSmallButton3'
             'SpkSmallButton4'
@@ -1560,62 +1189,33 @@ object Form1: TForm1
             'SpkSmallButton7'
           )
           object SpkSmallButton3: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Cut'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 2
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton4: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Copy'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 3
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton5: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Paste'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 4
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton6: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Select all'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsColumn
-            ButtonKind = bkButton
           end
           object SpkSmallButton7: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Unselect'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
         end
         object SpkPane20: TSpkPane
           Caption = 'Format commands'
-          Visible = True
           Items = (
             'SpkSmallButton69'
             'SpkSmallButton70'
@@ -1626,55 +1226,36 @@ object Form1: TForm1
             'SpkSmallButton75'
           )
           object SpkSmallButton69: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
+            GroupBehaviour = gbBeginsGroup
             ImageIndex = 5
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton70: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
+            GroupBehaviour = gbContinuesGroup
             ImageIndex = 6
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton71: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
+            GroupBehaviour = gbContinuesGroup
             ImageIndex = 7
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton72: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
+            GroupBehaviour = gbEndsGroup
             ImageIndex = 8
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
           end
           object SpkSmallButton73: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
+            GroupBehaviour = gbBeginsGroup
             ImageIndex = 9
             ShowCaption = False
             TableBehaviour = tbBeginsRow
@@ -1683,52 +1264,33 @@ object Form1: TForm1
             GroupIndex = 1
           end
           object SpkSmallButton74: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
+            GroupBehaviour = gbContinuesGroup
             ImageIndex = 10
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
             GroupIndex = 1
           end
           object SpkSmallButton75: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
+            GroupBehaviour = gbEndsGroup
             ImageIndex = 11
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
             ButtonKind = bkToggle
             GroupIndex = 1
           end
         end
         object SpkPane15: TSpkPane
           Caption = 'Settings'
-          Visible = True
           Items = (
             'SpkSmallButton40'
             'SpkCheckbox5'
           )
           object SpkSmallButton40: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Save now'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkCheckbox5: TSpkCheckbox
-            Visible = True
-            Enabled = True
             Caption = 'auto ssave'
-            State = cbUnchecked
             TableBehaviour = tbBeginsRow
           end
         end
