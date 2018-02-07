@@ -183,3 +183,5 @@ to explain the component
 [+] Added Public method: procedure CloseAllTabs;
     (by: DSA)
 
+07/01/2018
+[-] Fix compilation for Lazarus 1.9.0 (by: DSA)

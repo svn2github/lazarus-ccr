@@ -1182,7 +1182,7 @@ var
 begin
   if (tdiMiddleButtomClosePage in FTDIOptions) and (Button = mbMiddle) then
   begin
-     APageIndex := TabIndexAtClientPos( Point(X,Y) );
+     APageIndex := IndexOfPageAt(X, Y);
      if (APageIndex >= 0) and (APageIndex >= FixedPages) then
      begin
        RemovePage( APageIndex );
