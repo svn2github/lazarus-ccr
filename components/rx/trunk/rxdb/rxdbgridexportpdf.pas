@@ -35,7 +35,7 @@ unit RxDBGridExportPdf;
 
 interface
 
-{$IF (FPC_FULLVERSION >= 30101)}
+{$IF (FPC_FULLVERSION >= 30004)}
 uses
   Classes, SysUtils, DB, rxdbgrid, rxlclutils, Graphics, fpPDF, contnrs,  fpparsettf,
   fpTTF;
@@ -191,7 +191,7 @@ type
   {$ENDIF}
 implementation
 
-{$IF (FPC_FULLVERSION >= 30101)}
+{$IF (FPC_FULLVERSION >= 30004)}
 uses Grids, rxdconst, FileUtil, Forms, Controls, LCLIntf, LazFileUtils, FPReadBMP,
   RxDBGridExportPdfSetupUnit, LazUTF8;
 

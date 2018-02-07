@@ -35,7 +35,7 @@ unit RxDBGridExportPdfSetupUnit;
 
 interface
 
-{$IF (FPC_FULLVERSION >= 30101)}
+{$IF (FPC_FULLVERSION >= 30004)}
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   EditBtn, ButtonPanel, ExtCtrls, ComCtrls, ColorBox, fpPDF;
@@ -95,7 +95,7 @@ const
 
   {$ENDIF}
 implementation
-{$IF (FPC_FULLVERSION >= 30101)}
+{$IF (FPC_FULLVERSION >= 30004)}
 uses rxdconst, LCLIntf;
 
 {$R *.lfm}

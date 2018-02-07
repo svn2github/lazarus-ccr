@@ -43,7 +43,7 @@ implementation
 uses DB, DBPropEdits, rxdbgrid, RxDBSpinEdit, RxDBTimeEdit, RxDBCtrls, rxmemds,
   ComponentEditors, rxseldsfrm, PropEdits, RxDBColorBox, rxdbdateedit, rxdbcomb,
   rxlookup, rxdbcurredit, RxDBGridFooterTools, rxdbverticalgrid
-  {$IF (FPC_FULLVERSION >= 30101)}
+  {$IF (FPC_FULLVERSION >= 30004)}
   , RxDBGridExportPdf
   {$ENDIF}
   ;
@@ -151,7 +151,7 @@ begin
   RegisterComponents('RX DBAware',[TRxDBGridFooterTools]);
 end;
 
-{$IF (FPC_FULLVERSION >= 30101)}
+{$IF (FPC_FULLVERSION >= 30004)}
 procedure RegisterRxDBGridExportPDF;
 begin
   RegisterComponents('RX DBAware',[TRxDBGridExportPDF]);
@@ -205,7 +205,7 @@ begin
   RegisterUnit('RxDBGridFooterTools', @RegisterRxDbGridFooterTools);
   RegisterUnit('rxdbverticalgrid', @RegisterRxDBVerticalGrid);
 
-  {$IF (FPC_FULLVERSION >= 30101)}
+  {$IF (FPC_FULLVERSION >= 30004)}
   RegisterUnit('RxDBGridExportPdf', @RegisterRxDBGridExportPDF);
   {$ENDIF}
 
