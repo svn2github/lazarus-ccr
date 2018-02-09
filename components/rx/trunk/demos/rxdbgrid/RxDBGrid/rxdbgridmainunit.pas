@@ -149,7 +149,7 @@ begin
   RxMemoryData1.AppendRecord([16, 'Гарант', 480, 'Гарант', EncodeDate(2007, 2, 1), 3]);
   RxMemoryData1.AppendRecord([17, 'Fedora Linux', 0, 'Open source', EncodeDate(2007, 2, 1), 3]);
   RxMemoryData1.AppendRecord([17, 'Ubuntu Linux', 0, 'Open source', EncodeDate(2007, 2, 1), 3]);
-  RxMemoryData1.AppendRecord([17, 'Linux', 0, null, EncodeDate(2007, 2, 1), 3]);
+  RxMemoryData1.AppendRecord([17, 'Linux', 0, 'a', EncodeDate(2007, 2, 1), 3]);
 
   RxMemoryData1.First;
 

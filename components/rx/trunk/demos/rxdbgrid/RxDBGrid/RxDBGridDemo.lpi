@@ -59,7 +59,7 @@
         <MinVersion Major="1" Release="18" Build="56" Valid="True"/>
       </Item5>
     </RequiredPackages>
-    <Units Count="77">
+    <Units Count="78">
       <Unit0>
         <Filename Value="RxDBGridDemo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -74,7 +74,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="RxDBGridMainUnit"/>
-        <CursorPos X="31" Y="28"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="118"/>
+        <CursorPos X="50" Y="152"/>
         <UsageCount Value="130"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -476,14 +478,13 @@
       </Unit56>
       <Unit57>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="1143"/>
-        <CursorPos X="15" Y="1162"/>
+        <TopLine Value="1180"/>
+        <CursorPos X="45" Y="1192"/>
         <UsageCount Value="12"/>
         <Bookmarks Count="2">
-          <Item0 X="3" Y="7324" ID="1"/>
-          <Item1 X="17" Y="4366" ID="2"/>
+          <Item0 X="3" Y="7325" ID="1"/>
+          <Item1 X="17" Y="4367" ID="2"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit57>
@@ -514,9 +515,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="RxDBGrid_PopUpFilterUnit"/>
-        <EditorIndex Value="6"/>
-        <TopLine Value="216"/>
-        <CursorPos X="3" Y="224"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="152"/>
+        <CursorPos Y="159"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -539,7 +540,7 @@
       </Unit63>
       <Unit64>
         <Filename Value="../../../rxtools/rxdconst.pas"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="98"/>
         <CursorPos X="3" Y="117"/>
         <UsageCount Value="10"/>
@@ -562,7 +563,7 @@
       <Unit67>
         <Filename Value="../../../../../lcl/lclproc.pas"/>
         <UnitName Value="LCLProc"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="843"/>
         <CursorPos Y="862"/>
         <UsageCount Value="10"/>
@@ -623,7 +624,7 @@
       <Unit75>
         <Filename Value="../../../rxdbgrid_print/rxdbgridprintgrid.pas"/>
         <UnitName Value="RxDBGridPrintGrid"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="365"/>
         <CursorPos X="3" Y="314"/>
         <UsageCount Value="10"/>
@@ -632,132 +633,140 @@
       <Unit76>
         <Filename Value="../../../rxdbgrid_export_spreadsheet/rxdbgridexportspreadsheet.pas"/>
         <UnitName Value="RxDBGridExportSpreadSheet"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="40"/>
         <CursorPos X="3" Y="59"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit76>
+      <Unit77>
+        <Filename Value="../../../rxdb/rxlookup.pas"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="34"/>
+        <CursorPos X="53" Y="54"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit77>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="234" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="1182" Column="61" TopLine="1151"/>
       </Position1>
       <Position2>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="235" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="2340" Column="3" TopLine="2338"/>
       </Position2>
       <Position3>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="236" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="1182" Column="15" TopLine="1164"/>
       </Position3>
       <Position4>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="232" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="1162" Column="15" TopLine="1143"/>
       </Position4>
       <Position5>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="234" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="2341" Column="3" TopLine="2338"/>
       </Position5>
       <Position6>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="235" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="1161" Column="15" TopLine="1101"/>
       </Position6>
       <Position7>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="236" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="1269" TopLine="1241"/>
       </Position7>
       <Position8>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="232" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="3023" Column="13" TopLine="3017"/>
       </Position8>
       <Position9>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="234" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxlookup.pas"/>
+        <Caret Line="322" Column="14" TopLine="305"/>
       </Position9>
       <Position10>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="235" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="3023" Column="26" TopLine="3017"/>
       </Position10>
       <Position11>
-        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="236" TopLine="216"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="1192" Column="45" TopLine="1180"/>
       </Position11>
       <Position12>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="232" TopLine="216"/>
       </Position12>
       <Position13>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="234" TopLine="216"/>
+        <Caret Line="80" Column="27" TopLine="50"/>
       </Position13>
       <Position14>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="235" TopLine="216"/>
+        <Caret Line="162" TopLine="153"/>
       </Position14>
       <Position15>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="236" TopLine="216"/>
+        <Caret Line="159" TopLine="152"/>
       </Position15>
       <Position16>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="232" TopLine="216"/>
+        <Caret Line="160" TopLine="152"/>
       </Position16>
       <Position17>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="240" TopLine="216"/>
+        <Caret Line="161" TopLine="152"/>
       </Position17>
       <Position18>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="243" TopLine="216"/>
+        <Caret Line="163" TopLine="152"/>
       </Position18>
       <Position19>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="246" TopLine="216"/>
+        <Caret Line="164" TopLine="152"/>
       </Position19>
       <Position20>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="241" Column="22" TopLine="216"/>
+        <Caret Line="166" TopLine="152"/>
       </Position20>
       <Position21>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
-        <Caret Line="248" Column="39" TopLine="216"/>
+        <Caret Line="165" Column="2" TopLine="152"/>
       </Position21>
       <Position22>
-        <Filename Value="rxdbgridmainunit.pas"/>
-        <Caret Line="188" Column="138" TopLine="152"/>
+        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
+        <Caret Line="159" TopLine="152"/>
       </Position22>
       <Position23>
-        <Filename Value="rxdbgridmainunit.pas"/>
+        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
+        <Caret Line="160" TopLine="152"/>
       </Position23>
       <Position24>
-        <Filename Value="rxdbgridmainunit.pas"/>
-        <Caret Line="28" Column="31"/>
+        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
+        <Caret Line="161" TopLine="152"/>
       </Position24>
       <Position25>
-        <Filename Value="../../../rxdbgrid_export_spreadsheet/rxdbgridexportspreadsheet.pas"/>
-        <Caret Line="59" Column="3" TopLine="40"/>
+        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
+        <Caret Line="166" TopLine="152"/>
       </Position25>
       <Position26>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="1182" Column="61" TopLine="1151"/>
+        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
+        <Caret Line="169" Column="4" TopLine="152"/>
       </Position26>
       <Position27>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="2340" Column="3" TopLine="2338"/>
+        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
+        <Caret Line="159" TopLine="152"/>
       </Position27>
       <Position28>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="1182" Column="15" TopLine="1164"/>
+        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
+        <Caret Line="160" TopLine="152"/>
       </Position28>
       <Position29>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="1162" Column="15" TopLine="1143"/>
+        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
+        <Caret Line="161" TopLine="152"/>
       </Position29>
       <Position30>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="2341" Column="3" TopLine="2338"/>
+        <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
+        <Caret Line="166" TopLine="152"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>

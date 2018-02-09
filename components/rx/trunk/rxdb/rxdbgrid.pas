@@ -3020,6 +3020,7 @@ begin
   FLDS := TDataSource.Create(nil);
   LookupSource := FLDS;
   AutoSize := false;
+  Style:=rxcsDropDownList;
 end;
 
 destructor TRxDBGridLookupComboEditor.Destroy;

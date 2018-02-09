@@ -613,7 +613,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
       ButtonWidth = 23
       DialogTitle = 'Select a Date'
       MaxLength = 10
-      NumGlyphs = 2
       PasswordChar = #0
       PopupColor = clWindow
       TabOrder = 8
@@ -700,8 +699,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
       ReadOnly = False
       Required = False
       DisplayFormat = '#,##0.00'
-      MaxValue = 0
-      MinValue = 0
       Precision = 2
     end
     object RxMemoryData1Developer1: TStringField

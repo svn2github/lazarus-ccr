@@ -159,10 +159,10 @@ begin
   CheckListBox1.Items.BeginUpdate;
   CheckListBox1.Items.Clear;
   Cnt:=FRxColumn.Filter.ValueList.Count - 1;
-
+{
   if FRxColumn.Filter.Style = rxfstBoth then
     Dec(Cnt);
-
+}
   for i:=0 to Cnt do
   begin
     S:=FRxColumn.Filter.ValueList[i];
