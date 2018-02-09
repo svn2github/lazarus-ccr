@@ -56,7 +56,7 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
         <TopLine Value="57"/>
-        <CursorPos X="14" Y="62"/>
+        <CursorPos X="23" Y="74"/>
         <UsageCount Value="24"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -125,8 +125,8 @@
         <Filename Value="../../rxdb/rxlookup.pas"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="1552"/>
-        <CursorPos Y="1566"/>
+        <TopLine Value="1533"/>
+        <CursorPos X="33" Y="1520"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit10>

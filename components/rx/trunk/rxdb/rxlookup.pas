@@ -1519,7 +1519,7 @@ end;
 
 procedure TRxCustomDBLookupCombo.Paint;
 const
-  padding {: Integer} = 1;
+  padding = 1;
 var
   Selected:boolean;
   R, R1, R2: TRect;
@@ -1539,7 +1539,11 @@ begin
 
     if Enabled then
     begin
+      {$IF lcl_fullversion >= 1090000}
       if MouseInClient then
+      {$ELSE}
+      if MouseEntered then
+      {$ENDIF}
       begin
         if FMouseDown then
         begin
@@ -1658,147 +1662,6 @@ begin
     end;
   end;
 end;
-
-(*const
-  padding : Integer = 1;
-var
-  Selected:boolean;
-  R, R1, R2: TRect;
-  AText: string;
-  border : Integer;
-  Details, DetailsBtn: TThemedElementDetails;
-  BtnSize: TSize;
-  pr: PRect;
-begin
-  R := Rect(0, 0, ClientWidth, ClientHeight);
-  if ThemeServices.ThemesEnabled and (FStyle = rxcsDropDownList) then
-  begin
-    if Enabled then
-    begin
-      {$IF lcl_fullversion >= 1090000}
-      if MouseInClient then
-      {$ELSE}
-      if MouseEntered then
-      {$ENDIF}
-      begin
-        if FMouseDown then
-        begin
-          Details := ThemeServices.GetElementDetails(tbPushButtonPressed);
-          DetailsBtn := ThemeServices.GetElementDetails(tcDropDownButtonPressed);
-        end
-        else
-        begin
-          Details := ThemeServices.GetElementDetails(tbPushButtonHot);
-          DetailsBtn := ThemeServices.GetElementDetails(tcDropDownButtonHot);
-        end;
-      end
-      else
-      begin
-        Details := ThemeServices.GetElementDetails(tbPushButtonNormal);
-        DetailsBtn := ThemeServices.GetElementDetails(tcDropDownButtonNormal);
-      end;
-    end
-    else
-    begin
-      Details := ThemeServices.GetElementDetails(tbPushButtonDisabled);
-      DetailsBtn := ThemeServices.GetElementDetails(tcDropDownButtonDisabled);
-    end;
-    ThemeServices.DrawElement(Canvas.Handle, Details, R, nil);
-
-
-    //BtnSize:=ThemeServices.GetDetailSize(DetailsBtn);
-    BtnSize.Width:=20;
-    // adjust this for each OS, on windows looks fine
-    R1 := Rect(ClientWidth - BtnSize.Width, 1, ClientWidth, ClientHeight - 1);
-    R2 := Rect(r1.Left+1, r1.Top+1, r1.Right-2, r1.Bottom-1);
-    pr := @R2;
-    ThemeServices.DrawElement(Canvas.Handle, DetailsBtn, R1, pr);
-
-    R.Right:=R.Right - BtnSize.Width;
-
-    if FDisplayAll then
-      PaintDisplayValues(Canvas, R, TextMargin, @Details)
-    else
-    begin
-      if Assigned(FDataField) and FDataField.IsNull then
-        AText:=FEmptyValue
-      else
-      if FValuesList.Count > 0 then
-        AText:=FValuesList[FLookupDisplayIndex]
-      else
-        AText:='';
-      R.Left:=R.Left + TextMargin;
-      ThemeServices.DrawText(Canvas, Details, AText, R, DT_LEFT or DT_VCENTER or DT_SINGLELINE, 0);
-    end;
-  end
-  else
-  begin
-    Canvas.Font := Font;
-    Canvas.Brush.Color := Color;
-    Selected := Focused and (not (csPaintCopy in ControlState)) and  (not PopupVisible);
-    if Selected then
-    begin
-      Canvas.Font.Color := clHighlightText;
-      Canvas.Brush.Color := clHighlight;
-    end
-    else
-    if not Enabled {and NewStyleControls }then
-    begin
-      Canvas.Font.Color := clInactiveCaption;
-    end;
-
-    if BorderStyle = bsNone then
-    begin
-      border := 3;
-      if Flat then
-      begin
-        Canvas.Frame3d(R, border, bvLowered);
-      end
-      else
-      begin
-        RxFrame3D(Canvas, R, clWindowFrame, clBtnHighlight, 1);
-        RxFrame3D(Canvas, R, clBtnShadow, clBtnFace, 1);
-      end;
-    end
-    else
-    begin
-      border := 1;
-    end;
-
-    if ClientWidth > 2*border then
-    begin
-      R1 := Rect(border, border, ClientWidth - border, ClientHeight - border);
-      Canvas.FillRect(R1);
-      R.Right := R.Right - GetButtonWidth;
-      if PopupVisible and (Caption<>'') then
-      begin
-        AText := Caption;
-        Canvas.TextRect(R, TextMargin, Max(0, (HeightOf(R) - Canvas.TextHeight('Wg')) div 2), AText);
-      end
-      else
-      if FDisplayAll then
-        PaintDisplayValues(Canvas, R, TextMargin, nil)
-      else
-      begin
-        if Assigned(FDataField) and FDataField.IsNull then
-        begin
-          R1 := Rect(border + padding, border + padding, ClientWidth - (border + padding) - GetButtonWidth, ClientHeight - (border + padding));
-          Canvas.Brush.Color:=FEmptyItemColor;
-          Canvas.FillRect(R1);
-          AText:=FEmptyValue
-        end
-        else
-        if FValuesList.Count > 0 then
-          AText:=FValuesList[FLookupDisplayIndex]
-        else
-          AText:='';
-        Canvas.TextRect(R, TextMargin, Max(0, (HeightOf(R) - Canvas.TextHeight('Wg')) div 2), AText);
-      end
-    end;
-  end;
-end;
-*)
-
 
 procedure TRxCustomDBLookupCombo.LookupDataSetChanged(Sender: TObject);
 begin
