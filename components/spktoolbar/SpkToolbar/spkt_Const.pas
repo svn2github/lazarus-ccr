@@ -19,13 +19,10 @@ uses
 
 const
   {$IF lcl_fullversion < 1080000}
-  DPI_AWARE = true;
+  SPK_DPI_AWARE = true;
   {$ELSE}
-  DPI_AWARE = false;   // use lcl scaling instead
+  SPK_DPI_AWARE = false;   // use lcl scaling instead
   {$ENDIF}
-
-var
-  DesignDPI: Integer;
 
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 function SpkScaleX(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;
@@ -52,6 +49,9 @@ const
   SMALLBUTTON_PADDING = 4;  // was: 2
   SMALLBUTTON_DROPDOWN_WIDTH = 11;
   SMALLBUTTON_RADIUS = 4;
+
+  DROPDOWN_ARROW_WIDTH = 8;
+  DROPDOWN_ARROW_HEIGHT = 8;
 
   // ***********************
   // *** Tab page layout ***
@@ -166,6 +166,9 @@ var
   SmallButtonRadius: Integer;
   SmallButtonMinWidth: Integer;
 
+  DropdownArrowWidth: Integer;
+  DropdownArrowHeight: Integer;
+
 
   // ***********************
   // *** Tab page layout ***
@@ -275,7 +278,7 @@ uses
 
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 begin
-  if not DPI_AWARE then
+  if not SPK_DPI_AWARE then
     ToDPI := FromDPI;
 
   {$IfDef Darwin}
@@ -299,6 +302,9 @@ begin
   SmallButtonDropdownWidth := SpkScaleX(SMALLBUTTON_DROPDOWN_WIDTH, FromDPI, ToDPI);
   SmallButtonRadius := SMALLBUTTON_RADIUS;
   SmallButtonMinWidth := 2 * SmallButtonPadding + SmallButtonGlyphWidth;
+
+  DropdownArrowWidth := SpkScaleX(DROPDOWN_ARROW_WIDTH, FromDPI, ToDPI);
+  DropdownArrowHeight := SpkScaleY(DROPDOWN_ARROW_HEIGHT, FromDPI, ToDPI);
 
   MaxElementHeight := SpkScaleY(MAX_ELEMENT_HEIGHT, FromDPI, ToDPI);
   PaneRowHeight := SpkScaleY(PANE_ROW_HEIGHT, FromDPI, ToDPI);
@@ -363,7 +369,7 @@ begin
   if ToDPI = 0 then
     ToDPI := ScreenInfo.PixelsPerInchX;
 
-  if (not DPI_AWARE) or (ToDPI = FromDPI) then
+  if (not SPK_DPI_AWARE) or (ToDPI = FromDPI) then
     Result := Size
   else
     begin
@@ -380,7 +386,7 @@ begin
   if ToDPI = 0 then
     ToDPI := ScreenInfo.PixelsPerInchY;
 
-  if (not DPI_AWARE) or (ToDPI = FromDPI) then
+  if (not SPK_DPI_AWARE) or (ToDPI = FromDPI) then
     Result := Size
   else
     begin

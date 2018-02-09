@@ -548,16 +548,9 @@ begin
   //todo: not found in lcl
   //inherited AlignWithMargins:=true;
 
-  if AOwner is TForm then
-   {$IF LCL_FullVersion >= 1090000}
-    DesignDPI := TForm(AOwner).DesignTimePPI
-   {$ELSE}
-    DesignDPI := TForm(AOwner).DesignTimeDPI
-   {$ENDIF}
-  else
-    DesignDPI := ScreenInfo.PixelsPerInchX;
+  if (AOwner is TForm) then
+    SpkInitLayoutConsts(96); // This default dpi value is ignored for LCL scaling
 
-  SpkInitLayoutConsts(DesignDPI);
   inherited Height := ToolbarHeight;
 
   //inherited Doublebuffered:=true;

@@ -436,21 +436,16 @@ begin
     ActionChange(Sender, False);
 end;
 
+{ Draw a downward-facing filled triangle as dropdown arrow }
 procedure TSpkBaseButton.DrawDropdownArrow(ABuffer: TBitmap; ARect: TRect;
   AColor: TColor);
-const
-  w = 8;
-  h = 8;
 var
   P: array[0..3] of TPoint;
-  wsc, hsc: Integer;
 begin
-  wsc := ScaleX(w, DesignDPI);                 // 0   1
-  hsc := ScaleY(h, DesignDPI);                 //   2
   P[2].x := ARect.Left + (ARect.Right - ARect.Left) div 2;
-  P[2].y := ARect.Top + (ARect.Bottom - ARect.Top + hsc) div 2 - 1;
-  P[0] := Point(P[2].x - wsc div 2, P[2].y - hsc div 2);
-  P[1] := Point(P[2].x + wsc div 2, P[0].y);
+  P[2].y := ARect.Top + (ARect.Bottom - ARect.Top + DropDownArrowHeight) div 2 - 1;
+  P[0] := Point(P[2].x - DropDownArrowWidth div 2, P[2].y - DropDownArrowHeight div 2);
+  P[1] := Point(P[2].x + DropDownArrowWidth div 2, P[0].y);
   P[3] := P[0];
   ABuffer.Canvas.Brush.Color := AColor;
   ABuffer.Canvas.Pen.Style := psClear;
