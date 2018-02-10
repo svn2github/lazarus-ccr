@@ -12,7 +12,8 @@ interface
 {$MESSAGE HINT 'Every rect in this module are exact rectanges (not like in WINAPI without right and bottom)'}
 
 uses
-  LCLType, Graphics, SysUtils, Classes, Controls, StdCtrls, SpkGraphTools, SpkMath;
+  LCLType, LCLVersion, Graphics, SysUtils, Classes, Controls, StdCtrls,
+  SpkGraphTools, SpkMath;
 
 type
   TCornerPos = (cpLeftTop, cpRightTop, cpLeftBottom, cpRightBottom);
@@ -273,6 +274,13 @@ type
                              ImageIndex : integer;
                              Point : T2DIntVector;
                              ClipRect : T2DIntRect); overload;
+    class procedure DrawImage(ACanvas: TCanvas;
+                             Imagelist: TImageList;
+                             ImageIndex: integer;
+                             Point : T2DIntVector;
+                             ClipRect: T2DIntRect;
+                             AImageWidthAt96PPI, ATargetPPI: Integer;
+                             ACanvasFactor: Double); overload;
 
     class procedure DrawDisabledImage(ABitmap : TBitmap;
                                      Imagelist : TImageList;
@@ -1907,12 +1915,15 @@ begin
     CombineRgn(ClipRgn, ClipRgn, OrgRgn, RGN_AND);
 
   SelectClipRgn(ACanvas.Handle, ClipRgn);
+  ImageList.Draw(ACanvas, Point.X, Point.Y, ImageIndex);
 
+  (*
   { wp: Next part fixes issue https://sourceforge.net/p/lazarus-ccr/bugs/35/ }
   ImageBitmap := TBitmap.Create;
   ImageList.GetBitmap(ImageIndex, ImageBitmap);
   ACanvas.Draw(Point.x, Point.y, ImageBitmap);
   ImageBitmap.Free;
+    *)
 
 { wp: The following lines were removed and replaced by the "ImageBitmap" lines
   above in order to fix the "handle leak" of
@@ -1936,6 +1947,64 @@ begin
   RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
   DeleteObject(ClipRgn);
 end;
+
+class procedure TGUITools.DrawImage(ACanvas: TCanvas; Imagelist: TImageList;
+  ImageIndex: integer; Point : T2DIntVector; ClipRect: T2DIntRect;
+  AImageWidthAt96PPI, ATargetPPI: Integer; ACanvasFactor: Double);
+var
+  UseOrgClipRgn: Boolean;
+  OrgRgn: HRGN;
+  ClipRgn: HRGN;
+  //ImageIcon: TIcon;  // wp: no longer needed -- see below
+  ImageBitmap: TBitmap;
+begin
+  // Storing original ClipRgn and applying a new one
+  SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
+
+  ClipRgn := CreateRectRgn(ClipRect.left, ClipRect.Top, ClipRect.Right+1, ClipRect.Bottom+1);
+  if UseOrgClipRgn then
+    CombineRgn(ClipRgn, ClipRgn, OrgRgn, RGN_AND);
+
+  SelectClipRgn(ACanvas.Handle, ClipRgn);
+
+  {$IF LCL_FULLVERSION >= 1090000}
+  ImageList.DrawForPPI(ACanvas, Point.X, Point.Y, ImageIndex,
+    AImageWidthAt96PPI, ATargetPPI, ACanvasFactor);
+  {$ELSE}
+  ImageList.Draw(ACanvas, Point.X, Point.Y, ImageIndex);
+  {$ENDIF}
+
+  (*
+  { wp: Next part fixes issue https://sourceforge.net/p/lazarus-ccr/bugs/35/ }
+  ImageBitmap := TBitmap.Create;
+  ImageList.GetBitmap(ImageIndex, ImageBitmap);
+  ACanvas.Draw(Point.x, Point.y, ImageBitmap);
+  ImageBitmap.Free;
+    *)
+
+{ wp: The following lines were removed and replaced by the "ImageBitmap" lines
+  above in order to fix the "handle leak" of
+  https://sourceforge.net/p/lazarus-ccr/bugs/35/
+  Not daring to touch the ImageList.Draw which would have worked as well. }
+(*
+  // avoid exclusive draw. draw with local canvas itself.
+  //ImageList.Draw(ACanvas, Point.x, Point.y, ImageIndex);
+  {$IfDef LCLWin32}
+  ImageIcon := TIcon.Create;
+  ImageList.GetIcon(ImageIndex, ImageIcon);
+  ACanvas.Draw(Point.x, Point.y, ImageIcon);
+  ImageIcon.Free;
+  {$Else}
+  ImageBitmap := TBitmap.Create;
+  ImageList.GetBitmap(ImageIndex, ImageBitmap);
+  ACanvas.Draw(Point.x, Point.y, ImageBitmap);
+  ImageBitmap.Free;
+  {$EndIf}
+*)
+  RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
+  DeleteObject(ClipRgn);
+end;
+
 
 class procedure TGUITools.DrawMarkedText(ACanvas: TCanvas; x, y: integer; const AText,
   AMarkPhrase: string; TextColor : TColor; ClipRect: T2DIntRect; CaseSensitive: boolean);

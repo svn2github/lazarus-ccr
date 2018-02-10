@@ -29,6 +29,8 @@ type
     FDisabledImages: TImageList;
     FLargeImages: TImageList;
     FDisabledLargeImages: TImageList;
+    FImagesWidth: Integer;
+    FLargeImagesWidth: Integer;
 
     // *** Gettery i settery ***
     procedure SetToolbarDispatch(const Value: TSpkBaseToolbarDispatch);
@@ -38,6 +40,8 @@ type
     procedure SetDisabledImages(const Value: TImageList);
     procedure SetLargeImages(const Value: TImageList);
     procedure SetDisabledLargeImages(const Value: TImageList);
+    procedure SetImagesWidth(const Value: Integer);
+    procedure SetLargeImagesWidth(const Value: Integer);
 
   public
     function AddLargeButton: TSpkLargeButton;
@@ -56,6 +60,8 @@ type
     property DisabledImages: TImageList read FDisabledImages write SetDisabledImages;
     property LargeImages: TImageList read FLargeImages write SetLargeImages;
     property DisabledLargeImages: TImageList read FDisabledLargeImages write SetDisabledLargeImages;
+    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth;
+    property LargeImagesWidth: Integer read FLargeImagesWidth write SetLargeImagesWidth;
   end;
 
 implementation
@@ -110,6 +116,8 @@ begin
         TSpkBaseItem(Item).DisabledImages := FDisabledImages;
         TSpkBaseItem(Item).LargeImages := FLargeImages;
         TSpkBaseItem(Item).DisabledLargeImages := FDisabledLargeImages;
+        TSpkBaseItem(Item).ImagesWidth := FImagesWidth;
+        TSpkBaseItem(Item).LargeImagesWidth := FLargeImagesWidth;
         TSpkBaseItem(Item).ToolbarDispatch := FToolbarDispatch;
       end;
 
@@ -122,6 +130,8 @@ begin
         TSpkBaseItem(Item).DisabledImages := nil;
         TSpkBaseItem(Item).LargeImages := nil;
         TSpkBaseItem(Item).DisabledLargeImages := nil;
+//        TSpkBaseitem(Item).ImagesWidth := 0;
+//        TSpkBaseItem(Item).LargeImagesWidth := 0;
       end;
   end;
 end;
@@ -162,6 +172,15 @@ begin
     Items[i].Images := Value;
 end;
 
+procedure TSpkItems.SetImagesWidth(const Value: Integer);
+var
+  i: Integer;
+begin
+  FImagesWidth := Value;
+  for i := 0 to Count - 1 do
+    Items[i].ImagesWidth := Value;
+end;
+
 procedure TSpkItems.SetLargeImages(const Value: TImageList);
 var
   i: Integer;
@@ -169,6 +188,15 @@ begin
   FLargeImages := Value;
   for i := 0 to Count - 1 do
     Items[i].LargeImages := Value;
+end;
+
+procedure TSpkItems.SetLargeImagesWidth(const Value: Integer);
+var
+  i: Integer;
+begin
+  FLargeImagesWidth := Value;
+  for i := 0 to Count - 1 do
+    Items[i].LargeImagesWidth := Value;
 end;
 
 procedure TSpkItems.SetToolbarDispatch(const Value: TSpkBaseToolbarDispatch);

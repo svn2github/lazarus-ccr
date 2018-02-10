@@ -203,7 +203,7 @@ type
 implementation
 
 uses
-  LCLType, LCLIntf, LCLProc, SysUtils,
+  LCLType, LCLIntf, LCLProc, LCLVersion, SysUtils,
   spkt_Pane, spkt_Appearance;
 
 
@@ -987,11 +987,13 @@ var
   delta: Integer;
   cornerRadius: Integer;
   imgList: TImageList;
+  imgSize: TSize;
   txtHeight: Integer;
   breakPos, breakWidth: Integer;
   s: String;
   P: T2DIntPoint;
   drawBtn: Boolean;
+  ppi: Integer;
   R: TRect;
 begin
   if FToolbarDispatch = nil then
@@ -1151,17 +1153,19 @@ begin
 
   if (imgList <> nil) and (FLargeImageIndex >= 0) and (FLargeImageIndex < imgList.Count) then
   begin
+    ppi := FAppearance.Element.CaptionFont.PixelsPerInch;
+    {$IF LCL_FULLVERSION >= 1090000}
+    imgSize := imgList.SizeForPPI[FLargeImagesWidth, ppi];
+    {$ELSE}
+    imgSize := Size(imgList.Width, imgList.Height);
+    {$ENDIF}
+
     P := {$IFDEF EnhancedRecordSupport}T2DIntPoint.Create{$ELSE}Create2DIntPoint{$ENDIF}(
-      FButtonRect.Left + (FButtonRect.Width - imgList.Width) div 2,
+      FButtonRect.Left + (FButtonRect.Width - imgSize.CX) div 2,
       FButtonRect.Top + LargeButtonBorderSize + LargeButtonGlyphMargin
     );
-    TGUITools.DrawImage(
-      ABuffer.Canvas,
-      imgList,
-      FLargeImageIndex,
-      P,
-      ClipRect
-    );
+    TGUITools.DrawImage(ABuffer.Canvas, imgList, FLargeImageIndex, P, ClipRect,
+      FLargeImagesWidth, ppi, 1.0);
   end;
 
   // Text
@@ -1506,9 +1510,11 @@ var
   delta: Integer;
   cornerRadius: Integer;
   imgList: TImageList;
+  imgSize: TSize;
   drawBtn: Boolean;
   R: TRect;
   dx: Integer;
+  ppi: Integer;
 begin
   if (FToolbarDispatch = nil) or (FAppearance = nil) then
     exit;
@@ -1585,18 +1591,27 @@ begin
 
   if (imgList <> nil) and (FImageIndex >= 0) and (FImageIndex < imgList.Count) then
   begin
+    ppi := FAppearance.Element.CaptionFont.PixelsPerInch;
+    {$IF LCL_FULLVERSION >= 1090000}
+    imgSize := imgList.SizeForPPI[FImagesWidth, ppi];
+    {$ELSE}
+    imgSize := Size(imgList.Width, imgList.Height);
+    {$ENDIF}
+
     if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
       x := FButtonRect.Left + SmallButtonHalfBorderWidth + SmallButtonPadding
     else
       x := FButtonRect.Left + SmallButtonBorderWidth + SmallButtonPadding;
-    y := FButtonRect.top + (FButtonRect.height - imgList.Height) div 2;
+    y := FButtonRect.top + (FButtonRect.height - imgSize.CY) div 2;
     P := {$IFDEF EnhancedRecordSupport}T2DIntPoint.Create{$ELSE}Create2DIntPoint{$ENDIF}(x, y);
     TGUITools.DrawImage(
       ABuffer.Canvas,
       imgList,
       FImageIndex,
       P,
-      ClipRect
+      ClipRect,
+      FImagesWidth,
+      ppi, 1.0
     );
   end;
 

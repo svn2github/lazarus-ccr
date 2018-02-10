@@ -62,6 +62,8 @@ type
     FDisabledImages: TImageList;
     FLargeImages: TImageList;
     FDisabledLargeImages: TImageList;
+    FImagesWidth: Integer;
+    FLargeImagesWidth: Integer;
 
     // *** Makro ustawia odpowiednie appearance taflom ***
     procedure SetPaneAppearance; inline;
@@ -84,6 +86,8 @@ type
     procedure SetDisabledImages(const Value: TImageList);
     procedure SetLargeImages(const Value: TImageList);
     procedure SetDisabledLargeImages(const Value: TImageList);
+    procedure SetImagesWidth(const Value: Integer);
+    procedure SetLargeImagesWidth(const Value: Integer);
     procedure SetRect(ARect: T2DIntRect);
     procedure SetToolbarDispatch(const Value: TSpkBaseToolbarDispatch);
 
@@ -118,6 +122,8 @@ type
     property DisabledImages: TImageList read FDisabledImages write SetDisabledImages;
     property LargeImages: TImageList read FLargeImages write SetLargeImages;
     property DisabledLargeImages: TImageList read FDisabledLargeImages write SetDisabledLargeImages;
+    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth;
+    property LargeImagesWidth: Integer read FLargeImagesWidth write SetLargeImagesWidth;
 
   published
     property CustomAppearance: TSpkToolbarAppearance read FCustomAppearance write SetCustomAppearance;
@@ -135,6 +141,8 @@ type
     FDisabledImages: TImageList;
     FLargeImages: TImageList;
     FDisabledLargeImages: TImageList;
+    FImagesWidth: Integer;
+    FLargeImagesWidth: Integer;
     procedure SetToolbarDispatch(const Value: TSpkBaseToolbarDispatch);
     function GetItems(AIndex: integer): TSpkTab; reintroduce;
     procedure SetAppearance(const Value: TSpkToolbarAppearance);
@@ -142,6 +150,8 @@ type
     procedure SetDisabledImages(const Value: TImageList);
     procedure SetLargeImages(const Value: TImageList);
     procedure SetDisabledLargeImages(const Value: TImageList);
+    procedure SetImagesWidth(const Value: Integer);
+    procedure SetLargeImagesWidth(const Value: Integer);
   public
     function Add: TSpkTab;
     function Insert(AIndex: integer): TSpkTab;
@@ -155,6 +165,8 @@ type
     property DisabledImages: TImageList read FDisabledImages write SetDisabledImages;
     property LargeImages: TImageList read FLargeImages write SetLargeImages;
     property DisabledLargeImages: TImageList read FDisabledLargeImages write SetDisabledLargeImages;
+    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth;
+    property LargeImagesWidth: Integer read FLargeImagesWidth write SetLargeImagesWidth;
   end;
 
 
@@ -190,6 +202,8 @@ begin
   FCustomAppearance := TSpkToolbarAppearance.Create(FAppearanceDispatch);
   FPanes := TSpkPanes.Create(self);
   FPanes.ToolbarDispatch := FToolbarDispatch;
+  FPanes.ImagesWidth := FImagesWidth;
+  FPanes.LargeImagesWidth := FLargeImagesWidth;
   {$IFDEF EnhancedRecordSupport}
   FRect := T2DIntRect.Create(0,0,0,0);
   {$ELSE}
@@ -532,10 +546,22 @@ begin
   FPanes.Images := Value;
 end;
 
+procedure TSpkTab.SetImagesWidth(const Value: Integer);
+begin
+  FImagesWidth := Value;
+  FPanes.ImagesWidth := Value;
+end;
+
 procedure TSpkTab.SetLargeImages(const Value: TImageList);
 begin
   FLargeImages := Value;
   FPanes.LargeImages := Value;
+end;
+
+procedure TSpkTab.SetLargeImagesWidth(const Value: Integer);
+begin
+  FLargeImagesWidth := Value;
+  FPanes.LargeImagesWidth := Value;
 end;
 
 procedure TSpkTab.SetAppearance(const Value: TSpkToolbarAppearance);
@@ -598,7 +624,7 @@ var
   i: Integer;
 begin
   if (AIndex < 0) or (AIndex >= self.Count) then
-    raise InternalException.create('TSpkTabs.Insert: Nieprawid³owy indeks!');
+    raise InternalException.Create('TSpkTabs.Insert: Nieprawid³owy indeks!');
 
   if FRootComponent<>nil then
   begin
@@ -611,7 +637,7 @@ begin
     lParent := nil;
   end;
 
-  Result := TSpkTab.create(lOwner);
+  Result := TSpkTab.Create(lOwner);
   Result.Parent := lParent;
 
   if FRootComponent<>nil then
@@ -640,6 +666,8 @@ begin
         TSpkTab(Item).DisabledImages := self.FDisabledImages;
         TSpkTab(Item).LargeImages := self.FLargeImages;
         TSpkTab(Item).DisabledLargeImages := self.FDisabledLargeImages;
+        TSpkTab(Item).ImagesWidth := self.FImagesWidth;
+        TSpkTab(Item).LargeImagesWidth := self.FLargeImagesWidth;
         TSpkTab(Item).ToolbarDispatch := self.FToolbarDispatch;
       end;
     opRemove:
@@ -651,6 +679,8 @@ begin
         TSpkTab(Item).DisabledImages := nil;
         TSpkTab(Item).LargeImages := nil;
         TSpkTab(Item).DisabledLargeImages := nil;
+  //      TSpkTab(Item).ImagesWidth := 0;
+//        TSpkTab(Item).LargeImagesWidth := 0;
       end;
   end;
 end;
@@ -691,6 +721,15 @@ begin
     Items[i].Images := Value;
 end;
 
+procedure TSpkTabs.SetImagesWidth(const Value: Integer);
+var
+  i: Integer;
+begin
+  FImagesWidth := Value;
+  for i := 0 to Count - 1 do
+    Items[i].ImagesWidth := Value;
+end;
+
 procedure TSpkTabs.SetLargeImages(const Value: TImageList);
 var
   i: Integer;
@@ -698,6 +737,15 @@ begin
   FLargeImages := Value;
   for i := 0 to self.Count - 1 do
     Items[i].LargeImages := Value;
+end;
+
+procedure TSpkTabs.SetLargeImagesWidth(const Value: Integer);
+var
+  i: Integer;
+begin
+  FLargeImagesWidth := Value;
+  for i := 0 to Count - 1 do
+    Items[i].LargeImagesWidth := Value;
 end;
 
 procedure TSpkTabs.SetToolbarDispatch(const Value: TSpkBaseToolbarDispatch);

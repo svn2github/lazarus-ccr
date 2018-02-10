@@ -36,6 +36,8 @@ type
     FDisabledImages: TImageList;
     FLargeImages: TImageList;
     FDisabledLargeImages: TImageList;
+    FImagesWidth: Integer;
+    FLargeImagesWidth: Integer;
     FVisible: boolean;
     FEnabled: boolean;
 
@@ -47,6 +49,8 @@ type
     procedure SetLargeImages(const Value: TImageList); virtual;
     procedure SetDisabledLargeImages(const Value: TImageList); virtual;
     procedure SetAppearance(const Value: TSpkToolbarAppearance);
+    procedure SetImagesWidth(const Value: Integer);
+    procedure SetLargeImagesWidth(const Value: Integer);
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -72,6 +76,8 @@ type
     property DisabledImages: TImageList read FDisabledImages write SetDisabledImages;
     property LargeImages: TImageList read FLargeImages write SetLargeImages;
     property DisabledLargeImages: TImageList read FDisabledLargeImages write SetDisabledLargeImages;
+    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth;
+    property LargeImagesWidth: Integer read FLargeImagesWidth write SetLargeImagesWidth;
     property Rect: T2DIntRect read FRect write SetRect;
 
   published
@@ -144,9 +150,19 @@ begin
   FImages := Value;
 end;
 
+procedure TSpkBaseItem.SetImagesWidth(const Value: Integer);
+begin
+  FImagesWidth := Value;
+end;
+
 procedure TSpkBaseItem.SetLargeImages(const Value: TImageList);
 begin
   FLargeImages := Value;
+end;
+
+procedure TSpkBaseItem.SetLargeImagesWidth(const Value: Integer);
+begin
+  FLargeImagesWidth := Value;
 end;
 
 procedure TSpkBaseItem.SetRect(const Value: T2DIntRect);

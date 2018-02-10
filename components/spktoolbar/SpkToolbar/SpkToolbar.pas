@@ -182,6 +182,12 @@ type
       automatically }
     FDisabledLargeImages: TImageList;
 
+    { Unscaled width of the small images }
+    FImagesWidth: Integer;
+
+    { Unscaled width of the large images }
+    FLargeImagesWidth: Integer;
+
     function DoTabChanging(OldIndex, NewIndex: integer): boolean;
 
     // *****************************************************
@@ -326,7 +332,22 @@ type
     {$ENDIF}
     {$ENDIF}
 
+    { Hi-DPI image list support }
+    procedure SetImagesWidth(const AValue: Integer);
+    procedure SetLargeImagesWidth(const AValue: Integer);
+
   public
+
+    // **********************************
+    // *** Constructor and Destructor ***
+    // **********************************
+
+    { Constructor }
+    constructor Create(AOwner: TComponent); override;
+
+    { Destructor }
+    destructor Destroy; override;
+
 
     // *************************
     // *** Dispatcher events ***
@@ -347,15 +368,6 @@ type
     { Method gives back the instance of supporting bitmap }
     function GetTempBitmap: TBitmap;
 
-    // **********************************
-    // *** Constructor and Destructor ***
-    // **********************************
-
-    { Constructor }
-    constructor Create(AOwner: TComponent); override;
-
-    { Destructor }
-    destructor Destroy; override;
 
     // ***************
     // *** Drawing ***
@@ -424,6 +436,12 @@ type
     { ImageList with the large pictures in state "disabled" }
     property DisabledLargeImages: TImageList
       read FDisabledLargeImages write SetDisabledLargeImages;
+
+    { Unscaled size of the small images }
+    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth default 16;
+
+    { Unscaled size of the large images }
+    property LargeImagesWidth: Integer read FLargeImagesWidth write SetLargeImagesWidth default 32;
 
     { Events called before and after another tab is selected }
     property OnTabChanging: TSpkTabChangingEvent
@@ -541,6 +559,9 @@ constructor TSpkToolbar.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
+  FImagesWidth := 16;
+  FLargeImagesWidth := 32;
+
   // Initialization of inherited property
   Align := alTop;
   DoubleBuffered := true;  // required after Laz 1.9
@@ -564,7 +585,7 @@ begin
   FTemporary := TBitmap.Create;
   FTemporary.Pixelformat := pf24bit;
 
-  setlength(FTabRects, 0);
+  SetLength(FTabRects, 0);
 
   {$IFDEF EnhancedRecordSupport}
   FTabClipRect := T2DIntRect.Create(0, 0, 0, 0);
@@ -585,6 +606,8 @@ begin
   FTabs := TSpkTabs.Create(self);
   FTabs.ToolbarDispatch := FToolbarDispatch;
   FTabs.Appearance := FAppearance;
+  FTabs.ImagesWidth := FImagesWidth;
+  FTabs.LargeImagesWidth := FLargeImagesWidth;
 
   FTabIndex := -1;
   Color := clSkyBlue;
@@ -1751,7 +1774,7 @@ begin
           TabAppearance := FTabs[i].CustomAppearance
         else
           TabAppearance := FAppearance;
-        FBuffer.Canvas.font.Assign(TabAppearance.Tab.TabHeaderFont);
+        FBuffer.Canvas.Font.Assign(TabAppearance.Tab.TabHeaderFont);
 
         TabWidth := 2 +  // Frame
           2 * TabCornerRadius +
@@ -1914,5 +1937,22 @@ begin
 end;
 {$ENDIF}
 {$ENDIF}
+
+{ Hi-DPI image list support }
+
+procedure TSpkToolbar.SetImagesWidth(const AValue: Integer);
+begin
+  if FImagesWidth = AValue then Exit;
+  FImagesWidth := AValue;
+  NotifyMetricsChanged
+end;
+
+procedure TSpkToolbar.SetLargeImagesWidth(const AValue: Integer);
+begin
+  if FLargeImagesWidth = AValue then Exit;
+  FLargeImagesWidth := AValue;
+  NotifyMetricsChanged
+end;
+
 
 end.
