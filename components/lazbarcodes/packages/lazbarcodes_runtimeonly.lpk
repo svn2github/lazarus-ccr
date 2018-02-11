@@ -13,8 +13,22 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Provides barcode 1D and 2D generation based in the 'C' zint library."/>
-    <License Value="GNU General Public License version 3.0 (GPLv3)"/>
-    <Version Major="1" Release="1"/>
+    <License Value="BSD 3
+
+ZINT was originally developed by Robin Stuart and licensed under the terms of the GPL (Gnu
+Public License). In 2013 Robin Stuart and all developers that contributed to the code agreed
+to change the license to a less restrictive one (see ZINT mailing list of May 2013 for
+related mails) under the following conditions:
+- the names of original copyright holder Robin Stuart and contributors are not removed,
+  neither from sources nor from the manual
+- the documentation is done in British English (as Robin said: &quot;Oh, and please don't
+  replace the word &quot;colour&quot; with &quot;color&quot; in the documentation - that really annoys me!&quot;)
+
+Change to BSD-license is done for backend and therefore for ZINT shared library only, for
+the frontends and Qt4-backend the GPL is still valid. Since BSD-license is GPL-compatible
+this gives the possibility to include ZINT library in own products or link against it from
+own software."/>
+    <Version Major="1" Release="2"/>
     <Files Count="9">
       <Item1>
         <Filename Value="..\src\zint.pp"/>

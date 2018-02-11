@@ -20,7 +20,7 @@ Author:
 Jose Mejuto
 
 License:
-GPL 3.0 as it is being inherited from the zint source code.
+BSD 3 as it is being inherited from the zint backend source code.
 
 wiki Page:
 http://wiki.freepascal.org/LazBarcodes

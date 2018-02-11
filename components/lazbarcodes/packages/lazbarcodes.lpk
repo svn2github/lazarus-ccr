@@ -14,7 +14,7 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Provides barcode 1D and 2D generation based in the 'C' zint library."/>
-    <Version Major="1" Release="1"/>
+    <Version Major="1" Release="2"/>
     <Files Count="1">
       <Item1>
         <Filename Value="..\src\ubarcodes.pas"/>
