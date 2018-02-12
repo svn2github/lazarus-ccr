@@ -127,6 +127,9 @@ implementation
 
 {$R *.lfm}
 
+uses
+  IDEWindowIntf;
+
 resourcestring
   RSCannotMoveAboveFirstElement = 'You can not move above the top of the first element!';
   RSCannotMoveBeyondLastElement = 'You can not move beyond the last element!';
@@ -1173,6 +1176,7 @@ begin
   end;
   tbToolbar.ButtonHeight := tbToolbar.Images.Height + 8;
 //  tbToolbar.ButtonWidth := tbToolbar.Images.Width + 8;
+  IDEDialogLayoutList.ApplyLayout(self);
 end;
 
 end.

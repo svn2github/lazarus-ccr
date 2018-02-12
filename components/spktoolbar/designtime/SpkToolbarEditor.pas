@@ -268,12 +268,13 @@ begin
   if not(Component is TSpkToolbar) then
     exit;
 
+  if EditWindow = nil then
+    EditWindow := TfrmEditWindow.Create(nil);
   EditWindow.SetData(TSpkToolbar(Component),Self.GetDesigner);
   EditWindow.Show;
 end;
 
 procedure TSpkToolbarEditor.Edit;
-
 begin
   DoOpenContentsEditor;
 end;
@@ -371,11 +372,9 @@ begin
 end;
 
 initialization
-
-EditWindow:=TfrmEditWindow.create(nil);
+  //EditWindow:=TfrmEditWindow.create(nil);
 
 finalization
-
-EditWindow.Free;
+  EditWindow.Free;
 
 end.
