@@ -287,8 +287,6 @@ begin
     s := GetItemCaption(Item);
     NewNode := tvStructure.Items.AddChild(Node, s);
     NewNode.Data := Item;
-    NewNode.ImageIndex := 2;
-    NewNode.SelectedIndex := 2;
     NewNode.Selected := true;
     CheckActionsAvailability;
   end else
@@ -304,12 +302,24 @@ begin
     s := GetItemCaption(Item);
     NewNode := tvStructure.Items.AddChild(Node.Parent, s);
     NewNode.Data := Item;
-    NewNode.ImageIndex := 2;
-    NewNode.SelectedIndex := 2;
     NewNode.Selected := true;
     CheckActionsAvailability;
   end else
     raise Exception.Create('TfrmEditWindow.AddItem: ' + RSIncorrectObjectInTree);
+  if ItemClass = TSpkLargeButton then
+    NewNode.ImageIndex := 2
+  else
+  if ItemClass = TSpkSmallButton then
+    NewNode.ImageIndex := 3
+  else
+  if ItemClass = TSpkCheckbox then
+    NewNode.ImageIndex := 4
+  else
+  if ItemClass = TSpkRadioButton then
+    NewNode.ImageIndex := 5
+  else
+    raise Exception.Create('Item class not supported');
+  NewNode.SelectedIndex := NewNode.ImageIndex;
   FDesigner.PropertyEditorHook.PersistentAdded(Item,True);
   FDesigner.Modified;
 end;
@@ -1161,15 +1171,21 @@ begin
     ActionList.Images := ilActionImages_200;
     tbToolbar.Images := ilActionImages_200;
     tvStructure.Images := ilTreeImages_200;
+    pmAddItem.Images := ilActionImages_200;
+    pmStructure.Images := ilActionImages_200;
   end else
   if ScreenInfo.PixelsPerInchY >= 135 then begin
     ActionList.Images := ilActionImages_150;
     tbToolbar.Images := ilActionImages_150;
     tvStructure.Images := ilTreeImages_150;
+    pmAddItem.Images := ilActionImages_150;
+    pmStructure.Images := ilActionImages_150;
   end else begin
     ActionList.Images := ilActionImages;
     tbToolbar.Images := ilActionImages;
     tvStructure.Images := ilTreeImages;
+    pmAddItem.Images := ilActionImages;
+    pmStructure.Images := ilActionImages;
   end;
   tbToolbar.ButtonHeight := tbToolbar.Images.Height + 8;
 end;
