@@ -8,3 +8,6 @@ The gimp source files contains all images needed for a given icon size on
 separate layers. Activate the layers needed for a given png image to be 
 exported.
 
+The svg images are drawn by Roland Hahn and provided as Freeware without any
+restrictions.
+
