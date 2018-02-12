@@ -18,11 +18,7 @@ uses
   Graphics, LCLVersion;
 
 const
-  {$IF lcl_fullversion < 1080000}
   SPK_DPI_AWARE = true;
-  {$ELSE}
-  SPK_DPI_AWARE = false;   // use lcl scaling instead
-  {$ENDIF}
 
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 function SpkScaleX(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;

@@ -290,9 +290,6 @@ type
     // *** Getters and setters ***
     // ***************************
 
-    {Getter for property Height }
-    function GetHeight: integer;
-
     { Setter for property Appearance }
     procedure SetAppearance(const Value: TSpkToolbarAppearance);
 
@@ -417,9 +414,6 @@ type
 
     { Object containing attributes of toolbar appearance }
     property Appearance: TSpkToolbarAppearance read FAppearance write SetAppearance;
-
-    { Height of toolbar (read-only) }
-    property Height: integer read GetHeight;
 
     { Index of active tab }
     property TabIndex: integer read FTabIndex write SetTabIndex;
@@ -572,7 +566,7 @@ begin
   if (AOwner is TForm) then
     SpkInitLayoutConsts(96); // This default dpi value is ignored for LCL scaling
 
-  inherited Height := ToolbarHeight;
+  Height := ToolbarHeight;
 
   //inherited Doublebuffered:=true;
 
@@ -686,11 +680,6 @@ end;
 function TSpkToolbar.GetColor: TColor;
 begin
   Result := inherited Color;
-end;
-
-function TSpkToolbar.GetHeight: integer;
-begin
-  Result := inherited Height;
 end;
 
 function TSpkToolbar.GetTempBitmap: TBitmap;
@@ -1081,7 +1070,8 @@ end;
 
 procedure TSpkToolbar.DoOnResize;
 begin
-  inherited Height := ToolbarHeight;
+  if Height <> ToolbarHeight then
+    Height := ToolbarHeight;
 
  {$IFDEF DELAYRUNTIMER}
   FDelayRunTimer.Enabled := False;

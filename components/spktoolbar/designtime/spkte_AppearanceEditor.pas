@@ -321,7 +321,7 @@ implementation
 {$R *.lfm}
 
 uses
-  Types, clipbrd;
+  Types, clipbrd, spkt_Const;
 
 var
   CurrPageIndex: Integer = 0;

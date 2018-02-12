@@ -1,23 +1,25 @@
 object Form1: TForm1
-  Left = 301
-  Height = 378
-  Top = 242
-  Width = 585
+  Left = 368
+  Height = 304
+  Top = 248
+  Width = 501
   Caption = 'Form1'
-  ClientHeight = 358
-  ClientWidth = 585
+  ClientHeight = 284
+  ClientWidth = 501
   Menu = MainMenu
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   LCLVersion = '1.9.0.0'
   object ToolBar1: TToolBar
     Left = 0
-    Height = 26
+    Height = 24
     Top = 0
-    Width = 585
+    Width = 501
+    AutoSize = True
     Caption = 'ToolBar1'
     EdgeBorders = [ebBottom]
     Images = ImageList
+    ParentFont = False
     TabOrder = 0
     object ToolButton1: TToolButton
       Left = 1
@@ -30,71 +32,71 @@ object Form1: TForm1
       Action = AcSave
     end
     object ToolButton3: TToolButton
-      Left = 47
+      Left = 70
       Height = 22
       Top = 0
       Caption = 'ToolButton3'
       Style = tbsDivider
     end
     object ToolButton4: TToolButton
-      Left = 52
+      Left = 47
       Top = 0
       Action = AcEditCut
     end
     object ToolButton5: TToolButton
-      Left = 75
+      Left = 73
       Top = 0
       Action = AcEditCopy
     end
     object ToolButton6: TToolButton
-      Left = 98
+      Left = 96
       Top = 0
       Action = AcEditPaste
     end
     object ToolButton7: TToolButton
-      Left = 121
+      Left = 188
       Height = 22
       Top = 0
       Caption = 'ToolButton7'
       Style = tbsDivider
     end
     object ToolButton8: TToolButton
-      Left = 269
+      Left = 260
       Top = 0
       Action = AcQuit
     end
     object ToolButton9: TToolButton
-      Left = 126
+      Left = 119
       Top = 0
       Action = AcBold
     end
     object ToolButton10: TToolButton
-      Left = 149
+      Left = 142
       Top = 0
       Action = AcItalic
     end
     object ToolButton11: TToolButton
-      Left = 195
+      Left = 191
       Top = 0
       Action = AcLeftJustify
     end
     object ToolButton12: TToolButton
-      Left = 172
+      Left = 165
       Top = 0
       Action = AcUnderline
     end
     object ToolButton13: TToolButton
-      Left = 218
+      Left = 214
       Top = 0
       Action = AcCenter
     end
     object ToolButton14: TToolButton
-      Left = 241
+      Left = 237
       Top = 0
       Action = AcRightJustify
     end
     object ToolButton15: TToolButton
-      Left = 264
+      Left = 283
       Height = 22
       Top = 0
       Caption = 'ToolButton15'
@@ -103,27 +105,30 @@ object Form1: TForm1
   end
   object Panel1: TPanel
     Left = 0
-    Height = 220
-    Top = 138
-    Width = 585
+    Height = 185
+    Top = 99
+    Width = 501
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 220
-    ClientWidth = 585
+    ClientHeight = 185
+    ClientWidth = 501
+    ParentFont = False
     TabOrder = 1
     object Label1: TLabel
-      Left = 16
+      Left = 24
       Height = 15
-      Top = 8
+      Top = 12
       Width = 34
       Caption = 'Label1'
       ParentColor = False
+      ParentFont = False
     end
   end
   object SpkToolbar1: TSpkToolbar
     Left = 0
-    Top = 26
-    Width = 585
+    Height = 75
+    Top = 24
+    Width = 501
     Appearance.Tab.TabHeaderFont.Color = 9126421
     Appearance.Tab.BorderColor = 14922381
     Appearance.Tab.GradientFromColor = 16115934
