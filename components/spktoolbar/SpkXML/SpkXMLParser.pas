@@ -6,9 +6,10 @@ unit SpkXMLParser;
 
 interface
 
-{TODO Uporz¹dkowaæ widocznoœæ i wirtualnoœæ metod i w³asnoœci}
+{TODO Organize the visibility and virtuality of methods and properties}
 
 // Notatki: Stosujê konsekwentnie case-insensitivity
+// Notes: I apply case-insensitivity consistently
 
 uses
   SysUtils, Classes, ContNrs, Graphics, Math;
@@ -16,31 +17,32 @@ uses
 //todo: use LineEnding?
 const CRLF=#13#10;
 
-type // Rodzaj ga³êzi XML
+type // The type of XML nodes
      TXMLNodeType = (xntNormal, xntControl, xntComment);
 
-type // Forward dla klasy ga³êzi XML
+type // Forward declaration for XML nodes
      TSpkXMLNode = class;
 
      TBinaryTreeNode = class;
 
-     // Ga³¹Ÿ drzewa binarnych przeszukiwañ
+     // I'm going to binary tree searches
      TBinaryTreeNode = class(TObject)
      private
-     // Lewe poddrzewo
+     // The left subtree
        FLeft,
-     // Prawe poddrzewo
+     // The right subtree
        FRight,
-     // Rodzic
+     // Parent
        FParent : TBinaryTreeNode;
-     // Dane zawarte w wêŸle
+     // Data contained in the node
        FData : array of TSpkXMLNode;
-     // Wysokoœæ poddrzewa
+     // The height of the subtree
        FSubtreeSize : integer;
-     protected
-     // *** Metody dotycz¹ce drzewa ***
 
-     // Setter dla lewego poddrzewa
+     protected
+     // *** Methods for the tree ***
+
+     // Setter for the left subtree
        procedure SetLeft(ANode : TBinaryTreeNode);
      // Setter dla prawego poddrzewa
        procedure SetRight(ANode : TBinaryTreeNode);
@@ -411,26 +413,23 @@ if Parent<>nil then
    Parent.RefreshSubtreeSize;
 end;
 
+// According to the assumptions, this method can only be called the current parent.
 procedure TBinaryTreeNode.DetachFromParent;
-
 begin
-// Zgodnie z za³o¿eniami, metodê t¹ mo¿e zawo³aæ tylko obecny parent.
-FParent:=nil;
+  FParent := nil;
 end;
 
+// According to the assumptions, this method is called by the new parent
+// of the element. The element must take care to inform the previous parent
+// about the fact that he is removable.
 procedure TBinaryTreeNode.AttachToParent(AParent : TBinaryTreeNode);
-
 begin
-// Zgodnie z za³o¿eniami, t¹ metod¹ wywo³uje nowy parent elementu. Element
-// musi zadbaæ o to, by poinformowaæ poprzedniego parenta o tym, ¿e jest on
-// odpinany.
-if AParent<>FParent then
-   begin
-   if FParent<>nil then
+  if AParent<>FParent then
+  begin
+    if FParent<>nil then
       FParent.DetachChild(self);
-
-   FParent:=AParent;
-   end;
+    FParent := AParent;
+  end;
 end;
 
 procedure TBinaryTreeNode.DetachChild(AChild : TBinaryTreeNode);
@@ -446,15 +445,14 @@ RefreshSubtreeSize;
 end;
 
 procedure TBinaryTreeNode.Add(AData : TSpkXMLNode);
-
 begin
-{$B-}
-if (length(FData)=0) or ((length(FData)>0) and (uppercase(FData[0].Name)=uppercase(AData.Name))) then
-   begin
-   setlength(FData,length(FData)+1);
-   FData[high(FData)]:=AData;
-   end else
-       raise exception.create('Pojedyncza ga³¹Ÿ przechowuje dane o jednakowych nazwach!');
+ {$B-}
+  if (Length(FData)=0) or ((Length(FData)>0) and (Uppercase(FData[0].Name)=Uppercase(AData.Name))) then
+  begin
+    SetLength(FData, Length(FData)+1);
+    FData[High(FData)] := AData;
+  end else
+    raise Exception.Create('A single node stores data with identical names!');
 end;
 
 procedure TBinaryTreeNode.Remove(AData : TSpkXMLNode);
@@ -519,7 +517,7 @@ if (uppercase(FValue)='TRUE') or (uppercase(FValue)='T') or
    (uppercase(FValue)='YES') or (uppercase(FValue)='Y') then result:=true else
 if (uppercase(FValue)='FALSE') or (uppercase(FValue)='F') or
    (uppercase(FValue)='NO') or (uppercase(FValue)='N') then result:=false else
-   raise exception.create('Nie mogê przekonwertowaæ wartoœci.');
+   raise exception.create('Cannot convert values.');
 end;
 
 function TSpkXMLParameter.GetValueAsColor: TColor;
@@ -528,7 +526,7 @@ begin
 try
 result:=StrToInt(FValue);
 except
-raise exception.create('Nie mogê przekonwertowaæ wartoœci.');
+raise exception.create('Cannot convert values.');
 end;
 end;
 
@@ -537,7 +535,7 @@ begin
 try
 result:=StrToFloat(FValue);
 except
-raise exception.create('Nie mogê przekonwertowaæ wartoœci.');
+raise exception.create('Cannot convert values.');
 end;
 end;
 
@@ -546,7 +544,7 @@ begin
 try
 result:=StrToInt(FValue);
 except
-raise exception.create('Nie mogê przekonwertowaæ wartoœci.');
+raise exception.create('Cannot convert values.');
 end;
 end;
 
@@ -581,7 +579,7 @@ procedure TSpkXMLParameters.Insert(AIndex : integer; AParameter : TSpkXMLParamet
 
 begin
 if (AIndex<0) or (AIndex>FList.count-1) then
-   raise exception.create('Nieprawid³owy indeks.');
+   raise exception.create('Invalid index.');
 
 FList.Insert(AIndex, AParameter);
 end;
@@ -601,7 +599,7 @@ end;
 procedure TSpkXMLParameters.Delete(index: integer);
 begin
 if (index<0) or (index>FList.count-1) then
-   raise exception.create('Nieprawid³owy indeks parametru.');
+   raise exception.create('Invalid parameter index.');
 
 FList.delete(index);
 end;
@@ -626,7 +624,7 @@ end;
 function TSpkXMLParameters.GetParamByIndex(index: integer): TSpkXMLParameter;
 begin
 if (index<0) or (index>Flist.count-1) then
-   raise exception.create('Nieprawid³owy indeks elementu.');
+   raise exception.create('Invalid item index.');
 
 result:=TSpkXMLParameter(FList[index]);
 end;
@@ -727,7 +725,7 @@ procedure TSpkBaseXMLNode.TreeDelete(ANode : TSpkXMLNode);
   // Kilka przypadków.
   // 0. Mo¿e elementu nie ma w drzewku?
   if DelNode=nil then
-     raise exception.create('Takiego elementu nie ma w drzewie AVL!') else
+     raise exception.create('There is no such element in the AVL tree!') else
   // 1. Jeœli ga³¹Ÿ ta przechowuje wiêcej ni¿ tylko ten element, to usuwamy go
   //    z listy i koñczymy dzia³anie.
   if DelNode.Count>1 then
@@ -1004,7 +1002,7 @@ function TSpkBaseXMLNode.GetNodeByIndex(index : integer) : TSpkXMLNode;
 
 begin
 if (index<0) or (index>FList.count-1) then
-   raise exception.create('Nieprawid³owy indeks!');
+   raise exception.create('Invalid index!');
 
 result:=TSpkXMLNode(FList[index]);
 end;
@@ -1066,21 +1064,20 @@ inherited destroy;
 end;
 
 procedure TSpkBaseXMLNode.Add(ANode : TSpkXMLNode);
-
 begin
-if ANode = self then
-   raise exception.create('Nie mogê dodaæ siebie do w³asnej listy!');
-if ANode.NodeType=xntNormal then
-   TreeAdd(ANode);
-FList.add(ANode);
-ANode.Parent:=self;
+  if ANode = self then
+    raise Exception.Create('Cannot add Self to list!');
+  if ANode.NodeType = xntNormal then
+    TreeAdd(ANode);
+  FList.add(ANode);
+  ANode.Parent := self;
 end;
 
 procedure TSpkBaseXMLNode.Insert(AIndex : integer; ANode : TSpkXMLNode);
 
 begin
 if (AIndex<0) or (AIndex>FList.count-1) then
-   raise exception.create('Nieprawid³owy indeks!');
+   raise exception.create('Invalid index!');
 
 FList.Insert(AIndex, ANode);
 TreeAdd(ANode);
@@ -1091,7 +1088,7 @@ procedure TSpkBaseXMLNode.Delete(AIndex : integer);
 
 begin
 if (AIndex<0) or (AIndex>FList.count-1) then
-   raise exception.create('Nieprawid³owy indeks!');
+   raise exception.create('Invalid index');
 
 TreeDelete(TSpkXMLNode(FList[AIndex]));
 
@@ -1156,7 +1153,7 @@ begin
 try
 result:=StrToInt(FText);
 except
-raise exception.create('Nie mogê przekonwertowaæ wartoœci.');
+raise exception.create('Cannot convert values.');
 end;
 end;
 
@@ -1172,7 +1169,7 @@ begin
 try
 result:=StrToFloat(FText);
 except
-raise exception.create('Nie mogê przekonwertowaæ wartoœci.');
+raise exception.create('Cannot convert values.');
 end;
 end;
 
@@ -1188,7 +1185,7 @@ begin
 try
 result:=StrToInt(FText);
 except
-raise exception.create('Nie mogê przekonwertowaæ wartoœci.');
+raise exception.create('Cannot convert values.');
 end;
 end;
 
@@ -1205,7 +1202,7 @@ if (uppercase(FText)='TRUE') or (uppercase(FText)='T') or
    (uppercase(FText)='YES') or (uppercase(FText)='Y') then result:=true else
 if (uppercase(FText)='FALSE') or (uppercase(FText)='F') or
    (uppercase(FText)='NO') or (uppercase(FText)='N') then result:=false else
-   raise exception.create('Nie mogê przekonwertowaæ wartoœci.');
+   raise exception.create('Cannot convert values.');
 end;
 
 procedure TSpkXMLNode.SetTextAsBoolean(value : boolean);
@@ -1342,7 +1339,7 @@ var // Stos przetwarzanych ga³êzi (niejawna rekurencja)
 
         // Nie mo¿e wyst¹piæ tu koniec pliku
         if input^=#0 then
-           raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku.') else
+           raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of file.') else
 
         // Jeœli napotkaliœmy nawias k¹towy, mo¿e to byæ sekcja CDATA
         if (input^='<') and (StrLComp(input,'<![CDATA[',9)=0) then
@@ -1355,7 +1352,7 @@ var // Stos przetwarzanych ga³êzi (niejawna rekurencja)
            repeat
            {$B-}
            if input^=#0 then
-              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku.');
+              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of file.');
            if (input^=']') and (StrLComp(input,']]>',3)=0) then Finish:=true else
               begin
               result:=result+input^;
@@ -1378,7 +1375,7 @@ var // Stos przetwarzanych ga³êzi (niejawna rekurencja)
            while input^<>';' do
                  begin
                  if input^=#0 then
-                    raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku - nie dokoñczona encja.');
+                    raise Exception.Create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of file - entity not finished.');
                  Entity:=Entity+input^;
                  increment(input);
                  end;
@@ -1398,17 +1395,17 @@ var // Stos przetwarzanych ga³êzi (niejawna rekurencja)
               // Kod ASCII zapisany heksadecymalnie
               i:=HexToInt(copy(Entity,2,length(Entity)-1));
               if not(i in [0..255]) then
-                 raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owa wartoœæ heksadecymalna encji (dopuszczalne: 0..255)');
+                 raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Invalid hexadecimal value of the entity (allowed: 0..255)');
               result:=result+chr(i);
               end else
            if Entity[1]='#' then
               begin
               i:=StrToInt(copy(Entity,2,length(Entity)-1));
               if not(i in [0..255]) then
-                 raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owa wartoœæ dziesiêtna encji (dopuszczalne: 0..255)');
+                 raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Invalid entity decimal value (acceptable: 0..255)');
               result:=result+chr(i);
               end else
-                  raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owa (nie obs³ugiwana) encja!');
+                  raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Invalid (not supported) entity!');
            end else
         if (DoTrim) and (input^ in [#32,#9,#10,#13]) then
            begin
@@ -1459,10 +1456,10 @@ try
                  // Wejœcie mo¿e siê tu koñczyæ tylko wtedy, gdy jesteœmy
                  // maksymalnie na zewn¹trz
                  if (input^=#0) and (NodeStack.count>0) then
-                    raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku.');
+                    raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of file.');
 
                  if (input^<>#0) and (input^<>'<') then
-                    raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owy znak podczas przetwarzania pliku.');
+                    raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Invalid character when processing the file.');
 
                  if input^<>#0 then
                     if StrLComp(input,'<?',2)=0 then
@@ -1473,7 +1470,7 @@ try
                        CurrentOperation:=poClosingInterior else
                     if StrLComp(input,'<',1)=0 then
                        CurrentOperation:=poTagInterior else
-                       raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owy znak podczas przetwarzania pliku.');
+                       raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Invalid character when processing the file.');
                  end;
 
        poTagInterior,
@@ -1497,12 +1494,12 @@ try
 
                            // Plik nie mo¿e siê tu koñczyæ
                            if input^=#0 then
-                              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku!');
+                              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of file');
 
                            // Oczekujemy nazwy taga, która jest postaci
                            // [a-zA-Z]([a-zA-Z0-9_]|([\-:][a-zA-Z0-9_]))*
                            if not (input^ in ['a'..'z','A'..'Z']) then
-                              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owa nazwa taga!');
+                              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Invalid tag name!');
 
                            TokenStart:=input;
                            repeat
@@ -1511,7 +1508,7 @@ try
                               begin
                               increment(input);
                               if not(input^ in ['a'..'z','A'..'Z','0'..'9','_']) then
-                                 raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owa nazwa taga!');
+                                 raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Invalid tag name!');
                               increment(input);
                               end;
                            until not(input^ in ['a'..'z','A'..'Z','0'..'9','_']);
@@ -1522,7 +1519,7 @@ try
 
                            // Plik nie mo¿e siê tu koñczyæ.
                            if input^=#0 then
-                              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku!');
+                              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of the file!');
 
                            // Teraz bêdziemy wczytywaæ parametry (o ile takowe s¹).
                            repeat
@@ -1534,7 +1531,7 @@ try
 
                               // Plik nie mo¿e siê tu koñczyæ.
                               if input^=#0 then
-                                 raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku!');
+                                 raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of the file!');
 
                               // Je¿eli po bia³ych znakach jest litera,
                               // zaczynamy wczytywaæ parametr
@@ -1555,11 +1552,11 @@ try
 
                                  // Plik nie mo¿e siê tu koñczyæ
                                  if input^=#0 then
-                                    raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku!');
+                                    raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of the file!');
 
                                  // Oczekujemy znaku '='
                                  if input^<>'=' then
-                                    raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Oczekiwany znak równoœci (prawdopodobnie nieprawid³owa nazwa parametru)');
+                                    raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Expected equality sign (probably invalid parameter name)');
 
                                  increment(input);
 
@@ -1568,7 +1565,7 @@ try
 
                                  // Plik nie mo¿e siê tu koñczyæ
                                  if input^=#0 then
-                                    raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku!');
+                                    raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of the file!');
 
                                  // Oczekujemy ' lub "
                                  if input^='''' then
@@ -1587,7 +1584,7 @@ try
                                     // Pomijamy koñcz¹cy znak cudzys³owu
                                     increment(input);
                                     end else
-                                    raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owy znak, oczekiwano '' lub "');
+                                    raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+ '): Invalid character, expected " or "');
 
                                  // Dodajemy parametr o nazwie s i zawartoœci s1
                                  Node.Parameters[s,true].Value:=s1;
@@ -1603,12 +1600,12 @@ try
 
                            // Plik nie mo¿e siê tu koñczyæ.
                            if input^=#0 then
-                              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku!');
+                              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of the file!');
 
                            if CurrentOperation=poControlInterior then
                               begin
                               if StrLComp(input,'?>',2)<>0 then
-                                 raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owe domkniêcie taga kontrolnego (powinno byæ: ?>)');
+                                 raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Incorrect closing of the control tag (should be:?>)');
 
                               // Pomijamy znaki zamkniêcia taga kontrolnego
                               increment(input,2);
@@ -1641,7 +1638,7 @@ try
 
                                  CurrentOperation:=poTagText;
                                  end else
-                                     raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owe domkniêcie taga XML (powinno byæ: > lub />)');
+                                     raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Incorrect closing of the XML tag (should be:> or />)');
                               end;
 
                            except
@@ -1673,7 +1670,7 @@ try
                              repeat
                              increment(input);
                              if input^=#0 then
-                                raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku!');
+                                raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of the file!');
                              until input^='-';
                            until StrLComp(input,'-->',3)=0;
 
@@ -1703,12 +1700,12 @@ try
 
                            // Plik nie mo¿e siê tu koñczyæ
                            if input^=#0 then
-                              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku!');
+                              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of the file!');
 
                            // Wczytujemy nazwê zamykanego taga postaci
                            // [a-zA-Z]([a-zA-Z0-9_]|([\-:][a-zA-Z0-9_]))*
                            if not(input^ in ['a'..'z','A'..'Z']) then
-                              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owa nazwa taga!');
+                              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Invalid tag name!');
 
                            TokenStart:=input;
                            repeat
@@ -1717,7 +1714,7 @@ try
                               begin
                               increment(input);
                               if not(input^ in ['a'..'z','A'..'Z','0'..'9','_']) then
-                                 raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieprawid³owa nazwa taga!');
+                                 raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Invalid tag name!');
                               increment(input);
                               end;
                            until not(input^ in ['a'..'z','A'..'Z','0'..'9','_']);
@@ -1730,11 +1727,11 @@ try
 
                            // Plik nie mo¿e siê tu koñczyæ
                            if input^=#0 then
-                              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku!');
+                              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of the file!');
 
                            // Oczekujemy znaku '>'
                            if input^<>'>' then
-                              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Oczekiwany znak zamkniêcia taga (>)');
+                              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Expected tag closing (>)');
 
                            // Pomijamy znak zamkniêcia taga
                            increment(input);
@@ -1742,10 +1739,10 @@ try
                            // Sprawdzamy, czy uppercase nazwa taga na stosie i
                            // wczytana pasuj¹ do siebie
                            if NodeStack.Count=0 then
-                              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Brakuje taga otwieraj¹cego do zamykaj¹cego!');
+                              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): The opening tag is not closed!');
 
                            if uppercase(s)<>uppercase(TSpkXMLNode(NodeStack.Peek).Name) then
-                              raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Tag zamykaj¹cy ('+s+') nie pasuje do taga otwieraj¹cego ('+TSpkXMLNode(NodeStack.Peek).Name+') !');
+                              raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): The closing tag (' + s + ') does not match the opening tag ('+TSpkXMLNode(NodeStack.Peek).Name+') !');
 
                            // Wszystko OK, zdejmujemy tag ze stosu i dodajemy go do taga pod nim
                            Node:=TSpkXMLNode(NodeStack.Pop);
@@ -1763,7 +1760,7 @@ try
                    s:=ParseText(input,'<',true);
 
                    if NodeStack.Count=0 then
-                      raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Tekst mo¿e wystêpowaæ tylko wewn¹trz tagów!');
+                      raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): The text can only be inside tags!');
 
                    TSpkXMLNode(NodeStack.Peek).Text:=s;
 
@@ -1775,7 +1772,7 @@ try
   // domkniête)
 
   if NodeStack.Count>0 then
-     raise exception.create('B³¹d w sk³adni XML (linia '+IntToStr(ParseLine)+', znak '+IntToStr(ParseChar)+') : Nieoczekiwany koniec pliku (istniej¹ nie domkniête tagi, pierwszy z nich: '+TSpkXMLNode(NodeStack.Peek).Name+')');
+     raise exception.create('Error in XML syntax (line '+IntToStr(ParseLine)+', character '+IntToStr(ParseChar)+'): Unexpected end of file (there are unclosed tags, the first of them is '+TSpkXMLNode(NodeStack.Peek).Name+')');
 
   // Wszystko w porz¹dku, XML zosta³ wczytany.
 finally
@@ -1978,78 +1975,60 @@ function TSpkXMLParser.Generate(UseFormatting : boolean) : string;
   end;
 
 begin
-result:=InternalGenerate(nil,0,UseFormatting);
+  result:=InternalGenerate(nil,0,UseFormatting);
 end;
 
 procedure TSpkXMLParser.LoadFromFile(AFile : string);
-
-var sl : TStringList;
-
+var
+  sl : TStringList;
 begin
-sl:=nil;
-try
-sl:=TStringList.create;
-sl.LoadFromFile(AFile);
-
-if length(sl.text)>0 then
-   self.Parse(PChar(sl.text));
-
-finally
-if sl<>nil then sl.free;
-end;
+  sl:=TStringList.create;
+  try
+    sl.LoadFromFile(AFile);
+    if length(sl.text)>0 then
+      self.Parse(PChar(sl.text));
+  finally
+    sl.free;
+  end;
 end;
 
 procedure TSpkXMLParser.SaveToFile(AFile : string; UseFormatting : boolean);
-
-var sl : TStringList;
-
+var
+  sl: TStringList;
 begin
-sl:=nil;
-try
-sl:=TStringList.create;
-
-sl.text:=self.Generate(UseFormatting);
-
-sl.savetofile(AFile);
-
-finally
-if sl<>nil then sl.free;
-end;
+  sl:=TStringList.create;
+  try
+    sl.text:=self.Generate(UseFormatting);
+    sl.savetofile(AFile);
+  finally
+    sl.free;
+  end;
 end;
 
 procedure TSpkXMLParser.LoadFromStream(AStream : TStream);
-
-var sl : TStringList;
-
+var
+  sl: TStringList;
 begin
-sl:=nil;
-try
-sl:=TStringList.create;
-sl.LoadFromStream(AStream);
-
-self.Parse(PChar(sl.text));
-
-finally
-if sl<>nil then sl.free;
-end;
+  sl:=TStringList.create;
+  try
+    sl.LoadFromStream(AStream);
+    self.Parse(PChar(sl.text));
+  finally
+    sl.free;
+  end;
 end;
 
 procedure TSpkXMLParser.SaveToStream(AStream : TStream; UseFormatting : boolean);
-
-var sl : TStringList;
-
+var
+  sl: TStringList;
 begin
-sl:=nil;
-try
-sl:=TStringList.create;
-
-sl.text:=self.Generate(UseFormatting);
-
-sl.savetostream(AStream);
-
-finally
-if sl<>nil then sl.free;
-end;
+  sl:=TStringList.create;
+  try
+    sl.text:=self.Generate(UseFormatting);
+    sl.savetostream(AStream);
+  finally
+    sl.free;
+  end;
 end;
 
 end.

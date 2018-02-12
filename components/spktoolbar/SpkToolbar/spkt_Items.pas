@@ -5,11 +5,11 @@ unit spkt_Items;
 
 (*******************************************************************************
 *                                                                              *
-*  Plik: spkt_Items.pas                                                        *
-*  Opis: Modu³ zawiera klasê kolekcji elementów tafli.                         *
-*  Copyright: (c) 2009 by Spook.                                               *
-*  License:   Modified LGPL (with linking exception, like Lazarus LCL)         *
-'             See "license.txt" in this installation                           *
+*  File:        spkt_Items.pas                                                 *
+*  Description: The module contains the class of panel elements collection.    *
+*  Copyright:   (c) 2009 by Spook.                                             *
+*  License:     Modified LGPL (with linking exception, like Lazarus LCL)       *
+'               See "license.txt" in this installation                         *
 *                                                                              *
 *******************************************************************************)
 
@@ -32,7 +32,7 @@ type
     FImagesWidth: Integer;
     FLargeImagesWidth: Integer;
 
-    // *** Gettery i settery ***
+    // *** Getters and setters ***
     procedure SetToolbarDispatch(const Value: TSpkBaseToolbarDispatch);
     function GetItems(AIndex: integer): TSpkBaseItem; reintroduce;
     procedure SetAppearance(const Value: TSpkToolbarAppearance);
@@ -49,7 +49,7 @@ type
     function AddCheckbox: TSpkCheckbox;
     function AddRadioButton: TSpkRadioButton;
 
-    // *** Reakcja na zmiany listy ***
+    // *** Reaction to changes in the list ***
     procedure Notify(Item: TComponent; Operation: TOperation); override;
     procedure Update; override;
 
@@ -108,8 +108,8 @@ begin
   case Operation of
     opInsert:
       begin
-        // Ustawienie dyspozytora na nil spowoduje, ¿e podczas
-        // przypisywania w³asnoœci nie bêd¹ wo³ane metody Notify*
+        // Setting the dispatcher to nil will cause that during the ownership
+        // assignment, the Notify method will not be called
         TSpkBaseItem(Item).ToolbarDispatch := nil;
         TSpkBaseItem(Item).Appearance := FAppearance;
         TSpkBaseItem(Item).Images := FImages;

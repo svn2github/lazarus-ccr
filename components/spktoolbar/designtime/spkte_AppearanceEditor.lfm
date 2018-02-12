@@ -125,8 +125,6 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         CustomAppearance.Element.ActiveCaptionColor = 8405614
         CustomAppearance.Element.Style = esRounded
         Caption = 'Sample toolbar'
-        OverrideAppearance = False
-        Visible = True
         Panes = (
           'SpkPane1'
           'SpkPane2'
@@ -134,29 +132,21 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         )
         object SpkPane1: TSpkPane
           Caption = 'Sample large buttons'
-          Visible = True
           Items = (
             'SpkLargeButton1'
             'SpkLargeButton3'
             'SpkLargeButton2'
           )
           object SpkLargeButton1: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Default'
             LargeImageIndex = 0
-            ButtonKind = bkButton
           end
           object SpkLargeButton3: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Button and dropdown'
             LargeImageIndex = 0
             ButtonKind = bkButtonDropdown
           end
           object SpkLargeButton2: TSpkLargeButton
-            Visible = True
-            Enabled = True
             Caption = 'Dropdown'
             LargeImageIndex = 0
             ButtonKind = bkDropdown
@@ -164,49 +154,34 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         end
         object SpkPane2: TSpkPane
           Caption = 'Sample small buttons'
-          Visible = True
           Items = (
             'SpkSmallButton1'
             'SpkSmallButton2'
             'SpkSmallButton3'
           )
           object SpkSmallButton1: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Default'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 0
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton2: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button and dropdown'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 0
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton3: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Dropdown'
-            GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 0
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
             ButtonKind = bkDropdown
           end
         end
         object SpkPane3: TSpkPane
           Caption = 'Tool buttons'
-          Visible = True
           Items = (
             'SpkSmallButton4'
             'SpkSmallButton5'
@@ -215,59 +190,31 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
             'SpkSmallButton8'
           )
           object SpkSmallButton4: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbBeginsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 0
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton5: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbContinuesGroup
-            HideFrameWhenIdle = False
             ImageIndex = 0
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton6: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Button'
             GroupBehaviour = gbEndsGroup
-            HideFrameWhenIdle = False
             ImageIndex = 0
             ShowCaption = False
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton7: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Btn1'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
             ImageIndex = 0
-            ShowCaption = True
             TableBehaviour = tbBeginsRow
-            ButtonKind = bkButton
           end
           object SpkSmallButton8: TSpkSmallButton
-            Visible = True
-            Enabled = True
             Caption = 'Btn2'
-            GroupBehaviour = gbSingleItem
-            HideFrameWhenIdle = False
             ImageIndex = 0
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
-            ButtonKind = bkButton
           end
         end
       end
@@ -316,8 +263,6 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         CustomAppearance.Element.ActiveCaptionColor = 8405614
         CustomAppearance.Element.Style = esRounded
         Caption = 'Another tab'
-        OverrideAppearance = False
-        Visible = True
         Panes = (        )
       end
     end

@@ -4,11 +4,11 @@ unit spkt_Types;
 
 (*******************************************************************************
 *                                                                              *
-*  Plik: spkt_Types.pas                                                        *
-*  Opis: Definicje typów u¿ywanych podczas pracy toolbara                      *
-*  Copyright: (c) 2009 by Spook.                                               *
-*  License:   Modified LGPL (with linking exception, like Lazarus LCL)         *
-'             See "license.txt" in this installation                           *
+*  File:        spkt_Types.pas                                                 *
+*  Description: Definitions of types used during work of the toolbar           *
+*  Copyright:   (c) 2009 by Spook.                                             *
+*  License:     Modified LGPL (with linking exception, like Lazarus LCL)       *
+'               See "license.txt" in this installation                         *
 *                                                                              *
 *******************************************************************************)
 
@@ -111,7 +111,7 @@ begin
   // przetwarzaj¹ca nazwy korzysta z AddItem)
 
   // This method can be recalling untreated names (in particular, the method
-  // uses the name przetwarzaj¹ca AddItem)   --- ???
+  // that processes the name uses the AddItem)
 
   Notify(AItem, opInsert);
   FList.Add(AItem);

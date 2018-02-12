@@ -326,7 +326,8 @@ uses
 var
   CurrPageIndex: Integer = 0;
 
-{ TForm3 }
+
+{ TfrmAppearanceEditWindow }
 
 {$IF lcl_fullversion >= 1080000}
 procedure TfrmAppearanceEditWindow.DoAutoAdjustLayout(

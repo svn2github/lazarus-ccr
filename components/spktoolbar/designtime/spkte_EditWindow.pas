@@ -136,6 +136,7 @@ resourcestring
   RSNoObjectSelected = 'No object selected!';
   RSNoObjectSelectedToMove = 'No object selected to move!';
 
+
 { TfrmEditWindow }
 
 procedure TfrmEditWindow.aAddPaneExecute(Sender: TObject);

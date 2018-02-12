@@ -5,11 +5,11 @@ unit spkt_Pane;
 
 (*******************************************************************************
 *                                                                              *
-*  Plik: spkt_Pane.pas                                                         *
-*  Opis: Komponent tafli toolbara                                              *
-*  Copyright: (c) 2009 by Spook.                                               *
-*  License:   Modified LGPL (with linking exception, like Lazarus LCL)         *
-'             See "license.txt" in this installation                           *
+*  File:        spkt_Pane.pas                                                  *
+*  Description: The component of the toolbar panel                             *
+*  Copyright:   (c) 2009 by Spook.                                             *
+*  License:     Modified LGPL (with linking exception, like Lazarus LCL)       *
+'               See "license.txt" in this installation                         *
 *                                                                              *
 *******************************************************************************)
 
@@ -59,15 +59,15 @@ type
     FVisible: boolean;
     FItems: TSpkItems;
 
-    // *** Generowanie layoutu elementów ***
+    // *** Generating a layout of elements ***
     function GenerateLayout: TSpkPaneItemsLayout;
 
-    // *** Obs³uga designtime i DFM ***
+    // *** Designtime and LFM support ***
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
     procedure DefineProperties(Filer : TFiler); override;
     procedure Loaded; override;
 
-    // *** Gettery i settery ***
+    // *** Getters and setters ***
     procedure SetCaption(const Value: string);
     procedure SetVisible(const Value: boolean);
     procedure SetAppearance(const Value: TSpkToolbarAppearance);
@@ -81,22 +81,22 @@ type
     procedure SetToolbarDispatch(const Value: TSpkBaseToolbarDispatch);
 
   public
-    // *** Konstruktor, destruktor ***
+    // *** Constructor, destructor ***
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    // *** Obs³uga gryzonia ***
+    // *** Mouse support ***
     procedure MouseLeave;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure MouseMove(Shift: TShiftState; X, Y: Integer);
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 
-    // *** Geometria i rysowanie ***
+    // *** Geometry and drawing ***
     function GetWidth: integer;
     procedure Draw(ABuffer: TBitmap; ClipRect: T2DIntRect);
     function FindItemAt(x, y: integer): integer;
 
-    // *** Obs³uga elementów ***
+    // *** Support for elements ***
     procedure FreeingItem(AItem: TSpkBaseItem);
 
     property ToolbarDispatch: TSpkBaseToolbarDispatch read FToolbarDispatch write SetToolbarDispatch;
@@ -127,7 +127,7 @@ type
     FImagesWidth: Integer;
     FLargeImagesWidth: Integer;
 
-    // *** Gettery i settery ***
+    // *** Getters and setters ***
     procedure SetToolbarDispatch(const Value: TSpkBaseToolbarDispatch);
     function GetItems(AIndex: integer): TSpkPane; reintroduce;
     procedure SetAppearance(const Value: TSpkToolbarAppearance);
@@ -139,11 +139,11 @@ type
     procedure SetLargeImagesWidth(const Value: Integer);
 
   public
-    // *** Dodawanie i wstawianie elementów ***
+    // *** Adding and inserting elements ***
     function Add: TSpkPane;
     function Insert(AIndex: integer): TSpkPane;
 
-    // *** Reakcja na zmiany listy ***
+    // *** Reaction to changes in the list ***
     procedure Notify(Item: TComponent; Operation: TOperation); override;
     procedure Update; override;
 
@@ -251,12 +251,12 @@ var
   R: T2DIntRect;
   delta: Integer;
 begin
-  // W niektórych warunkach nie jesteœmy w stanie rysowaæ:
-  // * Brak dyspozytora
+  // Under some conditions, we are not able to draw::
+  // * No dispatcher
   if FToolbarDispatch = nil then
      exit;
 
-  // * Brak appearance
+  // * No appearance
   if FAppearance = nil then
      exit;
 
@@ -281,7 +281,7 @@ begin
     BorderDarkColor := TColorTools.Brighten(FAppearance.Pane.BorderDarkColor, delta);
   end;
 
-  // T³o
+  // The background
   {$IFDEF EnhancedRecordSupport}
   R := T2DIntRect.Create(
   {$ELSE}
@@ -302,7 +302,7 @@ begin
     ClipRect
   );
 
-  // T³o etykiety tafli
+  // Label background
   {$IFDEF EnhancedRecordSupport}
   R := T2DIntRect.Create(
   {$ELSE}
@@ -399,7 +399,8 @@ begin
          FRect.Bottom-1
        );
        if FAppearance.Pane.Style = psRectangleEtched then
-         c := BorderDarkColor else
+         c := BorderDarkColor
+       else
          c := BorderLightColor;
        TGUITools.DrawAARoundFrame(
          ABuffer,
@@ -423,7 +424,8 @@ begin
          c
        );
        if FAppearance.Pane.Style = psDividerRaised then
-         c := BorderDarkColor else
+         c := BorderDarkColor
+       else
          c := BorderLightColor;
        TGUITools.DrawVLine(
          ABuffer,
@@ -444,7 +446,7 @@ begin
      );
   end;
 
-  // Elementy
+  // Elements
   for i := 0 to FItems.Count - 1 do
     if FItems[i].Visible then
       FItems[i].Draw(ABuffer, ClipRect);
@@ -504,9 +506,9 @@ begin
   if FItems.Count = 0 then
     exit;
 
-  // Notatka: algorytm jest skonstruowany w ten sposób, ¿e trójka: CurrentColumn,
-  //          CurrentRow oraz CurrentItem wskazuje na element, którego jeszcze nie
-  //          ma (zaraz za ostatnio dodanym elementem).
+  // Note: the algorithm is structured in such a way that three of them,
+  // CurrentColumn, CurrentRow and CurrentItem, point to an element that
+  // is not yet present (just after the recently added element).
 
   SetLength(Layout, 1);
   CurrentColumn := 0;
@@ -524,14 +526,14 @@ begin
     ItemTableBehaviour := FItems[i].GetTableBehaviour;
     ItemSize := FItems[i].GetSize;
 
-    // Rozpoczêcie nowej kolumny?
+    // Starting a new column?
     if (i=0) or
        (ItemSize = isLarge) or
        (ItemTableBehaviour = tbBeginsColumn) or
        ((ItemTableBehaviour = tbBeginsRow) and (CurrentRow = 2)) or
        (ForceNewColumn) then
     begin
-      // Jeœli ju¿ jesteœmy na pocz¹tku nowej kolumny, nie ma nic do roboty.
+      // If we are already at the beginning of the new column, there is nothing to do.
       if (CurrentRow <> 0) or (CurrentItem <> 0) then
       begin
         SetLength(Layout, Length(Layout)+1);
@@ -544,10 +546,10 @@ begin
         CurrentItem := 0;
       end;
     end else
-    // Rozpoczêcie nowego wiersza?
+    // Starting a new row?
     if (ItemTableBehaviour = tbBeginsRow) then
     begin
-      // Jeœli ju¿ jesteœmy na pocz¹tku nowego wiersza, nie ma nic do roboty.
+      // If we are already at the beginning of a new poem, there is nothing to do.
       if CurrentItem <> 0 then
       begin
         SetLength(Layout[CurrentColumn], Length(Layout[CurrentColumn])+1);
@@ -558,8 +560,7 @@ begin
 
     ForceNewColumn := (ItemSize = isLarge);
 
-    // Jeœli element jest widoczny, dodajemy go w aktualnej kolumnie i aktualnym
-    // wierszu.
+    // If the item is visible, we add it in the current column and the current row.
     if FItems[i].Visible then
     begin
       SetLength(Layout[CurrentColumn][CurrentRow], Length(Layout[CurrentColumn][CurrentRow])+1);
@@ -569,11 +570,10 @@ begin
     end;
   end;
 
-  // W tym miejscu mamy gotowy layout. Teraz trzeba obliczyæ pozycje i rozmiary
-  // Rectów.
+  // We have a ready layout here. Now you have to calculate the positions
+  // and sizes of the Rects.
 
-  // Najpierw wype³niamy je pustymi danymi, które zape³ni¹ miejsce elementów
-  // niewidocznych.
+  // First, fill them with empty data that will fill the place of invisible elements.
   {$IFDEF EnhancedRecordSupport}
   for i := 0 to FItems.Count - 1 do
     Result.Rects[i] := T2DIntRect.Create(-1, -1, -1, -1);
@@ -584,7 +584,7 @@ begin
 
   MaxRowX := 0;
 
-  // Teraz iterujemy po layoucie, ustalaj¹c recty.
+  // Now, we iterate through the layout, fixing the recit.
   for c := 0 to High(Layout) do
   begin
     if c>0 then
@@ -630,8 +630,8 @@ begin
           end
           else
           begin
-            // Jeœli element nie jest pierwszy, musi zostaæ
-            // odsuniêty marginesem od poprzedniego
+            // If the element is not the first one, it must be offset by
+            // the margin from the previous one
             if i>0 then
               tmpRect.Left := LastX + PaneGroupSpacer
             else
@@ -639,7 +639,7 @@ begin
             tmpRect.Right := tmpRect.Left + ItemWidth - 1;
           end;
 
-          {$REGION 'Obliczanie tmpRect.top i bottom'}
+          {$REGION 'Calculation of tmpRect.top and bottom'}
           case rows of
             1 : begin
                   tmpRect.Top := PaneOneRowTopPadding;
@@ -681,8 +681,8 @@ begin
       end;
     end;
   end;
-  // W tym miejscu MaxRowX wskazuje na pierwszy piksel za najbardziej wysuniêtym
-  // w prawo elementem - ergo jest równy szerokoœci ca³ego layoutu.
+  // At this point, MaxRowX points to the first pixel behind the most
+  // right-hand element - ergo is equal to the width of the entire layout.
   Result.Width := MaxRowX;
 end;
 
@@ -703,7 +703,7 @@ var
   ElementsW: integer;
   Layout: TSpkPaneItemsLayout;
 begin
-  // Przygotowywanie...
+  // Preparing...
   Result := -1;
   if FToolbarDispatch = nil then
     exit;
@@ -715,16 +715,16 @@ begin
     exit;
   tmpBitmap.Canvas.Font.Assign(FAppearance.Pane.CaptionFont);
 
-  // *** Minimalna szerokoœæ tafli (tekstu) ***
+  // *** The minimum width of the sheet (text) ***
   TextW := tmpBitmap.Canvas.TextWidth(FCaption);
   PaneCaptionWidth := 2*PaneBorderSize + 2*PaneCaptionHMargin + TextW;
 
-  // *** Szerokoœæ elementów tafli ***
+  // *** The width of the elements of the sheet ***
   Layout := GenerateLayout;
   ElementsW := Layout.Width;
   PaneElementsWidth := PaneBorderSize + PaneLeftPadding + ElementsW + PaneRightPadding + PaneBorderSize;
 
-  // *** Ustawianie szerokoœci tafli ***
+  // *** Setting the width of the pane ***
   Result := Max(PaneCaptionWidth, PaneElementsWidth);
 end;
 
@@ -767,7 +767,7 @@ begin
     begin
       FMouseActiveElement.ElementType := pePaneArea;
       FMouseActiveElement.ElementIndex := -1;
-      // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia.
+      // Placeholder, if there is a need to handle this event.
     end;
   end;
 end;
@@ -783,15 +783,15 @@ begin
     end else
     if FMouseHoverElement.ElementType = pePaneArea then
     begin
-      // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia.
+      // Placeholder, if there is a need to handle this event.
     end;
   end;
 
   FMouseHoverElement.ElementType := peNone;
   FMouseHoverElement.ElementIndex := -1;
 
-  // Niezale¿nie od tego, który element by³ aktywny / pod mysz¹, trzeba
-  // wygasiæ HotTrack.
+  // Regardless of which item was active / under the mouse, you need to
+  // expire HotTrack.
   if FPaneState <> psIdle then
   begin
     FPaneState := psIdle;
@@ -805,9 +805,9 @@ var
   i: integer;
   NewMouseHoverElement: TSpkMousePaneElement;
 begin
-  // MouseMove jest wywo³ywany tylko, gdy tafla jest aktywna, b¹dŸ gdy
-  // mysz rusza siê wewn¹trz jej obszaru. Wobec tego zawsze nale¿y
-  // w tej sytuacji zapaliæ HotTrack.
+  // MouseMove is only called when the tile is active, or when the mouse moves
+  // inside its area. Therefore, it is always necessary to ignite HotTrack
+  // in this situation.
 
   if FPaneState = psIdle then
   begin
@@ -816,7 +816,7 @@ begin
       FToolbarDispatch.NotifyVisualsChanged;
   end;
 
-  // Szukamy obiektu pod mysz¹
+  // We're looking for an object under the mouse
   i := FindItemAt(X, Y);
   if i <> -1 then
   begin
@@ -841,12 +841,12 @@ begin
   end else
   if FMouseActiveElement.ElementType = pePaneArea then
   begin
-    // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+    // Placeholder, if there is a need to handle this event
   end else
   if FMouseActiveElement.ElementType = peNone then
   begin
-    // Jeœli element pod mysz¹ siê zmienia, informujemy poprzedni element o
-    // tym, ¿e mysz opuszcza jego obszar
+    // If the item under the mouse changes, we inform the previous element
+    // that the mouse leaves its area
     if (NewMouseHoverElement.ElementType <> FMouseHoverElement.ELementType) or
        (NewMouseHoverElement.ElementIndex <> FMouseHoverElement.ElementIndex) then
     begin
@@ -857,7 +857,7 @@ begin
       end else
       if FMouseHoverElement.ElementType = pePaneArea then
       begin
-        // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+        // Placeholder, if there is a need to handle this event
       end;
     end;
 
@@ -868,7 +868,7 @@ begin
     end else
     if NewMouseHoverElement.ElementType = pePaneArea then
     begin
-      // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+      // Placeholder, if there is a need to handle this event
     end;
   end;
 
@@ -889,7 +889,7 @@ begin
   end else
   if FMouseActiveElement.ElementType = pePaneArea then
   begin
-    // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia.
+    // Placeholder, if there is a need to handle this event
   end;
 
   if ClearActive and
@@ -903,7 +903,7 @@ begin
     end else
     if FMouseActiveElement.ElementType = pePaneArea then
     begin
-      // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia.
+      // Placeholder, if there is a need to handle this event
     end;
 
     if FMouseHoverElement.ElementType = peItem then
@@ -913,7 +913,7 @@ begin
     end else
     if FMouseHoverElement.ElementType = pePaneArea then
     begin
-      // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia.
+      // Placeholder, if there is a need to handle this event
     end else
     if FMouseHoverElement.ElementType = peNone then
     begin
@@ -1010,7 +1010,7 @@ var
   i: Integer;
 begin
   if (AIndex < 0) or (AIndex > self.Count) then
-    raise InternalException.Create('TSpkPanes.Insert: Nieprawid³owy indeks!');
+    raise InternalException.Create('TSpkPanes.Insert: Invalid index!');
 
   if FRootComponent<>nil then
   begin
@@ -1043,8 +1043,8 @@ begin
   case Operation of
     opInsert:
       begin
-        // Ustawienie dyspozytora na nil spowoduje, ¿e podczas
-        // przypisywania w³asnoœci nie bêd¹ wo³ane metody Notify*
+        // Setting the dispatcher to nil will cause that during the
+        // ownership assignment, the Notify method will not be called
         TSpkPane(Item).ToolbarDispatch := nil;
         TSpkPane(Item).Appearance := FAppearance;
         TSpkPane(Item).Images := FImages;

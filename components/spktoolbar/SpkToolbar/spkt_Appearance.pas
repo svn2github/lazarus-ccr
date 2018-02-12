@@ -4,11 +4,11 @@ unit spkt_Appearance;
 
 (*******************************************************************************
 *                                                                              *
-*  Plik: spkt_Appearance.pas                                                   *
-*  Opis: Klasy bazowe dla klas wygl¹du elementów toolbara                      *
-*  Copyright: (c) 2009 by Spook.                                               *
-*  License:   Modified LGPL (with linking exception, like Lazarus LCL)         *
-'             See "license.txt" in this installation                           *
+*  File:        spkt_Appearance.pas                                            *
+*  Description: Base classes for the appearance classes of the toolbar elements*
+*  Copyright:   (c) 2009 by Spook.                                             *
+*  License:     Modified LGPL (with linking exception, like Lazarus LCL)       *
+'               See "license.txt" in this installation                         *
 *                                                                              *
 *******************************************************************************)
 
@@ -56,9 +56,9 @@ type
     procedure TabHeaderFontChange(Sender: TObject);
 
   public
-    // *** Konstruktor, destruktor, assign ***
-    // <remarks>Appearance musi mieæ assign, bo wystêpuje jako w³asnoœæ
-    // opublikowana.</remarks>
+    // *** Constructor, destructor, Assign ***
+    // Remarks: Appearance must have Assign because it exists as a
+    // published property.
     constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
@@ -329,7 +329,7 @@ begin
      if FDispatch <> nil then
         FDispatch.NotifyAppearanceChanged;
   end else
-    raise AssignException.Create('TSpkToolbarAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkToolbarAppearance!');
+    raise AssignException.Create('TSpkToolbarAppearance.Assign: Cannot assign the object '+Source.ClassName+' to TSpkToolbarAppearance!');
 end;
 
 procedure TSpkTabAppearance.LoadFromXML(Node: TSpkXMLNode);
@@ -544,7 +544,7 @@ begin
     if FDispatch <> nil then
       FDispatch.NotifyAppearanceChanged;
   end else
-    raise AssignException.create('TSpkPaneAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkPaneAppearance!');
+    raise AssignException.Create('TSpkPaneAppearance.Assign: Cannot assign the class '+Source.ClassName+' to TSpkPaneAppearance!');
 end;
 
 procedure TSpkPaneAppearance.CaptionFontChange(Sender: TObject);
@@ -831,7 +831,7 @@ begin
     if FDispatch <> nil then
       FDispatch.NotifyAppearanceChanged;
   end else
-    raise AssignException.create('TSpkElementAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkElementAppearance!');
+    raise AssignException.Create('TSpkElementAppearance.Assign: Cannot assign the objecct '+Source.ClassName+' to TSpkElementAppearance!');
 end;
 
 procedure TSpkElementAppearance.CaptionFontChange(Sender: TObject);
@@ -1522,7 +1522,7 @@ begin
     if FDispatch <> nil then
       FDispatch.NotifyAppearanceChanged;
   end else
-    raise AssignException.create('TSpkToolbarAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkToolbarAppearance!');
+    raise AssignException.Create('TSpkToolbarAppearance.Assign: Cannot assign the object '+Source.ClassName+' to TSpkToolbarAppearance!');
 end;
 
 procedure TSpkToolbarAppearance.LoadFromXML(Node: TSpkXMLNode);

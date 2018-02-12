@@ -609,4 +609,5 @@ begin
   ACanvas.Brush.Style := TmpBrushStyle;
 end;
 
+
 end.

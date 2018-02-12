@@ -7,7 +7,7 @@ unit SpkMath;
 
 interface
 
-{TODO: Zastanowiæ siê, czy wszystkie niejawne casty maj¹ sens}
+{TODO: Consider if all implicit casts make sense }
 
 uses
   Types, Math, SysUtils;

@@ -4,12 +4,12 @@ unit spkt_Dispatch;
 
 (*******************************************************************************
 *                                                                              *
-*  Plik: spkt_Dispatch.pas                                                     *
-*  Opis: Bazowe klasy dyspozytorów poœrednicz¹cych pomiêdzy elementami         *
-*        toolbara.                                                             *
-*  Copyright: (c) 2009 by Spook.                                               *
-*  License:   Modified LGPL (with linking exception, like Lazarus LCL)         *
-'             See "license.txt" in this installation                           *
+*  File: spkt_Dispatch.pas                                                     *
+*  Description: Basic classes of intermediary dispatchers between elements     *
+*               of the toolbar.                                                *
+*  Copyright:   (c) 2009 by Spook.                                             *
+*  License:     Modified LGPL (with linking exception, like Lazarus LCL)       *
+'               See "license.txt" in this installation                         *
 *                                                                              *
 *******************************************************************************)
 
