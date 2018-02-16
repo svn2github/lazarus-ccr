@@ -558,7 +558,6 @@ begin
 
   // Initialization of inherited property
   Align := alTop;
-  DoubleBuffered := true;  // required after Laz 1.9
 
   //todo: not found in lcl
   //inherited AlignWithMargins:=true;
@@ -705,6 +704,10 @@ end;
 procedure TSpkToolbar.Loaded;
 begin
   inherited;
+
+  if not (csDesigning in ComponentState) then
+    DoubleBuffered := DoubleBuffered or (GetSystemMetrics(SM_REMOTESESSION)=0);
+    // force DoubleBuffered if not used in remote session
 
   InternalBeginUpdate;
 
