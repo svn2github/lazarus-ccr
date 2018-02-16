@@ -702,12 +702,20 @@ begin
 end;
 
 procedure TSpkToolbar.Loaded;
+{$IF LCL_FULLVERSION = 1090000}
+const
+  SM_REMOTESESSION = $1000;
+  // is defined only after Lazarus r57304
+{$ENDIF}
 begin
   inherited;
 
+  {$IF LCL_FULLVERSION >= 1090000}
+  // Needed due to changes of doublebuffering in Laz r57267
+  // force DoubleBuffered if not used in remote session
   if not (csDesigning in ComponentState) then
     DoubleBuffered := DoubleBuffered or (GetSystemMetrics(SM_REMOTESESSION)=0);
-    // force DoubleBuffered if not used in remote session
+  {$ENDIF}
 
   InternalBeginUpdate;
 
