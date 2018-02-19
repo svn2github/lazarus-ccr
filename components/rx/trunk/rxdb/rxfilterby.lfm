@@ -9,14 +9,14 @@ object rxFilterByForm: TrxFilterByForm
   ClientWidth = 644
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object Label1: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
     Left = 6
     Height = 20
     Top = 6
-    Width = 214
+    Width = 212
     BorderSpacing.Around = 6
     Caption = 'Select filter expression for data'
     Font.Style = [fsBold]
@@ -30,7 +30,7 @@ object rxFilterByForm: TrxFilterByForm
     Left = 6
     Height = 20
     Top = 32
-    Width = 57
+    Width = 58
     BorderSpacing.Around = 6
     Caption = 'On field:'
     Font.Color = clRed
@@ -44,7 +44,7 @@ object rxFilterByForm: TrxFilterByForm
     Left = 168
     Height = 20
     Top = 32
-    Width = 75
+    Width = 74
     BorderSpacing.Around = 6
     Caption = 'Operation :'
     Font.Color = clRed
@@ -73,7 +73,7 @@ object rxFilterByForm: TrxFilterByForm
     Left = 533
     Height = 20
     Top = 32
-    Width = 66
+    Width = 65
     BorderSpacing.Around = 6
     Caption = 'Operand :'
     Font.Color = clRed
@@ -143,7 +143,7 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 527
-    Height = 36
+    Height = 32
     Top = 58
     Width = 111
     Anchors = [akTop, akRight]
@@ -214,7 +214,7 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 527
-    Height = 36
+    Height = 32
     Top = 100
     Width = 111
     Anchors = [akTop, akRight]
@@ -285,7 +285,7 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 527
-    Height = 36
+    Height = 32
     Top = 144
     Width = 111
     Anchors = [akTop, akRight]
@@ -356,7 +356,7 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 527
-    Height = 36
+    Height = 32
     Top = 188
     Width = 111
     Anchors = [akTop, akRight]
@@ -427,7 +427,7 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 527
-    Height = 36
+    Height = 32
     Top = 232
     Width = 111
     Anchors = [akTop, akRight]
@@ -498,7 +498,7 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 527
-    Height = 36
+    Height = 32
     Top = 276
     Width = 111
     Anchors = [akTop, akRight]
@@ -569,7 +569,7 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 527
-    Height = 36
+    Height = 32
     Top = 320
     Width = 111
     Anchors = [akTop, akRight]
@@ -640,7 +640,7 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 527
-    Height = 36
+    Height = 32
     Top = 364
     Width = 111
     Anchors = [akTop, akRight]
@@ -710,8 +710,8 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 6
-    Height = 36
-    Top = 403
+    Height = 32
+    Top = 407
     Width = 58
     Anchors = [akLeft, akBottom]
     BorderSpacing.Around = 6
@@ -729,10 +729,10 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 585
+    Left = 586
     Height = 36
     Top = 403
-    Width = 53
+    Width = 52
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Around = 6
@@ -745,10 +745,10 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Control = Button1
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 519
+    Left = 521
     Height = 36
     Top = 403
-    Width = 60
+    Width = 59
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Around = 6
@@ -761,10 +761,10 @@ object rxFilterByForm: TrxFilterByForm
     AnchorSideRight.Control = Button2
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 429
+    Left = 432
     Height = 36
     Top = 403
-    Width = 84
+    Width = 83
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Around = 6

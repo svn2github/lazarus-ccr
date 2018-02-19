@@ -181,22 +181,33 @@ end;
 
 procedure TrxFilterByForm.ClearALL(AGrid: TRxDBGrid);
 var
-  i : Integer;
+  i , wsb, w, wt: Integer;
 begin
   //*****************************************************************************
   Combo_1[1].Items.Clear;
   Combo_1[1].Items.Add('');
+
+  wsb:= 30;  //ширина скроллбара
+  w := Combo_1[1].Width - wsb;
   for i := 0 To AGrid.Columns.Count-1 do
   begin
     if Assigned(AGrid.Columns[i].Field) and (AGrid.Columns[i].Field.FieldKind=fkData) and (AGrid.Columns[i].Visible) then
+    begin
       Combo_1[1].Items.Objects[Combo_1[1].Items.Add(AGrid.Columns[i].Title.Caption)]:=AGrid.Columns[i].Field;
+      wt := Canvas.TextWidth(AGrid.Columns[i].Title.Caption);
+        if wt > w then
+          w := wt;
+    end;
   end;
 
   Combo_1[1].ItemIndex := 0;
+  Combo_1[1].ItemWidth := w + wsb;
+
   for i := 2 To 9 do
   begin
     Combo_1[i].Items.Assign(Combo_1[1].Items);
     Combo_1[i].ItemIndex := 0;
+    Combo_1[i].ItemWidth := w + wsb;
   end;
 
   Combo_2[1].Items.Clear;
