@@ -37,6 +37,7 @@ type
     AcSortColAsc: TAction;
     AcRowHeight: TAction;
     AcColWidth: TAction;
+    AcSettingsReadFormulas: TAction;
     AcWorksheetProtection: TAction;
     AcWorksheetRTL: TAction;
     AcViewInspector: TAction;
@@ -79,6 +80,8 @@ type
     MenuItem176: TMenuItem;
     MenuItem177: TMenuItem;
     MenuItem178: TMenuItem;
+    MenuItem179: TMenuItem;
+    MenuItem180: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
@@ -431,6 +434,7 @@ type
     procedure AcRowAddExecute(Sender: TObject);
     procedure AcRowDeleteExecute(Sender: TObject);
     procedure AcRowHeightExecute(Sender: TObject);
+    procedure AcSettingsReadFormulasExecute(Sender: TObject);
     procedure AcSortColAscExecute(Sender: TObject);
     procedure AcSortExecute(Sender: TObject);
     procedure ActionListUpdate(AAction: TBasicAction; var Handled: Boolean);
@@ -805,6 +809,14 @@ begin
   end;
 end;
 
+procedure TMainForm.AcSettingsReadFormulasExecute(Sender: TObject);
+begin
+  if AcSettingsReadFormulas.Checked then
+    WorkbookSource.Options := WorkbookSource.Options + [boReadFormulas]
+  else
+    WorkbookSource.Options := WorkbookSource.Options - [boReadFormulas];
+end;
+
 procedure TMainForm.AcShowGridLinesExecute(Sender: TObject);
 begin
   WorksheetGrid.ShowGridLines := AcShowGridLines.Checked;
@@ -1130,6 +1142,10 @@ begin
     b := ini.ReadBool('Inspector', 'Visible', false);
     AcViewInspector.Checked := b;
     AcviewInspectorExecute(nil);
+
+    AcSettingsReadFormulas.Checked := ini.ReadBool('Settings', 'ReadFormulas', true);
+    AcSettingsReadFormulasExecute(nil);
+
   finally
     ini.Free;
   end;
@@ -1206,6 +1222,8 @@ begin
     ini.WriteInteger('Inspector', 'Width', InspectorTabControl.Width);
     ini.WriteString('Inspector', 'Page', InspectorTabControl.Tabs[InspectorTabControl.TabIndex]);
     ini.WriteBool('Inspector', 'Visible', InspectorTabControl.Visible);
+
+    ini.WriteBool('Settings', 'ReadFormulas', AcSettingsReadFormulas.Checked);
   finally
     ini.Free;
   end;

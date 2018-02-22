@@ -347,7 +347,7 @@ object MainForm: TMainForm
       Width = 130
       WorkbookSource = WorkbookSource
       DropDownCount = 24
-      ItemIndex = 44
+      ItemIndex = 46
       TabOrder = 0
       Text = 'Arial'
     end
@@ -1904,6 +1904,13 @@ object MainForm: TMainForm
       ImageIndex = 73
       OnExecute = AcWorksheetProtectionExecute
       OnUpdate = AcWorksheetProtectionUpdate
+    end
+    object AcSettingsReadFormulas: TAction
+      Category = 'Settings'
+      AutoCheck = True
+      Caption = 'Read formulas'
+      Checked = True
+      OnExecute = AcSettingsReadFormulasExecute
     end
   end
   object ImageList: TImageList
@@ -4707,6 +4714,13 @@ object MainForm: TMainForm
       end
       object MenuItem108: TMenuItem
         Action = AcSettingsCurrency
+      end
+      object MenuItem179: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem180: TMenuItem
+        Action = AcSettingsReadFormulas
+        AutoCheck = True
       end
     end
     object MnuHelp: TMenuItem
