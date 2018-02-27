@@ -274,6 +274,7 @@ type
     procedure MouseLeave; override;
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
+    procedure Resize; override;
 
     procedure Click; override;
     function RealGetText: TCaption; override;
@@ -1461,6 +1462,12 @@ procedure TRxCustomDBLookupCombo.MouseUp(Button: TMouseButton;
 begin
   inherited MouseUp(Button, Shift, X, Y);
   FMouseDown:=false;
+  Invalidate;
+end;
+
+procedure TRxCustomDBLookupCombo.Resize;
+begin
+  inherited Resize;
   Invalidate;
 end;
 
