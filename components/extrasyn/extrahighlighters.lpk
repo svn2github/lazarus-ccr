@@ -15,7 +15,7 @@
     <Description Value="Extra highlighters for synedit"/>
     <License Value="MPL GPL dual license."/>
     <Version Major="1"/>
-    <Files Count="36">
+    <Files Count="39">
       <Item1>
         <Filename Value="SyneditHighlighters\syneditstrconstextra.pas"/>
         <UnitName Value="SynEditStrConstExtra"/>
@@ -161,6 +161,18 @@
         <Filename Value="SyneditHighlighters\SynHighlighter8051.pas"/>
         <UnitName Value="SynHighlighter8051"/>
       </Item36>
+      <Item37>
+        <Filename Value="SyneditHighlighters\synhighlighteruri.pas"/>
+        <UnitName Value="SynHighlighterURI"/>
+      </Item37>
+      <Item38>
+        <Filename Value="SyneditHighlighters\synhighlighterst.pas"/>
+        <UnitName Value="SynHighlighterST"/>
+      </Item38>
+      <Item39>
+        <Filename Value="SyneditHighlighters\synhighlightergeneral.pas"/>
+        <UnitName Value="SynHighlighterGeneral"/>
+      </Item39>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  SynEdit, Menus, StdCtrls, SynEditHighlighter,
+  SynEdit, Menus, StdCtrls, ComCtrls, SynEditHighlighter,
 
   SynHighlighterADSP21xx, SynHighlighterFortran, SynHighlighterFoxpro,  SynHighlighterGalaxy,   SynHighlighterBaan,
   SynHighlighterHaskell,  SynHighlighterCache,  {SynHighlighterDfm,}    SynHighlighterModelica, SynHighlighterCobol,
@@ -18,22 +18,23 @@ uses
   SynHighlighterST,       SynHighlighter8051,    SynHighlighterLua,     SynHighlighterProlog,   SynHighlighterCAC,
   SynHighlighterAWK;
 
+//   SynHighlighterGeneral;
+
 type
 
   { TForm1 }
-
   TForm1 = class(TForm)
-    Label1: TLabel;
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
     SynEdit1: TSynEdit;
-    procedure MenuClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure MenuClick(Sender: TObject);
   private
-    { private declarations }
-    FHighlighters: Array of TSynCustomHighlighter;
+    FHighlighters: TFPList;
+    procedure SelectHighlighter(AIndex: Integer);
   public
-    { public declarations }
+
   end;
 
 var
@@ -45,6 +46,27 @@ uses
   SynUniHighlighter;
 
 {$R *.lfm}
+
+const
+  FORM_CAPTION = 'SyntaxHighlighter Test';
+
+function GetHighlighterCaption(hl: TSynCustomHighlighter): String;
+begin
+  if (hl is TSynUniSyn) and (TSynUniSyn(hl).Info.General.Name <> '') then
+    Result := TSynUniSyn(hl).Info.General.Name
+  else
+    Result := hl.LanguageName;
+end;
+
+function CompareHighlighters(p1, p2: Pointer): Integer;
+var
+  s1, s2: String;
+begin
+  s1 := GetHighlighterCaption(TSynCustomHighlighter(p1));
+  s2 := GetHighlighterCaption(TSynCustomHighlighter(p2));
+  Result := AnsiCompareText(s1, s2);
+end;
+
 
 { TForm1 }
 
@@ -62,93 +84,105 @@ procedure TForm1.FormCreate(Sender: TObject);
   end;
 
 var
-  i, c :Integer;
-  item :TMenuItem;
+  i, c: Integer;
+  item: TMenuItem;
+  hl: TSynCustomHighlighter;
 begin
-  SetLength(FHighlighters, 35);
+  Caption := FORM_CAPTION;
 
-  for i:= low(FHighlighters) to high(FHighlighters) do
-    FHighlighters[i] := Nil;
+  FHighlighters := TFPList.Create;
 
-  FHighlighters[00] := TSynADSP21xxSyn.Create(self);
-  FHighlighters[01] := TSynFortranSyn.Create(self);
-  FHighlighters[02] := TSynFoxproSyn.Create(self);
-  FHighlighters[03] := TSynGalaxySyn.Create(self);
-  FHighlighters[04] := TSynBaanSyn.Create(self);
-  FHighlighters[05] := TSynAWKSyn.Create(self);
-  FHighlighters[06] := TSynHaskellSyn.Create(self);
-  FHighlighters[07] := TSynCacheSyn.Create(self);
-  FHighlighters[08] := TSynModelicaSyn.Create(self);
-  FHighlighters[09] := TSynCobolSyn.Create(self);
-  FHighlighters[10] := TSynCSSyn.Create(self);
-  FHighlighters[11] := TSynDmlSyn.Create(self);
-  FHighlighters[12] := TSynProgressSyn.Create(self);
-  FHighlighters[13] := TSynEiffelSyn.Create(self);
-  FHighlighters[14] := TSynGWScriptSyn.Create(self);
-  FHighlighters[15] := TSynHP48Syn.Create(self);
-  FHighlighters[16] := TSynVBScriptSyn.Create(self);
-  FHighlighters[17] := TSynUnrealSyn.Create(self);
-  FHighlighters[18] := TSynVrml97Syn.Create(self);
-  FHighlighters[19] := TSynTclTkSyn.Create(self);
-  FHighlighters[20] := TSynLDRSyn.Create(self);
-  FHighlighters[21] := TSynRubySyn.Create(self);
-  FHighlighters[22] := TSynInnoSyn.Create(self);
-  FHighlighters[23] := TSynAsmSyn.Create(self);
-  FHighlighters[24] := TSynDOTSyn.Create(self);
-  FHighlighters[25] := TSynIdlSyn.Create(self);
-  FHighlighters[26] := TSynKixSyn.Create(self);
-  FHighlighters[27] := TSynSDDSyn.Create(self);
-  FHighlighters[28] := TSynSMLSyn.Create(self);
-  FHighlighters[29] := TSynURISyn.Create(self);
-  FHighlighters[30] := TSynM3Syn.Create(self);
-  FHighlighters[31] := TSynRCSyn.Create(self);
-  FHighlighters[32] := TSynPrologSyn.Create(Self);
-  FHighlighters[33] := TSynLuaSyn.Create(Self);
-  FHighlighters[34] := TSyn8051Syn.Create(Self);
-  FHighlighters[35] := TSynCACSyn.Create(Self);
+  // extra highlighters
+  FHighlighters.Add(TSynADSP21xxSyn.Create(self));
+  FHighlighters.Add(TSynFortranSyn.Create(self));
+  FHighlighters.Add(TSynFoxproSyn.Create(self));
+  FHighlighters.Add(TSynGalaxySyn.Create(self));
+  FHighlighters.Add(TSynBaanSyn.Create(self));
+  FHighlighters.Add(TSynAWKSyn.Create(self));
+  FHighlighters.Add(TSynHaskellSyn.Create(self));
+  FHighlighters.Add(TSynCacheSyn.Create(self));
+  FHighlighters.Add(TSynModelicaSyn.Create(self));
+  FHighlighters.Add(TSynCobolSyn.Create(self));
+  FHighlighters.Add(TSynCSSyn.Create(self));
+  FHighlighters.Add(TSynDmlSyn.Create(self));
+  FHighlighters.Add(TSynProgressSyn.Create(self));
+  FHighlighters.Add(TSynEiffelSyn.Create(self));
+  FHighlighters.Add(TSynGWScriptSyn.Create(self));
+  FHighlighters.Add(TSynHP48Syn.Create(self));
+  FHighlighters.Add(TSynVBScriptSyn.Create(self));
+  FHighlighters.Add(TSynUnrealSyn.Create(self));
+  FHighlighters.Add(TSynVrml97Syn.Create(self));
+  FHighlighters.Add(TSynTclTkSyn.Create(self));
+  FHighlighters.Add(TSynLDRSyn.Create(self));
+  FHighlighters.Add(TSynRubySyn.Create(self));
+  FHighlighters.Add(TSynInnoSyn.Create(self));
+  FHighlighters.Add(TSynAsmSyn.Create(self));
+  FHighlighters.Add(TSynDOTSyn.Create(self));
+  FHighlighters.Add(TSynIdlSyn.Create(self));
+  FHighlighters.Add(TSynKixSyn.Create(self));
+  FHighlighters.Add(TSynSDDSyn.Create(self));
+  FHighlighters.Add(TSynSMLSyn.Create(self));
+  FHighlighters.Add(TSynURISyn.Create(self));
+  FHighlighters.Add(TSynM3Syn.Create(self));
+  FHighlighters.Add(TSynRCSyn.Create(self));
+  FHighlighters.Add(TSynPrologSyn.Create(Self));
+  FHighlighters.Add(TSynLuaSyn.Create(Self));
+  FHighlighters.Add(TSyn8051Syn.Create(Self));
+  FHighlighters.Add(TSynCACSyn.Create(Self));
+  FHighlighters.Add(TSynSTSyn.Create(self));
 
-  // FHighlighters[06] := TSynGeneralSyn.Create(self);
-  // FHighlighters[09] := TSynDfmSyn.Create(self);
-  // FHighlighters[12] := TSynUniSyn.Create(self);
-  // FHighlighters[12] := TSynCPMSyn.Create(self);
-  // FHighlighters[30] := TSynMsgSyn.Create(self);
-  // FHighlighters[36] := TSynSTSyn.Create(self);
+//  FHighlighters.Add(TSynCPMSyn.Create(self));
+//  FHighlighters.Add(TSynGeneralSyn.Create(self));
+//  FHighlighters.Add(TSynDfmSyn.Create(self));
+//  FHighlighters.Add/TSynUniSyn.Create(self));
+//  FHighlighters.Add(TSynMsgSyn.Create(self));
 
-  for i:= low(FHighlighters) to high(FHighlighters) do
-    if Assigned(FHighlighters[i]) then begin
-      SetDefaultColors(FHighlighters[i]);
-      item         := TMenuItem.Create(self);
-      item.Tag     := i+1; //0 = unknown highlighter
+  FHighlighters.Sort(@CompareHighlighters);
+
+  for i:=0 to FHighlighters.Count-1 do begin
+    hl := TSynCustomHighlighter(FHighlighters[i]);
+    if Assigned(hl) then begin
+      SetDefaultColors(hl);
+      item := TMenuItem.Create(self);
+      item.Tag := i+1; //0 = unknown highlighter
       try
-        if (FHighlighters[i] is TSynUniSyn) and (TSynUniSyn(FHighlighters[i]).Info.General.Name <> '') then
-          item.Caption := IntToStr(i) + ' - ' + TSynUniSyn(FHighlighters[i]).Info.General.Name
-        else
-          item.Caption := IntToStr(i) + ' - ' + TSynCustomHighlighter(FHighlighters[i]).LanguageName;
+        item.Caption := Format('%d - %s', [i, GetHighlighterCaption(hl)]);
       except
         on E : Exception  do
           ShowMessage(E.Message+LineEnding+' at index '+inttostr(i));
       end;
-      item.Name := FHighlighters[i].ClassName;
+//      item.Hint := hl.ClassName;
       item.OnClick := @MenuClick;
-      if i > 27 then
-        WriteLn(I, ' : ',Item.Name,' : ', item.Caption);
       MenuItem1.Add(item);
     end;
+  end;
 
-  SynEdit1.Highlighter := FHighlighters[12];
-  Label1.Caption := FHighlighters[12].ClassName;
+  SelectHighlighter(12);
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  FHighlighters.Free;
 end;
 
 procedure TForm1.MenuClick(Sender: TObject);
-var i,c:Integer;
+var
+  i, idx, c:Integer;
 begin
-  c:= ComponentCount-1;
+  c := ComponentCount-1;
   if (Sender is TMenuItem) and (TMenuItem(Sender).Tag > 0) then begin
-    SynEdit1.Highlighter := FHighlighters[TMenuItem(Sender).Tag-1];
-    Caption := SynEdit1.Highlighter.LanguageName;
-    SynEdit1.Text := SynEdit1.Highlighter.SampleSource;
-    Label1.Caption := Caption;
+    idx := TMenuItem(Sender).Tag - 1;
+    SelectHighlighter(idx);
   end;
+end;
+
+procedure TForm1.SelectHighlighter(AIndex: Integer);
+begin
+  SynEdit1.Highlighter := TSynCustomHighlighter(FHighlighters[AIndex]);
+  SynEdit1.Text := SynEdit1.Highlighter.SampleSource;
+  Caption := Format('%s - %s [%s]', [
+    FORM_CAPTION, SynEdit1.Highlighter.LanguageName, SynEdit1.Highlighter.ClassName
+  ]);
 end;
 
 end.

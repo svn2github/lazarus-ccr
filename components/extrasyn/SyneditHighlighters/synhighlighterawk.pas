@@ -595,6 +595,14 @@ begin
   Result := ['0'..'9', 'a'..'z', 'A'..'Z'] + TSynSpecialChars;
 end;
 
+function TSynAWKSyn.GetSampleSource :string;
+begin
+  Result :=
+    'BEGIN { FS='':''; print "This is the first line\n" }' + LineEnding +
+    '{ print "LINE",NR,$1 }' + LineEnding +
+    'END { print "This is the last line\n" }';
+end;
+
 function TSynAWKSyn.IsFilterStored: Boolean;
 begin
   Result := fDefaultFilter <> SYNS_FilterAWK;
@@ -603,14 +611,6 @@ end;
 class function TSynAWKSyn.GetLanguageName: string;
 begin
   Result := SYNS_LangAWK;
-end;
-
-function TSynAWKSyn.GetSampleSource :string;
-begin
-  Result :=
-    'BEGIN { FS='':''; print "This is the first line\n" }' + LineEnding +
-    '{ print "LINE",NR,$1 }' + LineEnding +
-    'END { print "This is the last line\n" }';
 end;
 
 

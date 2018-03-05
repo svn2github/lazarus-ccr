@@ -19,7 +19,8 @@ uses
   SynHighlighterModelica, SynHighlighterProgress, SynHighlighterProlog, 
   SynHighlighterRC, SynHighlighterRuby, SynHighlighterSDD, SynHighlighterSml, 
   SynHighlighterTclTk, SynHighlighterUnreal, SynHighlighterVBScript, 
-  SynHighlighterVrml97, SynHighlighter8051;
+  SynHighlighterVrml97, SynHighlighter8051, SynHighlighterURI, 
+  SynHighlighterST, SynHighlighterGeneral;
 
 implementation
 

@@ -2198,86 +2198,86 @@ end;
 
 function TSynCobolSyn.GetSampleSource: string;
 begin
-  Result := '000100* This is a sample file to be used to show all TSynCobolSyn''s'#13#10 +
-            '000200* features.'#13#10 +
-            '000300* This isn''t a valid COBOL program.'#13#10 +
-            '000400'#13#10 +
-            '000500* 1. Supported COBOL features.'#13#10 +
-            '000600'#13#10 +
-            '000700* 1.1  Sequence area.'#13#10 +
-            '000800*    First six columns in COBOL are reserved for enumeration'#13#10 +
-            '000900*    of source lines.'#13#10 +
-            '001000* 1.2  Indicator area.'#13#10 +
-            '001100*    7th column in COBOL is reserved for special markers like ''*'''#13#10 +
-            '001200*    or ''D''.'#13#10 +
-            '001300* 1.3  Comment lines.'#13#10 +
-            '001400*    Any line started from ''*'' in 7th column is a comment.'#13#10 +
-            '001500*    No separate word highlighting will be done by the editor.'#13#10 +
-            '001600* 1.4  Debug lines.'#13#10 +
-            '001700D    Any line started from ''D'' will be treated as containing debug'#13#10 +
-            '001800D    commands. No separate word highlighting will be done'#13#10 +
-            '001900D    by the editor.'#13#10 +
-            '002000* 1.5  Tag area.'#13#10 +
-            '002100*    Only columns from 8th till 72th can be used for COBOL        TAG_AREA'#13#10 +
-            '002200*    program. Columns beyond the 72th one may be used by some     TAG_AREA'#13#10 +
-            '002300*    COBOL compilers to tag the code in some internal way.        TAG_AREA'#13#10 +
-            '002400* 1.6  Area A identifiers.'#13#10 +
-            '002500*    In area A (from 8th column till'#13#10 +
-            '002600*    11th one) you should type only sections''/paragraphs'' names.'#13#10 +
-            '002700*    For example "SOME" is a section name:'#13#10 +
-            '002800 SOME SECTION.'#13#10 +
-            '002900* 1.7  Preprocessor directives.'#13#10 +
-            '003000*    For example "COPY" is a preprocessor directive:'#13#10 +
-            '003100     COPY "PRD-DATA.SEL".'#13#10 +
-            '003200* 1.8  Key words.'#13#10 +
-            '003300*    For example "ACCEPT" and "AT" are COBOL key words:'#13#10 +
-            '003400     ACCEPT WS-ENTRY AT 2030.'#13#10 +
-            '003500* 1.9  Boolean constants.'#13#10 +
-            '003600*    These are "TRUE" and "FALSE" constants. For example:'#13#10 +
-            '003700     EVALUATE TRUE.'#13#10 +
-            '003800* 1.10 Numbers.'#13#10 +
-            '003900*    Here are the examples of numbers:'#13#10 +
-            '004000 01  WSV-TEST-REC.'#13#10 +
-            '004100     03  WSV-INT-T	       PIC 9(5) VALUE 12345.'#13#10 +
-            '004200     03  WSV-PRICES              PIC 9(4)V99 COMP-3 VALUE 0000.33. 		'#13#10 +
-            '004300     03  WSV-Z-PRICES            PIC Z(5)9.99- VALUE -2.12. 		'#13#10 +
-            '004400     03  WSV-STORE-DATE          PIC 9(4)V99E99 VALUE 0001.33E02.'#13#10 +
-            '004500* 1.11 Strings.'#13#10 +
-            '004600*    The following types of strings are supported:'#13#10 +
-            '004700*    1.11.1 Quoted strings.'#13#10 +
-            '004800         MOVE "The name of field is ""PRODUCT""" TO WS-ERR-MESS.'#13#10 +
-            '004900         MOVE ''The name of field is ''''PRODUCT'''''' TO WS-ERR-MESS.'#13#10 +
-            '005000*    1.11.2 Pseudo-text.'#13#10 +
-            '005100         COPY'#13#10 +
-            '005200             REPLACING ==+00001== BY  +2'#13#10 +
-            '005300                       == 1 ==    BY  -3.'#13#10 +
-            '005400*    1.11.3 Figurative constants.'#13#10 +
-            '005500*        For example "SPACES" is figurative constant:'#13#10 +
-            '005600             DISPLAY SPACES UPON CRT.'#13#10 +
-            '005700* 1.12 Continued lines.'#13#10 +
-            '005800*    Only continued strings are supported. For example:'#13#10 +
-            '005900         MOVE "The name of figurative constant field is'#13#10 +
-            '006000-"SPACES" TO WS-ERR-MESS.'#13#10 +
-            '006100*    Or (a single quotation mark in 72th column):'#13#10 +
-            '005900         MOVE "The name of figurative constant field is  ""SPACES"'#13#10 +
-            '006000-""" TO WS-ERR-MESS.'#13#10 +
-            '006100'#13#10 +
-            '006200* 2. Unsupported COBOL features.'#13#10 +
-            '006300'#13#10 +
-            '006400* 2.1 Continued lines.'#13#10 +
-            '006500*    Continuation of key words is not supported. For example,'#13#10 +
-            '006600*    the following COBOL code is valid but TSynCobolSyn won''t'#13#10 +
-            '006700*    highlight "VALUE" keyword properly:'#13#10 +
-            '006800     03  WSV-STORE-DATE                         PIC 9(4)V99E99 VAL'#13#10 +
-            '006900-UE 0001.33E02.'#13#10 +
-            '007000* 2.2 Identifiers started from digits.'#13#10 +
-            '007100*    They are valid in COBOL but won''t be highlighted properly'#13#10 +
-            '007200*    by TSynCobolSyn. For example, "000-main" is a paragraph'#13#10 +
-            '007300*    name and should be highlighted as Area A identifier:'#13#10 +
-            '007400 000-main.'#13#10 +
-            '007500* 2.3 Comment entries in optional paragraphs'#13#10 +
-            '007600*    The so called comment-entries in the optional paragraphs'#13#10 +
-            '007700*    of the Identification Division are not supported and won''t'#13#10 +
+  Result := '000100* This is a sample file to be used to show all TSynCobolSyn''s' + LineEnding +
+            '000200* features.' + LineEnding +
+            '000300* This isn''t a valid COBOL program.' + LineEnding +
+            '000400' + LineEnding +
+            '000500* 1. Supported COBOL features.' + LineEnding +
+            '000600' + LineEnding +
+            '000700* 1.1  Sequence area.' + LineEnding +
+            '000800*    First six columns in COBOL are reserved for enumeration' + LineEnding +
+            '000900*    of source lines.' + LineEnding +
+            '001000* 1.2  Indicator area.' + LineEnding +
+            '001100*    7th column in COBOL is reserved for special markers like ''*''' + LineEnding +
+            '001200*    or ''D''.' + LineEnding +
+            '001300* 1.3  Comment lines.' + LineEnding +
+            '001400*    Any line started from ''*'' in 7th column is a comment.' + LineEnding +
+            '001500*    No separate word highlighting will be done by the editor.' + LineEnding +
+            '001600* 1.4  Debug lines.' + LineEnding +
+            '001700D    Any line started from ''D'' will be treated as containing debug' + LineEnding +
+            '001800D    commands. No separate word highlighting will be done' + LineEnding +
+            '001900D    by the editor.' + LineEnding +
+            '002000* 1.5  Tag area.' + LineEnding +
+            '002100*    Only columns from 8th till 72th can be used for COBOL        TAG_AREA' + LineEnding +
+            '002200*    program. Columns beyond the 72th one may be used by some     TAG_AREA' + LineEnding +
+            '002300*    COBOL compilers to tag the code in some internal way.        TAG_AREA' + LineEnding +
+            '002400* 1.6  Area A identifiers.' + LineEnding +
+            '002500*    In area A (from 8th column till' + LineEnding +
+            '002600*    11th one) you should type only sections''/paragraphs'' names.' + LineEnding +
+            '002700*    For example "SOME" is a section name:' + LineEnding +
+            '002800 SOME SECTION.' + LineEnding +
+            '002900* 1.7  Preprocessor directives.' + LineEnding +
+            '003000*    For example "COPY" is a preprocessor directive:' + LineEnding +
+            '003100     COPY "PRD-DATA.SEL".' + LineEnding +
+            '003200* 1.8  Key words.' + LineEnding +
+            '003300*    For example "ACCEPT" and "AT" are COBOL key words:' + LineEnding +
+            '003400     ACCEPT WS-ENTRY AT 2030.' + LineEnding +
+            '003500* 1.9  Boolean constants.' + LineEnding +
+            '003600*    These are "TRUE" and "FALSE" constants. For example:' + LineEnding +
+            '003700     EVALUATE TRUE.' + LineEnding +
+            '003800* 1.10 Numbers.' + LineEnding +
+            '003900*    Here are the examples of numbers:' + LineEnding +
+            '004000 01  WSV-TEST-REC.' + LineEnding +
+            '004100     03  WSV-INT-T	       PIC 9(5) VALUE 12345.' + LineEnding +
+            '004200     03  WSV-PRICES              PIC 9(4)V99 COMP-3 VALUE 0000.33. 		' + LineEnding +
+            '004300     03  WSV-Z-PRICES            PIC Z(5)9.99- VALUE -2.12. 		' + LineEnding +
+            '004400     03  WSV-STORE-DATE          PIC 9(4)V99E99 VALUE 0001.33E02.' + LineEnding +
+            '004500* 1.11 Strings.' + LineEnding +
+            '004600*    The following types of strings are supported:' + LineEnding +
+            '004700*    1.11.1 Quoted strings.' + LineEnding +
+            '004800         MOVE "The name of field is ""PRODUCT""" TO WS-ERR-MESS.' + LineEnding +
+            '004900         MOVE ''The name of field is ''''PRODUCT'''''' TO WS-ERR-MESS.' + LineEnding +
+            '005000*    1.11.2 Pseudo-text.' + LineEnding +
+            '005100         COPY' + LineEnding +
+            '005200             REPLACING ==+00001== BY  +2' + LineEnding +
+            '005300                       == 1 ==    BY  -3.' + LineEnding +
+            '005400*    1.11.3 Figurative constants.' + LineEnding +
+            '005500*        For example "SPACES" is figurative constant:' + LineEnding +
+            '005600             DISPLAY SPACES UPON CRT.' + LineEnding +
+            '005700* 1.12 Continued lines.' + LineEnding +
+            '005800*    Only continued strings are supported. For example:' + LineEnding +
+            '005900         MOVE "The name of figurative constant field is' + LineEnding +
+            '006000-"SPACES" TO WS-ERR-MESS.' + LineEnding +
+            '006100*    Or (a single quotation mark in 72th column):' + LineEnding +
+            '005900         MOVE "The name of figurative constant field is  ""SPACES"' + LineEnding +
+            '006000-""" TO WS-ERR-MESS.' + LineEnding +
+            '006100' + LineEnding +
+            '006200* 2. Unsupported COBOL features.' + LineEnding +
+            '006300' + LineEnding +
+            '006400* 2.1 Continued lines.' + LineEnding +
+            '006500*    Continuation of key words is not supported. For example,' + LineEnding +
+            '006600*    the following COBOL code is valid but TSynCobolSyn won''t' + LineEnding +
+            '006700*    highlight "VALUE" keyword properly:' + LineEnding +
+            '006800     03  WSV-STORE-DATE                         PIC 9(4)V99E99 VAL' + LineEnding +
+            '006900-UE 0001.33E02.' + LineEnding +
+            '007000* 2.2 Identifiers started from digits.' + LineEnding +
+            '007100*    They are valid in COBOL but won''t be highlighted properly' + LineEnding +
+            '007200*    by TSynCobolSyn. For example, "000-main" is a paragraph' + LineEnding +
+            '007300*    name and should be highlighted as Area A identifier:' + LineEnding +
+            '007400 000-main.' + LineEnding +
+            '007500* 2.3 Comment entries in optional paragraphs' + LineEnding +
+            '007600*    The so called comment-entries in the optional paragraphs' + LineEnding +
+            '007700*    of the Identification Division are not supported and won''t' + LineEnding +
             '007800*    be highlighted properly.';
 end;
 

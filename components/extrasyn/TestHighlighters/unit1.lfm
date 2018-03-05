@@ -8,11 +8,12 @@ object Form1: TForm1
   ClientWidth = 742
   Menu = MainMenu1
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   LCLVersion = '1.9.0.0'
   inline SynEdit1: TSynEdit
     Left = 0
-    Height = 410
-    Top = 19
+    Height = 429
+    Top = 0
     Width = 742
     Align = alClient
     Font.Height = -13
@@ -646,18 +647,6 @@ object Form1: TForm1
           end>
       end
     end
-  end
-  object Label1: TLabel
-    Left = 0
-    Height = 15
-    Top = 2
-    Width = 742
-    Align = alTop
-    Alignment = taCenter
-    BorderSpacing.Top = 2
-    BorderSpacing.Bottom = 2
-    Caption = 'Label1'
-    ParentColor = False
   end
   object MainMenu1: TMainMenu
     left = 152

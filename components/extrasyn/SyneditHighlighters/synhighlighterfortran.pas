@@ -155,6 +155,7 @@ type
     procedure CommentProc;
   protected
     function GetIdentChars: TSynIdentChars; override;
+    function GetSampleSource: String; override;
     function IsFilterStored: Boolean; override;
   public
     class function GetLanguageName: string; override;
@@ -960,6 +961,43 @@ end;
 function TSynFortranSyn.GetIdentChars: TSynIdentChars;
 begin
   Result := TSynValidStringChars;
+end;
+
+function TSynFortranSyn.GetSampleSource: String;
+begin
+  Result :=
+  '*     euclid.f (FORTRAN 77)' + LineEnding +
+  '*     Find greatest common divisor using the Euclidean algorithm' + LineEnding +
+  LineEnding +
+  '      PROGRAM EUCLID' + LineEnding +
+  '        PRINT *, ''A?''' + LineEnding +
+  '        READ *, NA' + LineEnding +
+  '        IF (NA.LE.0) THEN' + LineEnding +
+  '          PRINT *, ''A must be a positive integer.''' + LineEnding +
+  '          STOP' + LineEnding +
+  '        END IF' + LineEnding +
+  '        PRINT *, ''B?''' + LineEnding +
+  '        READ *, NB' + LineEnding +
+  '        IF (NB.LE.0) THEN' + LineEnding +
+  '          PRINT *, ''B must be a positive integer.''' + LineEnding +
+  '          STOP' + LineEnding +
+  '        END IF' + LineEnding +
+  '        PRINT *, ''The GCD of'', NA, '' and'', NB, '' is'', NGCD(NA, NB), ''.''' + LineEnding +
+  '        STOP' + LineEnding +
+  '      END' + LineEnding +
+  LineEnding +
+  '      FUNCTION NGCD(NA, NB)' + LineEnding +
+  '        IA = NA' + LineEnding +
+  '        IB = NB' + LineEnding +
+  '    1   IF (IB.NE.0) THEN' + LineEnding +
+  '          ITEMP = IA' + LineEnding +
+  '          IA = IB' + LineEnding +
+  '          IB = MOD(ITEMP, IB)' + LineEnding +
+  '          GOTO 1' + LineEnding +
+  '        END IF' + LineEnding +
+  '        NGCD = IA' + LineEnding +
+  '        RETURN' + LineEnding +
+  '      END';
 end;
 
 function TSynFortranSyn.IsFilterStored: Boolean;
