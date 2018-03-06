@@ -46,6 +46,9 @@ tsyngalxysyn_200.png
 tsyngeneralsyn.png
 tsyngeneralsyn_150.png
 tsyngeneralsyn_200.png
+tsyngnuplotsyn.png
+tsyngnuplotsyn_150.png
+tsyngnuplotsyn_200.png
 tsyngwscriptsyn.png
 tsyngwscriptsyn_150.png
 tsyngwscriptsyn_200.png

@@ -16,7 +16,7 @@ uses
   SynHighlighterAsm,      SynHighlighterDOT,     SynHighlighterIDL,     SynHighlighterKix,     {SynHighlighterMsg,}
   SynHighlighterSDD,      SynHighlighterSml,     SynHighlighterURI,     SynHighlighterM3,       SynHighlighterRC,
   SynHighlighterST,       SynHighlighter8051,    SynHighlighterLua,     SynHighlighterProlog,   SynHighlighterCAC,
-  SynHighlighterAWK;
+  SynHighlighterAWK, SynHighlighterGnuplot;
 
 //   SynHighlighterGeneral;
 
@@ -130,6 +130,7 @@ begin
   FHighlighters.Add(TSyn8051Syn.Create(Self));
   FHighlighters.Add(TSynCACSyn.Create(Self));
   FHighlighters.Add(TSynSTSyn.Create(self));
+  FHighlighters.Add(TSynGnuplotSyn.Create(self));
 
 //  FHighlighters.Add(TSynCPMSyn.Create(self));
 //  FHighlighters.Add(TSynGeneralSyn.Create(self));
