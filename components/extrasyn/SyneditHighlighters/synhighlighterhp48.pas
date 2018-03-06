@@ -799,12 +799,12 @@ end;
 
 function TSynHP48Syn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 end;
 
 procedure TSynHP48Syn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 end;
 
 procedure TSynHP48Syn.ResetRange;

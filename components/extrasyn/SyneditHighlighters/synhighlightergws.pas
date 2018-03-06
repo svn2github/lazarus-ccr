@@ -965,7 +965,7 @@ end;
 
 function TSynGWScriptSyn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 end;
 
 function TSynGWScriptSyn.GetToken: String;
@@ -1026,7 +1026,7 @@ end;
 
 procedure TSynGWScriptSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 end;
 
 function TSynGWScriptSyn.GetIdentChars: TSynIdentChars;

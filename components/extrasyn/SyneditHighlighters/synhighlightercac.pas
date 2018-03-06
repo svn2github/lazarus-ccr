@@ -1075,7 +1075,7 @@ end;
 
 function TSynCACSyn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 end;
 
 function TSynCACSyn.GetToken: string;
@@ -1132,7 +1132,7 @@ end;
 
 procedure TSynCACSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 end;
 
 function TSynCACSyn.IsFilterStored: Boolean;

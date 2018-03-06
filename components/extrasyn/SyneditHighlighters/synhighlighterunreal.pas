@@ -1694,7 +1694,7 @@ end;
 
 function TSynUnrealSyn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 end;
 
 function TSynUnrealSyn.GetToken: String;
@@ -1757,7 +1757,7 @@ end;
 
 procedure TSynUnrealSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 end;
 
 procedure TSynUnrealSyn.EnumUserSettings(settings: TStrings);

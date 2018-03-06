@@ -1508,7 +1508,7 @@ end;
 
 function TSynCacheSyn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 end;
 
 function TSynCacheSyn.GetToken: String;
@@ -1565,7 +1565,7 @@ end;
 
 procedure TSynCacheSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 end;
 
 //------------------------------------------------------------------------------

@@ -4870,7 +4870,7 @@ end;
 
 function TSynVrml97Syn.GetRange :Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 end;
 
 function TSynVrml97Syn.GetToken :string;
@@ -4941,7 +4941,7 @@ end;
 
 procedure TSynVrml97Syn.SetRange(Value :Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 end;
 
 function TSynVrml97Syn.GetIdentChars :TSynIdentChars;

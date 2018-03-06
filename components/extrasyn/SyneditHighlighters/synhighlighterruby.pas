@@ -673,7 +673,7 @@ begin
   end;
   Result := RangePointer.Ptr;
 {$ELSE}
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 {$ENDIF}
 end;
 
@@ -743,7 +743,7 @@ begin
     fHeredocChecksum := RangePointer.Checksum;
   end;
 {$ELSE}
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 {$ENDIF}
 end;
 

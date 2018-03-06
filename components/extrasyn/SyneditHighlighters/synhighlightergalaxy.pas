@@ -361,7 +361,7 @@ end;
 
 function TSynGalaxySyn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 end;
 
 function TSynGalaxySyn.GetToken: String;
@@ -416,7 +416,7 @@ end;
 
 procedure TSynGalaxySyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 end;
 
 procedure TSynGalaxySyn.SetKeyWords(const Value: TStrings);

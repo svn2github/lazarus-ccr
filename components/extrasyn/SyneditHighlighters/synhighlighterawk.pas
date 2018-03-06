@@ -294,7 +294,7 @@ begin
   StrLCopy(PChar(s), (fLine + Run), (i - Run));
   Run := i;
   if AWKSyntaxList.Find(s, idx) and (AWKSyntaxList.Strings[idx] = s) then begin
-    fTokenID := TtkTokenKind(AWKSyntaxList.Objects[idx]);
+    fTokenID := TtkTokenKind(PtrInt(AWKSyntaxList.Objects[idx]));
     if (fTokenID = tkUnKnown) then begin
       fTokenID := tkKey;
       if (fLine[i] = ' ') then begin

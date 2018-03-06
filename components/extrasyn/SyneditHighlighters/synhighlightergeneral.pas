@@ -626,7 +626,7 @@ end;
 
 function TSynGeneralSyn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 end;
 
 function TSynGeneralSyn.GetToken: String;
@@ -676,7 +676,7 @@ end;
 
 procedure TSynGeneralSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 end;
 
 procedure TSynGeneralSyn.SetKeyWords(const Value: TStrings);

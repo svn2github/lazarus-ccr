@@ -670,13 +670,13 @@ end; { ResetRange }
 procedure TSynSDDSyn.SetRange(Value: Pointer);
 begin
   inherited;
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 end; { SetRange }
 
 
 function TSynSDDSyn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 end; { GetRange }
 
 

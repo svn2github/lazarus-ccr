@@ -1083,7 +1083,7 @@ end;
 
 function TSynRCSyn.GetRange: pointer;
 begin
-  result:= pointer(fRange);
+  result:= pointer(PtrInt(fRange));
 end;
 
 function TSynRCSyn.GetToken: string;
@@ -1133,7 +1133,7 @@ end;
 
 procedure TSynRCSyn.SetRange(value: pointer);
 begin
-  fRange:= TRangeState(value);
+  fRange:= TRangeState(PtrInt(value));
 end;
 
 procedure TSynRCSyn.EnumUserSettings(Settings: TStrings);

@@ -631,7 +631,7 @@ end;
 
 function TSynTclTkSyn.GetRange: Pointer;
 begin
-  Result := Pointer(fRange);
+  Result := Pointer(PtrInt(fRange));
 end;
 
 function TSynTclTkSyn.GetToken: string;
@@ -681,7 +681,7 @@ end;
 
 procedure TSynTclTkSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(Value);
+  fRange := TRangeState(PtrInt(Value));
 end;
 
 procedure TSynTclTkSyn.SetKeyWords(const Value: TStrings);
