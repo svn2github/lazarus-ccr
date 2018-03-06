@@ -56,7 +56,6 @@ uses
 {$ELSE}
   Graphics,
   Registry,
-  Windows, // registry constants
   SynEditHighlighter,
   SynEditTypes,
 {$ENDIF}

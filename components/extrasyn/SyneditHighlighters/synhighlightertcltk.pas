@@ -57,7 +57,6 @@ uses
   QSynEditTypes,
   QSynEditHighlighter,
 {$ELSE}
-  Windows,
   Graphics,
   SynEditTypes,
   SynEditHighlighter,
