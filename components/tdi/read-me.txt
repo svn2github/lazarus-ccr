@@ -61,14 +61,14 @@ http://www.opensource.org/licenses/lgpl-license.php
 === 5 - Download ===
 
   The package can be downloaded from the Lazarus CCR SVN repository.
-  https://lazarus-ccr.svn.sourceforge.net/svnroot/lazarus-ccr/components/tdi
+  https://svn.code.sf.net/p/lazarus-ccr/svn/components/tdi/
 
 You will need a SVN Client
 
  On Windows you can use TortoiseSVN: http://tortoisesvn.net/downloads.html
 
  On Linux, use:
- svn co https://lazarus-ccr.svn.sourceforge.net/svnroot/lazarus-ccr/components/tdi
+ svn co https://svn.code.sf.net/p/lazarus-ccr/svn/components/tdi/
 
 === 6 - Dependencies / System Requirements ===
 

@@ -9,8 +9,8 @@
     "RepositoryDate" : 4.3024000000000000E+004,
     "PackageBaseDir" : "tdi\\/",
     "HomePageURL" : "http://wiki.freepascal.org/TTDINotebook",
-    "DownloadURL" : "https://lazarus-ccr.svn.sourceforge.net/svnroot/lazarus-ccr/components/tdi/opm/update_tdi.json",
-    "SVNURL" : ""
+    "DownloadURL" : "https://svn.code.sf.net/p/lazarus-ccr/svn/components/tdi/opm/update_TDINoteBook.json",
+    "SVNURL" : "https://svn.code.sf.net/p/lazarus-ccr/svn/components/tdi/"
   },
   "PackageFiles0" : [
     {
@@ -20,8 +20,8 @@
       "License" : "LGPL",
       "RelativeFilePath" : "",
       "VersionAsString" : "0.2.0.0",
-      "LazCompatibility" : "1.6, 1.8, Trunk",
-      "FPCCompatibility" : "2.6.4, 3.0.4",
+      "LazCompatibility" : "1.6, 1.8, 1.9, Trunk",
+      "FPCCompatibility" : "2.6.4, 3.0.4, 3.1.1",
       "SupportedWidgetSet" : "win32/64, gtk2, carbon, qt",
       "PackageType" : 0,
       "DependenciesAsString" : "LazControls, LCL, FCL"
