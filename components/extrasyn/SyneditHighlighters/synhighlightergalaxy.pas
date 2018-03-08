@@ -416,7 +416,7 @@ end;
 
 procedure TSynGalaxySyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 procedure TSynGalaxySyn.SetKeyWords(const Value: TStrings);

@@ -4941,7 +4941,7 @@ end;
 
 procedure TSynVrml97Syn.SetRange(Value :Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynVrml97Syn.GetIdentChars :TSynIdentChars;

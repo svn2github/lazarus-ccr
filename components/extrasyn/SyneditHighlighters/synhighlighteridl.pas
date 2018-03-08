@@ -909,7 +909,7 @@ end;
 
 procedure TSynIdlSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynIdlSyn.GetRange: Pointer;

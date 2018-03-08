@@ -54,9 +54,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="111"/>
-        <CursorPos X="50" Y="133"/>
+        <TopLine Value="65"/>
+        <CursorPos X="35" Y="137"/>
         <UsageCount Value="62"/>
         <Bookmarks Count="1">
           <Item0 Y="137" ID="2"/>
@@ -806,7 +807,6 @@
       </Unit108>
       <Unit109>
         <Filename Value="..\SyneditHighlighters\synhighlightergnuplot.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <TopLine Value="823"/>
         <CursorPos Y="856"/>

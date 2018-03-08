@@ -58,7 +58,6 @@ uses
   QSynEditTypes,
 {$ELSE}
   Graphics,
-  Registry,
   SynEditHighlighter,
   SynEditTypes,
 {$ENDIF}

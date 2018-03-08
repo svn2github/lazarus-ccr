@@ -804,7 +804,7 @@ end;
 
 procedure TSynHP48Syn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 procedure TSynHP48Syn.ResetRange;

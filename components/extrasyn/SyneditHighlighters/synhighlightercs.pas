@@ -1509,7 +1509,7 @@ end;
 
 procedure TSynCSSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynCSSyn.GetIdentChars: TSynIdentChars;

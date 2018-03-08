@@ -1026,7 +1026,7 @@ end;
 
 procedure TSynGWScriptSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynGWScriptSyn.GetIdentChars: TSynIdentChars;

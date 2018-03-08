@@ -564,7 +564,7 @@ end;
 
 procedure TSynLDRSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynLDRSyn.GetRange: Pointer;

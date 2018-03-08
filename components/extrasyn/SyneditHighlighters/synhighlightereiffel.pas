@@ -1408,7 +1408,7 @@ end;
 
 procedure TSynEiffelSyn.SetRange(Value :Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynEiffelSyn.GetRange :Pointer;

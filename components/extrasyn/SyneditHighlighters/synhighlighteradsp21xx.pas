@@ -1391,7 +1391,7 @@ end;
 
 procedure TSynADSP21xxSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 procedure TSynADSP21xxSyn.ResetRange;

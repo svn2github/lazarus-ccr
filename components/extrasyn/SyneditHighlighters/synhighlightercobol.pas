@@ -2324,7 +2324,7 @@ end;
 
 procedure TSynCobolSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynCobolSyn.GetRange: Pointer;

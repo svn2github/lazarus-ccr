@@ -58,7 +58,6 @@ uses
   QSynEditHighlighter,
 {$ELSE}
   Graphics,
-  SynEditTypes,
   SynEditHighlighter,
 {$ENDIF}
   SysUtils,
@@ -168,7 +167,7 @@ uses
 {$IFDEF SYN_CLX}
   QSynEditStrConst;
 {$ELSE}
-  SynEditStrConst, SynEditStrConstExtra;
+  SynEditStrConst;
 {$ENDIF}
 
 const
@@ -680,7 +679,7 @@ end;
 
 procedure TSynTclTkSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 procedure TSynTclTkSyn.SetKeyWords(const Value: TStrings);

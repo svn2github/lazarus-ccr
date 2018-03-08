@@ -1109,7 +1109,7 @@ end;
 
 procedure TSynHaskellSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynHaskellSyn.GetIdentChars: TSynIdentChars;

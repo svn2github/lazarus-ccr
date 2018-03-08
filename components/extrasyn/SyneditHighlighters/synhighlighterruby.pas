@@ -59,7 +59,6 @@ uses
   QSynEditHighlighter,
 {$ELSE}
   Graphics,
-  SynEditTypes,
   SynEditHighlighter,
 {$ENDIF}
   SysUtils,
@@ -180,7 +179,6 @@ uses
   QSynEditMiscProcs,
   QSynEditStrConst;
 {$ELSE}
-  SynEditMiscProcs,
   SynEditStrConst, SynEditStrConstExtra;
 {$ENDIF}
 
@@ -743,7 +741,7 @@ begin
     fHeredocChecksum := RangePointer.Checksum;
   end;
 {$ELSE}
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 {$ENDIF}
 end;
 

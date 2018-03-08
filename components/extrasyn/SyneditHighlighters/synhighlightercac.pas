@@ -1132,7 +1132,7 @@ end;
 
 procedure TSynCACSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 function TSynCACSyn.IsFilterStored: Boolean;

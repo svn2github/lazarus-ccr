@@ -1829,7 +1829,7 @@ end;
 
 procedure TSynDmlSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 procedure TSynDmlSyn.ResetRange;

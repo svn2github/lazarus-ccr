@@ -3,7 +3,7 @@
   <Package Version="4">
     <PathDelim Value="\"/>
     <Name Value="ExtraHighlighters"/>
-    <Author Value="Various authors see each highlighter source file for more info."/>
+    <Author Value="Various authors, see each highlighter source file for more info."/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -11,6 +11,11 @@
         <OtherUnitFiles Value="SyneditHighlighters"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
+      <Other>
+        <CompilerMessages>
+          <IgnoredMessages idx5027="True" idx5024="True" idx4055="True"/>
+        </CompilerMessages>
+      </Other>
     </CompilerOptions>
     <Description Value="Extra highlighters for synedit"/>
     <License Value="MPL GPL dual license."/>

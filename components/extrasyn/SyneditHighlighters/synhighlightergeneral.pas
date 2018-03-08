@@ -676,7 +676,7 @@ end;
 
 procedure TSynGeneralSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 procedure TSynGeneralSyn.SetKeyWords(const Value: TStrings);

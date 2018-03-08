@@ -55,7 +55,6 @@ uses
   QSynEditTypes,
 {$ELSE}
   Graphics,
-  Registry,
   SynEditHighlighter,
   SynEditTypes,
 {$ENDIF}
@@ -1756,7 +1755,7 @@ end;
 
 procedure TSynUnrealSyn.SetRange(Value: Pointer);
 begin
-  fRange := TRangeState(PtrInt(Value));
+  fRange := TRangeState(PtrUInt(Value));
 end;
 
 procedure TSynUnrealSyn.EnumUserSettings(settings: TStrings);

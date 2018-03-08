@@ -141,7 +141,7 @@ type
 implementation
 
 uses
-  SynEditStrConst, SynEditStrConstExtra;
+  SynEditStrConst;
 
 var
   Identifiers: array[#0..#255] of ByteBool;

@@ -197,7 +197,7 @@ const
   Reserved = [';', '/', '?', ':', '@', '&', '=', '+', '$', ',', '%', '#'];
   URIChars = Reserved + Unreserved;
   NeverAtEnd = Mark - [''''] + Reserved - ['/', '$'];
-  URIBreakChars = [#0..#255] - URIChars - [#0..#32];
+//  URIBreakChars = [#0..#255] - URIChars - [#0..#32];
   EMailAddressChars = ['.', '_', '-', '@'] + AlphaNum;
   NeverAtEMailAddressEnd = ['.', '@'];
 
@@ -207,7 +207,7 @@ var
 procedure MakeHashTable;
 var
   c: Char;
-  u: Byte;
+  u: Integer;
 begin
   FillChar(HashTable, sizeof(HashTable), 0);
 

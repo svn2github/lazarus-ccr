@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="ExtraHighlighters_Dsgn"/>
     <Type Value="DesignTime"/>
-    <Author Value="various authors see each highlighter file from more info."/>
+    <Author Value="various authors, see each highlighter file for more info."/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -15,16 +15,12 @@
     <Description Value="Extra highlighters for synedit"/>
     <License Value="MPL, LGPL DUAL license."/>
     <Version Major="1"/>
-    <Files Count="2">
+    <Files Count="1">
       <Item1>
         <Filename Value="uhighlighterreg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="uHighlighterReg"/>
       </Item1>
-      <Item2>
-        <Filename Value="images.lrs"/>
-        <Type Value="LRS"/>
-      </Item2>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

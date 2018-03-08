@@ -1133,7 +1133,7 @@ end;
 
 procedure TSynRCSyn.SetRange(value: pointer);
 begin
-  fRange:= TRangeState(PtrInt(value));
+  fRange:= TRangeState(PtrUInt(value));
 end;
 
 procedure TSynRCSyn.EnumUserSettings(Settings: TStrings);
