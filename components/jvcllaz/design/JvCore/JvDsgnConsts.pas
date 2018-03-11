@@ -61,6 +61,8 @@ resourcestring
 
 //=== JVCL IDE palettes ======================================================
 resourcestring
+  RsPaletteJvcl = 'Jvcl';
+  RsPaletteJvclDB = 'Jvcl DB';
   RsPaletteSystem = 'Jv System';
   RsPaletteDialog = 'Jv Dialogs';
   RsPaletteButton = 'Jv Buttons';
