@@ -1,0 +1,27 @@
+object TimelineNotesForm: TTimelineNotesForm
+  Left = 336
+  Height = 237
+  Top = 170
+  Width = 207
+  BorderStyle = bsToolWindow
+  Caption = 'Notes'
+  ClientHeight = 237
+  ClientWidth = 207
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  LCLVersion = '1.9.0.0'
+  object Memo1: TMemo
+    Left = 0
+    Height = 237
+    Top = 0
+    Width = 207
+    Align = alClient
+    Color = clInfoBk
+    Font.Color = clWindowText
+    ParentFont = False
+    TabOrder = 0
+    WantTabs = True
+  end
+end

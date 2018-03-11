@@ -26,9 +26,6 @@ begin
     TJvNavPaneStyleManager, TJvNavPaneToolPanel
   ]);
 end;
-                                      {
-initialization
-  {$I ..\..\resource\JvNavigationPaneLaz.lrs}
-                                       }
+
 end.
 
