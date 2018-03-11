@@ -11,12 +11,17 @@ procedure Register;
 
 implementation
 
+{$R ../../resource/jvdbreg.res}
+
 uses
   Classes, JvDsgnConsts, JvDBHTLabel;
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteDBVisual, [TJvDBHTLabel]);
+  RegisterComponents(RsPaletteJvclDB, [
+    TJvDBHtLabel
+  ]);
+  //RegisterComponents(RsPaletteDBVisual, [TJvDBHTLabel]);
 end;
 
 end.

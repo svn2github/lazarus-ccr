@@ -19,7 +19,10 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteValidators, [TJvValidators, TJvValidationSummary, TJvErrorIndicator]);
+  RegisterComponents(RsPaletteJvcl, [
+    TJvValidators, TJvValidationSummary, TJvErrorIndicator
+  ]);
+//  RegisterComponents(RsPaletteValidators, [TJvValidators, TJvValidationSummary, TJvErrorIndicator]);
 
   RegisterNoIcon([TJvRequiredFieldValidator, TJvCompareValidator,
     TJvRangeValidator, TJvRegularExpressionValidator, TJvCustomValidator, TJvControlsCompareValidator]);

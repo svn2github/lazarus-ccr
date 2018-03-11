@@ -1,0 +1,8 @@
+tjvnaviconbutton.bmp
+tjvnavigationpane.bmp
+tjvnavpanelbutton.bmp
+tjvnavpaneldivider.bmp
+tjvnavpanelheader.bmp
+tjvnavpanestylemanager.bmp
+tjvnavpanetoolpanel.bmp
+tjvoutlooksplitter.bmp
