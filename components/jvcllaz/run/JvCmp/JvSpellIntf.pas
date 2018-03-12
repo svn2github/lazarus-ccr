@@ -30,7 +30,6 @@ Known Issues:
 unit JvSpellIntf;
 
 {$mode objfpc}{$H+}
-//{$I jvcl.inc}
 
 interface
 
@@ -100,25 +99,7 @@ type
 var
   CreateSpellChecker: function: IJvSpellChecker = nil;
 
-{$IFDEF UNITVERSIONING}
-const
-  UnitVersioning: TUnitVersionInfo = (
-    RCSfile: '$URL$';
-    Revision: '$Revision$';
-    Date: '$Date$';
-    LogPath: 'JVCL\run'
-  );
-{$ENDIF UNITVERSIONING}
 
 implementation
-
-
-{$IFDEF UNITVERSIONING}
-initialization
-  RegisterUnitVersion(HInstance, UnitVersioning);
-
-finalization
-  UnregisterUnitVersion(HInstance);
-{$ENDIF UNITVERSIONING}
 
 end.

@@ -30,14 +30,12 @@ Known Issues:
 unit JvSpellChecker;
 
 {$mode objfpc}{$H+}
-//{$I jvcl.inc}
 
 interface
 
 uses
   SysUtils, Classes,
-  Windows, Controls, Messages,
-  JvSpellIntf; //, JvComponentBase;
+  JvSpellIntf;
 
 type
   TJvSpellChecker = class(TComponent) //TJvComponent)
@@ -69,20 +67,10 @@ type
     property OnCanIgnore: TJvSpellCheckIgnoreEvent read GetCanIgnore write SetCanIgnore;
   end;
 
-{$IFDEF UNITVERSIONING}
-const
-  UnitVersioning: TUnitVersionInfo = (
-    RCSfile: '$URL$';
-    Revision: '$Revision$';
-    Date: '$Date$';
-    LogPath: 'JVCL\run'
-  );
-{$ENDIF UNITVERSIONING}
 
 implementation
 
 uses
-//  JclStrings, // StrAddRef, StrDecRef
   JvTypes, JvResources;
 
 // NOTE: hash table and soundex lookup code originally from Julian Bucknall's

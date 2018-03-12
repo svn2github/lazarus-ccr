@@ -26,14 +26,11 @@ Known Issues:
 unit JvSpellerForm;
 
 {$mode objfpc}{$H+}
-//{$I jvcl.inc}
 
 interface
 
 uses
-  SysUtils, Classes, Windows, Messages, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls,
-  JvComponent;
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls;
 
 type
   TJvSpeller = class;
@@ -89,23 +86,11 @@ type
     property UserDictionary: TFileName read FUserDictionary write SetUserDictionary;
   end;
 
-{$IFDEF UNITVERSIONING}
-const
-  UnitVersioning: TUnitVersionInfo = (
-    RCSfile: '$URL$';
-    Revision: '$Revision$';
-    Date: '$Date$';
-    LogPath: 'JVCL\run'
-  );
-{$ENDIF UNITVERSIONING}
 
 implementation
 
 uses
   StrUtils,
-  {$IFNDEF COMPILER12_UP}
-  JvJCLUtils,
-  {$ENDIF ~COMPILER12_UP}
   JvConsts, JvResources, JvTypes;
 
 {$R *.lfm}

@@ -26,11 +26,13 @@
 
 unit MainFrm;
 
+{$mode objfpc}{$H+}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Menus, ComCtrls, JvComponent;
+  SysUtils, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Menus, ComCtrls;
 
 type
   TfrmMain = class(TForm)
@@ -68,7 +70,9 @@ type
 var
   frmMain: TfrmMain;
 
+
 implementation
+
 uses
   JvSpellCheckerForm;
 

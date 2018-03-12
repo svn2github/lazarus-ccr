@@ -1,64 +1,69 @@
-﻿object JvSpellerForm: TJvSpellerForm
+object JvSpellerForm: TJvSpellerForm
   Left = 306
+  Height = 153
   Top = 251
+  Width = 371
   BorderStyle = bsDialog
   Caption = 'Spelling checker'
   ClientHeight = 153
   ClientWidth = 371
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
-  TextHeight = 13
+  LCLVersion = '1.9.0.0'
   object LblContext: TLabel
-    Left = 0
-    Top = 33
-    Width = 371
+    Left = 8
     Height = 86
     Hint = 'look ahead box'
+    Top = 33
+    Width = 355
     Align = alClient
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
     Caption = 'LblContext'
+    ParentColor = False
     ParentShowHint = False
     ShowHint = True
     WordWrap = True
   end
   object TextPanel: TPanel
     Left = 0
+    Height = 33
     Top = 0
     Width = 371
-    Height = 33
     Align = alTop
     BevelInner = bvRaised
     BevelOuter = bvLowered
+    ClientHeight = 33
+    ClientWidth = 371
+    Font.Color = clWindowText
+    ParentFont = False
     TabOrder = 0
     object TxtSpell: TEdit
-      Left = 7
+      Left = 8
+      Height = 23
       Top = 7
       Width = 293
-      Height = 21
       TabOrder = 0
       Text = 'TxtSpell'
     end
   end
   object ButtonPanel: TPanel
     Left = 0
+    Height = 34
     Top = 119
     Width = 371
-    Height = 34
     Align = alBottom
     BevelInner = bvRaised
     BevelOuter = bvLowered
+    ClientHeight = 34
+    ClientWidth = 371
     TabOrder = 1
     object BtnSkip: TButton
       Left = 13
-      Top = 7
-      Width = 61
       Height = 20
       Hint = 'Skip this word'
+      Top = 7
+      Width = 61
       Caption = '&Skip'
       ParentShowHint = False
       ShowHint = True
@@ -66,10 +71,10 @@
     end
     object BtnChange: TButton
       Left = 228
-      Top = 7
-      Width = 60
       Height = 20
       Hint = 'Change to corrected word'
+      Top = 7
+      Width = 60
       Caption = '&Change'
       ParentShowHint = False
       ShowHint = True
@@ -77,10 +82,10 @@
     end
     object BtnCancel: TButton
       Left = 299
-      Top = 7
-      Width = 61
       Height = 20
       Hint = 'Abort all changes'
+      Top = 7
+      Width = 61
       Caption = 'Cancel'
       ModalResult = 2
       ParentShowHint = False
@@ -89,10 +94,10 @@
     end
     object BtnAdd: TButton
       Left = 156
-      Top = 7
-      Width = 61
       Height = 20
       Hint = 'Add to user Dictionary'
+      Top = 7
+      Width = 61
       Caption = '&Add'
       ParentShowHint = False
       ShowHint = True
@@ -100,10 +105,10 @@
     end
     object BtnSkipAll: TButton
       Left = 85
-      Top = 7
-      Width = 60
       Height = 20
       Hint = 'Skip all, update and finish'
+      Top = 7
+      Width = 60
       Caption = 'S&kip All'
       ModalResult = 1
       ParentShowHint = False

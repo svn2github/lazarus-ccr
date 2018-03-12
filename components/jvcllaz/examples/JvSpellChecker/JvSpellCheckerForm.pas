@@ -29,10 +29,10 @@ unit JvSpellCheckerForm;
 interface
 
 {$mode objfpc}{$H+}
-//{$I jvcl.inc}
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  LCLIntf, LMessages,
+  SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, JvSpellChecker, ActnList;
 
 type
@@ -94,6 +94,7 @@ type
     ASpellChecker: TJvSpellChecker;
     FOnReplaceText: TJvReplaceTextEvent;
     FOnSelectText: TJvSelectTextEvent;
+    procedure AsyncClose(Data: PtrInt);
     procedure CloseAndReport(ReportSuccess: boolean);
     function GetNextWord: boolean;
     procedure DoReplaceText(Sender: TObject; StartIndex, ALength: integer; const NewText: string);
@@ -115,6 +116,11 @@ var
 implementation
 
 {$R *.lfm}
+
+procedure TfrmSpellChecker.AsyncClose(Data: PtrInt);
+begin
+  Close;
+end;
 
 procedure TfrmSpellChecker.FormCreate(Sender: TObject);
 var S:string;
@@ -256,7 +262,8 @@ begin
     S := 'There is nothing to spell check';
   ShowMessage(S);
   // delay since we might have been called from the OnShow event (can't close in OnShow)
-  PostMessage(Handle, WM_CLOSE, 0, 0);
+  Application.QueueAsyncCall(@AsyncClose, 0);
+//  PostMessage(Handle, LM_CLOSE, 0, 0);
 end;
 
 procedure TfrmSpellChecker.acIgnoreExecute(Sender: TObject);
