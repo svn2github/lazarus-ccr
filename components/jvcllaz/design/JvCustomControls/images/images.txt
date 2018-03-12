@@ -1,2 +1,3 @@
+tjvoutlookbar.bmp
 tjvtimeline.bmp
 tjvtmtimeline.bmp
