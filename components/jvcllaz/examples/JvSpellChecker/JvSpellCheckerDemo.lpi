@@ -4,9 +4,12 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <UseDefaultCompilerOptions Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <Title Value="SimpleTLTest1"/>
+      <Title Value="JvSpellCheckerDemo"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -25,33 +28,28 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <RequiredPackages Count="3">
+    <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="DateTimeCtrls"/>
+        <PackageName Value="JvCmpR"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvCustomLazR"/>
-      </Item2>
-      <Item3>
         <PackageName Value="LCL"/>
-      </Item3>
+      </Item2>
     </RequiredPackages>
     <Units Count="3">
       <Unit0>
-        <Filename Value="SimpleTLTest1.lpr"/>
+        <Filename Value="JvSpellCheckerDemo.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="frmMemoEdit.pas"/>
+        <Filename Value="JvSpellCheckerForm.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="MemoEditFrm"/>
         <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
       </Unit1>
       <Unit2>
-        <Filename Value="TMTimeLineMainFormU.pas"/>
+        <Filename Value="MainFrm.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="TMTimeLineMainForm"/>
+        <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit2>
@@ -61,7 +59,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\SimpleTLTest1"/>
+      <Filename Value="..\..\bin\JvSpellCheckerDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
