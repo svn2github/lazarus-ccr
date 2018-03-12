@@ -14,14 +14,14 @@ implementation
 {$R ../../resource/jvcustomreg.res}
 
 uses
-  Classes, JvDsgnConsts,
-  JvTimeLine, JvTimeLineEditor,
-  PropEdits, ComponentEditors, Controls;
+  Classes, PropEdits, ComponentEditors, Controls,
+  JvDsgnConsts, JvTimeLine, JvTMTimeline, JvTimeLineEditor;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
-    TJvTimeLine
+    TJvTimeLine,
+    TJvTMTimeLine
   ]);
   RegisterComponentEditor(TJvCustomTimeLine, TJvTimeLineEditor);
   RegisterPropertyEditor(TypeInfo(TDate), TJvTimeLine, 'FirstVisibledate', TDatePropertyEditor)

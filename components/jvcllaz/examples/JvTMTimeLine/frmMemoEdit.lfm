@@ -1,0 +1,103 @@
+object MemoEditFrm: TMemoEditFrm
+  Left = 427
+  Height = 305
+  Top = 205
+  Width = 305
+  ActiveControl = reLines
+  BorderStyle = bsSizeToolWin
+  Caption = 'Memo for %s'
+  ClientHeight = 305
+  ClientWidth = 305
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  LCLVersion = '1.9.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 41
+    Top = 264
+    Width = 305
+    Align = alBottom
+    BevelOuter = bvNone
+    ClientHeight = 41
+    ClientWidth = 305
+    Font.Color = clWindowText
+    ParentFont = False
+    TabOrder = 0
+    object btnOK: TButton
+      Left = 137
+      Height = 25
+      Top = 8
+      Width = 75
+      Anchors = [akRight, akBottom]
+      Caption = '&OK'
+      Default = True
+      ModalResult = 1
+      TabOrder = 0
+    end
+    object btnCancel: TButton
+      Left = 217
+      Height = 25
+      Top = 8
+      Width = 75
+      Anchors = [akRight, akBottom]
+      Cancel = True
+      Caption = 'Cancel'
+      ModalResult = 2
+      TabOrder = 1
+    end
+  end
+  object reLines: TMemo
+    Left = 4
+    Height = 256
+    Top = 4
+    Width = 297
+    Align = alClient
+    BorderSpacing.Around = 4
+    OnKeyUp = reLinesKeyUp
+    PopupMenu = popMemo
+    ScrollBars = ssBoth
+    TabOrder = 1
+  end
+  object popMemo: TPopupMenu
+    left = 128
+    top = 104
+    object Load1: TMenuItem
+      Caption = 'Load...'
+      ShortCut = 16463
+      OnClick = Load1Click
+    end
+    object Save1: TMenuItem
+      Caption = 'Save...'
+      ShortCut = 16467
+      OnClick = Save1Click
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object Cut1: TMenuItem
+      Caption = 'Cut'
+      ShortCut = 16472
+      OnClick = Cut1Click
+    end
+    object Copy1: TMenuItem
+      Caption = 'Copy'
+      ShortCut = 16451
+      OnClick = Copy1Click
+    end
+    object Paste1: TMenuItem
+      Caption = 'Paste'
+      ShortCut = 16470
+      OnClick = Paste1Click
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object Selectall1: TMenuItem
+      Caption = 'Select all'
+      ShortCut = 16449
+      OnClick = Selectall1Click
+    end
+  end
+end
