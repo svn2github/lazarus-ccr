@@ -30,17 +30,11 @@ unit JvTMTimeLine;
 
 {$mode objfpc}{$H+}
 
-//{$I jvcl.inc}
-
 interface
 
 uses
   LCLIntf, LCLType, LMessages, Types,
   SysUtils, Classes, Controls, Buttons, Graphics, ExtCtrls, Forms, ImgList,
-  {$IFDEF BCB}
-  JvTypes, // TDate / TTime macros
-  {$ENDIF BCB}
-  //JvExtComponent,
   JvExControls;
 
 type
@@ -329,15 +323,13 @@ implementation
 
 uses
   LCLStrConsts, Themes,
-  JvConsts, JvJCLUtils, JvJVCLUtils; // JvThemes, JclSysUtils;
+  JvConsts, JvJCLUtils, JvJVCLUtils, JvResources;
 
 {$R ..\..\resource\JvTMTimeLine.res}
 
 const
   cMagic = 'Jv.TMTIMELINE1';
 
-resourcestring
-  SInvalidImage = 'Invalid image';
 
 //=== { TJvTLSelFrame } ======================================================
 
@@ -1223,7 +1215,7 @@ begin
   ClearImages;
   ClearObjects;
   if not ReadMagic(Stream) then
-    raise EStreamError.CreateRes(@SInvalidImage);
+    raise EStreamError.CreateRes(@RsInvalidImage);
   FDateImages.Text := ReadStr(Stream);
   for I := 0 to FDateImages.Count - 1 do
     FDateImages.Objects[I] := TObject(ReadInt(Stream));

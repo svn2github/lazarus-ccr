@@ -2073,6 +2073,10 @@ resourcestring
   RsTipsCheckBoxText = '&Show Tips on Startup';
   RsStoreShowOnStartUp = 'Show_On_Startup'; // (p3) Spaces in XML node names is not valid XML...
 
+//=== JvTMTimeLine ===========================================================
+resourcestring
+  RsInvalidImage = 'Invalid image';
+
 //=== JvToolEdit.pas =========================================================
 resourcestring
   RsBrowseCaption = 'Browse';

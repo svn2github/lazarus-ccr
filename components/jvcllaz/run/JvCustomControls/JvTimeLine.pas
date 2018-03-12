@@ -41,7 +41,6 @@ Known Issues:
 unit JvTimeLine;
 
 {$mode objfpc}{$H+}
-//{$I jvcl.inc}
 
 interface
 
@@ -276,7 +275,7 @@ type
     procedure WMCancelMode(var Msg: TLMessage); message LM_CANCELMODE;
     procedure CMEnter(var Msg: TLMessage); message CM_ENTER;
     procedure CMExit(var Msg: TLMessage); message CM_EXIT;
-//    procedure CMDrag(var Msg: TCMDrag); message CM_DRAG;   -- wp
+//    procedure CMDrag(var Msg: TLMessage); message CM_DRAG;
 
     procedure DrawDays(ACanvas: TCanvas; Days, StartAt: Integer);
     procedure DrawDayNumbers(ACanvas: TCanvas; Days, StartAt: Integer);
@@ -489,11 +488,11 @@ type
 
 implementation
 
-uses
-  Math, Types, DateUtils, Themes, LazUTF8,
-  JvJCLUtils, JvJVCLUtils; //, {JvThemes,} JclSysUtils;
-
 {$R ..\..\resource\JvTimeLine.res}
+
+uses
+  Math, Types, DateUtils, Themes,
+  JvJCLUtils, JvJVCLUtils;
 
 const
   FDayLineLength = 4;
@@ -540,17 +539,6 @@ var
 begin
   Result := IntersectRect(R, Rect1, Rect2);
 end;
-               (*
-function KeyboardStateToShiftState(const KeyboardState: TKeyboardState): TShiftState;
-begin
-  Result := [];
-  if KeyboardState[VK_SHIFT] and $80 <> 0 then Include(Result, ssShift);
-  if KeyboardState[VK_CONTROL] and $80 <> 0 then Include(Result, ssCtrl);
-  if KeyboardState[VK_MENU] and $80 <> 0 then Include(Result, ssAlt);
-  if KeyboardState[VK_LBUTTON] and $80 <> 0 then Include(Result, ssLeft);
-  if KeyboardState[VK_RBUTTON] and $80 <> 0 then Include(Result, ssRight);
-  if KeyboardState[VK_MBUTTON] and $80 <> 0 then Include(Result, ssMiddle);
-end;             *)
 
 
 //=== { TJvTimeItem } ========================================================
@@ -589,7 +577,6 @@ end;
 procedure TJvTimeItem.Remove;
 begin
   LCLIntf.InvalidateRect(FParent.FTimeLine.Handle, @FRect, True);
-//  Windows.InvalidateRect(FParent.FTimeLine.Handle, @FRect, True);
   // (rom) suspicious
   inherited Free;
 end;
@@ -1217,10 +1204,14 @@ end;
 
 procedure TJvCustomTimeLine.SetBorderStyle(Value: TBorderStyle);
 begin
+  inherited;
+  exit;
+
   if FBorderStyle <> Value then
   begin
     FBorderStyle := Value;
-    Invalidate;
+//    Invalidate;
+    CreateWnd;
 //     RecreateWnd;   -- wp: Invalidate instead of RecreateWnd
   end;
 end;
@@ -1700,7 +1691,9 @@ begin
   else
     AName := FormatSettings.ShortMonthNames[Month];
   {$IF FPC_FULLVERSION < 3000000 }
-  AName := SysToUTF8(AName);
+  {$IFDEF MSWINDOWS}
+  AName := AnsiToUTF8(AName);
+  {$ENDIF}
   {$ENDIF}
 
   with ACanvas do
@@ -2375,13 +2368,8 @@ end;
 
 procedure TJvCustomTimeLine.CNKeyDown(var Msg: TLMKeyDown);
 var
-//  KeyState: TKeyboardState;
   ShiftState: TShiftState;
 begin
-{
-  GetKeyboardState(KeyState);
-  ShiftState := KeyboardStateToShiftState(KeyState);
-}
   ShiftState := GetKeyShiftState;
   Msg.Result := 0;
   case Msg.CharCode of
@@ -2415,9 +2403,9 @@ var
   Details: TThemedElementDetails;
   {$ENDIF JVCLThemesEnabled}
 begin
-  (*
   if csDestroying in ComponentState then
     Exit;
+             (*
   ACanvas := TCanvas.Create;
   { Get window DC that is clipped to the non-client area }
   DC := GetWindowDC(Handle);
@@ -2461,11 +2449,7 @@ begin
   *)
 end;
 
-{$IFDEF FPC}
 procedure TJvCustomTimeLine.WMNCCalcSize(var Msg: TLMNCCalcSize);
-{$ELSE}
-procedure TJvCustomTimeLine.WMNCCalcSize(var Msg: TWMNCCalcSize);
-{$ENDIF}
 begin
   InflateRect(Msg.CalcSize_Params^.rgrc[0], -2, -2);
   inherited;
@@ -2495,7 +2479,7 @@ begin
   inherited;
 end;
 
-{-- wp
+{ -------- FIXME !!!
 procedure TJvCustomTimeLine.CMDrag(var Msg: TCMDrag);
 var
   P: TPoint;
@@ -2576,6 +2560,7 @@ begin
     end;
 end;
 }
+
 procedure TJvCustomTimeLine.SetAutoSize(Value: Boolean);
 begin
   if FAutoSize <> Value then

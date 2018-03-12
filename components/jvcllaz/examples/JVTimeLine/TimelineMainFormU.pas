@@ -138,7 +138,6 @@ type
     procedure chkFlatClick(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure chkHelpYearClick(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure ColorBtnClick(Sender: TObject);
     procedure Disable1Click(Sender: TObject);
     procedure TimeLine1ItemClick(Sender: TObject; Item: TJvTimeItem);
@@ -583,15 +582,6 @@ end;
 procedure TTimelineMainForm.chkHelpYearClick(Sender: TObject);
 begin
   TimeLine1.HelperYears := chkHelpYear.Checked;
-end;
-
-procedure TTimelineMainForm.FormResize(Sender: TObject);
-begin
-  {
-  TimeLine1.Height := Height div 2;
-  if Panel2.Height < 250 then
-    TimeLine1.Height := Height - 250;
-    }
 end;
 
 procedure TTimelineMainForm.ColorBtnClick(Sender: TObject);

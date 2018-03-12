@@ -14,7 +14,6 @@ object TimelineMainForm: TTimelineMainForm
   Font.Color = clWindowText
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnResize = FormResize
   Position = poScreenCenter
   LCLVersion = '1.9.0.0'
   Scaled = False
