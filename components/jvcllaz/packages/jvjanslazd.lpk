@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="jvjanslazd"/>
+    <Type Value="RunAndDesignTime"/>
+    <Author Value="Original author: Jan Verhoeven [jan1 dott verhoeven att wxs dott nl]"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <IncludeFiles Value="..\run\JvJans"/>
+        <OtherUnitFiles Value="..\run\JvJans;..\design\JvJans"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (designtime code of Jan's Components):
+- YearGrid"/>
+    <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
+    <Version Major="1" Release="4"/>
+    <Files Count="1">
+      <Item1>
+        <Filename Value="..\design\JvJans\jvjansreg.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="JvJansReg"/>
+      </Item1>
+    </Files>
+    <RequiredPkgs Count="3">
+      <Item1>
+        <PackageName Value="JvCoreLazD"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="jvjanslazr"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="FCL"/>
+      </Item3>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

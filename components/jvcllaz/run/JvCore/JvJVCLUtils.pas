@@ -529,7 +529,7 @@ type
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
   end;
 { end JvGraph }
-
+         *)
 type
   // equivalent of TPoint, but that can be a published property
   TJvPoint = class(TPersistent)
@@ -610,7 +610,7 @@ type
     property Width: Longint read FWidth write SetWidth default 0;
     property Height: Longint read FHeight write SetHeight default 0;
   end;
-
+         (*
 { begin JvCtrlUtils }
 
 //------------------------------------------------------------------------------
@@ -6790,7 +6790,7 @@ begin
   else
     Result := Value;
   end;
-end;
+end;           *)
 
 //=== { TJvPoint } ===========================================================
 
@@ -7011,7 +7011,7 @@ begin
     DoChange;
   end;
 end;
-
+                 (*
 function SelectColorByLuminance(AColor, DarkColor, BrightColor: TColor): TColor;
 var
   ACol: Longint;
