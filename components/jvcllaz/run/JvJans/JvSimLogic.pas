@@ -53,7 +53,7 @@ type
   TJvLogic = class;
 
   TJvGateStyle = (jgsDI, jgsDO);
-  TJvLogicFunc = (jlfAND, jlfOR, jlfNOT);
+  TJvLogicFunc = (jlfAND, jlfOR, jlfNOT, jlfNAND, jlfNOR, jlfXOR);
   TJvGate = record
     Style: TJvGateStyle;
     State: Boolean;
@@ -1482,15 +1482,15 @@ var
   I: Integer;
 begin
   inherited Create(AOwner);
-  Width := 65;
+  Width := 75;
   Height := 65;
   // initialize Gates
   FGates[0].Pos := Point(1, 10);
   FGates[1].Pos := Point(1, 28);
   FGates[2].Pos := Point(1, 46);
-  FGates[3].Pos := Point(52, 10);
-  FGates[4].Pos := Point(52, 28);
-  FGates[5].Pos := Point(52, 46);
+  FGates[3].Pos := Point(62, 10);
+  FGates[4].Pos := Point(62, 28);
+  FGates[5].Pos := Point(62, 46);
   for I := 0 to 5 do
     FGates[I].State := False;
   for I := 0 to 2 do
@@ -1617,14 +1617,10 @@ begin
   if FDoStyle then
   begin
     FDoStyle := False;
-    case FLogicFunc of
-      jlfAND:
-        LogicFunc := jlfOR;
-      jlfOR:
-        LogicFunc := jlfNOT;
-      jlfNOT:
-        LogicFunc := jlfAND;
-    end;
+    if FLogicFunc = High(TJvLogicFunc) then
+      LogicFunc := Low(TJvLogicFunc)
+    else
+      LogicFunc := succ(FLogicFunc);
   end;
   BinCheck(Self);
 end;
@@ -1707,6 +1703,7 @@ var
 begin
   with Canvas do
   begin
+    Font.Assign(Self.Font);
     Brush.Color := clSilver;
     R := ClientRect;
     FillRect(R);
@@ -1716,7 +1713,7 @@ begin
     for I := 0 to 5 do
       PaintLed(I);
     R := ClientRect;
-    InflateRect(R, -15, -15);
+    InflateRect(R, -14, -14);
     if FStyleDown then
       Frame3D(R, clBtnShadow, clBtnHighlight, 1)
     else
@@ -1729,19 +1726,25 @@ begin
         S := 'OR'; // do not localize
       jlfNOT:
         S := 'NOT'; // do not localize
+      jlfNAND:
+        S := 'NAND';
+      jlfNOR:
+        S := 'NOR';
+      jlfXOR:
+        S := 'XOR';
     end;
     Brush.Style := bsClear;
     ts := TextStyle;
     ts.Alignment := taCenter;
     ts.Layout := tlCenter;
+    if Font.Size = 0 then Font.Size := 8;
     TextRect(R, R.Left, R.Top, S, ts);
-//    DrawText(Canvas.handle, PChar(S), -1, R, DT_SINGLELINE or DT_CENTER or DT_VCENTER);
   end;
 end;
 
 procedure TJvLogic.Resize;
 begin
-  Width := 65;
+  Width := 75;
   Height := 65;
 end;
 
@@ -1766,6 +1769,12 @@ begin
       Output2 := Input1 or Input3;
     jlfNOT:
       Output2 := not Input2;
+    jlfNAND:
+      Output2 := not (Input1 and Input3);
+    jlfNOR:
+      Output2 := not (Input1 or Input3);
+    jlfXOR:
+      Output2 := Input1 xor Input3;
   end;
 
 end;
@@ -1833,16 +1842,7 @@ begin
   begin
     FLogicFunc := Value;
     case FLogicFunc of
-      jlfAND:
-        begin
-          FGates[0].Active := True;
-          FGates[1].Active := False;
-          FGates[2].Active := True;
-          FGates[3].Active := False;
-          FGates[4].Active := True;
-          FGates[5].Active := False;
-        end;
-      jlfOR:
+      jlfAND, jlfOR, jlfNAND, jlfNOR, jlfXOR:
         begin
           FGates[0].Active := True;
           FGates[1].Active := False;
