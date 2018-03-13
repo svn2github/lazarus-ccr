@@ -1,0 +1,93 @@
+object frmMain: TfrmMain
+  Left = 0
+  Height = 271
+  Top = 0
+  Width = 541
+  BorderStyle = bsSingle
+  Caption = 'JvSimScope demo'
+  ClientHeight = 271
+  ClientWidth = 541
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object jssRandom: TJvSimScope
+    Left = 264
+    Height = 208
+    Top = 48
+    Width = 256
+    Active = False
+    BaseLine = 0
+    BaseLineUnit = jluAbsolute
+    DisplayUnits = jduLogical
+    Interval = 100
+    Lines = <    
+      item
+        Name = 'Random'
+        Color = clAqua
+        Position = 0
+        PositionUnit = jluAbsolute
+      end    
+      item
+        Name = 'Random 2'
+        Color = clYellow
+        Position = 0
+        PositionUnit = jluAbsolute
+      end>
+    Minimum = -100
+    Maximum = 100
+    TotalTimeSteps = 240
+    OnUpdate = jssRandomUpdate
+  end
+  object lblRandomDetails1: TLabel
+    Left = 16
+    Height = 80
+    Top = 48
+    Width = 232
+    AutoSize = False
+    Caption = 'This scope shows random values but uses logical units to show a more advanced usage. Here, the Minimum and Maximum values are used and can be adjusted to make the lines fit in the display.'
+    ParentColor = False
+    WordWrap = True
+  end
+  object Label1: TLabel
+    Left = 16
+    Height = 96
+    Top = 128
+    Width = 225
+    AutoSize = False
+    Caption = 'The yellow line values are meant to go higher than the maximum value set at design time for the scope. Use the button below to change that value and notice how the lines are completely adjusted to this change.'
+    ParentColor = False
+    WordWrap = True
+  end
+  object lblWelcome: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 114
+    Height = 28
+    Top = 8
+    Width = 312
+    Caption = 'Welcome to the TJvSimScope demo'
+    Font.Color = clWindowText
+    Font.Height = -20
+    ParentColor = False
+    ParentFont = False
+  end
+  object btnActivateDeactivateRandom: TButton
+    Left = 32
+    Height = 25
+    Top = 232
+    Width = 75
+    Caption = 'Activate'
+    OnClick = btnActivateDeactivateRandomClick
+    TabOrder = 0
+  end
+  object btnAdjustMax: TButton
+    Left = 113
+    Height = 25
+    Top = 232
+    Width = 100
+    Caption = 'Adjust Max value'
+    OnClick = btnAdjustMaxClick
+    TabOrder = 1
+  end
+end

@@ -1,1 +1,11 @@
 tjvyeargrid.bmp
+tjvsimlogicbox.bmp
+tjvsimindicator.bmp
+tjvsimconnector.bmp
+tjvsimpid.bmp
+tjvsimpidlinker.bmp
+tjvsimscope.bmp
+tjvsimbutton.bmp
+tjvsimreverse.bmp
+tjvsimlight.bmp
+tjvlogic.bmp

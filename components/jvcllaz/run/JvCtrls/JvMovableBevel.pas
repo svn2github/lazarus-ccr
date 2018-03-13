@@ -26,7 +26,6 @@ Known Issues:
 unit JvMovableBevel;
 
 {$mode objfpc}{$H+}
-//{$I jvcl.inc}
 
 interface
 
@@ -41,9 +40,6 @@ type
     tdRightToLeft, tdTopLeftToBottomRight, tdTopRightToBottomLeft,
     tdBottomLeftToTopRight, tdBottomRightToTopLeft);
 
-//  {$IFDEF RTL230_UP}
-//  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
-//  {$ENDIF RTL230_UP}
   TJvMovableBevel = class(TBevel) //TJvExBevel)
   private
     FStartX: Integer;
@@ -69,8 +65,6 @@ type
       X, Y: Integer); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
-//    procedure MouseEnter(Control: TControl); override;
-//    procedure MouseLeave(Control: TControl); override;
   public
     constructor Create(AOwner: TComponent); override;
   published

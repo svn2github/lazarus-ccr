@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectGroup FileVersion="1">
-    <Targets Count="19">
+    <Targets Count="21">
       <Target0 FileName="JvCoreLazR.lpk"/>
       <Target1 FileName="JvCoreLazD.lpk"/>
       <Target2 FileName="JvCtrlsLazR.lpk"/>
@@ -21,6 +21,8 @@
       <Target16 FileName="jvcustomlazr.lpk"/>
       <Target17 FileName="jvcustomlazd.lpk"/>
       <Target18 FileName="jvcmpr.lpk"/>
+      <Target19 FileName="jvjanslazr.lpk"/>
+      <Target20 FileName="jvjanslazd.lpk"/>
     </Targets>
   </ProjectGroup>
 </CONFIG>
