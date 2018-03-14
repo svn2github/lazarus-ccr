@@ -211,7 +211,7 @@ type
 
   TJvSimReverseGates = array [0..3] of TJvGate;
 
-  TJvSimReverse = class(TGraphicControl)
+  TJvSimReverse = class(TJvSimControl)
   private
     FDoMove: Boolean;
     FMdp: TPoint;
@@ -226,6 +226,7 @@ type
     FOutput3: Boolean;
     function GetGate(Index: Integer): TJvGate;
     procedure AnchorConnectors;
+    procedure InitDimensions;
     procedure MoveConnectors;
     procedure PaintLed(Index: Integer);
     procedure SetInput1(const Value: Boolean);
@@ -234,6 +235,7 @@ type
     procedure SetOutput2(const Value: Boolean);
     procedure SetOutput3(const Value: Boolean);
   protected
+    class function GetControlClassDefaultSize: TSize; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -359,7 +361,9 @@ type
     FDRev: Boolean;
     FBmpBin: TBitmap;
     procedure CpuOnTimer(Sender: TObject);
+    procedure InitDimensions;
   protected
+    class function GetControlClassDefaultSize: TSize; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Resize; override;
@@ -582,6 +586,8 @@ begin
 
       F.Width := b.Left + b.Width + 8;
       F.Height := Max(b.Top + b.Height, rg.Top + rg.Height) + 8;
+
+      F.AutoAdjustLayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
 
       if F.ShowModal = mrOK then begin
         FConType := TJvConType(rg.ItemIndex);
@@ -2550,6 +2556,8 @@ begin
       F.Width := b.Left + b.Width + 8;
       F.Height := Max(b.Top + b.Height, rg.Top + rg.Height) + 8;
 
+      F.AutoAdjustLayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
+
       if F.ShowModal = mrOK then
         LEDColor := TJvLEDColor(rg.ItemIndex);
     finally
@@ -2818,8 +2826,9 @@ end;
 constructor TJvSimLogicBox.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  Width := 130;
-  Height := 65;
+  with GetControlClassDefaultSize do
+    SetInitialBounds(0, 0, CX, CY);
+
   FBmpCon := TBitmap.Create;
   FBmpLogic := TBitmap.Create;
   FBmpButton := TBitmap.Create;
@@ -2832,6 +2841,7 @@ begin
   FBmpLight.LoadFromResourceName(HInstance, 'JvSimLogicBoxLIGHT'); // do not localize
   FBmpRev.LoadFromResourceName(HInstance, 'JvSimLogicBoxREV'); // do not localize
   FBmpBin.LoadFromResourceName(HInstance, 'JvSimLogicBoxBIN'); // do not localize
+
   FRCon := Rect(0, 0, 32, 32);
   FRLogic := Rect(33, 0, 64, 32);
   FRButton := Rect(0, 33, 32, 64);
@@ -2842,6 +2852,7 @@ begin
   FDButton := False;
   FDLight := False;
   FDRev := False;
+
   FCpu := TTimer.Create(Self);
   FCpu.Enabled := False;
   FCpu.OnTimer := @CpuOnTimer;
@@ -2892,6 +2903,26 @@ begin
       TJvSIMConnector(Wc.Controls[I]).Connect;
 end;
 
+class function TJvSimLogicBox.GetControlClassDefaultSize: TSize;
+begin
+  Result.CX := 130;
+  Result.CY := 65;
+end;
+
+procedure TJvSimLogicBox.InitDimensions;
+var
+  w4, w2, h2: Integer;
+begin
+  w2 := Width div 2;
+  w4 := Width div 4;
+  h2 := Height div 2;
+  FRCon    := Rect(0,    0,    w4,    h2);
+  FRLogic  := Rect(w4+1, 0,    w2,    h2);
+  FRButton := Rect(0,    h2+1, w4,    Height-1);
+  FRLight  := Rect(w4+1, h2+1, w2,    Height-1);
+  FRRev    := Rect(w2+1, 0,    w2+w4, h2);
+end;
+
 procedure TJvSimLogicBox.MouseDown(Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
@@ -2934,6 +2965,9 @@ begin
       Parent := Wc;
       Left := l;
       Top := t;
+      AutoAdjustLayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
+//      Width := Scale96ToForm(Width);
+//      Height := Scale96ToForm(Height);
     end
   else
   if FDLogic then
@@ -2942,6 +2976,9 @@ begin
       Parent := Wc;
       Left := l;
       Top := t;
+      AutoAdjustLayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
+//      Width := Scale96ToForm(Width);
+//      Height := Scale96ToForm(Height);
     end
   else
   if FDButton then
@@ -2950,6 +2987,9 @@ begin
       Parent := Wc;
       Left := l;
       Top := t;
+      AutoAdjustLayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
+//      Width := Scale96ToForm(Width);
+//      Height := Scale96ToForm(Height);
     end
   else
   if FDLight then
@@ -2958,6 +2998,9 @@ begin
       Parent := Wc;
       Left := l;
       Top := t;
+      AutoAdjustLayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
+//      Width := Scale96ToForm(Width);
+//      Height := Scale96ToForm(Height);
     end
   else
   if FDRev then
@@ -2966,6 +3009,9 @@ begin
       Parent := Wc;
       Left := l;
       Top := t;
+      AutoAdjustLayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
+//      Width := Scale96ToForm(Width);
+//      Height := Scale96ToForm(Height);
     end;
   FDCon := False;
   FDLogic := False;
@@ -2978,51 +3024,73 @@ end;
 procedure TJvSimLogicBox.Paint;
 var
   Rb: TRect;
+  d: Integer;
+
+  procedure DoDraw(R: TRect; ABitmap: TBitmap);
+  begin
+    InflateRect(R, -d, -d);
+    Canvas.StretchDraw(R, ABitmap);
+  end;
+
 begin
+  d := Scale96ToForm(4);
+
   with Canvas do
   begin
     Brush.Color := clSilver;
     FillRect(ClientRect);
+
     Rb := FRCon;
     if not FDCon then
       Frame3D(Rb, clBtnHighlight, clBtnShadow, 1)
     else
       Frame3D(Rb, clBtnShadow, clBtnHighlight, 1);
-    Draw(4, 4, FBmpCon);
+    DoDraw(FRCon, FBmpCon);
+//    Draw(4, 4, FBmpCon);
+
     Rb := FRLogic;
     if not FDLogic then
       Frame3D(Rb, clBtnHighlight, clBtnShadow, 1)
     else
       Frame3D(Rb, clBtnShadow, clBtnHighlight, 1);
-    Draw(36, 4, FBmpLogic);
+    Dodraw(FRLogic, FBmpLogic);
+//    Draw(36, 4, FBmpLogic);
+
     Rb := FRButton;
     if not FDButton then
       Frame3D(Rb, clBtnHighlight, clBtnShadow, 1)
     else
       Frame3D(Rb, clBtnShadow, clBtnHighlight, 1);
-    Draw(4, 36, FBmpButton);
+    DoDraw(FRButton, FBmpButton);
+//    Draw(4, 36, FBmpButton);
+
     Rb := FRLight;
     if not FDLight then
       Frame3D(Rb, clBtnHighlight, clBtnShadow, 1)
     else
       Frame3D(Rb, clBtnShadow, clBtnHighlight, 1);
-    Draw(36, 36, FBmpLight);
+//    Draw(36, 36, FBmpLight);
+    DoDraw(FRLight, FBmpLight);
+
     Rb := FRRev;
     if not FDRev then
       Frame3D(Rb, clBtnHighlight, clBtnShadow, 1)
     else
       Frame3D(Rb, clBtnShadow, clBtnHighlight, 1);
-    Draw(Rb.Left + 3, Rb.Top + 3, FBmpRev);
+    DoDraw(FRRev, FBmpRev);
 
     // Draw bin
-    Draw(100, 16, FBmpBin);
+    Rb := Rect(0, 0, FBmpBin.Width, FBmpBin.Height);
+    OffsetRect(Rb, FRRev.Right - 1 + d, (Self.Height - FBmpBin.Height) div 2);
+    Draw(Rb.Left, Rb.Top, FBmpBin);
+  //  Draw(100, 16, FBmpBin);
   end;
 end;
 
 procedure TJvSimLogicBox.Resize;
 begin
-  Width := 130;
-  Height := 65;
+  inherited;
+  InitDimensions;
 end;
 
 
@@ -3033,8 +3101,9 @@ var
   I: Integer;
 begin
   inherited Create(AOwner);
-  Width := 42;
-  Height := 42;
+  with GetControlClassDefaultSize do
+    SetInitialBounds(0, 0, CX, CY);
+
   // initialize Gates
   FGates[0].Pos := Point(28, 14);
   FGates[1].Pos := Point(14, 1);
@@ -3105,9 +3174,40 @@ begin
     end;
 end;
 
+class function TJvSimReverse.GetControlClassDefaultSize: TSize;
+begin
+  Result.CX := 42;
+  Result.CY := 42;
+end;
+
 function TJvSimReverse.GetGate(Index: Integer): TJvGate;
 begin
   Result := FGates[Index];
+end;
+
+procedure TJvSimReverse.InitDimensions;
+const
+  MARGIN = 1;
+var
+  m, d, h: Integer;
+begin
+  if Parent = nil then
+    exit;
+
+  m := Scale96ToForm(MARGIN);
+  d := Scale96ToForm(LED_SIZE);
+
+  FGates[0].Pos := Point(Width - m - d, (Height - d) div 2);
+  FGates[1].Pos := Point((Width - d) div 2, m);
+  FGates[2].Pos := Point(m, (Height - d) div 2);
+  FGates[3].Pos := Point((Width - d) div 2, Height - m - d);
+  {
+
+  FGates[0].Pos := Point(28, 14);
+  FGates[1].Pos := Point(14, 1);
+  FGates[2].Pos := Point(1, 14);
+  FGates[3].Pos := Point(14, 28);
+  }
 end;
 
 procedure TJvSimReverse.MouseDown(Button: TMouseButton;
@@ -3180,9 +3280,14 @@ begin
       PaintLed(I);
     R := ClientRect;
     // paint triangle
+    Poly[0] := Point(Scale96ToForm(14), Scale96ToForm(20));
+    Poly[1] := Point(Scale96ToForm(26), Poly[0].X);
+    Poly[2] := Point(Poly[1].X, Poly[1].X);
+    {
     Poly[0] := Point(14, 20);
     Poly[1] := Point(26, 14);
     Poly[2] := Point(26, 26);
+    }
     Pen.Style := psClear;
     Brush.Color := clBlack;
     Polygon(Poly);
@@ -3196,6 +3301,7 @@ var
   P: TPoint;
   X, Y: Integer;
   Lit: Boolean;
+  d: Integer;
 begin
   if not Gates[Index].Active then
     Exit;
@@ -3236,6 +3342,11 @@ begin
       LitCol := clRed;
     end;
   end;
+
+  d := Scale96ToForm(LED_SIZE);
+  DrawLED(Rect(X, Y, X+d, Y+d), SurfCol, LitCol, clSilver);
+  (*
+
   with Canvas do
   begin
     Brush.Color := clSilver;
@@ -3251,12 +3362,13 @@ begin
     Pen.Color := LitCol;
     Arc(X + 3, Y + 3, X + 8, Y + 9, X + 5, Y + 0, X + 0, Y + 8);
   end;
+  *)
 end;
 
 procedure TJvSimReverse.Resize;
 begin
-  Width := 42;
-  Height := 42;
+  inherited;
+  InitDimensions;
 end;
 
 procedure TJvSimReverse.SetInput1(const Value: Boolean);
