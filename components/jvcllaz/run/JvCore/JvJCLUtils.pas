@@ -63,6 +63,7 @@ const
     // Note: the else is on purpose, VCL is not defined for a console application
 ******************** NOT CONVERTED *)
   NullHandle = 0;
+  USDecimalSeparator = '.';
 
 (******************** NOT CONVERTED
 {$IFDEF UNIX}

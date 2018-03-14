@@ -16,6 +16,7 @@ implementation
 uses
   Classes, JvDsgnConsts,
   JvYearGrid,
+  //JvCSVData, JvCSVBaseControls, //JvCsvBaseEditor,
   JvSimScope, JvSimIndicator, JvSimPID, JvSimPIDLinker, JvSimLogic;
 
 procedure Register;
@@ -29,6 +30,16 @@ begin
     TJvSimScope, TJvSimIndicator, TJvSimPID,
     TJvSimPIDLinker, TJvSimConnector, TJvLogic, TJvSimButton, TJvSimLight,
     TJvSimLogicBox, TJvSimReverse]);
+                     (*
+  // CSV Components
+  RegisterComponents('Data Access', [TJvCSVDataset]);
+  RegisterComponents(RsPaletteJansCsv, [TJvCSVBase, TJvCSVEdit, TJvCSVComboBox,
+    TJvCSVCheckBox, TJvCSVNavigator]);
+//  RegisterPropertyEditor(TypeInfo(string), TJvCSVBase, cCSVFieldName, TJvCSVFileNameProperty);
+//  RegisterPropertyEditor(TypeInfo(string), TJvCSVEdit, cCSVField, TJvCSVFieldProperty);
+//  RegisterPropertyEditor(TypeInfo(string), TJvCSVComboBox, cCSVField, TJvCSVFieldProperty);
+//  RegisterPropertyEditor(TypeInfo(string), TJvCSVCheckBox, cCSVField, TJvCSVFieldProperty);
+*)
 
 end;
 
