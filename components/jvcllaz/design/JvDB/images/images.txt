@@ -1,1 +1,4 @@
 tjvdbhtlabel.bmp
+tjvdbsearchcombobox.bmp
+tjvdbsearchedit.bmp
+tjvdbtreeview.bmp

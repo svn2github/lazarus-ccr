@@ -35,6 +35,9 @@ uses
   JvComponent;
 
 type
+
+  { TYearGridEditForm }
+
   TYearGridEditForm = class(TForm) //JvForm)
     Panel1: TPanel;
     BtnOK: TBitBtn;

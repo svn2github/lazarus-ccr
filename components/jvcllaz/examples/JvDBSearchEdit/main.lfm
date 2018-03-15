@@ -1,0 +1,112 @@
+object Form1: TForm1
+  Left = 680
+  Height = 340
+  Top = 320
+  Width = 408
+  Caption = 'DBSearchEdit demo'
+  ClientHeight = 340
+  ClientWidth = 408
+  OnCreate = FormCreate
+  LCLVersion = '1.9.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 39
+    Top = 0
+    Width = 408
+    Align = alTop
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 39
+    ClientWidth = 408
+    TabOrder = 0
+    object JvDBSearchEdit1: TJvDBSearchEdit
+      AnchorSideLeft.Control = Label1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = CheckBox1
+      Left = 76
+      Height = 23
+      Top = 8
+      Width = 184
+      DataSource = DataSource1
+      DataResult = 'OK'
+      DataField = 'Name'
+      ClearOnEnter = False
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 7
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 16
+      BorderSpacing.Bottom = 8
+      TabOrder = 0
+      Text = 'JvDBSearchEdit1'
+    end
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = JvDBSearchEdit1
+      AnchorSideTop.Side = asrCenter
+      Left = 16
+      Height = 15
+      Top = 12
+      Width = 53
+      BorderSpacing.Left = 16
+      Caption = 'Search for'
+      ParentColor = False
+    end
+    object CheckBox1: TCheckBox
+      AnchorSideTop.Control = JvDBSearchEdit1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 276
+      Height = 19
+      Top = 10
+      Width = 116
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 16
+      Caption = 'Clear on get focus'
+      OnChange = CheckBox1Change
+      TabOrder = 1
+    end
+  end
+  object DBGrid1: TDBGrid
+    Left = 0
+    Height = 301
+    Top = 39
+    Width = 408
+    Align = alClient
+    Color = clWindow
+    Columns = <>
+    DataSource = DataSource1
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgDisableInsert]
+    ReadOnly = True
+    TabOrder = 1
+  end
+  object BufDataset1: TBufDataset
+    FieldDefs = <>
+    left = 104
+    top = 96
+    object BufDataset1Name: TStringField
+      FieldKind = fkData
+      FieldName = 'Name'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object BufDataset1Birthdate: TDateField
+      FieldKind = fkData
+      FieldName = 'Birthdate'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = BufDataset1
+    left = 104
+    top = 184
+  end
+end
