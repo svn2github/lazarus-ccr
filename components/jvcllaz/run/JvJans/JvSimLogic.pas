@@ -46,8 +46,7 @@ interface
 uses
   LCLIntf, Types,
   Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls,
-  SysUtils, Classes,
-  JvTypes;
+  SysUtils, Classes;
 
 type
   TJvLogic = class;

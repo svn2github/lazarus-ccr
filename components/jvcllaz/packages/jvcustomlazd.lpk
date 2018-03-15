@@ -10,7 +10,7 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <OtherUnitFiles Value="..\design\JvCustomControls"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvCustom"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (designtime code):

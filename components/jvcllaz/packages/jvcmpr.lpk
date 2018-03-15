@@ -10,7 +10,7 @@
       <SearchPaths>
         <IncludeFiles Value="..\run\JvCmp"/>
         <OtherUnitFiles Value="..\run\JvCmp"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\run\JvCmp"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code):

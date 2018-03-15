@@ -226,8 +226,6 @@ type
 
 implementation
 
-uses
-  Math;
 
 //=== { TJvScopeLineValues } =================================================
 

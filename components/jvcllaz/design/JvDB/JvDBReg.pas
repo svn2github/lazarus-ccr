@@ -9,6 +9,7 @@ uses
 
 procedure Register;
 
+
 implementation
 
 {$R ../../resource/jvdbreg.res}
@@ -37,9 +38,9 @@ const
 begin
   RegisterComponents(RsPaletteJvclDB, [     // was: TsPaletteDBVisual
     TJvDBSearchEdit,
- //   TJvDBSearchCombobox,
+//    TJvDBSearchCombobox,
+//    TJvDBTreeView,
     TJvDBHtLabel
-  //  TJvDBTreeView
   ]);
                 (*
   RegisterPropertyEditor(TypeInfo(string), TJvDBTreeView, cItemField, TFieldProperty); //TJvDataFieldProperty);

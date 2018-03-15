@@ -10,8 +10,8 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <IncludeFiles Value="..\run\JvJans"/>
-        <OtherUnitFiles Value="..\run\JvJans;..\design\JvJans"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+        <OtherUnitFiles Value="..\design\JvJans"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvJans"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (designtime code of Jan's Components):
