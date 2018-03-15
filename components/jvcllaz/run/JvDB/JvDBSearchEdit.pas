@@ -29,15 +29,13 @@ Description:
 
 unit JvDBSearchEdit;
 
+{$mode objfpc}{$H+}
 
 interface
 
 uses
-//  Windows,
-//  Messages,
   LCLType, LCLIntf, LMessages,
   Classes, Controls, StdCtrls, DB, DBCtrls;
-//  JvEdit;
 
 type
   TJvDBCustomSearchEdit = class(TCustomEdit) //JvCustomEdit)
