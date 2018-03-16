@@ -15,7 +15,8 @@ implementation
 {$R ../../resource/jvdbreg.res}
 
 uses
-  Classes, JvDsgnConsts, {JvDBSearchCombobox,} JvDBSearchEdit, JvDBHTLabel; //, JvDBTreeView;
+  Classes, JvDsgnConsts, //JvDBSearchCombobox,
+  JvDBSearchEdit, JvDBTreeView, JvDBHTLabel;
 
 procedure Register;
 const
@@ -39,15 +40,14 @@ begin
   RegisterComponents(RsPaletteJvclDB, [     // was: TsPaletteDBVisual
     TJvDBSearchEdit,
 //    TJvDBSearchCombobox,
-//    TJvDBTreeView,
+    TJvDBTreeView,
     TJvDBHtLabel
   ]);
-                (*
+                
   RegisterPropertyEditor(TypeInfo(string), TJvDBTreeView, cItemField, TFieldProperty); //TJvDataFieldProperty);
   RegisterPropertyEditor(TypeInfo(string), TJvDBTreeView, cMasterField, TFieldProperty); //TJvDataFieldProperty);
   RegisterPropertyEditor(TypeInfo(string), TJvDBTreeView, cDetailField, TFieldProperty); //TJvDataFieldProperty);
   RegisterPropertyEditor(TypeInfo(string), TJvDBTreeView, cIconField, TFieldProperty); //TJvDataFieldProperty);
-  *)
 end;
 
 end.
