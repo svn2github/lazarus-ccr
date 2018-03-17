@@ -1,0 +1,199 @@
+object frmClipboardAnalizer: TfrmClipboardAnalizer
+  Left = 175
+  Height = 517
+  Top = 185
+  Width = 771
+  Caption = 'Clipboard Analizer'
+  ClientHeight = 517
+  ClientWidth = 771
+  LCLVersion = '1.9.0.0'
+  object lstTypes: TListBox
+    Left = 0
+    Height = 517
+    Top = 0
+    Width = 272
+    Align = alLeft
+    ItemHeight = 0
+    OnSelectionChange = lstTypesSelectionChange
+    ScrollWidth = 270
+    TabOrder = 0
+  end
+  object Panel1: TPanel
+    Left = 277
+    Height = 517
+    Top = 0
+    Width = 494
+    Align = alClient
+    Caption = 'Panel1'
+    ClientHeight = 517
+    ClientWidth = 494
+    TabOrder = 1
+    object Panel2: TPanel
+      Left = 1
+      Height = 111
+      Top = 1
+      Width = 492
+      Align = alTop
+      ClientHeight = 111
+      ClientWidth = 492
+      TabOrder = 0
+      object btnUpdate: TButton
+        Left = 8
+        Height = 25
+        Top = 5
+        Width = 94
+        Caption = 'Load Clipboard'
+        OnClick = btnUpdateClick
+        TabOrder = 0
+      end
+      object lblSize: TLabel
+        Left = 8
+        Height = 15
+        Top = 72
+        Width = 33
+        Caption = 'lblSize'
+        ParentColor = False
+      end
+      object chkBinText: TCheckBox
+        Left = 344
+        Height = 19
+        Top = 88
+        Width = 118
+        Caption = 'View Special Chars'
+        OnClick = chkBinTextClick
+        TabOrder = 1
+      end
+      object lblEncoding: TLabel
+        Left = 120
+        Height = 15
+        Top = 72
+        Width = 63
+        Caption = 'lblEncoding'
+        ParentColor = False
+      end
+      object radAsText: TRadioButton
+        Left = 8
+        Height = 19
+        Top = 88
+        Width = 77
+        Caption = 'clip.AsText'
+        OnClick = chkBinTextClick
+        TabOrder = 4
+      end
+      object radStream: TRadioButton
+        Left = 96
+        Height = 19
+        Top = 88
+        Width = 57
+        Caption = 'Stream'
+        Checked = True
+        OnClick = chkBinTextClick
+        TabOrder = 2
+        TabStop = True
+      end
+      object radEncoding: TRadioButton
+        Left = 168
+        Height = 19
+        Top = 88
+        Width = 70
+        Caption = 'Encoding'
+        OnClick = chkBinTextClick
+        TabOrder = 3
+      end
+      object radHex: TRadioButton
+        Left = 256
+        Height = 19
+        Top = 88
+        Width = 40
+        Caption = 'Hex'
+        OnClick = chkBinTextClick
+        TabOrder = 5
+      end
+      object txtFormat: TEdit
+        Left = 112
+        Height = 23
+        Top = 5
+        Width = 375
+        Anchors = [akTop, akLeft, akRight]
+        ReadOnly = True
+        TabOrder = 6
+      end
+      object btnSave: TButton
+        Left = 8
+        Height = 25
+        Top = 40
+        Width = 75
+        Caption = 'Save'
+        OnClick = btnSaveClick
+        TabOrder = 7
+      end
+      object btnIsolate: TButton
+        Left = 272
+        Height = 25
+        Top = 40
+        Width = 91
+        Caption = 'Isolate Format'
+        OnClick = btnIsolateClick
+        TabOrder = 8
+      end
+      object btnUpdateIsolate: TButton
+        Left = 368
+        Height = 25
+        Top = 40
+        Width = 107
+        Caption = 'Update && Isolate'
+        OnClick = btnUpdateIsolateClick
+        TabOrder = 9
+      end
+      object btnOpen: TButton
+        Left = 89
+        Height = 25
+        Top = 40
+        Width = 75
+        Caption = 'Open'
+        OnClick = btnOpenClick
+        TabOrder = 10
+      end
+      object btnReOpen: TButton
+        Left = 168
+        Height = 25
+        Top = 40
+        Width = 75
+        Caption = 'Re-Open'
+        OnClick = btnReOpenClick
+        TabOrder = 11
+      end
+    end
+    object memoDump: TMemo
+      Left = 1
+      Height = 404
+      Top = 112
+      Width = 492
+      Align = alClient
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ScrollBars = ssAutoBoth
+      TabOrder = 1
+      WordWrap = False
+    end
+  end
+  object Splitter1: TSplitter
+    Left = 272
+    Height = 517
+    Top = 0
+    Width = 5
+  end
+  object sDlg: TSaveDialog
+    DefaultExt = '.raw'
+    Filter = 'Arhivos RAW|*.raw'
+    Left = 624
+    Top = 64
+  end
+  object oDlg: TOpenDialog
+    DefaultExt = '.raw'
+    Filter = 'Archivos Raw|*.raw|Todos los archivos|*.*'
+    Left = 584
+    Top = 64
+  end
+end
