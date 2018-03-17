@@ -45,7 +45,7 @@ unit JvOutlookBar;
 interface
 
 uses
-  LCLType, LCLIntf, LMessages, Types,
+  LCLType, LCLIntf, LMessages, Types, LCLVersion,
   SysUtils, Classes, ActnList,
   Buttons, Controls, Graphics, ImgList, Forms, StdCtrls, ExtCtrls, Themes,
   {$IFDEF HAS_UNIT_SYSTEM_UITYPES}
@@ -327,7 +327,9 @@ type
     procedure SetThemed(const Value: Boolean);
     procedure SetWordWrap(const Value: Boolean);
   protected
+    {$IF LCL_FullVersion >= 1090000}
     function DoEraseBackground(ACanvas: TCanvas; Param: LPARAM): Boolean; override;
+    {$ENDIF}
     procedure FontChanged; override;
     function GetButtonHeight(PageIndex, ButtonIndex: Integer): Integer;
     function GetButtonTopHeight(PageIndex, ButtonIndex: Integer): Integer;
@@ -2606,11 +2608,13 @@ begin
   Inc(Result, 4);
 end;
 
+{$IF LCL_FullVersion >= 1090000}
 function TJvCustomOutlookBar.DoEraseBackground(ACanvas: TCanvas; Param: LPARAM): Boolean;
 begin
   // don't redraw background: we always fill it anyway
   Result := True;
 end;
+{$ENDIF}
 
 procedure TJvCustomOutlookBar.RedrawRect(R: TRect; Erase: Boolean = False);
 begin

@@ -930,7 +930,7 @@ function TJvCustomTMTimeline.GetImageIndex(ADate: TDate): Integer;
 begin
   Result := FDateImages.IndexOf(IntToStr(Trunc(ADate)));
   if Result > -1 then
-    Result := Integer(FDateImages.Objects[Result]);
+    Result := PtrUInt(FDateImages.Objects[Result]);
 end;
 
 procedure TJvCustomTMTimeline.SetImageIndex(ADate: TDate;
@@ -941,7 +941,7 @@ begin
   I := FDateImages.IndexOf(IntToStr(Trunc(ADate)));
   if I < 0 then
     I := FDateImages.Add(IntToStr(Trunc(ADate)));
-  FDateImages.Objects[I] := TObject(Value);
+  FDateImages.Objects[I] := TObject(PtrUInt(Value));
   Invalidate;
 end;
 
@@ -1218,7 +1218,7 @@ begin
     raise EStreamError.CreateRes(@RsInvalidImage);
   FDateImages.Text := ReadStr(Stream);
   for I := 0 to FDateImages.Count - 1 do
-    FDateImages.Objects[I] := TObject(ReadInt(Stream));
+    FDateImages.Objects[I] := TObject(PtrUInt(ReadInt(Stream)));
   FObjects.Text := ReadStr(Stream);
   for I := 0 to FObjects.Count - 1 do
   begin
@@ -1235,7 +1235,7 @@ begin
   WriteStr(Stream, cMagic);
   WriteStr(Stream, FDateImages.Text);
   for I := 0 to FDateImages.Count - 1 do
-    WriteInt(Stream, Integer(FDateImages.Objects[I]));
+    WriteInt(Stream, PtrUInt(FDateImages.Objects[I]));
   WriteStr(Stream, FObjects.Text);
   for I := 0 to FObjects.Count - 1 do
     SaveObject(Stream, FObjects.Objects[I]);

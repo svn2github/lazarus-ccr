@@ -244,7 +244,9 @@ type
     property HideSelection;
     property Hint;
     property HotTrack;
+    {$IFDEF LCL_FullVersion >= 1090000}
     property HotTrackColor;
+    {$ENDIF}
     property Images;
     property Indent;
     property Items;

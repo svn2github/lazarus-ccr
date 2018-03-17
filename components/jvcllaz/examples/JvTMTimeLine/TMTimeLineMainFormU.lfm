@@ -1,7 +1,7 @@
 object TMTimeLineMainForm: TTMTimeLineMainForm
-  Left = 261
+  Left = 371
   Height = 580
-  Top = 138
+  Top = 154
   Width = 733
   Caption = 'Team Manager Timeline demo'
   ClientHeight = 580
@@ -17,7 +17,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
   OnMouseWheelUp = FormMouseWheelUp
   Position = poScreenCenter
   ShowHint = True
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '1.8.0.6'
   Scaled = False
   object Splitter1: TSplitter
     Cursor = crVSplit
