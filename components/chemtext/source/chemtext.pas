@@ -134,6 +134,7 @@ const
   SUBFONT_DIVISOR = 100;
   ARROW_LINE: array[boolean] of char = ('-', '=');
   ESCAPE_CHAR = '\';
+  HYDRATE_DOT = #$E2#$80#$A2;
 
 function ChemTextHeight(ACanvas: TCanvas; const AText: String;
   Arrow: TChemArrow = caAsciiSingle): Integer;
@@ -314,6 +315,12 @@ begin
               subNos := false;
             end;
 
+          '.':
+            begin
+              subNos := false;
+              DrawNormal(X, Y, HYDRATE_DOT);
+            end;
+
           ESCAPE_CHAR:
             escaping := true;
 
@@ -321,7 +328,7 @@ begin
             begin
               j := i+1;
               while (j <= Length(AText)) and
-                    not (AText[j] in ['0'..'9', '+', '-', '<', ESCAPE_CHAR])
+                    not (AText[j] in ['0'..'9', '+', '-', '<', '.', ESCAPE_CHAR])
               do
                 inc(j);
               s := Copy(AText, i, j-i);
