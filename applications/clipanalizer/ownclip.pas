@@ -55,7 +55,7 @@ begin
 end;
 {$else}
 begin
-  ClipboardGetData(ctPrimarySelection, formatID, DestStream);
+  ClipboardGetData(ctClipboard, formatID, DestStream);
 end;
 
 {$endif}
