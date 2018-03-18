@@ -11,7 +11,7 @@ the specific language governing rights and limitations under the License.
 The Original Code is: JvDBSearchEdit.pas, released on 2004-02-28.
 
 The Initial Developer of the Original Code is Lionel Reynaud
-Portions created by Sébastien Buysse are Copyright (C) 2004 Lionel Reynaud.
+Portions created by SÃ©bastien Buysse are Copyright (C) 2004 Lionel Reynaud.
 All Rights Reserved.
 
 Contributor(s):

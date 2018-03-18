@@ -17,6 +17,7 @@ uses
   Classes, JvDsgnConsts,
   JvYearGrid,
   //JvCSVData, JvCSVBaseControls, //JvCsvBaseEditor,
+  JvMarkupViewer, JvMarkupLabel,
   JvSimScope, JvSimIndicator, JvSimPID, JvSimPIDLinker, JvSimLogic;
 
 procedure Register;
@@ -30,6 +31,12 @@ begin
     TJvSimScope, TJvSimIndicator, TJvSimPID,
     TJvSimPIDLinker, TJvSimConnector, TJvLogic, TJvSimButton, TJvSimLight,
     TJvSimLogicBox, TJvSimReverse]);
+
+  // Markup components
+  RegisterComponents(RsPaletteJvcl, [
+    TJvMarkupViewer, TJvMarkupLabel
+  ]);
+
                      (*
   // CSV Components
   RegisterComponents('Data Access', [TJvCSVDataset]);

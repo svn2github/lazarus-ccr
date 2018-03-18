@@ -9,8 +9,5 @@ tjvsimbutton.bmp
 tjvsimreverse.bmp
 tjvsimlight.bmp
 tjvlogic.bmp
-tjvcsvbase.bmp
-tjvcsvcheckbox.bmp
-tjvcsvcombobox.bmp
-tjvcsvedit.bmp
-tjvcsvnavigator.bmp
+tjvmarkupviewer.bmp
+tjvmarkuplabel.bmp

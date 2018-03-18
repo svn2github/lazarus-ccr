@@ -2,39 +2,42 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="JvJansLazD"/>
+    <Name Value="jvcmpd"/>
     <Type Value="RunAndDesignTime"/>
-    <Author Value="Original author: Jan Verhoeven [jan1 dott verhoeven att wxs dott nl]"/>
+    <Author Value="Various authors - see header of each unit for original author."/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="..\design\JvJans"/>
-        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvJans"/>
+        <OtherUnitFiles Value="..\design\JvCmp"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvCmp"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (designtime code of Jan's Components):
-- YearGrid
-- Simulation components"/>
+    <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code):
+- Spellchecker component
+- EnterAsTab component"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
     <Files Count="1">
       <Item1>
-        <Filename Value="..\design\JvJans\jvjansreg.pas"/>
+        <Filename Value="..\design\JvCmp\jvcmpreg.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="JvJansReg"/>
+        <UnitName Value="JvCmpReg"/>
       </Item1>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="4">
       <Item1>
         <PackageName Value="JvCoreLazD"/>
       </Item1>
       <Item2>
-        <PackageName Value="jvjanslazr"/>
+        <PackageName Value="IDEIntf"/>
       </Item2>
       <Item3>
-        <PackageName Value="FCL"/>
+        <PackageName Value="JvCmpR"/>
       </Item3>
+      <Item4>
+        <PackageName Value="FCL"/>
+      </Item4>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

@@ -30,8 +30,6 @@ unit JvHint;
 
 {$mode objfpc}{$H+}
 
-//{.$I jvcl.inc}
-
 interface
 
 uses
