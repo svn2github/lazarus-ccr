@@ -47,8 +47,9 @@ unit JvNavigationPane;
 interface
 
 uses
-  SysUtils, Classes, Controls, ExtCtrls, Graphics, ImgList, JvButton,
-  JvComponent, JvExExtCtrls, JvPageList, JvTypes, LCLIntf, LCLType, LMessages, Menus;
+  LCLIntf, LCLType, LMessages,
+  SysUtils, Classes, Controls, ExtCtrls, Graphics, ImgList, JvButton, Menus,
+  JvComponent, JvExExtCtrls, JvPageList, JvTypes;
 
 const
   CM_PARENTSTYLEMANAGERCHANGE = CM_BASE + 1;

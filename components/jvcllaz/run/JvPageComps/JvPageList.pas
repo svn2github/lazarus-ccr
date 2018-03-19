@@ -35,8 +35,9 @@ unit JvPageList;
 interface
 
 uses
-  Classes, Controls, Graphics, JvComponent, LCLIntf, LCLType, LMessages,
-  SysUtils;
+  LCLIntf, LCLType, LMessages,
+  SysUtils, Classes, Controls, Graphics,
+  JvComponent;
 
 type
   EPageListError = class(Exception);

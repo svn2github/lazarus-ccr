@@ -1541,8 +1541,9 @@ procedure CopyParentImage(Control: TControl; Dest: TCanvas);
 var
   I, Count, SaveIndex: Integer;
   DC: HDC;
-  R, SelfR, CtlR: TRect;
+  SelfR, CtlR: TRect;
   ViewPortOrg: TPoint;
+  R: TRect = (Left:0; Top:0; Right:0; Bottom:0);
 begin
   if (Control = nil) or (Control.Parent = nil) then
     Exit;

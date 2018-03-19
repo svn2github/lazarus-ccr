@@ -5,9 +5,6 @@ unit JvDesignClip;
 interface
 
 uses
-  {$IFDEF UNITVERSIONING}
-  JclUnitVersioning,
-  {$ENDIF UNITVERSIONING}
   LCLProc, LCLType, LResources, LCLIntf, LMessages, Classes;
 
 type
@@ -35,15 +32,6 @@ procedure DesignSaveComponentToBinaryStream(InStream: TStream; InComponent: TCom
 procedure DesignCopyStreamFromClipboard(InFmt: Cardinal; InS: TStream);
 procedure DesignCopyStreamToClipboard(InFmt: Cardinal; InS: TStream);
 
-{$IFDEF UNITVERSIONING}
-const
-  UnitVersioning: TUnitVersionInfo = (
-    RCSfile: '$URL: https://jvcl.svn.sourceforge.net/svnroot/jvcl/tags/JVCL3_39/run/JvDesignClip.pas $';
-    Revision: '$Revision: 12515 $';
-    Date: '$Date: 2009-09-23 09:51:16 +0200 (mer., 23 sept. 2009) $';
-    LogPath: 'JVCL\run'
-  );
-{$ENDIF UNITVERSIONING}
 
 implementation
 
@@ -214,14 +202,7 @@ end;
 initialization
   { The following string should not be localized }
   CF_COMPONENTSTREAM := RegisterClipboardFormat('Delphi Components');
-  {$IFDEF UNITVERSIONING}
-  RegisterUnitVersion(HInstance, UnitVersioning);
-  {$ENDIF UNITVERSIONING}
 
-finalization
-  {$IFDEF UNITVERSIONING}
-  UnregisterUnitVersion(HInstance);
-  {$ENDIF UNITVERSIONING}
 
 end.
 

@@ -51,8 +51,8 @@ unit JvXPBar;
 interface
 
 uses
-  ActnList, Classes, Controls, Graphics, ExtCtrls, Forms, ImgList,
-  LCLIntf, LCLProc, LCLType, LMessages, LResources, SysUtils,
+  LCLIntf, LCLProc, LCLType, LMessages, LResources,
+  SysUtils, Classes, Controls, Graphics, ExtCtrls, Forms, ImgList, ActnList,
   JvXPCore, JvXPCoreUtils;
 
 type
@@ -224,7 +224,7 @@ type
     function GetItem(Index: Integer): TJvXPBarItem;
     procedure SetItem(Index: Integer; Value: TJvXPBarItem);
   protected
-    procedure Update(Item: TCollectionItem); override;
+    procedure Update({%H-}Item: TCollectionItem); override;
     function GetOwner: TPersistent; override;
     class function GetItemClass: TJvXPBarItemClass; virtual;
   public
@@ -557,6 +557,8 @@ uses
 
 resourcestring
   RsUntitled = 'untitled';
+
+const
   RsUntitledFmt = '(%s %d)';
   RsHintShortcutFmt = '%s (%s)';
 
@@ -1442,14 +1444,14 @@ begin
   FTopSpace := 5;
 
   FFont := TFont.Create;
-  FFont.Color := dxColor_FontColorXP; //$00840000;
+  FFont.Color := dxColor_FontColorXP;   // $00840000;
   FFont.Size := 0; //8;
   FFont.OnChange := @FontChange;
   FHeaderHeight := 28;
   FHeaderRounded := True;
   FGradientWidth := 0;
   FHeaderFont := TFont.Create;
-  FHeaderFont.Color := dxColor_HeaderFontColorXP; //$00840000;
+  FHeaderFont.Color := dxColor_HeaderFontColorXP;  // $00840000;
   FHeaderFont.Size := 0; //8;
   FHeaderFont.Style := [fsBold];
   FHeaderFont.OnChange := @FontChange;

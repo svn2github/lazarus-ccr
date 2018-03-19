@@ -31,7 +31,7 @@ interface
 
 uses
   SysUtils, Classes,
-  Messages, Graphics, Forms, Controls, StdCtrls,
+  Graphics, Forms, Controls, StdCtrls,
   JvMarkupCommon;
 
 type

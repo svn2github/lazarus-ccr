@@ -34,7 +34,9 @@ unit JvButton;
 interface
 
 uses
-  Classes, Controls, Graphics, JvComponent, JvConsts, JvTypes, LMessages, Menus;
+  LMessages,
+  Classes, Controls, Graphics, Menus,
+  JvComponent, JvConsts, JvTypes;
 
 type
   TJvButtonMouseState = (bsMouseInside, bsMouseDown);

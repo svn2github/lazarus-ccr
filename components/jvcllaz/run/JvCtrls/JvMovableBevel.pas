@@ -30,9 +30,7 @@ unit JvMovableBevel;
 interface
 
 uses
-  SysUtils, Classes,
-  //Windows, Messages,
-  Controls, Forms, ExtCtrls,
+  SysUtils, Classes, Controls, Forms, ExtCtrls,
   JvExExtCtrls;
 
 type

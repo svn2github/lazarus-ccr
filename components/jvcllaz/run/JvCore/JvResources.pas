@@ -28,7 +28,7 @@ Known Issues:
 
 unit JvResources;
 
-//{.$I jvcl.inc}
+{$mode objfpc}{$H+}
 
 interface
 

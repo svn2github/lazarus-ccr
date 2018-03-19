@@ -100,9 +100,9 @@ type
   public
     {$IFDEF JVVALIDATORS_SUPPORTS_DBCONTROLS}
     // return a TDataLink if the control is a DB control or nil if is not
-    function GetDataLink(AControl:TControl):TDataLink;virtual;
+    function GetDataLink(AControl:TControl):TDataLink; virtual;
     {$ELSE}
-    function GetDataLink(AControl:TControl):TObject;virtual;
+    function GetDataLink(AControl:TControl):TObject; virtual;
     {$ENDIF JVVALIDATORS_SUPPORTS_DBCONTROLS}
     // register a new base validator class. DisplayName is used by the design-time editor.
     // A class with an empty DisplayName will not sshow up in the editor

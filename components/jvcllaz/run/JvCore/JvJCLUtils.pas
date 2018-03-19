@@ -46,7 +46,7 @@ interface
 //          the JCL has the same problem with CLX it should not make any difference.
 
 uses
-  Classes, Graphics, LCLIntf, LCLType, LMessages;
+  Classes, Graphics, LCLIntf, LCLType;
   
 const
 (******************** NOT CONVERTED
@@ -8284,11 +8284,11 @@ begin
   if hDLL <> 0 then
   begin
     Result := True;
-    (*  You must get this function explicitly
+    {  You must get this function explicitly
         because earlier versions of the DLL's
         don't implement this function.
         That makes the lack of implementation
-        of the function a version marker in itself.   *)
+        of the function a version marker in itself.   }
     @pDllGetVersion := GetProcAddress(hDLL, PChar('DllGetVersion'));
     if Assigned(pDllGetVersion) then
     begin
@@ -8301,7 +8301,7 @@ begin
         pdwMinor := Dvi.dwMinorVersion;
       end;
     end
-    else (*   If GetProcAddress failed, the DLL is a version previous to the one  shipped with IE 3.x. *)
+    else {   If GetProcAddress failed, the DLL is a version previous to the one  shipped with IE 3.x. }
     begin
       pdwMajor := 4;
       pdwMinor := 0;

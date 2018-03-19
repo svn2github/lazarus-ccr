@@ -59,9 +59,7 @@ interface
 
 uses
   LCLIntf, LCLType, LMessages,
-  Messages, CommCtrl,
   Classes, Controls, ExtCtrls, ComCtrls, DB;
-//  JvExtComponent;
 
 type
   TJvDBTreeNode = class;
@@ -106,7 +104,7 @@ type
     procedure SetStartMasterValue(Value: string);
     function GetDataSource: TDataSource;
     procedure SetDataSource(Value: TDataSource);
-    procedure CMGetDataLink(var Msg: TMessage); message CM_GETDATALINK;
+    procedure CMGetDataLink(var Msg: TLMessage); message CM_GETDATALINK;
     { wp -- removed
     procedure SetMirror(Value: Boolean);
     }
@@ -577,7 +575,7 @@ begin
     Value.FreeNotification(Self);
 end;
 
-procedure TJvCustomDBTreeView.CMGetDataLink(var Msg: TMessage);
+procedure TJvCustomDBTreeView.CMGetDataLink(var Msg: TLMessage);
 begin
   Msg.Result := LRESULT(FDataLink);
 end;
@@ -1397,10 +1395,10 @@ end;
 procedure TJvCustomDBTreeView.TimerDnDTimer(Sender: TObject);
 begin
   if YDragPos < DnDScrollArea then
-    Perform(WM_VSCROLL, SB_LINEUP, 0)
+    Perform(LM_VSCROLL, SB_LINEUP, 0)
   else
     if YDragPos > ClientHeight - DnDScrollArea then
-      Perform(WM_VSCROLL, SB_LINEDOWN, 0);
+      Perform(LM_VSCROLL, SB_LINEDOWN, 0);
 end;
 
 procedure TJvCustomDBTreeView.DragOver(Source: TObject; X, Y: Integer;

@@ -30,8 +30,7 @@ unit JvYearGridEditForm;
 interface
 
 uses
-  SysUtils, Classes, Windows, Messages, Graphics, Controls,
-  Forms, Dialogs, StdCtrls, Buttons, ExtCtrls,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, Buttons, ExtCtrls,
   JvComponent;
 
 type

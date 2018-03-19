@@ -35,7 +35,7 @@ unit JvComponent;
 interface
 
 uses
-  Classes, Controls, Forms, LMessages, JvExControls;
+  Classes, Controls, Forms, JvExControls;
 
 type
   TJvGraphicControl = TJvExGraphicControl;

@@ -34,8 +34,9 @@ unit JvXPCoreUtils;
 interface
 
 uses
-  Classes, Controls, Graphics, LCLIntf, LCLType, SysUtils,
-  TypInfo, JvXPCore;
+  LCLIntf, LCLType, SysUtils,
+  Classes, Controls, Graphics, TypInfo,
+  JvXPCore;
 
 function JvXPMethodsEqual(const Method1, Method2: TMethod): Boolean;
 

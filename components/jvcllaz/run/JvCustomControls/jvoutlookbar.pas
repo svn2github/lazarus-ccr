@@ -48,9 +48,6 @@ uses
   LCLType, LCLIntf, LMessages, Types, LCLVersion,
   SysUtils, Classes, ActnList,
   Buttons, Controls, Graphics, ImgList, Forms, StdCtrls, ExtCtrls, Themes,
-  {$IFDEF HAS_UNIT_SYSTEM_UITYPES}
-  System.UITypes,
-  {$ENDIF HAS_UNIT_SYSTEM_UITYPES}
   JvJCLUtils, JvComponent;
 
 const

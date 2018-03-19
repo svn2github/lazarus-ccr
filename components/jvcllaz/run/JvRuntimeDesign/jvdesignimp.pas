@@ -5,12 +5,9 @@ unit JvDesignImp;
 interface
 
 uses
-  {$IFDEF UNITVERSIONING}
-  JclUnitVersioning,
-  {$ENDIF UNITVERSIONING}
-  LCLProc, LCLType, LResources, LCLIntf, LMessages, SysUtils, Classes, Controls, Graphics,
-  Forms, ExtCtrls, Contnrs, JvDesignUtils,
-  JvDesignSurface;
+  LCLProc, LCLType, LResources, LCLIntf, LMessages,
+  SysUtils, Classes, Controls, Graphics, Forms, ExtCtrls, Contnrs,
+  JvDesignUtils, JvDesignSurface;
 
 const
   cJvDesignDefaultHandleWidth = 8;
@@ -178,7 +175,7 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
   end;
 
-    TJvDesignDesigner = class( TIDesigner)// TComponent, IDesignerHook)
+  TJvDesignDesigner = class(TIDesigner)// TComponent, IDesignerHook)
   private
     FMessenger: TJvDesignCustomMessenger;
   public
@@ -276,15 +273,6 @@ type
     procedure DesignComponent(AComponent: TComponent; ADesigning: Boolean); override;
   end;
 
-{$IFDEF UNITVERSIONING}
-const
-  UnitVersioning: TUnitVersionInfo = (
-    RCSfile: '$URL: https://jvcl.svn.sourceforge.net/svnroot/jvcl/trunk/jvcl/run/JvDesignImp.pas $';
-    Revision: '$Revision: 12931 $';
-    Date: '$Date: 2010-11-28 15:36:50 +0200 (Κυρ, 28 Νοε 2010) $';
-    LogPath: 'JVCL\run'
-  );
-{$ENDIF UNITVERSIONING}
 
 implementation
 
@@ -1466,15 +1454,9 @@ begin
 end;
 
 initialization
-  {$IFDEF UNITVERSIONING}
-  RegisterUnitVersion(HInstance, UnitVersioning);
-  {$ENDIF UNITVERSIONING}
 
 finalization
   FreeShadedBits;
-  {$IFDEF UNITVERSIONING}
-  UnregisterUnitVersion(HInstance);
-  {$ENDIF UNITVERSIONING}
 
 end.
 

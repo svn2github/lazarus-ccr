@@ -27,6 +27,8 @@ Known Issues:
 // Conversion is done in incremental way: as types / classes / routines
 // are needed they are converted.
 
+{$mode objfpc}{$H+}
+
 unit JvExExtCtrls;
 
 {MACROINCLUDE JvExControls.macros}

@@ -33,15 +33,8 @@ interface
 
 uses
   LCLIntf, Types,
-  {$IFDEF MSWINDOWS}
-  //ShellAPI,
-  {$ENDIF MSWINDOWS}
-  //Windows, Messages,
   Graphics, Controls, Forms, Dialogs, Grids, Menus, Clipbrd,
   SysUtils, StdCtrls, Classes,
-  {$IFDEF HAS_UNIT_SYSTEM_UITYPES}
-  System.UITypes,
-  {$ENDIF HAS_UNIT_SYSTEM_UITYPES}
   JvJVCLUtils, JvTypes;
 
 const

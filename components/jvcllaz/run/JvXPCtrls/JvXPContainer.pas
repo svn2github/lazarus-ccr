@@ -33,7 +33,8 @@ unit JvXPContainer;
 interface
 
 uses
-  TypInfo, Classes, LCLIntf, LCLProc, LCLType, Controls, Graphics, StdCtrls, ExtCtrls,
+  LCLIntf, LCLProc, LCLType,
+  TypInfo, Classes, Controls, Graphics, StdCtrls, ExtCtrls,
   JvXPCore, JvXPCoreUtils;
 
 type
