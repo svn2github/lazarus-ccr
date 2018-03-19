@@ -1,3 +1,6 @@
+tjvtabbar.bmp
+tjvmoderntabbarpainter.bmp
+Tjvtabbarxppainter.bmp
 tjvoutlookbar.bmp
 tjvtimeline.bmp
 tjvtmtimeline.bmp

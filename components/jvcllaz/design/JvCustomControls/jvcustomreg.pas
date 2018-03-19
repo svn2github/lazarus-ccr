@@ -15,12 +15,15 @@ implementation
 
 uses
   Classes, ImgList, Controls, PropEdits, GraphPropEdits, ComponentEditors,
-  JvDsgnConsts, JvOutlookBar, JvOutlookBarEditors,
+  JvDsgnConsts,
+  JvOutlookBar, JvOutlookBarEditors,
+  JvTabBar, JvTabBarXPPainter,
   JvTimeLine, JvTMTimeline, JvTimeLineEditor;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
+    TJvTabBar, TJvModernTabBarPainter, TJvTabBarXPPainter,
     TJvOutlookBar,
     TJvTimeLine,
     TJvTMTimeLine
