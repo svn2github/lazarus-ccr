@@ -14,9 +14,13 @@ implementation
 {$R ..\..\resource\jvpagecompsreg.res}
 
 uses
-  JvDsgnConsts, JvNavigationPane;
+  ImgList, PropEdits,
+  JvDsgnConsts,
+  JvNavigationPane, JvNavPaneEditors;
 
 procedure Register;
+const
+  cImageIndex = 'ImageIndex';
 begin
   RegisterComponents(RsPaletteJvcl, [  // was: RsPaletteNavPane
     TJvNavigationPane,
@@ -25,6 +29,10 @@ begin
     TJvOutlookSplitter,
     TJvNavPaneStyleManager, TJvNavPaneToolPanel
   ]);
+  RegisterPropertyEditor(TypeInfo(TImageIndex), TJvNavPanelPage, cImageIndex, TJvNavPanePageImageIndexProperty);
+  RegisterPropertyEditor(TypeInfo(TImageIndex), TJvNavPanelHeader, cImageIndex, TJvNavPanelHeaderImageIndexProperty);
+  RegisterPropertyEditor(TypeInfo(TImageIndex), TJvNavPanelButton, cImageIndex, TJvNavPanelButtonImageIndexProperty);
+  RegisterPropertyEditor(TypeInfo(TImageIndex), TJvNavIconButton, cImageIndex, TJvNavIconButtonImageIndexProperty);
 end;
 
 end.
