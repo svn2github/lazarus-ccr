@@ -26,7 +26,7 @@ Known Issues:
 unit JvTabBar;
 
 {$MODE objfpc}{$H+}
-{$DEFINE JVCLThemesEnabled}
+{.$DEFINE JVCLThemesEnabled}
 
 interface
 
@@ -217,12 +217,12 @@ type
     procedure SetTabWidth(Value: Integer);
   protected
     procedure DrawBackground(Canvas: TCanvas; TabBar: TJvCustomTabBar; R: TRect); override;
-    procedure DrawTab(Canvas: TCanvas; Tab: TJvTabBarItem; R: TRect); override;
+    procedure DrawTab(Canvas: TCanvas; Tab: TJvTabBarItem; ATabRect: TRect); override;
     procedure DrawDivider(Canvas: TCanvas; LeftTab: TJvTabBarItem; R: TRect); override;
     procedure DrawMoveDivider(Canvas: TCanvas; Tab: TJvTabBarItem; MoveLeft: Boolean); override;
     function GetDividerWidth(Canvas: TCanvas; LeftTab: TJvTabBarItem): Integer; override;
     function GetTabSize(Canvas: TCanvas; Tab: TJvTabBarItem): TSize; override;
-    function GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem; R: TRect): TRect; override;
+    function GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem; ATabRect: TRect): TRect; override;
     function Options: TJvTabBarPainterOptions; override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -499,28 +499,28 @@ begin
     ACanvas.FillRect(R);
     if IsDown then begin
       ACanvas.Pen.Color := clBlack;
-      ACanvas.Line(R.Left, R.Top, R.Left, R.Bottom);  // left
-      ACanvas.Line(R.Left, R.Top, R.Right, R.Top);    // top
+      ACanvas.Line(R.Left, R.Top, R.Left, R.Bottom-1);  // left
+      ACanvas.Line(R.Left, R.Top, R.Right-1, R.Top);    // top
       ACanvas.Pen.Color := clBtnHighlight;
-      ACanvas.Line(R.Right, R.Top, R.Right, R.Bottom);    // right
-      ACanvas.Line(R.Left, R.Bottom, R.Right, R.Bottom);  // bottom
+      ACanvas.Line(R.Right-1, R.Top, R.Right-1, R.Bottom-1);    // right
+      ACanvas.Line(R.Left, R.Bottom-1, R.Right-1, R.Bottom-1);  // bottom
       InflateRect(R, -1, -1);
       ACanvas.Pen.Color := clBtnShadow;
-      ACanvas.Line(R.Left, R.Top, R.Left, R.Bottom);  // left
-      ACanvas.Line(R.Left, R.Top, R.Right, R.Top);    // top
+      ACanvas.Line(R.Left, R.Top, R.Left, R.Bottom-1);  // left
+      ACanvas.Line(R.Left, R.Top, R.Right-1, R.Top);    // top
     end else begin
       ACanvas.Pen.Color := clBlack;
-      ACanvas.Line(R.Right, R.Top, R.Right, R.Bottom);    // right
-      ACanvas.Line(R.Left, R.Bottom, R.Right, R.Bottom);  // bottom
+      ACanvas.Line(R.Right-1, R.Top, R.Right-1, R.Bottom-1);    // right
+      ACanvas.Line(R.Left, R.Bottom-1, R.Right-1, R.Bottom-1);  // bottom
       dec(R.Right);
       dec(R.Bottom);
       ACanvas.Pen.Color := clBtnHighlight;
-      ACanvas.Line(R.Left, R.Top, R.Left, R.Bottom);  // left
-      ACanvas.Line(R.Left, R.Top, R.Right, R.Top);    // top
+      ACanvas.Line(R.Left, R.Top, R.Left, R.Bottom-1);  // left
+      ACanvas.Line(R.Left, R.Top, R.Right-1, R.Top);    // top
       Inc(R.Top);
       Inc(R.Left);
-      ACanvas.Line(R.Right, R.Top, R.Right, R.Bottom);    // right
-      ACanvas.Line(R.Left, R.Bottom, R.Right, R.Bottom);  // bottom
+      ACanvas.Line(R.Right-1, R.Top, R.Right-1, R.Bottom-1);    // right
+      ACanvas.Line(R.Left, R.Bottom-1, R.Right-1, R.Bottom-1);  // bottom
     end;
   end else begin
     ACanvas.Pen.Color := clWindowFrame;
@@ -2228,10 +2228,14 @@ begin
   end;
 end;
 
-procedure TJvModernTabBarPainter.DrawTab(Canvas: TCanvas; Tab: TJvTabBarItem; R: TRect);
+procedure TJvModernTabBarPainter.DrawTab(Canvas: TCanvas; Tab: TJvTabBarItem;
+  ATabRect: TRect);
 var
-  CloseR: TRect;
+  R, CloseR: TRect;
+  ts: TTextStyle;
 begin
+  R := ATabRect;
+
   with Canvas do
   begin
     Brush.Style := bsSolid;
@@ -2279,7 +2283,7 @@ begin
       else
         Brush.Color := CloseColor;
 
-      CloseR := GetCloseRect(Canvas, Tab, R);
+      CloseR := GetCloseRect(Canvas, Tab, ATabRect);
       Pen.Color := CloseRectColor;
       if not Tab.Enabled then
         Pen.Color := CloseRectColorDisabled;
@@ -2301,7 +2305,8 @@ begin
       else
         Pen.Color := CloseCrossColorDisabled;
 
-      // close cross
+      // Draw close cross
+      MoveTo(CloseR.Left + 3, CloseR.Top + 3);
       MoveTo(CloseR.Left + 3, CloseR.Top + 3);
       LineTo(CloseR.Right - 3, CloseR.Bottom - 3);
       MoveTo(CloseR.Left + 4, CloseR.Top + 3);
@@ -2316,17 +2321,20 @@ begin
       if Tab.Modified then
         FillRect(Rect(CloseR.Left + 5, CloseR.Top + 4, CloseR.Right - 5, CloseR.Bottom - 4));
 
-      R.Left := CloseR.Right;
+      R.Right := CloseR.Left;
+     // R.Left := CloseR.Right;
     end;
 
     InflateRect(R, -1, -1);
 
-    if not Tab.TabBar.CloseButton then
-      Inc(R.Left, 2);
+  //  if not Tab.TabBar.CloseButton then
+      Dec(R.Right, 2);
+//      Inc(R.Left, 2);
 
     if (Tab.ImageIndex <> -1) and (Tab.GetImages <> nil) then
     begin
-      Tab.GetImages.Draw(Canvas, R.Left, R.Top + (R.Bottom - R.Top - Tab.GetImages.Height) div 2,
+      inc(R.Left, 2);
+      Tab.GetImages.Draw(Canvas, R.Left, (R.Top + R.Bottom - Tab.GetImages.Height) div 2,
         Tab.ImageIndex, Tab.Enabled);
       Inc(R.Left, Tab.GetImages.Width + 2);
     end;
@@ -2342,22 +2350,23 @@ begin
       Font.Assign(Self.DisabledFont);
 
     Brush.Style := bsClear;
-    TextRect(R, R.Left + 3, R.Top + 3, Tab.Caption);
+    ts := TextStyle;
+    ts.EndEllipsis := true;
+    ts.Clipping := true;
+    TextRect(R, R.Left, (R.Top + R.Bottom - TextHeight('Tg')) div 2, Tab.Caption, ts);
   end;
 end;
 
-function TJvModernTabBarPainter.GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem; R: TRect): TRect;
+function TJvModernTabBarPainter.GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem;
+  ATabRect: TRect): TRect;
+const
+  H = 12;
+  W = 12;
 begin
-  (*
-  Result.Right := R.Right - 5;
-  Result.Top := R.Top + ((R.Bottom div 2) - 8);
-  Result.Left := Result.Right - 15;
-  Result.Bottom := Result.Top + 15;
-  *)
-  Result.Left := R.Left + 5;
-  Result.Top :=  R.Top + 5;
-  Result.Right := Result.Left + 12;
-  Result.Bottom := Result.Top + 11;
+  Result.Right := ATabRect.Right - 5;
+  Result.Left := Result.Right - W;
+  Result.Top := (ATabRect.Top + ATabRect.Bottom - H) div 2;
+  Result.Bottom := Result.Top + W;
 end;
 
 function TJvModernTabBarPainter.GetDividerWidth(Canvas: TCanvas; LeftTab: TJvTabBarItem): Integer;
