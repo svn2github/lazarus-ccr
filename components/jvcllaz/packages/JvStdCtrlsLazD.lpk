@@ -23,16 +23,19 @@
         <UnitName Value="JvStdCtrlsReg"/>
       </Item1>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="4">
       <Item1>
-        <PackageName Value="JvCoreLazD"/>
+        <PackageName Value="IDEIntf"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvStdCtrlsLazR"/>
+        <PackageName Value="JvCoreLazD"/>
       </Item2>
       <Item3>
-        <PackageName Value="FCL"/>
+        <PackageName Value="JvStdCtrlsLazR"/>
       </Item3>
+      <Item4>
+        <PackageName Value="FCL"/>
+      </Item4>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

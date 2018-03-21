@@ -23,16 +23,19 @@
         <UnitName Value="JvPageCompsReg"/>
       </Item1>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="4">
       <Item1>
-        <PackageName Value="JvCoreLazD"/>
+        <PackageName Value="IDEIntf"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvPageCompsR"/>
+        <PackageName Value="JvCoreLazD"/>
       </Item2>
       <Item3>
-        <PackageName Value="FCL"/>
+        <PackageName Value="JvPageCompsR"/>
       </Item3>
+      <Item4>
+        <PackageName Value="FCL"/>
+      </Item4>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
