@@ -159,7 +159,8 @@ begin
     begin
       if Assigned(C.Field) then
       begin
-        S:=C.Field.DisplayText;
+        //S:=C.Field.DisplayText;
+        S:=THackRxDBGrid(FRxDBGrid).GetFieldDisplayText(C.Field, C);
         if (C.KeyList.Count > 0) and (C.PickList.Count > 0) then
         begin
           J := C.KeyList.IndexOf(S);

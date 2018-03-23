@@ -304,6 +304,7 @@ begin
   Result:=TRxDBLookupCombo.Create(nil);
   TRxDBLookupCombo(Result).DisplayAllFields:=true;
   TRxDBLookupCombo(Result).OnClosePopup:=@RxDBLookupComboBox1CloseUp;
+  TRxDBLookupCombo(Result).Style:=rxcsDropDownList;
 end;
 
 procedure TlrRxDBLookupComboBox.AfterLoad;
