@@ -54,6 +54,7 @@ type
     btnIsolate: TButton;
     btnUpdateIsolate: TButton;
     btnOpen: TButton;
+    btnDeleteFormat: TButton;
     chkBinText: TCheckBox;
     oDlg: TOpenDialog;
     sDlg: TSaveDialog;
@@ -69,6 +70,7 @@ type
     radStream: TRadioButton;
     radEncoding: TRadioButton;
     Splitter1: TSplitter;
+    procedure btnDeleteFormatClick(Sender: TObject);
     procedure btnOpenClick(Sender: TObject);
     procedure btnUpdateIsolateClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
@@ -80,7 +82,9 @@ type
   private
     fFilename: string;
     procedure DumpClipboard;
+    procedure IsolateFormat(updateWithContent: boolean);
     procedure UpdateFormatList;
+    procedure DeleteFormat;
   public
 
   end;
@@ -239,31 +243,8 @@ begin
 end;
 
 procedure TfrmClipboardAnalizer.btnUpdateIsolateClick(Sender: TObject);
-var
-  aIndex: Integer;
-  formatID: TClipboardFormat;
-  stream: TMemoryStream;
 begin
-  aIndex := lstTypes.ItemIndex;
-  if aIndex<0 then
-    exit;
-
-  formatID := TClipboardFormat(lstTypes.Items.Objects[aIndex]);
-
-  stream := TMemoryStream.Create;
-  try
-    memoDump.Lines.SaveToStream(stream);
-    stream.position := 0;
-
-    Clipboard.Open;
-    Clipboard.Clear;
-    Clipboard.AddFormat(formatID, stream);
-    Clipboard.Close;
-
-    UpdateFormatList;
-  finally
-    stream.free;
-  end;
+  IsolateFormat(true);
 end;
 
 procedure TfrmClipboardAnalizer.btnOpenClick(Sender: TObject);
@@ -274,32 +255,14 @@ begin
   end;
 end;
 
-procedure TfrmClipboardAnalizer.btnIsolateClick(Sender: TObject);
-var
-  aIndex: Integer;
-  formatID: TClipboardFormat;
-  stream: TMemoryStream;
+procedure TfrmClipboardAnalizer.btnDeleteFormatClick(Sender: TObject);
 begin
-  aIndex := lstTypes.ItemIndex;
-  if aIndex<0 then
-    exit;
+  DeleteFormat;
+end;
 
-  formatID := TClipboardFormat(lstTypes.Items.Objects[aIndex]);
-
-  stream := TMemoryStream.Create;
-  try
-    ClipboardGetFormat(formatID, stream);
-    stream.position := 0;
-
-    Clipboard.Open;
-    Clipboard.Clear;
-    Clipboard.AddFormat(formatID, stream);
-    Clipboard.Close;
-
-    UpdateFormatList;
-  finally
-    stream.free;
-  end;
+procedure TfrmClipboardAnalizer.btnIsolateClick(Sender: TObject);
+begin
+  IsolateFormat(false);
 end;
 
 procedure TfrmClipboardAnalizer.btnReOpenClick(Sender: TObject);
@@ -389,6 +352,37 @@ begin
   end;
 end;
 
+procedure TfrmClipboardAnalizer.IsolateFormat(updateWithContent: boolean);
+var
+  stream: TMemoryStream;
+  formatID: TClipboardFormat;
+  aIndex: Integer;
+begin
+  aIndex := lstTypes.ItemIndex;
+  if aIndex<0 then
+    exit;
+
+  formatID := TClipboardFormat(lstTypes.Items.Objects[aIndex]);
+
+  stream := TMemoryStream.Create;
+  try
+    if updateWithContent then
+      memoDump.Lines.SaveToStream(stream)
+    else
+      ClipboardGetFormat(formatID, stream);
+    stream.position := 0;
+
+    Clipboard.Open;
+    Clipboard.Clear;
+    Clipboard.AddFormat(formatID, stream);
+    Clipboard.Close;
+
+    UpdateFormatList;
+  finally
+    stream.free;
+  end;
+end;
+
 procedure TfrmClipboardAnalizer.UpdateFormatList;
 var
   L: TStringList;
@@ -411,6 +405,48 @@ begin
   lstTypes.Items.Assign(L);
 
   L.Free;
+end;
+
+type
+  TFormatItem = record
+    formatID: TClipboardFormat;
+    stream: TMemoryStream;
+  end;
+
+procedure TfrmClipboardAnalizer.DeleteFormat;
+var
+  item: TFormatItem;
+  Lista: array of TFormatItem;
+  aIndex, n: Integer;
+begin
+
+  for aIndex:=0 to lstTypes.Count-1 do begin
+    if lstTypes.ItemIndex=aIndex then
+      continue;
+    item.formatID := TClipboardFormat(lstTypes.Items.Objects[aIndex]);
+    item.stream := TMemoryStream.Create;
+    ClipboardGetFormat(item.formatID, item.stream);
+    item.stream.Position := 0;
+    n := Length(Lista);
+    SetLength(lista, n+1);
+    lista[n] := item;
+  end;
+
+  if length(lista)=0 then
+    exit;
+
+  try
+    Clipboard.Open;
+    Clipboard.Clear;
+    for aIndex := 0 to Length(Lista)-1 do begin
+      Clipboard.AddFormat(lista[aIndex].formatID, lista[aIndex].stream);
+      lista[aIndex].stream.free;
+    end;
+  finally
+    Clipboard.Close;
+    UpdateFormatList;
+  end;
+
 end;
 
 end.
