@@ -66,6 +66,9 @@ begin
   inherited Create(AOwner);
 //  ControlStyle := ControlStyle - [csOpaque];
   ParentColor := true;
+  {$IFDEF WINDOWS}
+  DoubleBuffered := true;
+  {$ENDIF}
 end;
 
 destructor TmbBasicPicker.Destroy;
