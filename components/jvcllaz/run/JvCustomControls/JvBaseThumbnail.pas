@@ -428,6 +428,7 @@ begin
     inherited KeyPress(Key);
 end;
 
+
 //=== { TJvBaseThumbImage } ==================================================
 
 constructor TJvBaseThumbImage.Create(AOwner: TComponent);

@@ -32,7 +32,7 @@ interface
 
 uses
   Classes, SysUtils, Controls, Forms,
-  StdCtrls, ExtCtrls, FileCtrl, ComCtrls, ShellCtrls,
+  StdCtrls, ExtCtrls, FileCtrl, ComCtrls, ShellCtrls, Spin,
   JvThumbImage, JvThumbNails, JvBaseThumbnail, JvExExtCtrls;
 
 type
@@ -42,6 +42,7 @@ type
   TJvThumbnailChildForm = class(TForm)
     Bevel2: TBevel;
     Panel1: TPanel;
+    SpinEdit1: TSpinEdit;
     Splitter2: TSplitter;
     Panel6: TPanel;
     Splitter4: TSplitter;
@@ -86,6 +87,7 @@ type
     procedure BtnInvertClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
+    procedure SpinEdit1Change(Sender: TObject);
     procedure ThumbNailClick(Sender: TObject);
     procedure Panel10Resize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -135,6 +137,11 @@ begin
     Node.ImageIndex := 0
   else
     Node.ImageIndex := 1;
+end;
+
+procedure TJvThumbnailChildForm.SpinEdit1Change(Sender: TObject);
+begin
+  Thumbnail.Margin := SpinEdit1.Value;
 end;
 
 procedure TJvThumbnailChildForm.CbAsButtonClick(Sender: TObject);
@@ -189,6 +196,7 @@ begin
   //ThumbImage.Picture.Free;
   GbTitlePlacement.ItemIndex := integer(ThumbNail.titlePlacement);
   GbAngle.ItemIndex := integer(ThumbImage.angle);
+  SpinEdit1.Value := Thumbnail.Margin;
 end;
 
 procedure TJvThumbnailChildForm.GbAngleClick(Sender: TObject);

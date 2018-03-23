@@ -79,8 +79,8 @@ type
     FStream: TStream;
     FImageWidth: Longint;
     FImageHeight: Longint;
-    FClientHeight: Word;
-    FClientWidth: Word;
+    FThumbHeight: Word;
+    FThumbWidth: Word;
     FShadowObj: TShape;
     FUpdated: Boolean;
     FImageReady: Boolean;
@@ -97,6 +97,7 @@ type
     FShowShadow: Boolean;
     FHShadowOffset: Word;
     FVShadowOffset: Word;
+    FMargin: Integer;
     procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
     (************** NOT CONVERTED ***
     procedure PhotoOnProgress(Sender: TObject; Stage: TProgressStage;
@@ -108,11 +109,9 @@ type
     function LoadFile(AFile: string): string;
     function GetFileName: string;
     procedure CalculateImageSize; virtual;
-    procedure SetClientWidth(AWidth: Word);
     procedure SetDummyStr(AStr: string);
     procedure SetMinimizeMemory(Min: Boolean);
     procedure SetDummyCard(AInt: Longint);
-    procedure SetClientHeight(AHeight: Word);
     procedure SetShowTitle(const AState: Boolean);
     procedure SetTitlePlacement(const AState: TTitlePos);
     procedure SetTitle(const Value: string);
@@ -121,8 +120,15 @@ type
     procedure SetTitleFont(const Value: TFont);
     procedure GetFileInfo(AName: string);
     procedure SetShowShadow(AShow: Boolean);
+    procedure SetMargin(AValue: Integer);
 //    procedure SetShadowColor(aColor: TColor);
+
+    procedure UpdateThumbHeight;
+    procedure UpdateThumbWidth;
+    procedure UpdateTitlePanelHeight;
+    function IsTitleFontStored: Boolean;
   protected
+    procedure CreateHandle; override;
     procedure THSizeChanged(var Msg: TLMessage); message TH_IMAGESIZECHANGED;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: Integer); override;
@@ -140,12 +146,10 @@ type
   published
     property FileName: string read GetFileName write SetFileName;
     property Title: string read FTitle write SetTitle;
-    property TitleColor: TColor read FTitleColor write SetTitleColor;
-    property TitleFont: TFont read FTitleFont write SetTitleFont;
+    property TitleColor: TColor read FTitleColor write SetTitleColor default clDefault;
+    property TitleFont: TFont read FTitleFont write SetTitleFont stored IsTitleFontStored;
     property ImageReady: Boolean read FImageReady;
     property OnGetTitle: TTitleNotify read FOnGetTitle write FOnGetTitle;
-    property ClientWidth: Word read FClientWidth write SetClientWidth;
-    property ClientHeight: Word read FClientHeight write SetClientHeight;
     { Do not store dummies }
     property FileSize: Longint read FDFileSize write SetDummyCard stored False;
     property FileAccessed: string read FDFileAccessed write SetDummyStr stored False;
@@ -153,14 +157,15 @@ type
     property FileChanged: string read FDFileChanged write SetDummyStr stored False;
     property ImageWidth: Longint read FImageWidth default 0;
     property ImageHeight: Longint read FImageHeight default 0;
-    property AsButton: Boolean read FAsButton write FAsButton;
-    property MinimizeMemory: Boolean read FMinimizeMemory write SetMinimizeMemory;
-    property StreamFileType: TGRFKind read FStreamFileKind write FStreamFileKind;
-    property ShowTitle: Boolean read FShowTitle write SetShowTitle;
-    property TitlePlacement: TTitlePos read FTitlePlacement write SetTitlePlacement;
-    property AutoLoad: Boolean read FAutoLoad write FAutoLoad;
+    property AsButton: Boolean read FAsButton write FAsButton default false;
+    property Margin: Integer read FMargin write SetMargin default 8;
+    property MinimizeMemory: Boolean read FMinimizeMemory write SetMinimizeMemory default true;
+    property StreamFileType: TGRFKind read FStreamFileKind write FStreamFileKind default grBMP;
+    property ShowTitle: Boolean read FShowTitle write SetShowTitle default true;
+    property TitlePlacement: TTitlePos read FTitlePlacement write SetTitlePlacement default tpUp;
+    property AutoLoad: Boolean read FAutoLoad write FAutoLoad default true;
     property ShadowColor: TColor read FShadowColor write FShadowColor;
-    property ShowShadow: Boolean read FShowShadow write SetShowShadow;
+    property ShowShadow: Boolean read FShowShadow write SetShowShadow default false;
   end;
 
 
@@ -173,16 +178,19 @@ uses
 constructor TJvThumbnail.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FPhotoName := TJvFileName.Create;
+  FShowTitle := True;
+  FMargin := 8;
   FHShadowOffset := 3;
   FVShadowOffset := 3;
   FShowShadow := False;
   FShadowColor := clSilver;
-  FShadowObj := TShape.Create(Self);
-  FShadowObj.Visible := FShowShadow;
-  FShadowObj.Brush.Color := FShadowColor;
-  FShadowObj.Parent := Self;
-  FShadowObj.Pen.Style := psClear;
+  FTitleColor := clDefault; //clBtnFace;
+  FTitlePlacement := tpUp;
+  FTitle := '';
+  FUpdated := False;
+
+  FPhotoName := TJvFileName.Create;
+
   Photo := TJvThumbImage.Create(Self);
   Photo.AutoSize := False;
   Photo.Align := alNone;
@@ -191,25 +199,31 @@ begin
   Photo.OnProgress := PhotoOnProgress;
   **************)
 
+  FShadowObj := TShape.Create(Self);
+  FShadowObj.Visible := FShowShadow;
+  FShadowObj.Brush.Color := FShadowColor;
+  FShadowObj.Parent := Self;
+  FShadowObj.Pen.Style := psClear;
   FShadowObj.Width := Photo.Width;
   FShadowObj.Height := Photo.Height;
   FShadowObj.Left := Photo.Left + FHShadowOffset;
   FShadowObj.Top := Photo.Top + FVShadowOffset;
+
+  FTitleFont := TFont.Create;
+  FTitleFont.Name := 'default';
+  FTitleFont.Size := 0;
+  FTitleFont.OnChange := @RefreshFont;
+
   FTitlePanel := TJvThumbTitle.Create(Self);
   FTitlePanel.Align := alTop;
   FTitlePanel.Height := 15;
   FTitlePanel.Alignment := taCenter;
-  FTitleColor := clBtnFace;
   FTitlePanel.Color := FTitleColor;
-  FTitleFont := TFont.Create;
-  FTitleFont.OnChange := @RefreshFont;
   FTitlePanel.BevelOuter := bvLowered;
   FTitlePanel.ParentColor := True;
-  FTitlePanel.Color := Self.Color;
-  if FTitlePlacement = tpNone then
-    FTitlePanel.Visible := False;
-  FTitle := '';
-  FUpdated := False;
+//  FTitlePanel.Color := Self.Color;
+  FTitlePanel.Visible := (FTitlePlacement <> tpNone) and FShowTitle;
+
   InsertControl(Photo);
   InsertControl(FTitlePanel);
   Align := alNone;
@@ -260,6 +274,31 @@ begin
   inherited BoundsChanged;
 end;
 
+procedure TJvThumbnail.CreateHandle;
+begin
+  inherited;
+  if not (csDesigning in ComponentState) and (FTitleColor = clDefault) then
+    FTitleColor := Color;
+  UpdateTitlePanelHeight;
+end;
+
+function TJvThumbnail.IsTitleFontStored: Boolean;
+begin
+  Result := not FTitleFont.IsDefault;
+end;
+
+procedure TJvThumbnail.UpdateTitlePanelHeight;
+var
+  fd: TFontData;
+begin
+  fd := GetFontData(FTitleFont.Handle);
+  Canvas.Font.Name := fd.Name;
+  Canvas.Font.Style := fd.Style;
+  Canvas.Font.Height := fd.Height;
+  FTitlePanel.Height := Canvas.TextHeight('Tg') + 4;
+  CalculateImageSize;
+end;
+
 procedure TJvThumbnail.SetStream(const AStream: TStream);
 var
   Bmp: Graphics.TBitmap;
@@ -304,17 +343,17 @@ begin
   end;
 end;
 
-procedure TJvThumbnail.SetClientWidth(AWidth: Word);
+procedure TJvThumbnail.UpdateThumbWidth;
 begin
-  FClientWidth := (Width - (BorderWidth * 2)) - 8;
+  FThumbWidth := ClientWidth - 2 * FMargin;
 end;
 
-procedure TJvThumbnail.SetClientHeight(AHeight: Word);
+procedure TJvThumbnail.UpdateThumbHeight;
 begin
-  if Assigned(FTitlePanel) then
-    FClientHeight := Height - (FTitlePanel.Height + 8)
+  if Assigned(FTitlePanel) and FTitlePanel.Visible then
+    FThumbHeight := ClientHeight - FTitlePanel.Height - FMargin
   else
-    FClientHeight := Height - 8;
+    FThumbHeight := ClientHeight - FMargin;
 end;
 
 // dummy property functions to allow the object inspector to
@@ -353,6 +392,17 @@ procedure TJvThumbnail.SetShowShadow(AShow: Boolean);
 begin
   FShadowObj.Visible := AShow;
   FShowShadow := AShow;
+end;
+
+procedure TJvThumbnail.SetMargin(AValue: Integer);
+begin
+  if AValue <> FMargin then begin
+    FMargin := AValue;
+    CalculateImageSize;
+//    UpdateThumbWidth;
+//    UpdateThumbHeight;
+    Invalidate;
+  end;
 end;
 
 {procedure TJvThumbnail.SetShadowColor(aColor: TColor);
@@ -466,7 +516,7 @@ begin
     if Owner is TJvThumbView then
       Photo.ScaleDown(TJvThumbView(Owner).MaxWidth, TJvThumbView(Owner).MaxHeight)
     else
-      Photo.ScaleDown(Width, Height);
+      Photo.ScaleDown(FThumbWidth, FThumbHeight);
   end;
   Result := FName;
 end;
@@ -499,12 +549,12 @@ var
 begin
   if (Photo = nil) or (Photo.Picture = nil) then
     exit;
-  SetClientHeight(15);
-  SetClientWidth(15);
-  if (Photo.Picture.Width > ClientWidth) or (Photo.Picture.Height > ClientHeight) then
+  UpdateThumbHeight;
+  UpdateThumbWidth;
+  if (Photo.Picture.Width > FThumbWidth) or (Photo.Picture.Height > FThumbHeight) then
   begin
-    TempX := ((ClientWidth) / Photo.Picture.Width) * 100;
-    TempY := ((ClientHeight) / Photo.Picture.Height) * 100;
+    TempX := (FThumbWidth / Photo.Picture.Width) * 100;
+    TempY := (FThumbHeight / Photo.Picture.Height) * 100;
   end
   else
   begin
@@ -584,6 +634,7 @@ end;
 procedure TJvThumbnail.RefreshFont(Sender: TObject);
 begin
   FTitlePanel.Font.Assign(FTitleFont);
+  UpdateTitlePanelHeight;
 end;
 
 procedure TJvThumbnail.SetTitlePanel(ATitle: string; AFont: TFont;
@@ -606,7 +657,7 @@ begin
       tpNone:
         FTitlePanel.Visible := False;
     end;
-  if FTitlePlacement = tpNone then
+  if FTitlePlacement <> tpNone then
     FTitlePanel.Visible := True;
   FTitlePlacement := AState;
   CalculateImageSize;
@@ -640,6 +691,5 @@ begin
   CalculateImageSize;
   inherited Refresh;
 end;
-
 
 end.

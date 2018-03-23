@@ -31,8 +31,9 @@ unit JvThumbnailMainFormU;
 interface
 
 uses
-  Classes, Controls, Forms, StdCtrls, ExtCtrls, FileCtrl, ComCtrls, Spin, ShellCtrls,
-  JvThumbNails, JvThumbViews, JvBaseThumbnail, JvThumbnailDatamodule;
+  Classes, Controls, Graphics, Forms, StdCtrls, ExtCtrls, FileCtrl, ComCtrls, Spin,
+  ShellCtrls, ColorBox, Dialogs, JvThumbNails, JvThumbViews, JvBaseThumbnail,
+  JvThumbnailDatamodule;
   {JvSpecialProgress,
   JvListBox, JvDriveCtrls, JvCombobox, JvExControls, JvComponent,
   JvExStdCtrls, JvExForms; }
@@ -42,6 +43,8 @@ type
   { TJvThumbnailMainForm }
 
   TJvThumbnailMainForm = class(TForm)
+    CbThumbColor: TColorButton;
+    CbTitleColor: TColorButton;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
     Splitter1: TSplitter;
@@ -68,6 +71,8 @@ type
     Panel5: TPanel;
     ProgressBar: TProgressBar;
     Bevel1: TBevel;
+    procedure CbThumbColorColorChanged(Sender: TObject);
+    procedure CbTitleColorColorChanged(Sender: TObject);
     procedure ShellTreeViewChange(Sender: TObject; Node: TTreeNode);
     procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
     procedure ThumbViewKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -164,6 +169,16 @@ begin
   ThumbView.MinMemory := CbMinMemory.Checked;
 end;
 
+procedure TJvThumbnailMainForm.CbThumbColorColorChanged(Sender: TObject);
+begin
+  ThumbView.ThumbColor := CbThumbColor.ButtonColor;
+end;
+
+procedure TJvThumbnailMainForm.CbTitleColorColorChanged(Sender: TObject);
+begin
+  ThumbView.ThumbTitleColor := CbTitleColor.ButtonColor;
+end;
+
 procedure TJvThumbnailMainForm.SpinEdit1Change(Sender: TObject);
 begin
   if spinedit1.Text <> '' then ThumbView.ThumbGap := spinedit1.Value;
@@ -207,6 +222,8 @@ end;
 
 procedure TJvThumbnailMainForm.FormShow(Sender: TObject);
 begin
+  CbThumbColor.ButtonColor := ColorToRGB(ThumbVIew.ThumbColor);
+  CbTitleColor.ButtonColor := ColorToRGB(ThumbVIew.ThumbColor);
   CbAutoScrolling.Checked := ThumbView.AutoScrolling;
   CbAutoHandleKeyboard.Checked := ThumbView.AutoHandleKeyb;
   CbSorted.Checked := ThumbView.Sorted;

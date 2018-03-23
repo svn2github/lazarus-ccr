@@ -1,7 +1,7 @@
 object JvThumbnailMainForm: TJvThumbnailMainForm
-  Left = 295
+  Left = 296
   Height = 656
-  Top = 100
+  Top = 126
   Width = 878
   Caption = 'JvThumbView Demo'
   ClientHeight = 656
@@ -260,6 +260,34 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Caption = 'Edit Selected Thumb'
           OnClick = BtnEditSelThumbClick
           TabOrder = 7
+        end
+        object CbThumbColor: TColorButton
+          AnchorSideLeft.Control = SpinEdit2
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = SpinEdit2
+          Left = 760
+          Height = 25
+          Top = 27
+          Width = 27
+          BorderSpacing.Left = 16
+          BorderWidth = 2
+          ButtonColorSize = 16
+          ButtonColor = clBlack
+          OnColorChanged = CbThumbColorColorChanged
+        end
+        object CbTitleColor: TColorButton
+          AnchorSideLeft.Control = CbThumbColor
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = CbThumbColor
+          Left = 789
+          Height = 25
+          Top = 27
+          Width = 27
+          BorderSpacing.Left = 2
+          BorderWidth = 2
+          ButtonColorSize = 16
+          ButtonColor = clBlack
+          OnColorChanged = CbTitleColorColorChanged
         end
       end
       object Panel2: TPanel

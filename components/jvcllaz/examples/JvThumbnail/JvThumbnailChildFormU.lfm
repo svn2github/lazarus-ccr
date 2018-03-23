@@ -338,7 +338,6 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
       Top = 5
       Width = 577
       Align = alTop
-      AutoSize = True
       BorderSpacing.Around = 4
       BevelOuter = bvNone
       ClientHeight = 159
@@ -443,23 +442,14 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
         Anchors = [akTop, akBottom]
         BorderSpacing.Left = 2
         BorderSpacing.Right = 8
-        ClientHeight = 136
-        ClientWidth = 144
+        ClientHeight = 159
+        ClientWidth = 152
         Constraints.MinWidth = 152
         TabOrder = 2
         OnClick = ThumbNailClick
         TitleColor = clBtnFace
         TitleFont.Color = clWindowText
-        TitleFont.Height = -11
-        TitleFont.Name = 'MS Sans Serif'
-        AsButton = False
-        MinimizeMemory = True
-        StreamFileType = grBMP
-        ShowTitle = False
-        TitlePlacement = tpUp
-        AutoLoad = True
         ShadowColor = clSilver
-        ShowShadow = False
       end
       object Panel1: TPanel
         AnchorSideLeft.Control = ThumbNail
@@ -609,6 +599,14 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
           BorderSpacing.Bottom = 4
           Caption = 'Thumbnails Title'
           ParentColor = False
+        end
+        object SpinEdit1: TSpinEdit
+          Left = 2
+          Height = 23
+          Top = 80
+          Width = 86
+          OnChange = SpinEdit1Change
+          TabOrder = 6
         end
       end
     end

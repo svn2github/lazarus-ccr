@@ -14,7 +14,7 @@ implementation
 {$R ../../resource/jvcustomreg.res}
 
 uses
-  Classes, ImgList, Controls, PropEdits, GraphPropEdits, ComponentEditors,
+  Classes, ImgList, Controls, LResources, PropEdits, GraphPropEdits, ComponentEditors,
   JvDsgnConsts,
   JvOutlookBar, JvOutlookBarEditors,
   JvTabBar, JvTabBarXPPainter,
@@ -48,6 +48,10 @@ begin
     'ImageIndex', TJvOutlookBarButtonImageIndexProperty);
   RegisterPropertyEditor(TypeInfo(TImageIndex), TJvOutlookBarPage,
     'ImageIndex', TJvOutlookBarPageImageIndexProperty);
+
+  // Thumbnails
+  RegisterPropertyToSkip(TJvThumbnail, 'ClientWidth', 'Redundant', '');
+  RegisterPropertyToSkip(TJvThumbnail, 'ClientHeight', 'Redundant', '');
 
 end;
 

@@ -84,6 +84,7 @@ type
     FFilter: string;
 //    FBufferFile: string;
     FThumbColor: TColor;
+    FThumbTitleColor: TColor;
     FAsButtons: Boolean;
     FTitlePlacement: TTitlePos;
     FOnKeyDown: TKeyEvent;
@@ -112,6 +113,8 @@ type
     procedure GoDown;
     procedure GoUp;
     procedure SetAsButton(const NewVal: Boolean);
+    procedure SetThumbColor(const AValue: TColor);
+    procedure SetThumbTitleColor(const AValue: TColor);
     procedure SetTitlePos(const NewVal: TTitlePos);
     function CreateFilter: string;
     procedure SetFilters;
@@ -185,7 +188,8 @@ type
     property TitlePlacement: TTitlePos read FTitlePlacement write SetTitlePos default tpUp;
     property Filter: string read FFilter write FFilter;
     //    Property BufferFile : String Read FBufferFile write SetBufferFile;
-    property ThumbColor: TColor read FThumbColor write FThumbColor;
+    property ThumbColor: TColor read FThumbColor write SetThumbColor default clDefault;
+    property ThumbTitleColor: TColor read FThumbTitleColor write SetThumbTitleColor default clDefault;
     property ShowShadow: Boolean read FShowShadow write FShowShadow;
     property ShadowColor: TColor read FShadowColor write FShadowColor;
     property AutoScroll;
@@ -243,7 +247,8 @@ begin
   FFileList.Clear;
   FFileListSorted := TStringList.Create;
   FFileListSorted.Clear;
-  FThumbColor := clNone;
+  FThumbColor := clDefault;
+  FThumbTitlecolor := clDefault;
 end;
 
 destructor TJvThumbView.Destroy;
@@ -286,16 +291,18 @@ begin
   Thb.OnDblClick := OnDblClick;
   Thb.Photo.OnDblClick := OnDblClick;
   Thb.MinimizeMemory := MinMemory;
-  Thb.Color := Self.Color;
   Thb.Title := ATitle;
-  if FThumbColor = clNone then
+  if FThumbColor = clDefault then
   begin
     Thb.Color := Self.Color;
     Thb.ParentColor := True;
-    Thb.TitleColor := Self.Color;
   end
   else
     Thb.Color := FThumbColor;
+  if FThumbTitleColor = clDefault then
+    Thb.TitleColor := Self.Color
+  else
+    Thb.TitleColor := FThumbTitleColor;
   FThumbList.AddObject(Thb.Title, Thb);
   Thb.Parent := Self;
   if Redraw then
@@ -783,6 +790,16 @@ begin
   Thb.OnDblClick := OnDblClick;
   Thb.Title := aTitle;
   Thb.Photo.OnDblClick := OnDblClick;
+  if FThumbColor = clDefault then
+  begin
+    Thb.Color := Self.Color;
+    Thb.ParentColor := True;
+  end else
+    Thb.Color := FThumbColor;
+  if FThumbTitleColor = clDefault then
+    Thb.TitleColor := Self.Color
+  else
+    Thb.TitleColor := FThumbTitleColor;
   //  Thb.Buffer := Vbuffer;
   Thb.Photo.LoadFromStream(AStream, Thb.StreamFileType);
   Result := FThumbList.AddObject(Thb.Title, Thb);
@@ -814,6 +831,18 @@ begin
   Thb.OnDblClick := OnDblClick;
   Thb.Photo.OnDblClick := OnDblClick;
   Thb.MinimizeMemory := MinMemory;
+  if FThumbColor = clDefault then
+  begin
+    Thb.Color := Self.Color;
+    Thb.ParentColor := True;
+  end
+  else
+    Thb.Color := FThumbColor;
+  if FThumbTitleColor = clDefault then
+    Thb.TitleColor := Self.Color
+  else
+    Thb.TitleColor := FThumbTitleColor;
+
   //  Thb.Buffer := VBuffer;
   FThumbList.AddObject(AFile, Thb);
   InsertControl(Thb);
@@ -1101,6 +1130,26 @@ begin
       FThumbList.Thumbnail[I].AsButton := NewVal;
     FAsButtons := NewVal;
   end;
+end;
+
+procedure TJvThumbView.SetThumbColor(const AValue: TColor);
+var
+  i: Integer;
+begin
+  if AValue = FThumbColor then exit;
+  FThumbColor := AValue;
+  for i:=0 to FThumbList.Count-1 do
+    FThumbList.Thumbnail[i].Color := FThumbColor;
+end;
+
+procedure TJvThumbView.SetThumbTitleColor(const AValue: TColor);
+var
+  i: Integer;
+begin
+  if AValue = FThumbTitleColor then exit;
+  FThumbTitleColor := AValue;
+  for i:=0 to FThumbList.Count-1 do
+    FThumbList.Thumbnail[i].TitleColor := FThumbTitleColor;
 end;
 
 procedure TJvThumbView.SetTitlePos(const NewVal: TTitlePos);
