@@ -184,7 +184,7 @@ function ReplaceAllStr(const Str, SearchFor, ReplaceWith: string;
 implementation
 
 uses
-  SysUtils, Types, //LazFileUtils,
+  SysUtils, Types,
   JvJCLUtils, JvThemes;
 
 function ReplaceAllStr(const Str, SearchFor, ReplaceWith: string;

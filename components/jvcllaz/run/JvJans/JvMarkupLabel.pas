@@ -32,9 +32,7 @@ unit JvMarkupLabel;
 interface
 
 uses
-  //Messages,
-  Graphics, Controls,
-  SysUtils, Classes,
+  Graphics, Controls, SysUtils, Classes,
   JvMarkupCommon;
 
 type

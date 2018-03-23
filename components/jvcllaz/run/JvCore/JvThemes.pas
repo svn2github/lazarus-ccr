@@ -25,26 +25,17 @@ Known Issues:
 unit JvThemes;
 
 {$mode objfpc}{$H+}
-{$DEFINE JVCLThemesEnabled}
 
+{$DEFINE JVCLThemesEnabled}
 {$DEFINE COMPILER7_UP}
 
-(*
-{$I jvcl.inc}
-{$IFDEF JVCLThemesEnabled}
-{$I windowsonly.inc}
-{$ENDIF JVCLThemesEnabled}
-*)
 
 interface
 
 uses
-{
-  Windows, Messages, CommCtrl,
-  }
   Types, SysUtils, Classes, Contnrs,
   {$IFDEF JVCLThemesEnabled}
-  Themes, UxTheme,
+  Themes,
   {$ENDIF JVCLThemesEnabled}
   Controls, Forms, Graphics, Buttons;
 

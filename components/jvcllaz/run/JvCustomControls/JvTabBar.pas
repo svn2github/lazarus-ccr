@@ -32,7 +32,6 @@ interface
 
 uses
   LCLIntf, LCLType, LMessages, Types,
-//  Windows, Messages,
   Graphics, Controls, Forms, ImgList, Menus, Buttons,
   ExtCtrls, SysUtils, Classes, Contnrs, Themes;
 

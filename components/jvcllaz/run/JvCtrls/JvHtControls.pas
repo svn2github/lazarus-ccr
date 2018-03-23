@@ -109,9 +109,9 @@ unit JvHtControls;
 interface
 
 uses
-  SysUtils, Classes,
-  {LMessages,} Graphics, {Contnrs,} Controls, StdCtrls, Dialogs,
-  JvJVCLUtils, {JvDataSourceIntf,} Types, LCLType{, JvExStdCtrls};
+  LCLType, {LMessages,} Types,
+  SysUtils, Classes, Graphics, {Contnrs,} Controls, StdCtrls, Dialogs,
+  JvJVCLUtils {JvDataSourceIntf, JvExStdCtrls} ;
 
 const
   DefaultSuperSubScriptRatio: Double = 2/3;
