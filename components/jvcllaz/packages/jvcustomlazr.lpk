@@ -18,7 +18,7 @@
 "/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
-    <Files Count="5">
+    <Files Count="9">
       <Item1>
         <Filename Value="..\run\JvCustomControls\jvtimeline.pas"/>
         <UnitName Value="JvTimeLine"/>
@@ -39,6 +39,22 @@
         <Filename Value="..\run\JvCustomControls\JvTabBarXPPainter.pas"/>
         <UnitName Value="JvTabBarXPPainter"/>
       </Item5>
+      <Item6>
+        <Filename Value="..\run\JvCustomControls\JvBaseThumbnail.pas"/>
+        <UnitName Value="JvBaseThumbnail"/>
+      </Item6>
+      <Item7>
+        <Filename Value="..\run\JvCustomControls\JvThumbImage.pas"/>
+        <UnitName Value="JvThumbImage"/>
+      </Item7>
+      <Item8>
+        <Filename Value="..\run\JvCustomControls\JvThumbnails.pas"/>
+        <UnitName Value="JvThumbnails"/>
+      </Item8>
+      <Item9>
+        <Filename Value="..\run\JvCustomControls\JvThumbViews.pas"/>
+        <UnitName Value="JvThumbViews"/>
+      </Item9>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

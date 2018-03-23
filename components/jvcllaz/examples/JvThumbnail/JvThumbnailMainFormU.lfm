@@ -1,0 +1,438 @@
+object JvThumbnailMainForm: TJvThumbnailMainForm
+  Left = 295
+  Height = 656
+  Top = 100
+  Width = 878
+  Caption = 'JvThumbView Demo'
+  ClientHeight = 656
+  ClientWidth = 878
+  Color = clBtnFace
+  Constraints.MinHeight = 430
+  Constraints.MinWidth = 760
+  DefaultMonitor = dmDesktop
+  Font.Color = clWindowText
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  Scaled = False
+  object PageControl1: TPageControl
+    Left = 0
+    Height = 632
+    Top = 0
+    Width = 878
+    ActivePage = TabSheet1
+    Align = alClient
+    TabIndex = 0
+    TabOrder = 0
+    object TabSheet1: TTabSheet
+      Caption = 'ThumbView Component'
+      ClientHeight = 604
+      ClientWidth = 870
+      object Splitter1: TSplitter
+        Left = 153
+        Height = 546
+        Top = 58
+        Width = 3
+      end
+      object Panel1: TPanel
+        Left = 0
+        Height = 58
+        Top = 0
+        Width = 870
+        Align = alTop
+        AutoSize = True
+        BevelOuter = bvNone
+        ClientHeight = 58
+        ClientWidth = 870
+        TabOrder = 0
+        object LblThumbSize: TLabel
+          AnchorSideLeft.Control = TbThumbSize
+          AnchorSideTop.Control = Panel1
+          AnchorSideRight.Control = TbThumbSize
+          AnchorSideRight.Side = asrBottom
+          Left = 0
+          Height = 15
+          Top = 8
+          Width = 150
+          Alignment = taCenter
+          Anchors = [akTop, akLeft, akRight]
+          BorderSpacing.Top = 8
+          Caption = 'Thumbnail size'
+          ParentColor = False
+        end
+        object Label3: TLabel
+          AnchorSideLeft.Control = SpinEdit1
+          AnchorSideTop.Control = Panel1
+          AnchorSideRight.Control = SpinEdit1
+          AnchorSideRight.Side = asrBottom
+          Left = 569
+          Height = 16
+          Hint = 'Change the thumbgup to change the space between the thumbnails '
+          Top = 8
+          Width = 64
+          Alignment = taCenter
+          Anchors = [akTop, akLeft, akRight]
+          AutoSize = False
+          BorderSpacing.Top = 8
+          Caption = 'Gap:'
+          ParentColor = False
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object Label4: TLabel
+          AnchorSideLeft.Control = SpinEdit2
+          AnchorSideTop.Control = Label3
+          AnchorSideRight.Control = SpinEdit2
+          AnchorSideRight.Side = asrBottom
+          Left = 649
+          Height = 16
+          Hint = 'Change the selected to select the Nth element in the list.'
+          Top = 8
+          Width = 64
+          Alignment = taCenter
+          Anchors = [akTop, akLeft, akRight]
+          AutoSize = False
+          Caption = 'Selected:'
+          ParentColor = False
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object TbThumbSize: TTrackBar
+          AnchorSideLeft.Control = Panel1
+          AnchorSideTop.Control = LblThumbSize
+          AnchorSideTop.Side = asrBottom
+          Left = 0
+          Height = 28
+          Hint = 'Changes the size of the thumbs, it accepts values between 10 and 100'
+          Top = 25
+          Width = 150
+          Frequency = 10
+          Max = 100
+          Min = 10
+          OnChange = TbThumbSizeChange
+          PageSize = 10
+          Position = 100
+          TickMarks = tmTopLeft
+          TickStyle = tsNone
+          BorderSpacing.Top = 2
+          BorderSpacing.Bottom = 4
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+        end
+        object CbAutoScrolling: TCheckBox
+          AnchorSideLeft.Control = TbThumbSize
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel1
+          Left = 166
+          Height = 19
+          Hint = 'Set "AutoScrolling" to true to let the ThumbView component scroll the selected thumb into the screen automatically'
+          Top = 8
+          Width = 92
+          BorderSpacing.Left = 16
+          BorderSpacing.Top = 8
+          Caption = 'AutoScrolling'
+          Checked = True
+          OnClick = CbAutoScrollingClick
+          ParentShowHint = False
+          ShowHint = True
+          State = cbChecked
+          TabOrder = 1
+        end
+        object CbAutoHandleKeyboard: TCheckBox
+          AnchorSideLeft.Control = TbThumbSize
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = CbAutoScrolling
+          AnchorSideTop.Side = asrBottom
+          Left = 166
+          Height = 19
+          Hint = 'Set "AutoHandlekeyboard" to true to let the Thumbview capture the cursor key and navigate through the view using them'
+          Top = 31
+          Width = 134
+          BorderSpacing.Left = 16
+          BorderSpacing.Top = 4
+          Caption = 'AutoHandleKeyboard'
+          Checked = True
+          OnClick = CbAutoHandleKeyboardClick
+          ParentShowHint = False
+          ShowHint = True
+          State = cbChecked
+          TabOrder = 2
+        end
+        object SpinEdit1: TSpinEdit
+          AnchorSideLeft.Control = BtnEditSelThumb
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Label3
+          AnchorSideTop.Side = asrBottom
+          Left = 569
+          Height = 23
+          Hint = 'Changes the space between the thumbnails '
+          Top = 27
+          Width = 64
+          BorderSpacing.Left = 16
+          BorderSpacing.Top = 3
+          MaxValue = 300
+          MinValue = 1
+          OnChange = SpinEdit1Change
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 3
+          Value = 1
+        end
+        object SpinEdit2: TSpinEdit
+          AnchorSideLeft.Control = SpinEdit1
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = SpinEdit1
+          Left = 649
+          Height = 23
+          Hint = 'Selects the thumbnail with this index'
+          Top = 27
+          Width = 64
+          BorderSpacing.Left = 16
+          MaxValue = 0
+          OnChange = SpinEdit2Change
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 4
+        end
+        object CbSorted: TCheckBox
+          AnchorSideLeft.Control = CbMinMemory
+          AnchorSideTop.Control = CbAutoScrolling
+          Left = 316
+          Height = 19
+          Hint = 'Set "Sorted" to true to sort the files found in the directory by name (other posibilities in the next version)'
+          Top = 8
+          Width = 54
+          Caption = 'Sorted'
+          Checked = True
+          ParentShowHint = False
+          ShowHint = True
+          State = cbChecked
+          TabOrder = 5
+        end
+        object CbMinMemory: TCheckBox
+          AnchorSideLeft.Control = CbAutoHandleKeyboard
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = CbAutoHandleKeyboard
+          Left = 316
+          Height = 19
+          Top = 31
+          Width = 86
+          BorderSpacing.Left = 16
+          Caption = 'MinMemory'
+          Checked = True
+          OnClick = CbMinMemoryClick
+          ParentShowHint = False
+          ShowHint = True
+          State = cbChecked
+          TabOrder = 6
+        end
+        object BtnStopLoading: TButton
+          AnchorSideLeft.Control = BtnEditSelThumb
+          AnchorSideTop.Control = Panel1
+          AnchorSideRight.Control = BtnEditSelThumb
+          AnchorSideRight.Side = asrBottom
+          Left = 418
+          Height = 25
+          Top = 2
+          Width = 135
+          Anchors = [akTop, akLeft, akRight]
+          AutoSize = True
+          BorderSpacing.Top = 2
+          Caption = 'Stop Loading'
+          Enabled = False
+          OnClick = BtnStopLoadingClick
+          TabOrder = 8
+        end
+        object BtnEditSelThumb: TButton
+          AnchorSideLeft.Control = CbMinMemory
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = BtnStopLoading
+          AnchorSideTop.Side = asrBottom
+          Left = 418
+          Height = 25
+          Top = 29
+          Width = 135
+          AutoSize = True
+          BorderSpacing.Left = 16
+          BorderSpacing.Top = 2
+          BorderSpacing.Bottom = 4
+          Caption = 'Edit Selected Thumb'
+          OnClick = BtnEditSelThumbClick
+          TabOrder = 7
+        end
+      end
+      object Panel2: TPanel
+        Left = 0
+        Height = 546
+        Top = 58
+        Width = 153
+        Align = alLeft
+        BevelOuter = bvNone
+        Caption = 'Panel2'
+        ClientHeight = 546
+        ClientWidth = 153
+        TabOrder = 1
+        object ShellTreeView: TShellTreeView
+          Left = 0
+          Height = 376
+          Hint = 'Set directory where your images are located and watch the thumbview creating the thumbs'
+          Top = 0
+          Width = 153
+          Align = alClient
+          FileSortType = fstNone
+          HideSelection = False
+          ReadOnly = True
+          TabOrder = 0
+          OnChange = ShellTreeViewChange
+          Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+          ObjectTypes = [otFolders]
+        end
+        object RadioGroup1: TRadioGroup
+          Left = 0
+          Height = 77
+          Hint = 'Change the AlignView property to either use the thumbGup (VTNormal) autocalculate the empty space to equall parts(VTSPACEEQUAL) or Cender the thumbs in the using the htumbgup between them.'
+          Top = 384
+          Width = 153
+          Align = alBottom
+          AutoFill = True
+          AutoSize = True
+          BorderSpacing.Top = 8
+          Caption = ' AlignView '
+          ChildSizing.LeftRightSpacing = 6
+          ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+          ChildSizing.EnlargeVertical = crsHomogenousChildResize
+          ChildSizing.ShrinkHorizontal = crsScaleChilds
+          ChildSizing.ShrinkVertical = crsScaleChilds
+          ChildSizing.Layout = cclLeftToRightThenTopToBottom
+          ChildSizing.ControlsPerLine = 1
+          ClientHeight = 57
+          ClientWidth = 149
+          ItemIndex = 0
+          Items.Strings = (
+            'VTNormal'
+            'VTCenter'
+            'VTFitToScreen'
+          )
+          OnClick = RadioGroup1Click
+          TabOrder = 1
+        end
+        object RadioGroup2: TRadioGroup
+          Left = 0
+          Height = 77
+          Hint = 'Change the ScrollMode to change the direction the thumb are scrolling in the screen SMVertical You will see a vertical scrollbar SMHorizontal For A horizontal ScrollBar or SMBoth to create a square view '
+          Top = 469
+          Width = 153
+          Align = alBottom
+          AutoFill = True
+          AutoSize = True
+          BorderSpacing.Top = 8
+          Caption = ' ScrollMode '
+          ChildSizing.LeftRightSpacing = 6
+          ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+          ChildSizing.EnlargeVertical = crsHomogenousChildResize
+          ChildSizing.ShrinkHorizontal = crsScaleChilds
+          ChildSizing.ShrinkVertical = crsScaleChilds
+          ChildSizing.Layout = cclLeftToRightThenTopToBottom
+          ChildSizing.ControlsPerLine = 1
+          ClientHeight = 57
+          ClientWidth = 149
+          ItemIndex = 2
+          Items.Strings = (
+            'SMHorizontal'
+            'SMVertical'
+            'SMBoth'
+          )
+          OnClick = RadioGroup2Click
+          TabOrder = 2
+        end
+      end
+      object Panel3: TPanel
+        Left = 156
+        Height = 546
+        Top = 58
+        Width = 714
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'Panel3'
+        ClientHeight = 546
+        ClientWidth = 714
+        TabOrder = 2
+        object DirInfoPanel: TPanel
+          Left = 0
+          Height = 16
+          Hint = 'Read the selectedFile property to get the path+filename of the selected thumb'
+          Top = 530
+          Width = 714
+          Align = alBottom
+          BevelOuter = bvLowered
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+        end
+        object ThumbView: TJvThumbView
+          Left = 0
+          Height = 530
+          Top = 0
+          Width = 714
+          HorzScrollBar.Page = 1
+          HorzScrollBar.Tracking = True
+          VertScrollBar.Page = 1
+          VertScrollBar.Tracking = True
+          Align = alClient
+          TabOrder = 1
+          TabStop = True
+          OnDblClick = ThumbViewDblClick
+          OnMouseUp = ThumbViewMouseUp
+          AlignView = vtNormal
+          AutoScrolling = True
+          ThumbGap = 4
+          AutoHandleKeyb = True
+          MinMemory = True
+          MaxWidth = 200
+          MaxHeight = 200
+          Size = 100
+          ScrollMode = smHorizontal
+          Sorted = True
+          OnStartScanning = ThumbViewStartScanning
+          OnStopScanning = ThumbViewStopScanning
+          OnScanProgress = ThumbViewScanProgress
+          OnChange = ThumbViewChange
+          OnKeyUp = ThumbViewKeyUp
+          AsButtons = False
+          Filter = 'Portable Graphics Network (*.png)|*.png|PCX Image (*.pcx)|*.pcx|ANI Image (*.ani)|*.ani|JPEG Image File (*.jpg)|*.jpg|Bitmaps (*.bmp)|*.bmp|Icons (*.ico)|*.ico|Enhanced Metafiles (*.emf)|*.emf|Metafiles (*.wmf)|*.wmf'
+          ThumbColor = clNone
+          ShowShadow = False
+          ShadowColor = clBlack
+        end
+      end
+    end
+  end
+  object Panel5: TPanel
+    Left = 0
+    Height = 24
+    Top = 632
+    Width = 878
+    Align = alBottom
+    BorderWidth = 2
+    ClientHeight = 24
+    ClientWidth = 878
+    TabOrder = 1
+    object Bevel1: TBevel
+      Left = 3
+      Height = 18
+      Top = 3
+      Width = 291
+      Align = alLeft
+    end
+    object ProgressBar: TProgressBar
+      Left = 5
+      Height = 13
+      Top = 5
+      Width = 284
+      Step = 0
+      TabOrder = 0
+      Visible = False
+    end
+  end
+end

@@ -565,10 +565,11 @@ resourcestring
 resourcestring
   RsEFmtInterfaceNotSupported = '%s does not support the required interface (%s)';
   RsPageListEditorEllipsis = 'Page List Editor...';
-  RsNextPageAmp = 'Ne&xt Page';
-  RsPrevPage = '&Previous Page';
-  RsNewPage = '&New Page';
-  RsDelPage = '&Delete Page';
+  RsNextPageAmp = 'Ne&xt page';
+  RsPrevPage = '&Previous page';
+  RsNewPage = '&New page';
+  RsDelPage = '&Delete page';
+  RsShowPage = 'Show page';
 
 //=== JvPageManagerForm.pas ==================================================
 resourcestring

@@ -4,3 +4,6 @@ Tjvtabbarxppainter.bmp
 tjvoutlookbar.bmp
 tjvtimeline.bmp
 tjvtmtimeline.bmp
+tjvthumbnail.bmp
+tjvthumbimage.bmp
+tjvthumbview.bmp

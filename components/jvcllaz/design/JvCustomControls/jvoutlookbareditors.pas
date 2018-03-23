@@ -31,9 +31,9 @@ interface
 
 uses
   SysUtils, Classes,
-  Windows, Controls, Forms, ToolWin,
+  Controls, Forms, ToolWin,
   Menus, ActnList, ComCtrls, ImgList,
-  PropEdits, GraphPropEdits,ComponentEditors,
+  PropEdits, GraphPropEdits, ComponentEditors,
 //  DesignEditors, DesignIntf, DesignMenus, DesignWindows,
   //JvDsgnEditors,
   JvOutlookBar;

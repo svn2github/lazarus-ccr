@@ -18,6 +18,7 @@ uses
   JvDsgnConsts,
   JvOutlookBar, JvOutlookBarEditors,
   JvTabBar, JvTabBarXPPainter,
+  JvThumbImage, JvThumbnails, JvThumbViews,
   JvTimeLine, JvTMTimeline, JvTimeLineEditor;
 
 procedure Register;
@@ -25,6 +26,7 @@ begin
   RegisterComponents(RsPaletteJvcl, [
     TJvTabBar, TJvModernTabBarPainter, TJvTabBarXPPainter,
     TJvOutlookBar,
+    TJvThumbView, TJvThumbnail, TJvThumbImage,
     TJvTimeLine,
     TJvTMTimeLine
   ]);
