@@ -65,7 +65,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           AnchorSideTop.Control = Panel1
           AnchorSideRight.Control = SpinEdit1
           AnchorSideRight.Side = asrBottom
-          Left = 569
+          Left = 600
           Height = 16
           Hint = 'Change the thumbgup to change the space between the thumbnails '
           Top = 8
@@ -84,7 +84,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           AnchorSideTop.Control = Label3
           AnchorSideRight.Control = SpinEdit2
           AnchorSideRight.Side = asrBottom
-          Left = 649
+          Left = 680
           Height = 16
           Hint = 'Change the selected to select the Nth element in the list.'
           Top = 8
@@ -164,7 +164,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Label3
           AnchorSideTop.Side = asrBottom
-          Left = 569
+          Left = 600
           Height = 23
           Hint = 'Changes the space between the thumbnails '
           Top = 27
@@ -183,7 +183,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           AnchorSideLeft.Control = SpinEdit1
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = SpinEdit1
-          Left = 649
+          Left = 680
           Height = 23
           Hint = 'Selects the thumbnail with this index'
           Top = 27
@@ -217,9 +217,9 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Left = 316
           Height = 19
           Top = 31
-          Width = 86
+          Width = 117
           BorderSpacing.Left = 16
-          Caption = 'MinMemory'
+          Caption = 'Minimize memory'
           Checked = True
           OnClick = CbMinMemoryClick
           ParentShowHint = False
@@ -232,7 +232,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           AnchorSideTop.Control = Panel1
           AnchorSideRight.Control = BtnEditSelThumb
           AnchorSideRight.Side = asrBottom
-          Left = 418
+          Left = 449
           Height = 25
           Top = 2
           Width = 135
@@ -249,7 +249,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = BtnStopLoading
           AnchorSideTop.Side = asrBottom
-          Left = 418
+          Left = 449
           Height = 25
           Top = 29
           Width = 135

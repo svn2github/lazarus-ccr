@@ -40,42 +40,43 @@ type
   { TJvThumbnailChildForm }
 
   TJvThumbnailChildForm = class(TForm)
+    Bevel2: TBevel;
+    Panel1: TPanel;
     Splitter2: TSplitter;
     Panel6: TPanel;
     Splitter4: TSplitter;
     ShellTreeView: TShellTreeView;
     ShellListView: TShellListView;
     Panel8: TPanel;
-    Label6: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
+    LblRed: TLabel;
+    LblGreen: TLabel;
+    LblBlue: TLabel;
+    LblContrast: TLabel;
     REDBar: TTrackBar;
     GreenBar: TTrackBar;
     BlueBar: TTrackBar;
-    contrastBar: TTrackBar;
-    Button2: TButton;
+    ContrastBar: TTrackBar;
+    BtnApply: TButton;
     Panel10: TPanel;
     FilterComboBox1: TFilterComboBox;
     Panel7: TPanel;
     Panel5: TPanel;
-    Label5: TLabel;
-    Bevel1: TBevel;
+    LblThumbTitle: TLabel;
     CbAsButton: TCheckBox;
     CbAutoLoad: TCheckBox;
     CbMinimizeMem: TCheckBox;
     GbTitlePlacement: TRadioGroup;
-    Edit1: TEdit;
-    GroupBox1: TGroupBox;
+    EdThumbTitle: TEdit;
+    GbThumbImage: TGroupBox;
     BtnInvert: TButton;
     Button5: TButton;
-    Label1: TLabel;
+    LblLightness: TLabel;
     LightnessBar: TTrackBar;
     BtnExit: TButton;
     GbAngle: TRadioGroup;
-    ThumbNail1: TJVThumbNail;
-    ThumbImage1: TJvThumbImage;
-    procedure Button2Click(Sender: TObject);
+    ThumbNail: TJVThumbNail;
+    ThumbImage: TJvThumbImage;
+    procedure BtnApplyClick(Sender: TObject);
     procedure ShellListViewChange(Sender: TObject);
     procedure CbAsButtonClick(Sender: TObject);
     procedure CbAutoLoadClick(Sender: TObject);
@@ -85,7 +86,7 @@ type
     procedure BtnInvertClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
-    procedure thumbnail1Click(Sender: TObject);
+    procedure ThumbNailClick(Sender: TObject);
     procedure Panel10Resize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure GbAngleClick(Sender: TObject);
@@ -104,11 +105,11 @@ implementation
 uses
   JvThumbnailDatamodule;
 
-procedure TJvThumbnailChildForm.Button2Click(Sender: TObject);
+procedure TJvThumbnailChildForm.BtnApplyClick(Sender: TObject);
 begin
-  ThumbImage1.ChangeRGB(redbar.Position,greenbar.Position,bluebar.Position);
-  ThumbImage1.Contrast(contrastbar.Position);
-  ThumbImage1.Lightness(LightnessBar.Position);
+  ThumbImage.ChangeRGB(redbar.Position,greenbar.Position,bluebar.Position);
+  ThumbImage.Contrast(ContrastBar.Position);
+  ThumbImage.Lightness(LightnessBar.Position);
   RedBar.Position := 0;
   GreenBar.Position :=0;
   BlueBar.Position := 0;
@@ -122,8 +123,8 @@ var
 begin
   if ShellListView.Selected <> nil then begin
     fn := ShellListView.GetPathFromItem(ShellListView.Selected);
-    Thumbnail1.FileName := fn;
-    ThumbImage1.Loadfromfile(fn);
+    ThumbNail.FileName := fn;
+    ThumbImage.Loadfromfile(fn);
   end;
 end;
 
@@ -138,22 +139,22 @@ end;
 
 procedure TJvThumbnailChildForm.CbAsButtonClick(Sender: TObject);
 begin
-  THumbnail1.Asbutton := CbAsButton.Checked;
+  ThumbNail.Asbutton := CbAsButton.Checked;
 end;
 
 procedure TJvThumbnailChildForm.CbAutoLoadClick(Sender: TObject);
 begin
-  thumbnail1.autoload := CbAutoLoad.Checked;
+  ThumbNail.AutoLoad := CbAutoLoad.Checked;
 end;
 
 procedure TJvThumbnailChildForm.CbMinimizeMemClick(Sender: TObject);
 begin
-  thumbnail1.minimizememory:=CbMinimizeMem.Checked;
+  ThumbNail.MinimizeMemory := CbMinimizeMem.Checked;
 end;
 
 procedure TJvThumbnailChildForm.GbTitlePlacementClick(Sender: TObject);
 begin
-  thumbnail1.TitlePlacement := ttitlepos(GbTitlePlacement.ItemIndex);
+  ThumbNail.TitlePlacement := TTitlePos(GbTitlePlacement.ItemIndex);
 end;
 
 procedure TJvThumbnailChildForm.Panel8Resize(Sender: TObject);
@@ -163,18 +164,18 @@ end;
 
 procedure TJvThumbnailChildForm.BtnInvertClick(Sender: TObject);
 begin
-  ThumbImage1.Invert;
+  ThumbImage.Invert;
 end;
 
 procedure TJvThumbnailChildForm.Button5Click(Sender: TObject);
 begin
-  ThumbImage1.GrayScale;
+  ThumbImage.GrayScale;
 end;
 
-procedure TJvThumbnailChildForm.thumbnail1Click(Sender: TObject);
+procedure TJvThumbnailChildForm.ThumbNailClick(Sender: TObject);
 begin
-  if thumbnail1.FileName<>'' then
-    thumbimage1.Loadfromfile(thumbnail1.FileName);
+  if ThumbNail.FileName<>'' then
+    ThumbImage.Loadfromfile(ThumbNail.FileName);
 end;
 
 procedure TJvThumbnailChildForm.Panel10Resize(Sender: TObject);
@@ -185,14 +186,14 @@ end;
 
 procedure TJvThumbnailChildForm.FormShow(Sender: TObject);
 begin
-  //thumbimage1.Picture.Free;
-  GbTitlePlacement.ItemIndex := integer(thumbnail1.titlePlacement);
-  GbAngle.ItemIndex := integer(thumbimage1.angle);
+  //ThumbImage.Picture.Free;
+  GbTitlePlacement.ItemIndex := integer(ThumbNail.titlePlacement);
+  GbAngle.ItemIndex := integer(ThumbImage.angle);
 end;
 
 procedure TJvThumbnailChildForm.GbAngleClick(Sender: TObject);
 begin
-  thumbimage1.angle := TAngle(GbAngle.ItemIndex)
+  ThumbImage.angle := TAngle(GbAngle.ItemIndex)
 end;
 
 function TJvThumbnailChildForm.GetfileName: String;
