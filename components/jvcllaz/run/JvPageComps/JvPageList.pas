@@ -10,8 +10,8 @@ the specific language governing rights and limitations under the License.
 
 The Original Code is: JvPageList.PAS, released on 2003-04-25.
 
-The Initial Developer of the Original Code is Peter Thörnqvist [peter3 at sourceforge dot net] .
-Portions created by Peter Thörnqvist are Copyright (C) 2004 Peter Thörnqvist.
+The Initial Developer of the Original Code is Peter ThÃ¶rnqvist [peter3 at sourceforge dot net] .
+Portions created by Peter ThÃ¶rnqvist are Copyright (C) 2004 Peter ThÃ¶rnqvist.
 All Rights Reserved.
 
 Contributor(s):
@@ -42,7 +42,6 @@ uses
 type
   EPageListError = class(Exception);
 
-(******************** NOT CONVERTED
   IPageList = interface
     ['{6BB90183-CFB1-4431-9CFD-E9A032E0C94C}']
     function CanChange(AIndex: Integer): Boolean;
@@ -54,7 +53,6 @@ type
     procedure MovePage(CurIndex, NewIndex: Integer);
     procedure PageCaptionChanged(Index: Integer; const NewCaption: string);
   end;
-******************** NOT CONVERTED *)
 
   TJvCustomPageList = class;
 
@@ -121,8 +119,8 @@ type
   //TODO: 25.09.2007 - SESS - Find a better place...
   TCMDesignHitTest = TLMMouse;
 
-  // TJvCustomPageList = class(TJvCustomControl, IUnknown, IPageList)
-  TJvCustomPageList = class(TJvCustomControl)
+   TJvCustomPageList = class(TJvCustomControl, IUnknown, IPageList)
+  //TJvCustomPageList = class(TJvCustomControl)
   private
     FPages: TList;
     FActivePage: TJvCustomPage;
@@ -182,7 +180,7 @@ type
     property PageCount: Integer read GetPageCount;
   end;
 
-(******************** NOT CONVERTED
+(******************** NOT CONVERTED  *)
   TJvStandardPage = class(TJvCustomPage)
   published
     property BorderWidth;
@@ -240,7 +238,7 @@ type
     property OnStartDock;
     property OnUnDock;
     property OnEndDock;
-    property OnCanResize;
+//    property OnCanResize;
     property OnDockDrop;
     property OnDockOver;
     property OnGetSiteInfo;
@@ -275,7 +273,7 @@ type
     property ParentBackground default False;
     {$ENDIF JVCLThemesEnabled}
   end;
-******************** NOT CONVERTED *)
+(******************** NOT CONVERTED *)
 
 implementation
 
@@ -323,7 +321,7 @@ end;
 
 destructor TJvCustomPage.Destroy;
 begin
-  PageList := nil;
+  PageList := nil;  // This removes the page from the PageList.
   inherited Destroy;
 end;
 
@@ -464,6 +462,13 @@ end;
 
 function TJvCustomPage.DoEraseBackground(ACanvas: TCanvas; Param: Integer): Boolean;
 begin
+  exit;
+
+
+
+
+
+
   ACanvas.Brush.Color := Self.Color;
   ACanvas.Brush.Style := bsSolid;
   ACanvas.FillRect(Rect(0, 0, Width, Height));
@@ -512,7 +517,10 @@ end;
 constructor TJvCustomPageList.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  ControlStyle := ControlStyle + [csAcceptsControls];
+  // TNotebook has a comment: "Do not add csAcceptsControls" !!!!
+  // ControlStyle := ControlStyle + [csAcceptsControls];
+  ControlStyle := [];
+
 //  IncludeThemeStyle(Self, [csParentBackground]);
   FPages := TList.Create;
   FHiddenPages := TList.Create;
@@ -870,6 +878,7 @@ begin
   if FShowDesignCaption <> Value then
   begin
     FShowDesignCaption := Value;
+    if ActivePage <> nil then ActivePage.Invalidate;
     //TODO:
     (*
     if HandleAllocated and (csDesigning in ComponentState) then
@@ -932,13 +941,13 @@ begin
     Pages[Index].Caption := NewCaption;
 end;
 
-(**************
+(**************                          *)
 //===TJvPageList =============================================================
 
 function TJvPageList.InternalGetPageClass: TJvCustomPageClass;
 begin
   Result := TJvStandardPage;
 end;
-*******************)
+(*******************)
 
 end.

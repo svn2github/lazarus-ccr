@@ -282,9 +282,11 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Align = alClient
           FileSortType = fstNone
           HideSelection = False
+          Images = DataModule1.ImageList1
           ReadOnly = True
           TabOrder = 0
           OnChange = ShellTreeViewChange
+          OnGetImageIndex = ShellTreeViewGetImageIndex
           Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
           ObjectTypes = [otFolders]
         end

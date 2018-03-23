@@ -36,6 +36,9 @@ uses
   JvThumbImage, JvThumbNails, JvBaseThumbnail, JvExExtCtrls;
 
 type
+
+  { TJvThumbnailChildForm }
+
   TJvThumbnailChildForm = class(TForm)
     Splitter2: TSplitter;
     Panel6: TPanel;
@@ -81,6 +84,7 @@ type
     procedure Panel8Resize(Sender: TObject);
     procedure BtnInvertClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
     procedure thumbnail1Click(Sender: TObject);
     procedure Panel10Resize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -96,6 +100,9 @@ var
 implementation
 
 {$R *.lfm}
+
+uses
+  JvThumbnailDatamodule;
 
 procedure TJvThumbnailChildForm.Button2Click(Sender: TObject);
 begin
@@ -118,6 +125,15 @@ begin
     Thumbnail1.FileName := fn;
     ThumbImage1.Loadfromfile(fn);
   end;
+end;
+
+procedure TJvThumbnailChildForm.ShellTreeViewGetImageIndex(Sender: TObject;
+  Node: TTreeNode);
+begin
+  if Node.Level = 0 then
+    Node.ImageIndex := 0
+  else
+    Node.ImageIndex := 1;
 end;
 
 procedure TJvThumbnailChildForm.CbAsButtonClick(Sender: TObject);

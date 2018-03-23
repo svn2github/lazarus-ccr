@@ -44,8 +44,10 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
       Color = clDefault
       FileSortType = fstNone
       HideSelection = False
+      Images = DataModule1.ImageList1
       ReadOnly = True
       TabOrder = 0
+      OnGetImageIndex = ShellTreeViewGetImageIndex
       Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
       ObjectTypes = [otFolders]
       ShellListView = ShellListView
@@ -233,6 +235,7 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
       Top = 124
       Width = 236
       Align = alTop
+      AutoSize = True
       BevelOuter = bvNone
       Caption = 'Panel10'
       ClientHeight = 23
@@ -240,7 +243,7 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
       TabOrder = 3
       OnResize = Panel10Resize
       object FilterComboBox1: TFilterComboBox
-        Left = 2
+        Left = 0
         Height = 23
         Top = 0
         Width = 235

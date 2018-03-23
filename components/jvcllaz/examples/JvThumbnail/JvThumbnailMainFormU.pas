@@ -32,8 +32,8 @@ interface
 
 uses
   Classes, Controls, Forms, StdCtrls, ExtCtrls, FileCtrl, ComCtrls, Spin, ShellCtrls,
-  JvThumbNails, {JvSpecialProgress, }JvThumbViews, JvBaseThumbnail;
-  {
+  JvThumbNails, JvThumbViews, JvBaseThumbnail, JvThumbnailDatamodule;
+  {JvSpecialProgress,
   JvListBox, JvDriveCtrls, JvCombobox, JvExControls, JvComponent,
   JvExStdCtrls, JvExForms; }
 
@@ -69,6 +69,7 @@ type
     ProgressBar: TProgressBar;
     Bevel1: TBevel;
     procedure ShellTreeViewChange(Sender: TObject; Node: TTreeNode);
+    procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
     procedure ThumbViewKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure ThumbViewMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -192,6 +193,16 @@ begin
     until ThumbView.Directory = ShellTreeView.Path
   else
     NewDir := True;
+end;
+
+procedure TJvThumbnailMainForm.ShellTreeViewGetImageIndex(Sender: TObject;
+  Node: TTreeNode);
+begin
+  if Node.Level = 0 then
+    Node.ImageIndex := 0
+  else
+    Node.ImageIndex := 1;
+  Node.SelectedIndex := Node.ImageIndex;
 end;
 
 procedure TJvThumbnailMainForm.FormShow(Sender: TObject);
