@@ -179,6 +179,7 @@ function ReplaceChar(const AStr: string; const CharToFind, NewChar: Char;
 function JkCeil(I: Extended): Longint;
 function ReplaceAllStr(const Str, SearchFor, ReplaceWith: string;
   CaseSensitive: Boolean): string;
+function InRange(Min, Max, Value: Integer; WithBorder: Boolean = false): Boolean;
 
 
 implementation
@@ -307,6 +308,15 @@ begin
   else
     Result := Value;
 end;
+
+function InRange(Min, Max, Value: Integer; WithBorder: Boolean = false): Boolean;
+begin
+  if WithBorder then
+    Result := (Value >= Min) and (Value <= Max)
+  else
+    Result := (Value > Min) and (Value < Max);
+end;
+
 
 //=== { TJvThumbTitle } ======================================================
 

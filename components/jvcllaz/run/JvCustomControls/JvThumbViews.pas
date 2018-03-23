@@ -31,7 +31,7 @@ unit JvThumbViews;
 interface
 
 uses
-  LCLType, LMessages,
+  LCLType, LMessages, Types,
   Classes, Controls, Forms, ExtCtrls,
   SysUtils, Graphics,
   JvThumbnails, JvBaseThumbnail, JvExControls;
@@ -96,6 +96,7 @@ type
     FThumbList: TJvThumbList;
     FOnInvalidImage: TInvalidImageEvent;
     FDiskSize: DWORD;
+    FTopLeft: Integer;  // Index of thumbnail at top/left corner
     procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
     procedure GetFiles(ADirectory: string);
     procedure SetSorted(const Value: Boolean);
@@ -148,13 +149,13 @@ type
     function AddFromFile(AFile: string) : Integer;
     procedure AddFromStream(AStream: TStream; AType: TGRFKind); overload;
     function AddFromStream(AStream: TStream; AType: TGRFKind; const aTitle: string): Integer; overload;
-
     procedure Delete(No: Longint);
     procedure EmptyList;
     procedure SortList;
     procedure Refresh;
     function GetCount: Word;
     property ThumbList: TJvThumbList read FThumbList write FThumbList;
+
   published
     property SelectedFile: string read GetSelectedFile write SetSelectedFile;
     property AlignView: TViewType read FAlignView write SetAlignView;
@@ -369,40 +370,32 @@ begin
 // if AutoScrolling then
   if (Number < 0) or (Number >= FThumbList.Count) then
     Exit;
-  TN := TJvThumbnail(FThumbList.Objects[Number]);
+  TN := FThumbList.Thumbnail[Number];
   case ScrollMode of
     smVertical:
       begin
-        if TN.Top < 0 then
-          VertScrollBar.Position := VertScrollBar.Position +
-            (TN.Top - (TN.Width div 2));
-        if TN.Top + TN.Height > Height then
-          VertScrollBar.Position := VertScrollBar.Position +
-            (TN.Top - (Height - TN.Height - (TN.Height div 2)));
+        if TN.Top - VertScrollbar.Position < 0 then
+          VertScrollBar.Position := TN.Top - TN.Width div 2;
+        if TN.Top + TN.Height - VertScrollbar.Position > Height then
+          VertScrollBar.Position := TN.Top + TN.Height - (Height - TN.Height div 2);
       end;
     smHorizontal:
       begin
-        if TN.Left < 0 then
-          HorzScrollBar.Position := HorzScrollBar.Position +
-            (TN.Left - (TN.Width div 2));
-        if TN.Left + TN.Width > Width then
-          HorzScrollBar.Position := HorzScrollBar.Position +
-            (TN.Left - (Width - TN.Width - (TN.Width div 2)));
+        if TN.Left - HorzScrollbar.Position < 0 then
+          HorzScrollBar.Position := TN.Left - TN.Width div 2;
+        if TN.Left + TN.Width - HorzScrollbar.Position > Width then
+          HorzScrollBar.Position := TN.Left + TN.Width - (Width - TN.Width div 2);
       end;
     smBoth:
       begin
-        if TN.Top < 0 then
-          VertScrollBar.Position := VertScrollBar.Position +
-            (TN.Top - (TN.Width div 2));
-        if TN.Top + TN.Height > Height then
-          VertScrollBar.Position := VertScrollBar.Position +
-            (TN.Top - (TN.Height - (TN.Height div 2)));
-        if TN.Left < 0 then
-          HorzScrollBar.Position := HorzScrollBar.Position +
-            (TN.Left - (TN.Width div 2));
-        if TN.Left + TN.Width > Width then
-          HorzScrollBar.Position := HorzScrollBar.Position +
-            (TN.Left - (Width - TN.Width - (TN.Width div 2)));
+        if TN.Top < VertScrollbar.Position then
+          VertScrollBar.Position := TN.Top - TN.Width div 2;
+        if TN.Top + TN.Height > VertScrollbar.Position + Height  then
+          VertScrollBar.Position := TN.Top + TN.Height - (Height - TN.Height div 2);
+        if TN.Left - HorzScrollbar.Position < 0 then
+          HorzScrollBar.Position := TN.Left - TN.Width div 2;
+        if TN.Left + TN.Width - HorzScrollbar.Position > Width then
+          HorzScrollBar.Position := TN.Left + TN.Width - (Width - (TN.Width div 2));
       end;
   end;
   if FSelected <> Number then
@@ -593,7 +586,7 @@ var
   I: Integer;
   Tmp1: Longint;
   Tmp2: Longint;
-  TN: TJvThumbnail;
+  thumb: TJvThumbnail;
 begin
   if FThumbList = nil then
     exit;
@@ -604,13 +597,13 @@ begin
   VertScrollBar.Position := 0;
   for I := Start to FThumbList.Count - 1 do
   begin
-    TN := TJvThumbnail(FThumbList.Objects[I]);
-    if TN <> nil then
+    thumb := FThumbList.Thumbnail[I]; //TJvThumbnail(FThumbList.Objects[I]);
+    if thumb <> nil then
     begin
-      TN.Left := CalculateXPos(I + 1);
-      TN.Top := CalculateYPos(I + 1);
-      TN.Width := FThumbSize.X;
-      TN.Height := FThumbSize.Y;
+      thumb.Left := CalculateXPos(I + 1);
+      thumb.Top := CalculateYPos(I + 1);
+      thumb.Width := FThumbSize.X;
+      thumb.Height := FThumbSize.Y;
     end;
   end;
   HorzScrollBar.Position := Tmp2;
@@ -726,67 +719,47 @@ end;
 procedure TJvThumbView.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 var
-  No: Word;
+  SelNo, No: Word;
   TempX, TempY: Longint;
+  thumb: TJvThumbnail;
 begin
   // Check to see if there are any problems removing the following
   // For sure it solves A focus problem I'm having in an application
- //  setfocus;
-  if Count > 0 then
+  //  setfocus;
+  if Count > 0 then begin
+    SelNo := -1;
     case ScrollMode of
       smVertical, smBoth:
         begin
-          TempX := JkCeil((X + HorzScrollBar.Position) / (FThumbSize.X + FThumbGap));
-          TempY := JkCeil((Y + VertScrollBar.Position) / (FThumbSize.Y + FThumbGap));
-          if TempX > FMaxX then
-            TempX := FMaxX;
-          if TempY < 1 then
-            TempY := 1;
-          No := ((TempY - 1) * FMaxX + TempX) - 1;
-          if No < Count then
-            if TJvThumbnail(FThumbList.Objects[No]) <> nil then
-              if (X > TJvThumbnail(FThumbList.Objects[No]).Left) and
-                (X < TJvThumbnail(FThumbList.Objects[No]).Left +
-                TJvThumbnail(FThumbList.Objects[No]).Width) and
-                (Y > TJvThumbnail(FThumbList.Objects[No]).Top) and
-                (Y < TJvThumbnail(FThumbList.Objects[No]).Top +
-                TJvThumbnail(FThumbList.Objects[No]).Height) then
-                SetSelected(No)
-              else
-                SetSelected(-1)
-            else
-              SetSelected(-1)
-          else
-            SetSelected(-1);
+          TempX := trunc(X / (FThumbSize.X + FThumbGap));
+          TempY := trunc(Y / (FThumbSize.Y + FThumbGap));
+          if TempX >= FMaxX then TempX := FMaxX - 1;
+          if TempY < 0 then TempY := 0;
+          No := TempY * FMaxX + TempX;
+          if No < Count then begin
+            thumb := FThumbList.Thumbnail[No];
+            if thumb <> nil then
+              if InRange(thumb.Left, thumb.Left + thumb.Width, X) and
+                 InRange(thumb.Top, thumb.Top + thumb.Height, Y) then SelNo := No;
+          end;
         end;
       smHorizontal:
         begin
-          TempX := JkCeil((X + HorzScrollBar.Position) / (FThumbSize.X + FThumbGap));
-          TempY := JkCeil((Y + VertScrollBar.Position) / (FThumbSize.Y + FThumbGap));
-          if TempY > FMaxX then
-            TempY := FMaxX;
-          if TempX < 1 then
-            TempX := 1;
-          No := ((TempX - 1) * FMaxX + TempY) - 1;
-          if No < Count then
-            if TJvThumbnail(FThumbList.Objects[No]) <> nil then
-              if (X > TJvThumbnail(FThumbList.Objects[No]).Left) and
-                (X < TJvThumbnail(FThumbList.Objects[No]).Left +
-                TJvThumbnail(FThumbList.Objects[No]).Width) and
-                (Y > TJvThumbnail(FThumbList.Objects[No]).Top) and
-                (Y < TJvThumbnail(FThumbList.Objects[No]).Top +
-                TJvThumbnail(FThumbList.Objects[No]).Height) then
-                SetSelected(No)
-              else
-                SetSelected(-1)
-            else
-              SetSelected(-1)
-          else
-            SetSelected(-1);
+          TempX := trunc(X / (FThumbSize.X + FThumbGap));
+          TempY := trunc(Y / (FThumbSize.Y + FThumbGap));
+          if TempY >= FMaxX then TempY := FMaxX - 1;
+          if TempX < 0 then TempX := 0;
+          No := TempX * FMaxX + TempY;
+          if No < Count then begin
+            thumb := TJvThumbnail(FThumbList.Objects[No]);
+            if thumb <> nil then
+              if InRange(thumb.Left, thumb.Left + thumb.Width, X) and
+                 InRange(thumb.Top, thumb.Top + thumb.Height, Y) then SelNo := No;
+          end;
         end;
-    else
-      SetSelected(-1);
     end;
+    SetSelected(SelNo);
+  end;
   inherited MouseDown(Button, Shift, X, Y);
 end;
 

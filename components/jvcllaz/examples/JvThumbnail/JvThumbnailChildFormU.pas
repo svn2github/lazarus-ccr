@@ -187,12 +187,14 @@ end;
 procedure TJvThumbnailChildForm.SetFileName(AFileName: String);
 var
   dir, fn: String;
+  item: TListItem;
 begin
   dir := ExtractFilePath(AFileName);
   fn := ExtractFileName(AFileName);
   if dir <> ShellListView.Root then
     ShellTreeView.Path := dir;
-  ShellListView.Selected := ShellListView.Items.FindCaption(0, fn, false, false, false);
+  item := ShellListView.Items.FindCaption(-0, fn, false, true, false);
+  ShellListView.Selected := item;
 end;
 
 
