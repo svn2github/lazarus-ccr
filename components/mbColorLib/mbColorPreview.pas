@@ -81,6 +81,9 @@ begin
   FOpacity := 100;
   FBlockSize := 6;
   FSwatchStyle := false;
+  {$IFDEF WINDOWS}
+  DoubleBuffered := true;
+  {$ENDIF}
 end;
 
 procedure TmbColorPreview.DoChange;
