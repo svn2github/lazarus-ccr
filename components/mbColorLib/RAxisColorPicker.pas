@@ -191,25 +191,20 @@ end;
 procedure TRAxisColorPicker.SetBValue(b: integer);
 begin
   Clamp(b, 0, 255);
-  FB := b;
-  SetSelectedColor(RGBtoColor(FR, FG, FB));
+  SetSelectedColor(RGBtoColor(FR, FG, b));
 end;
 
 procedure TRAxisColorPicker.SetGValue(g: integer);
 begin
   Clamp(g, 0, 255);
-  FG := g;
-  SetSelectedColor(RGBtoColor(FR, FG, FB));
+  SetSelectedColor(RGBtoColor(FR, g, FB));
 end;
 
 procedure TRAxisColorPicker.SetRValue(r: integer);
 begin
   Clamp(r, 0, 255);
   if FR <> r then
-  begin
-    FR := r;
-    SetSelectedColor(RGBtoColor(FR, FG, FB));
-  end;
+    SetSelectedColor(RGBtoColor(r, FG, FB));
 end;
 
 procedure TRAxisColorPicker.SetSelectedColor(c: TColor);

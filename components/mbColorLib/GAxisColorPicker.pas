@@ -193,25 +193,20 @@ end;
 procedure TGAxisColorPicker.SetBValue(b: integer);
 begin
   Clamp(b, 0, 255);
-  FB := b;
-  SetSelectedColor(RGBToColor(FR, FG, FB));
+  SetSelectedColor(RGBToColor(FR, FG, b));
 end;
 
 procedure TGAxisColorPicker.SetGValue(g: integer);
 begin
   Clamp(g, 0, 255);
-  if FG = g then
-  begin
-    FG := g;
-    SetSelectedColor(RGBToColor(FR, FG, FB));
-  end;
+  if FG <> g then
+    SetSelectedColor(RGBToColor(FR, g, FB));
 end;
 
 procedure TGAxisColorPicker.SetRValue(r: integer);
 begin
   Clamp(r, 0, 255);
-  FR := r;
-  SetSelectedColor(RGBToColor(FR, FG, FB));
+  SetSelectedColor(RGBToColor(r, FG, FB));
 end;
 
 procedure TGAxisColorPicker.SetSelectedColor(c: TColor);

@@ -195,24 +195,19 @@ procedure TBAxisColorPicker.SetBValue(b: integer);
 begin
   Clamp(b, 0, 255);
   if b <> FB then
-  begin
-    FB := b;
-    SetSelectedColor(RGBToColor(FR, FG, FB));
-  end;
+    SetSelectedColor(RGBToColor(FR, FG, b));
 end;
 
 procedure TBAxisColorPicker.SetGValue(g: integer);
 begin
   Clamp(g, 0, 255);
-  FG := g;
-  SetSelectedColor(RGBtoColor(FR, FG, FB));
+  SetSelectedColor(RGBtoColor(FR, g, FB));
 end;
 
 procedure TBAxisColorPicker.SetRValue(r: integer);
 begin
   Clamp(r, 0, 255);
-  FR := r;
-  SetSelectedColor(RGBtoColor(FR, FG, FB));
+  SetSelectedColor(RGBtoColor(r, FG, FB));
 end;
 
 procedure TBAxisColorPicker.SetSelectedColor(c: TColor);
