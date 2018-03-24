@@ -222,8 +222,8 @@ end;
 
 procedure TJvThumbnailMainForm.FormShow(Sender: TObject);
 begin
-  CbThumbColor.ButtonColor := ColorToRGB(ThumbVIew.ThumbColor);
-  CbTitleColor.ButtonColor := ColorToRGB(ThumbVIew.ThumbColor);
+  CbThumbColor.ButtonColor := ThumbView.ThumbColor; //ColorToRGB(ThumbVIew.ThumbColor);
+  CbTitleColor.ButtonColor := ThumbView.ThumbTitleColor; //ColorToRGB(ThumbVIew.ThumbColor);
   CbAutoScrolling.Checked := ThumbView.AutoScrolling;
   CbAutoHandleKeyboard.Checked := ThumbView.AutoHandleKeyb;
   CbSorted.Checked := ThumbView.Sorted;
