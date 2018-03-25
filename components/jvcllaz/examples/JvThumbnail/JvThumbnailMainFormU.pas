@@ -31,9 +31,10 @@ unit JvThumbnailMainFormU;
 interface
 
 uses
-  Classes, Controls, Graphics, Forms, StdCtrls, ExtCtrls, FileCtrl, ComCtrls, Spin,
-  ShellCtrls, ColorBox, Dialogs, JvThumbNails, JvThumbViews, JvBaseThumbnail,
-  JvThumbnailDatamodule;
+  Classes, Controls, Graphics, Forms, StdCtrls, ExtCtrls, ComCtrls, Dialogs,
+  Spin, ShellCtrls,
+  JvThumbNails, JvThumbViews, {%H-}JvThumbnailDatamodule;
+
   {JvSpecialProgress,
   JvListBox, JvDriveCtrls, JvCombobox, JvExControls, JvComponent,
   JvExStdCtrls, JvExForms; }
@@ -43,9 +44,27 @@ type
   { TJvThumbnailMainForm }
 
   TJvThumbnailMainForm = class(TForm)
+    CbThumbTitleBevelInner: TComboBox;
+    CbThumbTitleBevelOuter: TComboBox;
+    CbThumbTitleBorderStyle: TComboBox;
     CbThumbColor: TColorButton;
     CbTitleColor: TColorButton;
+    CbThumbBevelInner: TComboBox;
+    CbThumbBevelOuter: TComboBox;
+    CbThumbBorderStyle: TComboBox;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
+    Label1: TLabel;
+    Label10: TLabel;
+    Label2: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
     PageControl1: TPageControl;
+    Panel4: TPanel;
     TabSheet1: TTabSheet;
     Splitter1: TSplitter;
     Panel1: TPanel;
@@ -71,7 +90,13 @@ type
     Panel5: TPanel;
     ProgressBar: TProgressBar;
     Bevel1: TBevel;
+    procedure CbThumbBevelInnerChange(Sender: TObject);
+    procedure CbThumbBevelOuterChange(Sender: TObject);
+    procedure CbThumbBorderStyleChange(Sender: TObject);
     procedure CbThumbColorColorChanged(Sender: TObject);
+    procedure CbThumbTitleBevelInnerChange(Sender: TObject);
+    procedure CbThumbTitleBevelOuterChange(Sender: TObject);
+    procedure CbThumbTitleBorderStyleChange(Sender: TObject);
     procedure CbTitleColorColorChanged(Sender: TObject);
     procedure ShellTreeViewChange(Sender: TObject; Node: TTreeNode);
     procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
@@ -169,9 +194,39 @@ begin
   ThumbView.MinMemory := CbMinMemory.Checked;
 end;
 
+procedure TJvThumbnailMainForm.CbThumbBevelInnerChange(Sender: TObject);
+begin
+  ThumbView.ThumbBevelInner := TPanelBevel(CbThumbBevelInner.ItemIndex);
+end;
+
+procedure TJvThumbnailMainForm.CbThumbBevelOuterChange(Sender: TObject);
+begin
+  ThumbView.ThumbBevelOuter := TPanelBevel(CbThumbBevelOuter.ItemIndex);
+end;
+
+procedure TJvThumbnailMainForm.CbThumbBorderStyleChange(Sender: TObject);
+begin
+  ThumbView.ThumbBorderStyle := TBorderStyle(CbThumbBorderStyle.ItemIndex);
+end;
+
 procedure TJvThumbnailMainForm.CbThumbColorColorChanged(Sender: TObject);
 begin
   ThumbView.ThumbColor := CbThumbColor.ButtonColor;
+end;
+
+procedure TJvThumbnailMainForm.CbThumbTitleBevelInnerChange(Sender: TObject);
+begin
+  ThumbView.ThumbTitleBevelInner := TPanelBevel(CbThumbTitleBevelInner.ItemIndex);
+end;
+
+procedure TJvThumbnailMainForm.CbThumbTitleBevelOuterChange(Sender: TObject);
+begin
+  ThumbView.ThumbTitleBevelOuter := TPanelBevel(CbThumbTitleBevelOuter.ItemIndex);
+end;
+
+procedure TJvThumbnailMainForm.CbThumbTitleBorderStyleChange(Sender: TObject);
+begin
+  ThumbView.ThumbTitleBorderStyle := TBorderStyle(CbThumbTitleBorderStyle.ItemIndex);
 end;
 
 procedure TJvThumbnailMainForm.CbTitleColorColorChanged(Sender: TObject);

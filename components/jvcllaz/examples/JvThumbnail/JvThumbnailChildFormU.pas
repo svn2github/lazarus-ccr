@@ -42,6 +42,7 @@ type
   TJvThumbnailChildForm = class(TForm)
     Bevel2: TBevel;
     Panel1: TPanel;
+    Panel2: TPanel;
     SpinEdit1: TSpinEdit;
     Splitter2: TSplitter;
     Panel6: TPanel;
@@ -59,7 +60,7 @@ type
     ContrastBar: TTrackBar;
     BtnApply: TButton;
     Panel10: TPanel;
-    FilterComboBox1: TFilterComboBox;
+    FilterComboBox: TFilterComboBox;
     Panel7: TPanel;
     Panel5: TPanel;
     LblThumbTitle: TLabel;
@@ -70,7 +71,7 @@ type
     EdThumbTitle: TEdit;
     GbThumbImage: TGroupBox;
     BtnInvert: TButton;
-    Button5: TButton;
+    BtnGrayScale: TButton;
     LblLightness: TLabel;
     LightnessBar: TTrackBar;
     BtnExit: TButton;
@@ -78,23 +79,34 @@ type
     ThumbNail: TJVThumbNail;
     ThumbImage: TJvThumbImage;
     procedure BtnApplyClick(Sender: TObject);
-    procedure ShellListViewChange(Sender: TObject);
+    procedure BtnInvertClick(Sender: TObject);
+    procedure BtnGrayScaleClick(Sender: TObject);
     procedure CbAsButtonClick(Sender: TObject);
     procedure CbAutoLoadClick(Sender: TObject);
     procedure CbMinimizeMemClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure GbAngleClick(Sender: TObject);
     procedure GbTitlePlacementClick(Sender: TObject);
+    procedure Panel10Resize(Sender: TObject);
+    procedure Panel2Resize(Sender: TObject);
     procedure Panel8Resize(Sender: TObject);
-    procedure BtnInvertClick(Sender: TObject);
-    procedure Button5Click(Sender: TObject);
+    procedure ShellListViewChange(Sender: TObject);
     procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
     procedure SpinEdit1Change(Sender: TObject);
     procedure ThumbNailClick(Sender: TObject);
-    procedure Panel10Resize(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure GbAngleClick(Sender: TObject);
+    procedure ThumbImageMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure ThumbImageMouseMove(Sender: TObject;
+      Shift: TShiftState; X, Y: Integer);
+    procedure ThumbImageMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+  private
+    FMousePt: TPoint;
+    procedure LoadFile(const AFileName: String);
   public
-    procedure SetFileName(AFileName: String);
     function GetFileName: String;
+    procedure SetFileName(AFileName: String);
   end;
 
 var
@@ -109,7 +121,7 @@ uses
 
 procedure TJvThumbnailChildForm.BtnApplyClick(Sender: TObject);
 begin
-  ThumbImage.ChangeRGB(redbar.Position,greenbar.Position,bluebar.Position);
+  ThumbImage.ChangeRGB(RedBar.Position, GreenBar.Position, BlueBar.Position);
   ThumbImage.Contrast(ContrastBar.Position);
   ThumbImage.Lightness(LightnessBar.Position);
   RedBar.Position := 0;
@@ -119,14 +131,32 @@ begin
   LightnessBar.Position := 0;
 end;
 
+procedure TJvThumbnailChildForm.LoadFile(const AFileName: String);
+var
+  crs: TCursor;
+begin
+  crs := Screen.Cursor;
+  Screen.Cursor := crHourglass;
+  Application.ProcessMessages;
+  try
+    ThumbNail.FileName := AFileName;
+    ThumbImage.LoadFromFile(AFileName);
+    ThumbImage.Width := ThumbImage.Picture.Width;
+    ThumbImage.Height := ThumbImage.Picture.Height;
+    ThumbImage.Left := 0;
+    ThumbImage.Top := 0;
+  finally
+    Screen.Cursor := crs;
+  end;
+end;
+
 procedure TJvThumbnailChildForm.ShellListViewChange(Sender: TObject);
 var
   fn: String;
 begin
   if ShellListView.Selected <> nil then begin
     fn := ShellListView.GetPathFromItem(ShellListView.Selected);
-    ThumbNail.FileName := fn;
-    ThumbImage.Loadfromfile(fn);
+    Loadfile(fn);
   end;
 end;
 
@@ -144,6 +174,35 @@ begin
   Thumbnail.Margin := SpinEdit1.Value;
 end;
 
+procedure TJvThumbnailChildForm.ThumbImageMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  FMousePt := Point(X, Y);
+  ThumbImage.Cursor := crDrag;
+end;
+
+procedure TJvThumbnailChildForm.ThumbImageMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+var
+  L, T: Integer;
+begin
+  if ssLeft in Shift then begin
+    L := ThumbImage.Left + (X - FMousePt.X);
+    T := ThumbImage.Top + (Y - FMousePt.Y);
+    if L > 0 then L := 0;
+    if T > 0 then T := 0;
+    if L + ThumbImage.Width < Width then L := Width - ThumbImage.Width;
+    if T + ThumbImage.Height < Height then T := Height - ThumbImage.Height;
+    ThumbImage.SetBounds(L, T, ThumbImage.Width, ThumbImage.Height);
+  end;
+end;
+
+procedure TJvThumbnailChildForm.ThumbImageMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  ThumbImage.Cursor := crDefault;
+end;
+
 procedure TJvThumbnailChildForm.CbAsButtonClick(Sender: TObject);
 begin
   ThumbNail.Asbutton := CbAsButton.Checked;
@@ -157,6 +216,14 @@ end;
 procedure TJvThumbnailChildForm.CbMinimizeMemClick(Sender: TObject);
 begin
   ThumbNail.MinimizeMemory := CbMinimizeMem.Checked;
+end;
+
+procedure TJvThumbnailChildForm.FormCreate(Sender: TObject);
+begin
+  {$IFDEF WINDOWS}
+  ThumbImage.Parent.DoubleBuffered := true;
+  ShellListView.DoubleBuffered := true;
+  {$ENDIF}
 end;
 
 procedure TJvThumbnailChildForm.GbTitlePlacementClick(Sender: TObject);
@@ -174,7 +241,7 @@ begin
   ThumbImage.Invert;
 end;
 
-procedure TJvThumbnailChildForm.Button5Click(Sender: TObject);
+procedure TJvThumbnailChildForm.BtnGrayScaleClick(Sender: TObject);
 begin
   ThumbImage.GrayScale;
 end;
@@ -187,8 +254,22 @@ end;
 
 procedure TJvThumbnailChildForm.Panel10Resize(Sender: TObject);
 begin
-  filtercombobox1.Width := panel10.ClientWidth;
-  filtercombobox1.Height:= panel10.ClientHeight;
+  FilterComboBox.Width := panel10.ClientWidth;
+  FilterComboBox.Height:= panel10.ClientHeight;
+end;
+
+procedure TJvThumbnailChildForm.Panel2Resize(Sender: TObject);
+var
+  L, T: Integer;
+begin
+  L := ThumbImage.Left;
+  T := ThumbImage.Top;
+  if (L < 0) and (L + ThumbImage.Width < Width) then
+    L := Width - ThumbImage.Width;
+  if (T < 0) and (T + ThumbImage.Height < Height) then
+    T := Height - ThumbImage.Height;
+  if (L <> ThumbImage.Left) or (T <> ThumbImage.Top) then
+    ThumbImage.SetBounds(L, T, ThumbImage.Width, ThumbImage.Height);
 end;
 
 procedure TJvThumbnailChildForm.FormShow(Sender: TObject);

@@ -2,10 +2,10 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
   Left = 296
   Height = 656
   Top = 126
-  Width = 878
+  Width = 931
   Caption = 'JvThumbView Demo'
   ClientHeight = 656
-  ClientWidth = 878
+  ClientWidth = 931
   Color = clBtnFace
   Constraints.MinHeight = 430
   Constraints.MinWidth = 760
@@ -19,7 +19,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
     Left = 0
     Height = 632
     Top = 0
-    Width = 878
+    Width = 931
     ActivePage = TabSheet1
     Align = alClient
     TabIndex = 0
@@ -27,9 +27,9 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
     object TabSheet1: TTabSheet
       Caption = 'ThumbView Component'
       ClientHeight = 604
-      ClientWidth = 870
+      ClientWidth = 923
       object Splitter1: TSplitter
-        Left = 153
+        Left = 205
         Height = 546
         Top = 58
         Width = 3
@@ -38,12 +38,12 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
         Left = 0
         Height = 58
         Top = 0
-        Width = 870
+        Width = 923
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
         ClientHeight = 58
-        ClientWidth = 870
+        ClientWidth = 923
         TabOrder = 0
         object LblThumbSize: TLabel
           AnchorSideLeft.Control = TbThumbSize
@@ -261,52 +261,24 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           OnClick = BtnEditSelThumbClick
           TabOrder = 7
         end
-        object CbThumbColor: TColorButton
-          AnchorSideLeft.Control = SpinEdit2
-          AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = SpinEdit2
-          Left = 760
-          Height = 25
-          Top = 27
-          Width = 27
-          BorderSpacing.Left = 16
-          BorderWidth = 2
-          ButtonColorSize = 16
-          ButtonColor = clBlack
-          OnColorChanged = CbThumbColorColorChanged
-        end
-        object CbTitleColor: TColorButton
-          AnchorSideLeft.Control = CbThumbColor
-          AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = CbThumbColor
-          Left = 789
-          Height = 25
-          Top = 27
-          Width = 27
-          BorderSpacing.Left = 2
-          BorderWidth = 2
-          ButtonColorSize = 16
-          ButtonColor = clBlack
-          OnColorChanged = CbTitleColorColorChanged
-        end
       end
       object Panel2: TPanel
         Left = 0
         Height = 546
         Top = 58
-        Width = 153
+        Width = 205
         Align = alLeft
         BevelOuter = bvNone
         Caption = 'Panel2'
         ClientHeight = 546
-        ClientWidth = 153
+        ClientWidth = 205
         TabOrder = 1
         object ShellTreeView: TShellTreeView
           Left = 0
           Height = 376
           Hint = 'Set directory where your images are located and watch the thumbview creating the thumbs'
           Top = 0
-          Width = 153
+          Width = 205
           Align = alClient
           FileSortType = fstNone
           HideSelection = False
@@ -323,7 +295,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Height = 77
           Hint = 'Change the AlignView property to either use the thumbGup (VTNormal) autocalculate the empty space to equall parts(VTSPACEEQUAL) or Cender the thumbs in the using the htumbgup between them.'
           Top = 384
-          Width = 153
+          Width = 205
           Align = alBottom
           AutoFill = True
           AutoSize = True
@@ -337,7 +309,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           ChildSizing.Layout = cclLeftToRightThenTopToBottom
           ChildSizing.ControlsPerLine = 1
           ClientHeight = 57
-          ClientWidth = 149
+          ClientWidth = 201
           ItemIndex = 0
           Items.Strings = (
             'VTNormal'
@@ -352,7 +324,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Height = 77
           Hint = 'Change the ScrollMode to change the direction the thumb are scrolling in the screen SMVertical You will see a vertical scrollbar SMHorizontal For A horizontal ScrollBar or SMBoth to create a square view '
           Top = 469
-          Width = 153
+          Width = 205
           Align = alBottom
           AutoFill = True
           AutoSize = True
@@ -366,7 +338,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           ChildSizing.Layout = cclLeftToRightThenTopToBottom
           ChildSizing.ControlsPerLine = 1
           ClientHeight = 57
-          ClientWidth = 149
+          ClientWidth = 201
           ItemIndex = 2
           Items.Strings = (
             'SMHorizontal'
@@ -378,22 +350,22 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
         end
       end
       object Panel3: TPanel
-        Left = 156
+        Left = 208
         Height = 546
         Top = 58
-        Width = 714
+        Width = 715
         Align = alClient
         BevelOuter = bvNone
         Caption = 'Panel3'
         ClientHeight = 546
-        ClientWidth = 714
+        ClientWidth = 715
         TabOrder = 2
         object DirInfoPanel: TPanel
           Left = 0
           Height = 16
           Hint = 'Read the selectedFile property to get the path+filename of the selected thumb'
           Top = 530
-          Width = 714
+          Width = 715
           Align = alBottom
           BevelOuter = bvLowered
           ParentShowHint = False
@@ -404,7 +376,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Left = 0
           Height = 530
           Top = 0
-          Width = 714
+          Width = 553
           HorzScrollBar.Page = 1
           HorzScrollBar.Tracking = True
           VertScrollBar.Page = 1
@@ -415,25 +387,347 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           OnDblClick = ThumbViewDblClick
           OnMouseUp = ThumbViewMouseUp
           AlignView = vtNormal
-          AutoScrolling = True
-          ThumbGap = 4
+          AsButtons = False
           AutoHandleKeyb = True
-          MinMemory = True
-          MaxWidth = 200
+          AutoScrolling = True
+          Filter = 'Portable Graphics Network (*.png)|*.png|PCX Image (*.pcx)|*.pcx|ANI Image (*.ani)|*.ani|JPEG Image File (*.jpg)|*.jpg|Bitmaps (*.bmp)|*.bmp|Icons (*.ico)|*.ico|Enhanced Metafiles (*.emf)|*.emf|Metafiles (*.wmf)|*.wmf'
           MaxHeight = 200
-          Size = 100
+          MaxWidth = 200
+          MinMemory = True
           ScrollMode = smHorizontal
+          ShadowColor = clBlack
+          ShowShadow = False
+          Size = 100
           Sorted = True
-          OnStartScanning = ThumbViewStartScanning
-          OnStopScanning = ThumbViewStopScanning
-          OnScanProgress = ThumbViewScanProgress
+          ThumbColor = clNone
           OnChange = ThumbViewChange
           OnKeyUp = ThumbViewKeyUp
-          AsButtons = False
-          Filter = 'Portable Graphics Network (*.png)|*.png|PCX Image (*.pcx)|*.pcx|ANI Image (*.ani)|*.ani|JPEG Image File (*.jpg)|*.jpg|Bitmaps (*.bmp)|*.bmp|Icons (*.ico)|*.ico|Enhanced Metafiles (*.emf)|*.emf|Metafiles (*.wmf)|*.wmf'
-          ThumbColor = clNone
-          ShowShadow = False
-          ShadowColor = clBlack
+          OnScanProgress = ThumbViewScanProgress
+          OnStartScanning = ThumbViewStartScanning
+          OnStopScanning = ThumbViewStopScanning
+        end
+        object Panel4: TPanel
+          Left = 561
+          Height = 530
+          Top = 0
+          Width = 146
+          Align = alRight
+          BorderSpacing.Left = 8
+          BorderSpacing.Right = 8
+          BevelOuter = bvNone
+          ClientHeight = 530
+          ClientWidth = 146
+          TabOrder = 2
+          object GroupBox1: TGroupBox
+            Left = 0
+            Height = 80
+            Top = 0
+            Width = 146
+            Align = alTop
+            AutoSize = True
+            Caption = 'Colors'
+            ClientHeight = 60
+            ClientWidth = 142
+            TabOrder = 0
+            object Label1: TLabel
+              AnchorSideLeft.Control = GroupBox1
+              AnchorSideTop.Control = CbThumbColor
+              AnchorSideTop.Side = asrCenter
+              Left = 16
+              Height = 15
+              Top = 5
+              Width = 58
+              BorderSpacing.Left = 16
+              BorderSpacing.Top = 4
+              Caption = 'Thumbnail'
+              ParentColor = False
+            end
+            object Label2: TLabel
+              AnchorSideLeft.Control = Label1
+              AnchorSideTop.Control = CbTitleColor
+              AnchorSideTop.Side = asrCenter
+              Left = 16
+              Height = 15
+              Top = 32
+              Width = 23
+              Caption = 'Title'
+              ParentColor = False
+            end
+            object CbThumbColor: TColorButton
+              AnchorSideLeft.Control = Label1
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = GroupBox1
+              Left = 90
+              Height = 25
+              Top = 0
+              Width = 27
+              BorderSpacing.Left = 16
+              BorderWidth = 2
+              ButtonColorSize = 16
+              ButtonColor = clBlack
+              OnColorChanged = CbThumbColorColorChanged
+            end
+            object CbTitleColor: TColorButton
+              AnchorSideLeft.Control = CbThumbColor
+              AnchorSideTop.Side = asrBottom
+              Left = 90
+              Height = 25
+              Top = 27
+              Width = 27
+              BorderSpacing.Right = 8
+              BorderSpacing.Bottom = 8
+              BorderWidth = 2
+              ButtonColorSize = 16
+              ButtonColor = clBlack
+              OnColorChanged = CbTitleColorColorChanged
+            end
+          end
+          object GroupBox2: TGroupBox
+            Left = 0
+            Height = 164
+            Top = 88
+            Width = 146
+            Align = alTop
+            AutoSize = True
+            BorderSpacing.Top = 8
+            Caption = 'Thumbnail border'
+            ClientHeight = 144
+            ClientWidth = 142
+            TabOrder = 1
+            object CbThumbBevelInner: TComboBox
+              AnchorSideLeft.Control = Label5
+              AnchorSideTop.Control = Label5
+              AnchorSideTop.Side = asrBottom
+              AnchorSideRight.Control = GroupBox2
+              AnchorSideRight.Side = asrBottom
+              Left = 16
+              Height = 23
+              Top = 17
+              Width = 110
+              Anchors = [akTop, akLeft, akRight]
+              BorderSpacing.Top = 2
+              BorderSpacing.Right = 16
+              ItemHeight = 15
+              ItemIndex = 0
+              Items.Strings = (
+                'bvNone'
+                'bvLowered'
+                'bvRaised'
+              )
+              OnChange = CbThumbBevelInnerChange
+              Style = csDropDownList
+              TabOrder = 0
+              Text = 'bvNone'
+            end
+            object Label5: TLabel
+              AnchorSideLeft.Control = GroupBox2
+              AnchorSideTop.Control = GroupBox2
+              Left = 16
+              Height = 15
+              Top = 0
+              Width = 58
+              BorderSpacing.Left = 16
+              Caption = 'Inner bevel'
+              ParentColor = False
+            end
+            object Label6: TLabel
+              AnchorSideLeft.Control = GroupBox2
+              AnchorSideTop.Control = CbThumbBevelInner
+              AnchorSideTop.Side = asrBottom
+              Left = 16
+              Height = 15
+              Top = 48
+              Width = 61
+              BorderSpacing.Left = 16
+              BorderSpacing.Top = 8
+              Caption = 'Outer bevel'
+              ParentColor = False
+            end
+            object CbThumbBevelOuter: TComboBox
+              AnchorSideLeft.Control = Label6
+              AnchorSideTop.Control = Label6
+              AnchorSideTop.Side = asrBottom
+              AnchorSideRight.Control = CbThumbBevelInner
+              AnchorSideRight.Side = asrBottom
+              Left = 16
+              Height = 23
+              Top = 65
+              Width = 110
+              Anchors = [akTop, akLeft, akRight]
+              BorderSpacing.Top = 2
+              ItemHeight = 15
+              ItemIndex = 2
+              Items.Strings = (
+                'bvNone'
+                'bvLowered'
+                'bvRaised'
+              )
+              OnChange = CbThumbBevelOuterChange
+              Style = csDropDownList
+              TabOrder = 1
+              Text = 'bvRaised'
+            end
+            object Label7: TLabel
+              AnchorSideLeft.Control = GroupBox2
+              AnchorSideTop.Control = CbThumbBevelOuter
+              AnchorSideTop.Side = asrBottom
+              Left = 16
+              Height = 15
+              Top = 96
+              Width = 62
+              BorderSpacing.Left = 16
+              BorderSpacing.Top = 8
+              Caption = 'Border style'
+              ParentColor = False
+            end
+            object CbThumbBorderStyle: TComboBox
+              AnchorSideLeft.Control = Label7
+              AnchorSideTop.Control = Label7
+              AnchorSideTop.Side = asrBottom
+              AnchorSideRight.Control = CbThumbBevelInner
+              AnchorSideRight.Side = asrBottom
+              Left = 16
+              Height = 23
+              Top = 113
+              Width = 110
+              Anchors = [akTop, akLeft, akRight]
+              BorderSpacing.Top = 2
+              BorderSpacing.Bottom = 8
+              ItemHeight = 15
+              ItemIndex = 0
+              Items.Strings = (
+                'bsNone'
+                'bsSingle'
+              )
+              OnChange = CbThumbBorderStyleChange
+              Style = csDropDownList
+              TabOrder = 2
+              Text = 'bsNone'
+            end
+          end
+          object GroupBox3: TGroupBox
+            Left = 0
+            Height = 164
+            Top = 260
+            Width = 146
+            Align = alTop
+            AutoSize = True
+            BorderSpacing.Top = 8
+            Caption = 'Title border'
+            ClientHeight = 144
+            ClientWidth = 142
+            TabOrder = 2
+            object CbThumbTitleBevelInner: TComboBox
+              AnchorSideLeft.Control = Label8
+              AnchorSideTop.Control = Label8
+              AnchorSideTop.Side = asrBottom
+              AnchorSideRight.Control = GroupBox3
+              AnchorSideRight.Side = asrBottom
+              Left = 16
+              Height = 23
+              Top = 17
+              Width = 110
+              Anchors = [akTop, akLeft, akRight]
+              BorderSpacing.Top = 2
+              BorderSpacing.Right = 16
+              ItemHeight = 15
+              ItemIndex = 0
+              Items.Strings = (
+                'bvNone'
+                'bvLowered'
+                'bvRaised'
+              )
+              OnChange = CbThumbTitleBevelInnerChange
+              Style = csDropDownList
+              TabOrder = 0
+              Text = 'bvNone'
+            end
+            object Label8: TLabel
+              AnchorSideLeft.Control = GroupBox3
+              AnchorSideTop.Control = GroupBox3
+              Left = 16
+              Height = 15
+              Top = 0
+              Width = 58
+              BorderSpacing.Left = 16
+              Caption = 'Inner bevel'
+              ParentColor = False
+            end
+            object Label9: TLabel
+              AnchorSideLeft.Control = GroupBox3
+              AnchorSideTop.Control = CbThumbTitleBevelInner
+              AnchorSideTop.Side = asrBottom
+              Left = 16
+              Height = 15
+              Top = 48
+              Width = 61
+              BorderSpacing.Left = 16
+              BorderSpacing.Top = 8
+              Caption = 'Outer bevel'
+              ParentColor = False
+            end
+            object CbThumbTitleBevelOuter: TComboBox
+              AnchorSideLeft.Control = Label9
+              AnchorSideTop.Control = Label9
+              AnchorSideTop.Side = asrBottom
+              AnchorSideRight.Control = CbThumbTitleBevelInner
+              AnchorSideRight.Side = asrBottom
+              Left = 16
+              Height = 23
+              Top = 65
+              Width = 110
+              Anchors = [akTop, akLeft, akRight]
+              BorderSpacing.Top = 2
+              ItemHeight = 15
+              ItemIndex = 2
+              Items.Strings = (
+                'bvNone'
+                'bvLowered'
+                'bvRaised'
+              )
+              OnChange = CbThumbTitleBevelOuterChange
+              Style = csDropDownList
+              TabOrder = 1
+              Text = 'bvRaised'
+            end
+            object Label10: TLabel
+              AnchorSideLeft.Control = GroupBox3
+              AnchorSideTop.Control = CbThumbTitleBevelOuter
+              AnchorSideTop.Side = asrBottom
+              Left = 16
+              Height = 15
+              Top = 96
+              Width = 62
+              BorderSpacing.Left = 16
+              BorderSpacing.Top = 8
+              Caption = 'Border style'
+              ParentColor = False
+            end
+            object CbThumbTitleBorderStyle: TComboBox
+              AnchorSideLeft.Control = Label10
+              AnchorSideTop.Control = Label10
+              AnchorSideTop.Side = asrBottom
+              AnchorSideRight.Control = CbThumbTitleBevelInner
+              AnchorSideRight.Side = asrBottom
+              Left = 16
+              Height = 23
+              Top = 113
+              Width = 110
+              Anchors = [akTop, akLeft, akRight]
+              BorderSpacing.Top = 2
+              BorderSpacing.Bottom = 8
+              ItemHeight = 15
+              ItemIndex = 0
+              Items.Strings = (
+                'bsNone'
+                'bsSingle'
+              )
+              OnChange = CbThumbTitleBorderStyleChange
+              Style = csDropDownList
+              TabOrder = 2
+              Text = 'bsNone'
+            end
+          end
         end
       end
     end
@@ -442,11 +736,11 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
     Left = 0
     Height = 24
     Top = 632
-    Width = 878
+    Width = 931
     Align = alBottom
     BorderWidth = 2
     ClientHeight = 24
-    ClientWidth = 878
+    ClientWidth = 931
     TabOrder = 1
     object Bevel1: TBevel
       Left = 3
