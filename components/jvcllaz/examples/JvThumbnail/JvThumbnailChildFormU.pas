@@ -281,8 +281,14 @@ begin
 end;
 
 procedure TJvThumbnailChildForm.GbAngleClick(Sender: TObject);
+var
+  w, h: Integer;
 begin
-  ThumbImage.angle := TAngle(GbAngle.ItemIndex)
+  w := ThumbImage.Picture.Width;
+  h := ThumbImage.Picture.Height;
+  ThumbImage.Angle := TAngle(GbAngle.ItemIndex);
+  if (w <> ThumbImage.Picture.Width) or (h <> ThumbImage.Picture.Height) then
+    with ThumbImage do SetBounds(0, 0, Picture.Width, Picture.Height);
 end;
 
 function TJvThumbnailChildForm.GetfileName: String;

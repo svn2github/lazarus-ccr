@@ -49,7 +49,7 @@ interface
 
 uses
   LCLIntf, LCLType,
-  Classes, Controls, ExtCtrls, SysUtils, Graphics, Forms, Dialogs,
+  Classes, Controls, ExtCtrls, SysUtils, Graphics, Forms, Dialogs, IntfGraphics,
   JvBaseThumbnail;
 
 type
@@ -63,6 +63,11 @@ type
   TFilterEmpty = function: Byte;
   TFilterArray = array [1..9] of Byte;
 
+  TJvTransformProc = procedure (ASourceIntfImage, ADestIntfImage: TLazIntfImage;
+    ARedData, AGreenData, ABlueData: Pointer);
+
+  { TJvThumbImage }
+
   TJvThumbImage = class(TJvBaseThumbImage)
   private
     FAngle: TAngle;
@@ -73,8 +78,8 @@ type
     FFileName: string;
     FClass: TGraphicClass;
     FOnInvalidImage: TInvalidImageEvent;
-    procedure Rotate90;
-    procedure Rotate270;
+//    procedure Rotate90;
+//    procedure Rotate270;
     procedure SetAngle(AAngle: TAngle);
     function GetModify: Boolean;
   public
@@ -89,6 +94,8 @@ type
     procedure SaveToStream(AStream: TStream; AType: TGRFKind); // testing it
     procedure SaveToFile(AFile: string);
     procedure Save;
+    procedure Transform(TransformProc: TJvTransformProc; ARedData: Pointer = nil;
+      AGreenData: Pointer = nil; ABlueData: Pointer = nil);
     procedure BitmapNeeded;
     //    Procedure FilterFactory(Filter: TFilterArray; Divider: Byte);
     procedure Invert;
@@ -114,8 +121,109 @@ type
 implementation
 
 uses
-  FPImage, IntfGraphics,
+  FPImage,
   JvThumbnails, JvTypes, JvResources;
+
+procedure GrayScaleProc(ASrcImg, ADestImg: TLazIntfImage;
+  ARedData, AGreenData, ABlueData: Pointer);
+var
+  r, c: Integer;
+  clr: TColor;
+  intens: Integer;
+begin
+  for r := 0 to ASrcImg.Height-1 do
+    for c := 0 to ASrcImg.Width-1 do begin
+      clr := ASrcImg.TColors[c, r];
+      intens := (GetRValue(clr) + GetGValue(clr) + GetBValue(clr)) div 3;
+      ADestImg.TColors[c, r] := RGBToColor(intens, intens, intens);
+    end;
+end;
+
+procedure InvertProc(ASrcImg, ADestImg: TLazIntfImage;
+  ARedData, AGreenData, ABlueData: Pointer);
+var
+  r, c: Integer;
+  clr: TColor;
+begin
+  for r := 0 to ASrcImg.Height - 1 do
+    for c := 0 to ASrcImg.Width - 1 do begin
+      clr := ASrcImg.TColors[c, r];
+      ADestImg.TColors[c, r] := RGBToColor(255 - GetRValue(clr), 255 - GetGValue(clr), 255 - GetBValue(clr));
+    end;
+end;
+
+procedure Rotate90Proc(ASrcImg, ADestImg: TLazIntfImage;
+  ARedData, AGreenData, ABlueData: Pointer);
+var
+  r, c, w, h: Integer;
+  clr: TColor;
+begin
+  w := ASrcImg.Width;
+  h := ASrcImg.Height;
+  ADestImg.SetSize(h, w);
+  for r := 0 to h - 1 do
+    for c := 0 to w - 1 do begin
+      clr := ASrcImg.TColors[c, r];
+      ADestImg.TColors[r, w-1-c] := clr;
+    end;
+end;
+
+procedure Rotate270Proc(ASrcImg, ADestImg: TLazIntfImage;
+  ARedData, AGreenData, ABlueData: Pointer);
+var
+  r, c, w, h: Integer;
+  clr: TColor;
+begin
+  w := ASrcImg.Width;
+  h := ASrcImg.Height;
+  ADestImg.SetSize(h, w);
+  for r := 0 to h - 1 do
+    for c := 0 to w - 1 do begin
+      clr := ASrcImg.TColors[c, r];
+      ADestImg.TColors[h-1-r, c] := clr;
+    end;
+end;
+
+procedure RGBProc(ASrcImg, ADestImg: TLazIntfImage;
+  ARedData, AGreenData, ABlueData: Pointer);
+var
+  r, c: Integer;
+  clr: TColor;
+  rVal, gVal, bVal: Byte;
+  deltaR, deltaG, deltaB: Integer;
+begin
+  deltaR := PtrUInt(ARedData);
+  deltaG := PtrUInt(AGreenData);
+  deltaB := PtrUInt(ABlueData);
+  for r := 0 to ASrcImg.Height - 1 do
+    for c := 0 to ASrcImg.Width - 1 do begin
+      clr := ASrcImg.TColors[c, r];
+      rVal := BoundByte(0, 255, GetBValue(clr) + deltaR);
+      gVal := BoundByte(0, 255, GetGValue(clr) + deltaG);
+      bVal := BoundByte(0, 255, GetBValue(clr) + deltaB);
+      ADestImg.TColors[c, r] := RGBToColor(rVal, gVal, bVal);
+    end;
+end;
+
+procedure RGBCurveProc(ASrcImg, ADestImg: TLazIntfImage;
+  ARedData, AGreenData, ABlueData: Pointer);
+var
+  r, c: Integer;
+  clr: TColor;
+  rVal, gVal, bVal: Byte;
+begin
+  for r := 0 to ASrcImg.Height - 1 do
+    for c := 0 to ASrcImg.Width - 1 do begin
+      clr := ASrcImg.TColors[c, r];
+      rVal := TCurveArray(ARedData^)[GetRValue(clr)];
+      gVal := TCurveArray(AGreenData^)[GetGValue(clr)];
+      bVal := TCurveArray(ABlueData^)[GetBValue(clr)];
+      ADestImg.TColors[c, r] := RGBToColor(rVal, gVal, bVal);
+    end;
+end;
+
+
+{ TJvThumbImage }
 
 constructor TJvThumbImage.Create(AOwner: TComponent);
 begin
@@ -150,11 +258,11 @@ procedure TJvThumbImage.Rotate(AAngle: TAngle);
 begin
   case AAngle of
     AT90:
-      Rotate90;
+      Transform(@Rotate90Proc);
     AT180:
       Mirror(mtBoth);
     AT270:
-      Rotate270;
+      Transform(@Rotate270Proc);
   end;
 end;
 
@@ -520,61 +628,25 @@ begin
 end;
 
 procedure TJvThumbImage.GrayScale;
-{At this point I would like to thanks The author of the EFG's computer lab
- (I don't Recall His name Right now) for the fantastic job he has
- done gathering all this info}
-var
-  MemBmp: TBitmap;
-  Row, Col: Word;
-  Intens: Byte;
-  IntfImg: TLazIntfImage;
-  clr: TColor;
-  ImgHandle, ImgMaskHandle: HBitmap;
 begin
-  if CanModify then
-  begin
-    IntfImg := TLazIntfImage.Create(0, 0);
-    MemBmp := TBitmap.Create;
-    try
-      MemBmp.PixelFormat := pf32bit;
-      MemBmp.SetSize(Picture.Width, Picture.Height);
-      MemBmp.Canvas.Brush.Color := clWhite;
-      MemBmp.Canvas.FillRect(0, 0, MemBmp.Width, MemBmp.Height);;
-      MemBmp.Assign(Picture);
-      IntfImg.LoadFromBitmap(MemBmp.Handle, MemBmp.MaskHandle);
-      for Row := 0 to IntfImg.Height-1 do
-        for Col := 0 to IntfImg.Width - 1 do begin
-          clr := IntfImg.TColors[Col, Row];
-          intens := (GetRValue(clr) + GetGValue(clr) + GetBValue(clr)) div 3;
-          clr := RGBToColor(intens, intens, intens);
-          IntfImg.TColors[Col, Row] := clr;
-        end;
-      IntfImg.CreateBitmaps(ImgHandle, ImgMaskHandle);
-      MemBmp.Handle := ImgHandle;
-      MemBmp.MaskHandle := ImgMaskHandle;
-      if Picture.Graphic is TJpegImage then
-        TJpegImage(Picture.Graphic).Assign(MemBmp)
-      else if Picture.Graphic is Graphics.TBitmap then
-        Picture.Bitmap.Assign(MemBmp);
-      Invalidate;
-    finally
-      MemBmp.Free;
-      IntfImg.Free;
-    end;
-  end;
+  Transform(@GrayscaleProc);
 end;
 
 procedure TJvThumbImage.Invert;
-var
-  R: TCurveArray;
-  I: Byte;
 begin
-  for I := 0 to 255 do
-    R[I] := 255 - I;
-  ChangeRGBCurves(R, R, R);
+  Transform(@InvertProc);
 end;
 
+{ This procedure substitutes the values of R,G,B acordinally to the arrays the
+  user passes in it. This is the simplest way to change the curve of a Color
+  depending on an algorithm created by the user.
+  The substitute value of a red 0 is the value which lies in the R[0] position.
+  for a simple example have a look at the invert procedure above. }
 procedure TJvThumbImage.ChangeRGBCurves(R, G, B: TCurveArray);
+begin
+  Transform(@RGBCurveProc, @R, @G, @B);
+end;
+(*
 var
   MemBmp: TBitmap;
   Row, Col: Word;
@@ -583,13 +655,6 @@ var
   cr, cg, cb: Byte;
   ImgHandle, ImgMaskHandle: HBitmap;
 begin
-  {
-  This procedure substitutes the values of R,G,B acordinally to the arrays the
-  user passes in it. This is the simplest way to change the curve of a Color
-  depending on an algorithm created by the user.
-  The substitute value of a red 0 is the value which lies in the R[0] position.
-  for a simple example have a look at the invert procedure above
-  }
   if CanModify then
   begin
     IntfImg := TLazIntfImage.Create(0, 0);
@@ -623,6 +688,7 @@ begin
     end;
   end;
 end;
+*)
 
 procedure TJvThumbImage.Mirror(MirrorType: TMirror);
 var
@@ -680,46 +746,50 @@ end;
   This will happen to all the image by the same value no Color limunocity is
   been preserved or values calculations depenting on the current channel values. }
 procedure TJvThumbImage.ChangeRGB(R, G, B: Longint);
-var
-  Row, Col: Integer;
-  MemBmp: TBitmap;
-  IntfImg: TLazIntfImage;
-  ImgHandle, ImgMaskHandle: HBitmap;
-  cr, cg, cb: byte;
-  clr: TColor;
 begin
-  if not CanModify then
-    Exit;
+  Transform(@RGBProc, Pointer(PtrUInt(R)), Pointer(PtrUInt(G)), Pointer(PtrUInt(B)));
+end;
 
-  IntfImg := TLazIntfImage.Create(0, 0);
-  MemBmp := TBitmap.Create;
-  try
-    MemBmp.PixelFormat := pf32bit;
-    MemBmp.SetSize(Picture.Width, Picture.Height);
-    MemBmp.Canvas.Brush.Color := clWhite;
-    MemBmp.Canvas.FillRect(0, 0, MemBmp.Width, MemBmp.Height);;
-    MemBmp.Assign(Picture);
-    IntfImg.LoadFromBitmap(MemBmp.Handle, MemBmp.MaskHandle);
-    for Row := 0 to IntfImg.Height-1 do
-      for Col := 0 to IntfImg.Width - 1 do begin
-        clr := IntfImg.TColors[Col, Row];
-        cr := BoundByte(0, 255, GetBValue(clr) + R);
-        cg := BoundByte(0, 255, GetGValue(clr) + G);
-        cb := BoundByte(0, 255, GetBValue(clr) + B);
-        IntfImg.TColors[Col, Row] := RGBToColor(cr, cg, cb);
+procedure TJvThumbImage.Transform(TransformProc: TJvTransformProc;
+  ARedData: Pointer = nil; AGreenData: Pointer = nil; ABlueData: Pointer = nil);
+var
+  Bmp: TBitmap;
+  SrcIntfImg, DestIntfImg: TLazIntfImage;
+  DestImgHandle, DestImgMaskHandle: HBitmap;
+  w, h: Integer;
+begin
+  if Assigned(Picture.Graphic) then
+    if CanModify then
+    begin
+      w := Picture.Width;
+      h := Picture.Height;
+      SrcIntfImg := TLazIntfImage.Create(0, 0);
+      DestIntfImg := TLazIntfImage.Create(0, 0);
+      Bmp := TBitmap.Create;
+      try
+        Bmp.PixelFormat := pf32bit;
+        Bmp.SetSize(w, h);
+        Bmp.Canvas.Brush.Color := clWhite;
+        Bmp.Canvas.FillRect(0, 0, w, h);
+        Bmp.Assign(Picture);
+        SrcIntfImg.LoadFromBitmap(Bmp.Handle, Bmp.MaskHandle);
+        DestIntfImg.LoadFromBitmap(Bmp.Handle, Bmp.MaskHandle);
+        TransformProc(SrcIntfImg, DestIntfImg, ARedData, AGreenData, ABlueData);
+        DestIntfImg.CreateBitmaps(DestImgHandle, DestImgMaskHandle);
+        Bmp.Handle := DestImgHandle;
+        Bmp.MaskHandle := DestImgMaskHandle;
+        Picture.Graphic.Clear;
+        if Picture.Graphic is TJpegImage then
+          TJpegImage(Picture.Graphic).Assign(Bmp)
+        else if Picture.Graphic is Graphics.TBitmap then
+          Picture.Bitmap.Assign(Bmp);
+        Invalidate;
+      finally
+        Bmp.Free;
+        SrcIntfImg.Free;
+        DestIntfImg.Free;
       end;
-    IntfImg.CreateBitmaps(ImgHandle, ImgMaskHandle);
-    MemBmp.Handle := ImgHandle;
-    MemBmp.MaskHandle := ImgMaskHandle;
-    if Picture.Graphic is TJpegImage then
-      TJpegImage(Picture.Graphic).Assign(MemBmp)
-    else if Picture.Graphic is Graphics.TBitmap then
-      Picture.Bitmap.Assign(MemBmp);
-    Invalidate;
-  finally
-    MemBmp.Free;
-    IntfImg.Free;
-  end;
+    end;
 end;
 
 { Procedure to actually decide what should be the rotation in conjuction with the
@@ -732,7 +802,7 @@ procedure TJvThumbImage.SetAngle(AAngle: TAngle);
     case TAngle(ADiff mod 4) of
       AT90:
         begin
-          Rotate90;
+          Transform(@Rotate90Proc);
           if Parent is TJvThumbnail then
             SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
         end;
@@ -740,7 +810,7 @@ procedure TJvThumbImage.SetAngle(AAngle: TAngle);
         Mirror(mtBoth);
       AT270:
         begin
-          Rotate270;
+          Transform(@Rotate270Proc);
           if Parent is TJvThumbnail then
             SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
         end;
@@ -755,329 +825,5 @@ begin
   end;
 end;
 
-(*
-  if Assigned(Picture.Graphic) then
-    if CanModify then
-      if AAngle <> FAngle then
-      begin
-        if FAngle = AT0 then
-        begin
-          if AAngle = AT90 then
-          begin
-            Rotate90;
-            if Parent is TJvThumbnail then
-              SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
-          end;
-          if AAngle = AT180 then
-          begin
-            //rotate180;
-            Mirror(mtBoth);
-          end;
-          if AAngle = AT270 then
-          begin
-            Rotate270;
-            if Parent is TJvThumbnail then
-              SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
-          end;
-        end;
-        if FAngle = AT90 then
-        begin
-          if AAngle = AT180 then
-          begin
-            Rotate90;
-            if Parent is TJvThumbnail then
-              SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
-          end;
-          if AAngle = AT270 then
-          begin
-            //rotate180;
-            Mirror(mtBoth);
-          end;
-          if AAngle = AT0 then
-          begin
-            Rotate270;
-            if Parent is TJvThumbnail then
-              SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
-          end;
-        end;
-        if FAngle = AT180 then
-        begin
-          if AAngle = AT90 then
-          begin
-            Rotate270;
-            if Parent is TJvThumbnail then
-              SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
-          end;
-          if AAngle = AT0 then
-          begin
-            //rotate180;
-            Mirror(mtBoth);
-          end;
-          if AAngle = AT270 then
-          begin
-            Rotate90;
-            if Parent is TJvThumbnail then
-              SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
-          end;
-        end;
-        if FAngle = AT270 then
-        begin
-          if AAngle = AT90 then
-          begin
-            //rotate180;
-            Mirror(mtBoth);
-          end;
-          if AAngle = AT0 then
-          begin
-            Rotate90;
-            if Parent is TJvThumbnail then
-              SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
-          end;
-          if AAngle = AT180 then
-          begin
-            Rotate270;
-            if Parent is TJvThumbnail then
-              SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
-          end;
-        end;
-        FAngle := AAngle;
-        FModified := FAngle <> AT0;
-      end;
-end;
-    *)
-
-procedure TJvThumbImage.Rotate270;
-var
-  Row, Col: Integer;
-  MemBmp, RotBmp: TBitmap;
-  IntfImg, RotIntfImg: TLazIntfImage;
-  RotImgHandle, RotImgMaskHandle: HBitmap;
-  clr: TColor;
-  w, h: Integer;
-begin
-  if Assigned(Picture.Graphic) then
-    if CanModify then
-    begin
-      w := Picture.Width;
-      h := Picture.Height;
-      IntfImg := TLazIntfImage.Create(0, 0);
-      RotIntfImg := TLazIntfImage.Create(0, 0);
-      MemBmp := TBitmap.Create;
-      RotBmp := TBitmap.Create;
-      try
-        MemBmp.PixelFormat := pf32bit;
-        MemBmp.SetSize(w, h);
-        MemBmp.Canvas.Brush.Color := clWhite;
-        MemBmp.Canvas.FillRect(0, 0, w, h);
-        MemBmp.Assign(Picture);
-        RotBmp.PixelFormat := pf32Bit;
-        RotBmp.SetSize(h, w);
-        IntfImg.LoadFromBitmap(MemBmp.Handle, MemBmp.MaskHandle);
-        RotIntfImg.LoadFromBitmap(RotBmp.Handle, RotBmp.MaskHandle);
-            (*
-        for Row := 0 to h - 1 do
-          for Col := 0 to w - 1 do begin
-            clr := IntfImg.TColors[Col, Row];
-            RotIntfImg.TColors[h - 1 - Row , w - 1 - Col] := clr;
-          end;
-          *)
-        for Row := h - 1 downto 0 do
-          for Col := 0 to w - 1 do begin
-            clr := IntfImg.TColors[Col, Row];
-            RotIntfImg.TColors[h - 1 - Row, w - 1 - Col] := clr;
-          end;
-
-        RotIntfImg.CreateBitmaps(RotImgHandle, RotImgMaskHandle);
-        RotBmp.Handle := RotImgHandle;
-        RotBmp.MaskHandle := RotImgMaskHandle;
-        Picture.Graphic.Clear;
-        if Picture.Graphic is TJpegImage then
-          TJpegImage(Picture.Graphic).Assign(RotBmp)
-        else if Picture.Graphic is Graphics.TBitmap then
-          Picture.Bitmap.Assign(RotBmp);
-        Invalidate;
-      finally
-        MemBmp.Free;
-        RotBmp.Free;
-        IntfImg.Free;
-        RotIntfImg.Free;
-      end;
-    end;
-end;
-
-(*
-procedure TJvThumbImage.Rotate180;
-var
-  MemBmp: Graphics.TBitmap;
-  RotateBmp: Graphics.TBitmap;
-  I, J: Longint;
-  Brake: Boolean;
-  R: TRect;
-begin
-  //Procedure to rotate the image at 180d cw or ccw is the same
-
-  { TODO : Removed the 180 degree rotation and replaced by the mirror(mtBoth) call.
-    this let the GDI engine to make the rotation and it is faster than any
-    rotation I have tested until now I have tested this routine with
-    and image of 2300x3500x24bit with out any problems on Win2K.
-    I must test it on Win98 before release. }
-  if Assigned(Picture.Graphic) then
-    if CanModify then
-    begin
-      if not Assigned(FOnRotate) then
-        Screen.Cursor := crHourGlass;
-      MemBmp := Graphics.TBitmap.Create;
-      MemBmp.Width := Picture.Width;
-      MemBmp.Height := Picture.Height;
-      MemBmp.canvas.Draw(0, 0, Picture.Graphic);
-      MemBmp.Palette := Picture.Graphic.Palette;
-      RotateBmp := Graphics.TBitmap.Create;
-      RotateBmp.Assign(MemBmp);
-      R :=  MemBmp.Canvas.ClipRect;
-      for I := Left to R.Right do
-        for J := Top to R.Bottom do
-        begin
-          RotateBmp.Canvas.Pixels[R.Right - I - 1, R.Bottom - J - 1] :=
-            MemBmp.Canvas.Pixels[I, J];
-          if Assigned(FOnRotate) then
-          begin
-            Brake := False;
-            FOnRotate(Self, Trunc(((I * J) / (R.Right * R.Bottom)) * 100), Brake);
-            if Brake then
-            begin
-              RotateBmp.Free;
-              MemBmp.Free;
-              Exit;
-            end;
-          end;
-        end;
-      Picture.Bitmap.Assign(RotateBmp);
-      Invalidate;
-      RotateBmp.Free;
-      MemBmp.Free;
-      if not Assigned(FOnRotate) then
-        Screen.Cursor := crArrow;
-    end;
-end;
-*)
-
-procedure TJvThumbImage.Rotate90;
-var
-  Row, Col: Integer;
-  MemBmp, RotBmp: TBitmap;
-  IntfImg, RotIntfImg: TLazIntfImage;
-  RotImgHandle, RotImgMaskHandle: HBitmap;
-  clr: TColor;
-  w, h: Integer;
-begin
-  if Assigned(Picture.Graphic) then
-    if CanModify then
-    begin
-      w := Picture.Width;
-      h := Picture.Height;
-      IntfImg := TLazIntfImage.Create(0, 0);
-      RotIntfImg := TLazIntfImage.Create(0, 0);
-      MemBmp := TBitmap.Create;
-      RotBmp := TBitmap.Create;
-      try
-        MemBmp.PixelFormat := pf32bit;
-        MemBmp.SetSize(w, h);
-        MemBmp.Canvas.Brush.Color := clWhite;
-        MemBmp.Canvas.FillRect(0, 0, w, h);
-        MemBmp.Assign(Picture);
-        RotBmp.PixelFormat := pf32Bit;
-        RotBmp.SetSize(h, w);
-        IntfImg.LoadFromBitmap(MemBmp.Handle, MemBmp.MaskHandle);
-        RotIntfImg.LoadFromBitmap(RotBmp.Handle, RotBmp.MaskHandle);
-
-        for Row := 0 to h - 1 do
-          for Col := 0 to w - 1 do begin
-            clr := IntfImg.TColors[Col, Row];
-            RotIntfImg.TColors[Row, Col] := clr;
-          end;
-        RotIntfImg.CreateBitmaps(RotImgHandle, RotImgMaskHandle);
-        RotBmp.Handle := RotImgHandle;
-        RotBmp.MaskHandle := RotImgMaskHandle;
-        Picture.Graphic.Clear;
-        if Picture.Graphic is TJpegImage then
-          TJpegImage(Picture.Graphic).Assign(RotBmp)
-        else if Picture.Graphic is Graphics.TBitmap then
-          Picture.Bitmap.Assign(RotBmp);
-        Invalidate;
-      finally
-        MemBmp.Free;
-        RotBmp.Free;
-        IntfImg.Free;
-        RotIntfImg.Free;
-      end;
-    end;
-end;
-
-(*
-procedure TJvThumbImage.Rotate90;
-var
-  MemBmp: Graphics.TBitmap;
-  {
-  PByte1: PJvRGBArray;
-  PByte2: PJvRGBArray;
-  }
-  //  Stp: Byte;
-  RotateBmp: Graphics.TBitmap;
-  I, J {, C}: Longint;
-begin
-  { ************************** FIX ME: Convert using LazIntfImage ***
-  //Procedure to rotate an image at 90D clockwise or 270D ccw
-  if Assigned(Picture.Graphic) then
-    if CanModify then
-    begin
-      RotateBmp := nil;
-      MemBmp := Graphics.TBitmap.Create;
-      RotateBmp := Graphics.TBitmap.Create;
-      try
-        MemBmp.Assign(Picture.Graphic);
-        MemBmp.HandleType := bmDIB;
-        //MemBmp.PixelFormat := pf24bit;
-      {  Case MemBmp.PixelFormat of
-          pf4bit,pf1bit   : begin MemBmp.PixelFormat := pf8bit; Stp := 1; end;
-          pf8bit          : Stp := 1;
-          pf16bit,PF15Bit : Stp := 2;
-          pf24bit         : Stp := 3;
-          pf32bit         : Stp := 4;
-          pfDevice,
-          pfCustom        : begin
-                              MemBmp.PixelFormat := pf24bit;
-                              Stp:=3;
-                            end;
-        else Exit;
-        end;}
-        MemBmp.PixelFormat := pf24bit;
-        //      Stp := 3;
-        RotateBmp.FreeImage;
-        RotateBmp.PixelFormat := MemBmp.PixelFormat;
-        RotateBmp.HandleType := MemBmp.HandleType;
-        RotateBmp.Width := MemBmp.Height;
-        RotateBmp.Height := MemBmp.Width;
-        I := RotateBmp.Height - 1;
-        while I  >= 0 do
-        begin
-          PByte1 := RotateBmp.ScanLine[I];
-          J := 0;
-          while J < MemBmp.Height do
-          begin
-            PByte2 := MemBmp.ScanLine[MemBmp.Height - 1 - J];
-            PByte1[J] := PByte2[I];
-            Inc(J);
-          end;
-          Dec(I);
-        end;
-        Picture.Bitmap.Assign(RotateBmp);
-      finally
-        FreeAndNil(RotateBmp);
-        FreeAndNil(MemBmp);
-      end;
-    end;
-  **********************************************************}
-end;
-*)
 
 end.
