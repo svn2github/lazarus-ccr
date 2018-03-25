@@ -98,12 +98,14 @@ type
     FHShadowOffset: Word;
     FVShadowOffset: Word;
     FMargin: Integer;
-    procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
     (************** NOT CONVERTED ***
     procedure PhotoOnProgress(Sender: TObject; Stage: TProgressStage;
       PercentDone: Byte; RedrawNow: Boolean;
       const R: TRect; const Msg: string);
     *******************************)
+    function GetTitleBevelInner: TPanelBevel;
+    function GetTitleBevelOuter: TPanelBevel;
+    function GetTitleBorderStyle: TBorderStyle;
     procedure RefreshFont(Sender: TObject);
     procedure SetFileName(const AFile: string);
     function LoadFile(AFile: string): string;
@@ -115,6 +117,9 @@ type
     procedure SetShowTitle(const AState: Boolean);
     procedure SetTitlePlacement(const AState: TTitlePos);
     procedure SetTitle(const Value: string);
+    procedure SetTitleBevelInner(const Value: TPanelBevel);
+    procedure SetTitleBevelOuter(const Value: TPanelBevel);
+    procedure SetTitleBorderStyle(const Value: TBorderStyle);
     procedure SetTitleColor(const Value: TColor);
     procedure SetStream(const AStream: TStream);
     procedure SetTitleFont(const Value: TFont);
@@ -127,6 +132,8 @@ type
     procedure UpdateThumbWidth;
     procedure UpdateTitlePanelHeight;
     function IsTitleFontStored: Boolean;
+    procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
+
   protected
     procedure CreateHandle; override;
     procedure THSizeChanged(var Msg: TLMessage); message TH_IMAGESIZECHANGED;
@@ -146,6 +153,9 @@ type
   published
     property FileName: string read GetFileName write SetFileName;
     property Title: string read FTitle write SetTitle;
+    property TitleBevelInner: TPanelBevel read GetTitleBevelInner write SetTitleBevelInner default bvNone;
+    property TitleBevelOuter: TPanelBevel read GetTitleBevelOuter write SetTitleBevelOuter default bvLowered;
+    property TitleBorderStyle: TBorderStyle read GetTitleBorderStyle write SetTitleBorderStyle default bsNone;
     property TitleColor: TColor read FTitleColor write SetTitleColor default clDefault;
     property TitleFont: TFont read FTitleFont write SetTitleFont stored IsTitleFontStored;
     property ImageReady: Boolean read FImageReady;
@@ -231,8 +241,7 @@ begin
   begin
     Width := TJvThumbView(Owner).MaxWidth;
     Height := TJvThumbView(Owner).MaxHeight;
-  end
-  else
+  end else
   begin
     Width := 120;
     Height := 120;
@@ -259,6 +268,21 @@ begin
   inherited Destroy;
 end;
 
+function TJvThumbnail.GetTitleBevelInner: TPanelBevel;
+begin
+  Result := FTitlePanel.BevelInner;
+end;
+
+function TJvThumbnail.GetTitleBevelOuter: TPanelBevel;
+begin
+  Result := FTitlePanel.BevelOuter;
+end;
+
+function TJvThumbnail.GetTitleBorderStyle: TBorderStyle;
+begin
+  Result := FTitlePanel.BorderStyle;
+end;
+
 procedure TJvThumbnail.SetShowTitle(const AState: Boolean);
 begin
   if AState <> FShowTitle then
@@ -266,6 +290,21 @@ begin
     FShowTitle := AState;
     FTitlePanel.Visible := AState;
   end
+end;
+
+procedure TJvThumbnail.SetTitleBevelInner(const Value: TPanelBevel);
+begin
+  FTitlePanel.BevelInner := Value;
+end;
+
+procedure TJvThumbnail.SetTitleBevelOuter(const Value: TPanelBevel);
+begin
+  FTitlePanel.BevelOuter := Value;
+end;
+
+procedure TJvThumbnail.SetTitleBorderStyle(const Value: TBorderStyle);
+begin
+  FTitlePanel.BorderStyle := Value;
 end;
 
 procedure TJvThumbnail.BoundsChanged;

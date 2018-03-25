@@ -78,10 +78,16 @@ type
     FShadowColor: TColor;
     FShowShadow: Boolean;
     FSorted: Boolean;
+    FThumbBevelInner: TPanelBevel;
+    FThumbBevelOuter: TPanelBevel;
+    FThumbBorderStyle: TBorderStyle;
     FThumbColor: TColor;
     FThumbGap: Byte;
     FThumbList: TJvThumbList;
     FThumbSize: TPoint;
+    FThumbTitleBevelInner: TPanelBevel;
+    FThumbTitleBevelOuter: TPanelBevel;
+    FThumbTitleBorderStyle: TBorderStyle;
     FThumbTitleColor: TColor;
     FTitlePlacement: TTitlePos;
     FWaitUntilFull: Boolean;
@@ -120,9 +126,15 @@ type
     procedure SetPercent(P: TPercent);
     procedure SetScrollMode(AMode: TScrollMode);
     procedure SetSorted(const Value: Boolean);
+    procedure SetThumbBevelInner(const AValue: TPanelBevel);
+    procedure SetThumbBevelOuter(const AValue: TPanelBevel);
+    procedure SetThumbBorderStyle(const AValue: TBorderStyle);
     procedure SetThumbColor(const AValue: TColor);
     procedure SetThumbGap(Sp: Byte);
     procedure SetThumbTitleColor(const AValue: TColor);
+    procedure SetThumbTitleBevelInner(const AValue: TPanelBevel);
+    procedure SetThumbTitleBevelOuter(const AValue: TPanelBevel);
+    procedure SetThumbTitleBorderStyle(const AValue: TBorderStyle);
     procedure SetTitlePos(const NewVal: TTitlePos);
     procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
     //function GetBufferName(AName: string): string;
@@ -180,10 +192,26 @@ type
     property ShowShadow: Boolean read FShowShadow write FShowShadow;
     property Size: TPercent read FPercent write SetPercent;
     property Sorted: Boolean read FSorted write SetSorted;
-    property ThumbColor: TColor read FThumbColor write SetThumbColor default clDefault;
-    property ThumbGap: Byte read FThumbGap write SetThumbGap;
-    property ThumbTitleColor: TColor read FThumbTitleColor write SetThumbTitleColor default clDefault;
-    property TitlePlacement: TTitlePos read FTitlePlacement write SetTitlePos default tpUp;
+    property ThumbBevelInner: TPanelBevel
+      read FThumbBevelInner write SetThumbBevelInner default bvNone;
+    property ThumbBevelOuter: TPanelBevel
+      read FThumbBevelOuter write SetThumbBevelOuter default bvRaised;
+    property ThumbBorderStyle: TBorderStyle
+      read FThumbBorderStyle write SetThumbBorderStyle default bsNone;
+    property ThumbColor: TColor
+      read FThumbColor write SetThumbColor default clDefault;
+    property ThumbGap: Byte
+      read FThumbGap write SetThumbGap default 4;
+    property ThumbTitleBevelInner: TPanelBevel
+      read FThumbTitleBevelInner write SetThumbTitleBevelInner default bvNone;
+    property ThumbTitleBevelOuter: TPanelBevel
+      read FThumbTitleBevelOuter write SetThumbTitleBevelOuter default bvLowered;
+    property ThumbTitleBorderStyle: TBorderStyle
+      read FThumbTitleBorderStyle write SetThumbTitleBorderStyle default bsNone;
+    property ThumbTitleColor: TColor
+      read FThumbTitleColor write SetThumbTitleColor default clDefault;
+    property TitlePlacement: TTitlePos
+      read FTitlePlacement write SetTitlePos default tpUp;
 
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnChanging: TNotifyEvent read FOnChanging write FOnChanging;
@@ -253,8 +281,14 @@ begin
   FFileList.Clear;
   FFileListSorted := TStringList.Create;
   FFileListSorted.Clear;
+  FThumbBevelInner := bvNone;
+  FThumbBevelOuter := bvRaised;
+  FThumbBorderStyle := bsNone;
   FThumbColor := clDefault;
-  FThumbTitlecolor := clDefault;
+  FThumbTitleColor := clDefault;
+  FThumbTitleBevelInner := bvNone;
+  FThumbTitleBevelOuter := bvLowered;
+  FThumbTitleBorderStyle := bsNone;
 end;
 
 destructor TJvThumbView.Destroy;
@@ -1170,6 +1204,36 @@ begin
   end;
 end;
 
+procedure TJvThumbView.SetThumbBevelInner(const AValue: TPanelBevel);
+var
+  i: Integer;
+begin
+  if AValue = FThumbBevelInner then exit;
+  FThumbBevelInner := AValue;
+  for i:=0 to FThumbList.Count-1 do
+    FThumbList.Thumbnail[i].BevelInner := FThumbBevelInner;
+end;
+
+procedure TJvThumbView.SetThumbBevelOuter(const AValue: TPanelBevel);
+var
+  i: Integer;
+begin
+  if AValue = FThumbBevelOuter then exit;
+  FThumbBevelOuter := AValue;
+  for i:=0 to FThumbList.Count-1 do
+    FThumbList.Thumbnail[i].BevelOuter := FThumbBevelOuter;
+end;
+
+procedure TJvThumbView.SetThumbBorderStyle(const AValue: TBorderStyle);
+var
+  i: Integer;
+begin
+  if AValue = FThumbBorderStyle then exit;
+  FThumbBorderStyle := AValue;
+  for i:=0 to FThumbList.Count-1 do
+    FThumbList.Thumbnail[i].BorderStyle := FThumbBorderStyle;
+end;
+
 procedure TJvThumbView.SetThumbColor(const AValue: TColor);
 var
   i: Integer;
@@ -1192,6 +1256,36 @@ begin
     vtFitToScreen:
       FThumbGap := Sp;
   end;
+end;
+
+procedure TJvThumbView.SetThumbTitleBevelInner(const AValue: TPanelBevel);
+var
+  i: Integer;
+begin
+  if AValue = FThumbTitleBevelInner then exit;
+  FThumbTitleBevelInner := AValue;
+  for i:=0 to FThumbList.Count-1 do
+    FThumbList.Thumbnail[i].TitleBevelInner := FThumbTitleBevelInner;
+end;
+
+procedure TJvThumbView.SetThumbTitleBevelOuter(const AValue: TPanelBevel);
+var
+  i: Integer;
+begin
+  if AValue = FThumbTitleBevelOuter then exit;
+  FThumbTitleBevelOuter := AValue;
+  for i:=0 to FThumbList.Count-1 do
+    FThumbList.Thumbnail[i].TitleBevelOuter := FThumbTitleBevelOuter;
+end;
+
+procedure TJvThumbView.SetThumbTitleBorderStyle(const AValue: TBorderStyle);
+var
+  i: Integer;
+begin
+  if AValue = FThumbTitleBorderStyle then exit;
+  FThumbTitleBorderStyle := AValue;
+  for i:=0 to FThumbList.Count-1 do
+    FThumbList.Thumbnail[i].TitleBorderStyle := FThumbTitleBorderStyle;
 end;
 
 procedure TJvThumbView.SetThumbTitleColor(const AValue: TColor);
