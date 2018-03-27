@@ -14,7 +14,7 @@
     </CompilerOptions>
     <Description Value="Comprehensive color selection library with more than 30 components"/>
     <License Value="License is granted to use, modify and redistribute these units in your applications as you see fit. You are given COMPLETE FREEDOM with the sources found in this pack; you're free to use it in ANY kind of app without even mentioning my name, my site or any other stuff, that depends on your good will and nothing else. I will accept any modifications and incorporate them in this pack if they'll help make it better. You are under NO obligation to pay for these components to neither me nor anyone else trying to sell them in their current form. If you wish to support development of these components you can do so by contributing some source or making a donation, again this solely depends on your good will."/>
-    <Version Major="2" Minor="2"/>
+    <Version Major="2" Minor="2" Release="1"/>
     <Files Count="46">
       <Item1>
         <Filename Value="PalUtils.pas"/>
@@ -220,5 +220,8 @@
     <PublishOptions>
       <Version Value="2"/>
     </PublishOptions>
+    <CustomOptions Items="ExternHelp" Version="2">
+      <_ExternHelp Items="Count"/>
+    </CustomOptions>
   </Package>
 </CONFIG>
