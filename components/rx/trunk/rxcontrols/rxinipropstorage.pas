@@ -47,6 +47,7 @@ type
     FSeparateFiles: boolean;
   protected
     function GetIniFileName: string; override;
+    procedure FinishPropertyList(List: TStrings); override;
   public
     procedure StorageNeeded(ReadOnly: Boolean); override;
     { Public declarations }
@@ -55,7 +56,7 @@ type
   end;
 
 implementation
-uses rxapputils, LazUTF8, FileUtil, LazFileUtils, IniFiles;
+uses rxapputils, LazUTF8, FileUtil, LazFileUtils, IniFiles, StrUtils;
 
 { TRxIniPropStorage }
 
@@ -79,6 +80,29 @@ begin
     end;
   end;
   Result:=UTF8ToSys(Result);
+end;
+
+procedure TRxIniPropStorage.FinishPropertyList(List: TStrings);
+{$IFDEF FIX_WIDTH_WIDE_STRING96}
+var
+  S: String;
+  i: Integer;
+  K: SizeInt;
+{$ENDIF FIX_WIDTH_WIDE_STRING96}
+begin
+  {$IFDEF FIX_WIDTH_WIDE_STRING96}
+  if Screen.PixelsPerInch<>96 then
+    for i:=List.Count-1 downto 0 do
+    begin
+      S:=UpperCase(List[I]);
+      K:=Pos('.', S);
+      if K > 0 then
+        Delete(S, 1, K);
+      if (S = 'WIDTH') or (S='HEIGHT') then
+        List.Delete(i);
+    end;
+  {$ENDIF FIX_WIDTH_WIDE_STRING96}
+  inherited FinishPropertyList(List);
 end;
 
 procedure TRxIniPropStorage.StorageNeeded(ReadOnly: Boolean);

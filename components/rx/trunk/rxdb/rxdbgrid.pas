@@ -3781,6 +3781,9 @@ begin
         C := ColumnByCaption(ColumName);
         if Assigned(C) then
         begin
+{$IFDEF FIX_WIDTH_WIDE_STRING96}
+          if Screen.PixelsPerInch = 96 then
+{$ENDIF}
           C.Width := FPropertyStorageLink.Storage.ReadInteger(S1 + sWidth, C.Width);
           C.Visible := FPropertyStorageLink.Storage.ReadInteger(S1 + sVisible, Ord(C.Visible)) = 1;
           C.Index := Min(FPropertyStorageLink.Storage.ReadInteger(S1 + sIndex, C.Index), Columns.Count - 1);
