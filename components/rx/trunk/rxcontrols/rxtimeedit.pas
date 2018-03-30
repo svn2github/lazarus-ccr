@@ -48,17 +48,21 @@ type
     FButton: TRxSpinButton;
     FButtonNeedsFocus: Boolean;
     FOnButtonClick : TNotifyEvent;
+    FShowSecond: boolean;
+    FDisplayFormat:string;
     procedure CheckButtonVisible;
     function GetButtonHint: TTranslateString;
     function GetTime: TTime;
     procedure SetButtonHint(const AValue: TTranslateString);
     procedure SetButtonNeedsFocus(const AValue: Boolean);
+    procedure SetShowSecond(AValue: boolean);
     procedure SetTime(const AValue: TTime);
     procedure DoChangeValue(AValue:integer);
     procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
     procedure WMKillFocus(var Message: TLMKillFocus); message LM_KILLFOCUS;
     procedure SetEnabled(Value: Boolean); override;
   protected
+    procedure UpdateEditFormat;
     procedure SetParent(AParent: TWinControl); override;
     procedure DoPositionButton; virtual;
     procedure UpClick(Sender: TObject); virtual;
@@ -66,6 +70,7 @@ type
     property ButtonOnlyWhenFocused: Boolean read FButtonNeedsFocus write SetButtonNeedsFocus default False;
     property OnButtonClick : TNotifyEvent read FOnButtonClick write FOnButtonClick;
     property ButtonHint: TTranslateString read GetButtonHint write SetButtonHint;
+    property ShowSecond:boolean read FShowSecond write SetShowSecond;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -74,7 +79,10 @@ type
 
 type
   TRxTimeEdit = class(TCustomRxTimeEdit)
+  public
+    property Text;
   published
+    property ShowSecond;
     property AutoSize;
     property AutoSelect;
     property Align;
@@ -124,7 +132,6 @@ type
     property ShowHint;
     property TabOrder;
     property TabStop;
-    property Text;
     property Visible;
   end;
 
@@ -167,9 +174,20 @@ begin
   end;
 end;
 
-procedure TCustomRxTimeEdit.SetTime(const AValue: TTime);
+procedure TCustomRxTimeEdit.SetShowSecond(AValue: boolean);
 begin
-  Text:=TimeToStr(AValue);
+  if FShowSecond=AValue then Exit;
+  FShowSecond:=AValue;
+  UpdateEditFormat;
+end;
+
+procedure TCustomRxTimeEdit.SetTime(const AValue: TTime);
+var
+  H, M, S, MS: word;
+begin
+  DecodeTime(AValue, H, M, S, MS);
+  Text:=Format(FDisplayFormat, [H, M, S, MS]);
+  //Text:=TimeToStr(AValue);
 end;
 
 procedure TCustomRxTimeEdit.DoChangeValue(AValue: integer);
@@ -222,13 +240,19 @@ begin
 
   H1:=StrToInt(S[1]+S[2]);
   M2:=StrToInt(S[4]+S[5]);
-  S3:=StrToInt(S[7]+S[8]);
+  if FShowSecond then
+    S3:=StrToInt(S[7]+S[8]);
   P:=GetSelStart;
-  if P < 3 then IncHour
+  if P < 3 then
+    IncHour
   else
-  if P < 6 then IncMin
-  else IncSec;
-  Text:=Format('%2.2d'+ DefaultFormatSettings.TimeSeparator +'%2.2d'+ DefaultFormatSettings.TimeSeparator +'%2.2d', [H1, M2, S3]);
+  if P < 6 then
+    IncMin
+  else
+  if FShowSecond then
+    IncSec;
+  //Text:=Format('%2.2d'+ DefaultFormatSettings.TimeSeparator +'%2.2d'+ DefaultFormatSettings.TimeSeparator +'%2.2d', [H1, M2, S3]);
+  SetTime(EncodeTime(H1, M2, S3, 0));
   SetSelStart(P);
 end;
 
@@ -249,6 +273,24 @@ procedure TCustomRxTimeEdit.SetEnabled(Value: Boolean);
 begin
   inherited SetEnabled(Value);
   FButton.Enabled:=Value;
+end;
+
+procedure TCustomRxTimeEdit.UpdateEditFormat;
+var
+  FOldTime: TTime;
+begin
+  FOldTime:=GetTime;
+  if FShowSecond then
+  begin
+    EditMask:='!#0'+DefaultFormatSettings.TimeSeparator + '00'+DefaultFormatSettings.TimeSeparator + '00;1;_';
+    FDisplayFormat:='%2.2d'+ DefaultFormatSettings.TimeSeparator +'%2.2d'+ DefaultFormatSettings.TimeSeparator +'%2.2d';
+  end
+  else
+  begin
+    EditMask:='!#0'+DefaultFormatSettings.TimeSeparator + '00;1;_';
+    FDisplayFormat:='%2.2d'+ DefaultFormatSettings.TimeSeparator +'%2.2d';
+  end;
+  SetTime(FOldTime);
 end;
 
 procedure TCustomRxTimeEdit.SetParent(AParent: TWinControl);
@@ -294,6 +336,7 @@ end;
 constructor TCustomRxTimeEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  FShowSecond:=true;
   FButton := TRxSpinButton.Create(Self);
   FButton.FocusControl := Self;
   FButton.Width := Self.Height;
@@ -303,7 +346,7 @@ begin
   FButton.OnTopClick := @UpClick;
   FButton.OnBottomClick := @DownClick;
 
-  EditMask:='!#0'+DefaultFormatSettings.TimeSeparator + '00'+DefaultFormatSettings.TimeSeparator + '00;1;_';
+  UpdateEditFormat;
 end;
 
 destructor TCustomRxTimeEdit.Destroy;
@@ -313,4 +356,6 @@ begin
   inherited Destroy;
 end;
 
+initialization
+  RegisterPropertyToSkip(TRxTimeEdit, 'Text', '', '');
 end.

@@ -13,21 +13,21 @@ object Form1: TForm1
     Height = 397
     Top = 0
     Width = 590
-    ActivePage = TabSheet2
+    ActivePage = TabSheet3
     Align = alClient
-    TabIndex = 1
+    TabIndex = 2
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'RxDBDateEdit demo'
-      ClientHeight = 363
+      ClientHeight = 366
       ClientWidth = 580
       object Label1: TLabel
         AnchorSideLeft.Control = Owner
         AnchorSideTop.Control = Owner
         Left = 6
-        Height = 20
+        Height = 17
         Top = 6
-        Width = 42
+        Width = 38
         Caption = 'Label1'
         ParentColor = False
       end
@@ -36,14 +36,13 @@ object Form1: TForm1
         AnchorSideTop.Control = Label1
         AnchorSideTop.Side = asrBottom
         Left = 12
-        Height = 37
+        Height = 34
         Top = 32
         Width = 151
         BorderSpacing.Around = 6
         ButtonWidth = 23
         Enabled = False
         MaxLength = 10
-        NumGlyphs = 2
         PasswordChar = #0
         PopupColor = clWindow
         TabOrder = 0
@@ -56,9 +55,9 @@ object Form1: TForm1
         AnchorSideTop.Control = RxDBDateEdit1
         AnchorSideTop.Side = asrBottom
         Left = 6
-        Height = 20
+        Height = 17
         Top = 75
-        Width = 85
+        Width = 77
         BorderSpacing.Around = 6
         Caption = 'Currency edit'
         ParentColor = False
@@ -68,24 +67,20 @@ object Form1: TForm1
         AnchorSideTop.Control = Label2
         AnchorSideTop.Side = asrBottom
         Left = 12
-        Height = 37
+        Height = 34
         Top = 101
         Width = 148
         Alignment = taCenter
         BorderSpacing.Around = 6
-        MaxValue = 0
-        MinValue = 0
         TabOrder = 1
-        Value = 0
       end
       object RxDateEdit1: TRxDateEdit
         Left = 12
-        Height = 37
+        Height = 34
         Top = 160
         Width = 80
         ButtonWidth = 23
         MaxLength = 10
-        NumGlyphs = 2
         PasswordChar = #0
         PopupColor = clWindow
         TabOrder = 2
@@ -93,9 +88,9 @@ object Form1: TForm1
       end
       object Button1: TButton
         Left = 248
-        Height = 36
+        Height = 33
         Top = 80
-        Width = 77
+        Width = 69
         AutoSize = True
         Caption = 'Invalidate'
         OnClick = Button1Click
@@ -104,15 +99,15 @@ object Form1: TForm1
     end
     object TabSheet2: TTabSheet
       Caption = 'RxDateRangeEdit demo'
-      ClientHeight = 363
+      ClientHeight = 366
       ClientWidth = 580
       object CheckBox1: TCheckBox
         AnchorSideLeft.Control = TabSheet2
         AnchorSideTop.Control = TabSheet2
         Left = 6
-        Height = 24
+        Height = 23
         Top = 6
-        Width = 88
+        Width = 84
         BorderSpacing.Around = 6
         Caption = 'reoMonth'
         Checked = True
@@ -126,8 +121,8 @@ object Form1: TForm1
         AnchorSideTop.Control = CheckBox3
         AnchorSideTop.Side = asrBottom
         Left = 159
-        Height = 37
-        Top = 96
+        Height = 34
+        Top = 93
         Width = 262
         BorderSpacing.Around = 6
         Month = 5
@@ -140,9 +135,9 @@ object Form1: TForm1
         AnchorSideTop.Control = CheckBox1
         AnchorSideTop.Side = asrBottom
         Left = 6
-        Height = 24
-        Top = 36
-        Width = 96
+        Height = 23
+        Top = 35
+        Width = 91
         BorderSpacing.Around = 6
         Caption = 'reoQuarter'
         Checked = True
@@ -155,9 +150,9 @@ object Form1: TForm1
         AnchorSideTop.Control = CheckBox2
         AnchorSideTop.Side = asrBottom
         Left = 6
-        Height = 24
-        Top = 66
-        Width = 102
+        Height = 23
+        Top = 64
+        Width = 95
         BorderSpacing.Around = 6
         Caption = 'reoHalfYear'
         Checked = True
@@ -170,9 +165,9 @@ object Form1: TForm1
         AnchorSideTop.Control = RxDateRangeEdit1
         AnchorSideTop.Side = asrBottom
         Left = 6
-        Height = 20
-        Top = 139
-        Width = 92
+        Height = 17
+        Top = 133
+        Width = 87
         BorderSpacing.Around = 6
         Caption = 'Start of period'
         ParentColor = False
@@ -183,8 +178,8 @@ object Form1: TForm1
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = Label5
         Left = 12
-        Height = 37
-        Top = 165
+        Height = 34
+        Top = 156
         Width = 272
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Around = 6
@@ -197,9 +192,9 @@ object Form1: TForm1
         AnchorSideTop.Control = RxDateRangeEdit1
         AnchorSideTop.Side = asrBottom
         Left = 296
-        Height = 20
-        Top = 139
-        Width = 85
+        Height = 17
+        Top = 133
+        Width = 79
         BorderSpacing.Around = 6
         Caption = 'End of period'
         ParentColor = False
@@ -211,8 +206,8 @@ object Form1: TForm1
         AnchorSideRight.Control = TabSheet2
         AnchorSideRight.Side = asrBottom
         Left = 302
-        Height = 37
-        Top = 165
+        Height = 34
+        Top = 156
         Width = 272
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Around = 6
@@ -229,6 +224,53 @@ object Form1: TForm1
         Top = 0
         Width = 1
         ParentColor = False
+      end
+    end
+    object TabSheet3: TTabSheet
+      Caption = 'RxTimeEdit demo'
+      ClientHeight = 366
+      ClientWidth = 580
+      object Label6: TLabel
+        AnchorSideLeft.Control = TabSheet3
+        AnchorSideTop.Control = TabSheet3
+        Left = 6
+        Height = 17
+        Top = 6
+        Width = 65
+        BorderSpacing.Around = 6
+        Caption = 'RxTimeEdit'
+        ParentColor = False
+      end
+      object CheckBox4: TCheckBox
+        AnchorSideLeft.Control = RxTimeEdit1
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = RxTimeEdit1
+        Left = 154
+        Height = 23
+        Top = 35
+        Width = 104
+        BorderSpacing.Left = 32
+        BorderSpacing.Around = 6
+        Caption = 'Show second'
+        Checked = True
+        OnChange = CheckBox4Change
+        State = cbChecked
+        TabOrder = 0
+      end
+      object RxTimeEdit1: TRxTimeEdit
+        AnchorSideLeft.Control = Label6
+        AnchorSideTop.Control = Label6
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 34
+        Top = 29
+        Width = 104
+        ShowSecond = True
+        BorderSpacing.Left = 6
+        BorderSpacing.Top = 6
+        CharCase = ecNormal
+        MaxLength = 8
+        TabOrder = 1
       end
     end
   end

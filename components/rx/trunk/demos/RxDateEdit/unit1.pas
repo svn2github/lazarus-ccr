@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, db, FileUtil, DividerBevel, LResources, Forms, Controls,
   Graphics, Dialogs, StdCtrls, ComCtrls, rxmemds, rxdbdateedit, rxcurredit,
-  rxtooledit, rxDateRangeEditUnit;
+  rxtooledit, rxDateRangeEditUnit, RxTimeEdit;
 
 type
 
@@ -18,6 +18,7 @@ type
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
+    CheckBox4: TCheckBox;
     CurrencyEdit1: TCurrencyEdit;
     dsData: TDatasource;
     Edit1: TEdit;
@@ -27,16 +28,20 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    Label6: TLabel;
     PageControl1: TPageControl;
     rxData: TRxMemoryData;
     rxDataDOC_DATE: TDateField;
     RxDateEdit1: TRxDateEdit;
     RxDateRangeEdit1: TRxDateRangeEdit;
     RxDBDateEdit1: TRxDBDateEdit;
+    RxTimeEdit1: TRxTimeEdit;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
     procedure Button1Click(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
+    procedure CheckBox4Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure RxDateRangeEdit1Change(Sender: TObject);
   private
@@ -87,6 +92,11 @@ begin
   if CheckBox3.Checked then
     R:=R + [reoHalfYear];
   RxDateRangeEdit1.Options:=R;
+end;
+
+procedure TForm1.CheckBox4Change(Sender: TObject);
+begin
+  RxTimeEdit1.ShowSecond:=CheckBox4.Checked;
 end;
 
 end.
