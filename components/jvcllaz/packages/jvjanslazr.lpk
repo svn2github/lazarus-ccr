@@ -17,7 +17,7 @@
 - Simulation components"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
-    <Files Count="10">
+    <Files Count="12">
       <Item1>
         <Filename Value="..\run\JvJans\JvYearGrid.pas"/>
         <UnitName Value="JvYearGrid"/>
@@ -58,6 +58,14 @@
         <Filename Value="..\run\JvJans\JvMarkupLabel.pas"/>
         <UnitName Value="JvMarkupLabel"/>
       </Item10>
+      <Item11>
+        <Filename Value="..\run\JvJans\jvjanled.pas"/>
+        <UnitName Value="JvJanLed"/>
+      </Item11>
+      <Item12>
+        <Filename Value="..\run\JvJans\jvjantoggle.pas"/>
+        <UnitName Value="jvjantoggle"/>
+      </Item12>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

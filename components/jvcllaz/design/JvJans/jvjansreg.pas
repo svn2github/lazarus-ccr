@@ -18,7 +18,8 @@ uses
   JvYearGrid,
   //JvCSVData, JvCSVBaseControls, //JvCsvBaseEditor,
   JvMarkupViewer, JvMarkupLabel,
-  JvSimScope, JvSimIndicator, JvSimPID, JvSimPIDLinker, JvSimLogic;
+  JvSimScope, JvSimIndicator, JvSimPID, JvSimPIDLinker, JvSimLogic,
+  JvJanLed, JvJanToggle;
 
 procedure Register;
 begin
@@ -30,7 +31,9 @@ begin
   RegisterComponents(RsPaletteJvcl, [            // was: RsPaletteJansSim
     TJvSimScope, TJvSimIndicator, TJvSimPID,
     TJvSimPIDLinker, TJvSimConnector, TJvLogic, TJvSimButton, TJvSimLight,
-    TJvSimLogicBox, TJvSimReverse]);
+    TJvSimLogicBox, TJvSimReverse,
+    TJvJanLed, TJvJanToggle
+  ]);
 
   // Markup components
   RegisterComponents(RsPaletteJvcl, [

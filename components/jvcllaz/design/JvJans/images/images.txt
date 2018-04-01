@@ -9,5 +9,7 @@ tjvsimbutton.bmp
 tjvsimreverse.bmp
 tjvsimlight.bmp
 tjvlogic.bmp
+tjvjanled.bmp
+tjvjantoggle.bmp
 tjvmarkupviewer.bmp
 tjvmarkuplabel.bmp
