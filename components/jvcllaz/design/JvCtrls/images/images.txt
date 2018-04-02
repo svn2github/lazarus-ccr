@@ -3,3 +3,4 @@ tjvhtcombobox.bmp
 tjvhtlabel.bmp
 tjvhtlistbox.bmp
 tjvmovablebevel.bmp
+tjvruler.bmp

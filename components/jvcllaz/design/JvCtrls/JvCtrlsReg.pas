@@ -15,13 +15,15 @@ implementation
 
 uses
   Classes, JvDsgnConsts,
-  JvHtControls, {JvDBHTLabel,} JvHint, JvHTHintForm, JvMovableBevel,
+  JvMovableBevel, JvRuler,
+  JvHtControls, {JvDBHTLabel,} JvHint, JvHTHintForm,
   PropEdits, Controls;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
-    TJvMovableBevel, TJvHint, TJvHTLabel, TJvHTListbox, TJvHTCombobox
+    TJvMovableBevel, TJvRuler,
+    TJvHint, TJvHTLabel, TJvHTListbox, TJvHTCombobox
   ]);
   {
   RegisterComponents(RsPaletteBarPanel, [TJvMovableBevel]);
