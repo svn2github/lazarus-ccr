@@ -26,6 +26,7 @@ object Form1: TForm1
         EditButtons = <>
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Empty)'
+        Filter.NotEmptyValue = '(Не пусто)'
         Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
@@ -40,6 +41,7 @@ object Form1: TForm1
         EditButtons = <>
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Empty)'
+        Filter.NotEmptyValue = '(Не пусто)'
         Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
@@ -55,6 +57,7 @@ object Form1: TForm1
         EditButtons = <>
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Empty)'
+        Filter.NotEmptyValue = '(Не пусто)'
         Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
@@ -70,6 +73,7 @@ object Form1: TForm1
         EditButtons = <>
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Empty)'
+        Filter.NotEmptyValue = '(Не пусто)'
         Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
@@ -84,6 +88,7 @@ object Form1: TForm1
         EditButtons = <>
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Empty)'
+        Filter.NotEmptyValue = '(Не пусто)'
         Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
@@ -149,7 +154,7 @@ object Form1: TForm1
     FooterOptions.DrawFullLine = False
     SearchOptions.QuickSearchOptions = [loCaseInsensitive, loPartialKey]
     SearchOptions.FromStart = False
-    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFilter, rdgAllowQuickFilter, rdgAllowToolMenu]
+    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFilter, rdgAllowQuickFilter, rdgAllowFilterForm, rdgAllowToolMenu]
     Align = alClient
     Color = clWindow
     DrawFullLine = False
@@ -158,7 +163,6 @@ object Form1: TForm1
     GridLineStyle = psSolid
     DataSource = dsData
     Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderPushedLook]
-    ParentColor = False
     TabOrder = 0
   end
   object rxData: TRxMemoryData

@@ -74,15 +74,15 @@ type
     ComboBox7: TComboBox;
     ComboBox8: TComboBox;
     ComboBox9: TComboBox;
-    Edit1: TEdit;
-    Edit2: TEdit;
-    Edit3: TEdit;
-    Edit4: TEdit;
-    Edit5: TEdit;
-    Edit6: TEdit;
-    Edit7: TEdit;
-    Edit8: TEdit;
-    Edit9: TEdit;
+    Edit1: TComboBox;
+    Edit2: TComboBox;
+    Edit3: TComboBox;
+    Edit4: TComboBox;
+    Edit5: TComboBox;
+    Edit6: TComboBox;
+    Edit7: TComboBox;
+    Edit8: TComboBox;
+    Edit9: TComboBox;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -98,13 +98,13 @@ type
   private
     Combo_1 : Array[1..9] of TComboBox;
     Combo_2 : Array[1..9] of TComboBox;
-    Edit_1  : Array[1..9] of TEdit;
+    Edit_1  : Array[1..9] of TComboBox;
     Combo_3 : Array[1..9] of TComboBox;
 
     FGrid : TRxDBGrid;
     procedure ClearALL(AGrid : TRxDBGrid);
     function  FindCombo(CB:TComboBox):Integer;
-    function  FindEdit(ED:TEdit):Integer;
+    function FindEdit(ED: TComboBox): Integer;
   public
     function Execute(AGrid : TRxDBGrid; var FilterStr : String; var LastFilter : TstringList):Boolean;
   end;
@@ -153,9 +153,9 @@ end;
 procedure TrxFilterByForm.EditChange(Sender: TObject);
 var
   EDN : Integer;
-  ED  : TEdit;
+  ED  : TComboBox;
 begin
-  ED  := (Sender AS TEdit);
+  ED  := (Sender AS TComboBox);
   EDN := FindEdit(ED);
   if EDN=0 Then Exit;
   if ED.Text='' Then Combo_1[EDN].ItemIndex:=-1;
@@ -193,7 +193,9 @@ begin
   begin
     if Assigned(AGrid.Columns[i].Field) and (AGrid.Columns[i].Field.FieldKind=fkData) and (AGrid.Columns[i].Visible) then
     begin
-      Combo_1[1].Items.Objects[Combo_1[1].Items.Add(AGrid.Columns[i].Title.Caption)]:=AGrid.Columns[i].Field;
+      Combo_1[1].Items.AddObject(AGrid.Columns[i].Title.Caption, AGrid.Columns[i].Field);
+      Edit_1[1].Items.AddObject(AGrid.Columns[i].Title.Caption, AGrid.Columns[i].Field);
+
       wt := Canvas.TextWidth(AGrid.Columns[i].Title.Caption);
         if wt > w then
           w := wt;
@@ -242,6 +244,7 @@ var
   S, S1 : String;
   SD : String;
   C : TColumn;
+  C1: TRxColumn;
 begin
   Result := False;
   //*****************************************************************************
@@ -344,6 +347,13 @@ begin
             FilterStr := FilterStr+Combo_3[X-1].Text+' ';
 
           C:=FGrid.ColumnByCaption(Combo_1[X].Text);
+
+          if Edit_1[X].Items.IndexOf(Edit_1[X].Text)>-1 then
+          begin
+            C1:=FGrid.ColumnByCaption(Edit_1[X].Text);
+            FilterStr := FilterStr+'('+C.FieldName+Combo_2[X].Text+C1.FieldName+') ';
+          end
+          else
           if Pos('NULL', Combo_2[X].Text) > 0 then
             FilterStr := FilterStr+'('+C.FieldName+Combo_2[X].Text+') '
           else
@@ -379,7 +389,7 @@ begin
   end;
 end;
 
-function  TrxFilterByForm.FindEdit(ED:TEdit):Integer;
+function  TrxFilterByForm.FindEdit(ED:TComboBox):Integer;
 var
  X : Integer;
 begin
