@@ -278,7 +278,7 @@ procedure TCustomRxDBTimeEdit.Change;
 begin
   if Assigned(FDatalink) then
   begin
-    FDatalink.Edit;
+    //FDatalink.Edit;
     FDataLink.Modified;
   end;
   inherited Change;
