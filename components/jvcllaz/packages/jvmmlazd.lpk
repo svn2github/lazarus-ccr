@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="JvMMLazD"/>
+    <Type Value="DesignTime"/>
+    <Author Value="Various authors - see header of each unit for original author."/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <OtherUnitFiles Value="..\design\JvMM"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Files Count="1">
+      <Item1>
+        <Filename Value="..\design\JvMM\jvmmreg.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="JvMMReg"/>
+      </Item1>
+    </Files>
+    <RequiredPkgs Count="4">
+      <Item1>
+        <PackageName Value="JvCoreLazD"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="IDEIntf"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="JvMMLazR"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="FCL"/>
+      </Item4>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
