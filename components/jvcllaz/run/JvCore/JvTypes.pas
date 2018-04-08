@@ -239,7 +239,11 @@ type
 
  {$ENDIF COMPILER5}
 
+ *********************)
+
   TJvGradientStyle = (grFilled, grEllipse, grHorizontal, grVertical, grPyramid, grMount);
+
+(********************
   //  TOnDelete = procedure(Sender: TObject; Path: string) of object;
   TJvParentEvent = procedure(Sender: TObject; ParentWindow: THandle) of object;
   //  TOnImage = procedure(Sender: TObject; Image: TBitmap) of object; // JvClipboardViewer

@@ -16,11 +16,12 @@ implementation
 uses
   Classes, JvDsgnConsts,
   PropEdits, Controls,
-  JvSpecialProgress;
+  JvGradient, JvSpecialProgress;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
+    TJvGradient,
     TJvSpecialProgress
   ]);
 end;
