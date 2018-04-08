@@ -65,6 +65,8 @@ const
   NullHandle = 0;
   USDecimalSeparator = '.';
 
+  WideNull = WideChar(#0);
+
 (******************** NOT CONVERTED
 {$IFDEF UNIX}
 type
@@ -1197,10 +1199,18 @@ function SecondsBetween(const Now: TDateTime; const FTime: TDateTime): Integer;
 
 ******************** NOT CONVERTED *)
 
+function ReverseBytes(Value: Word): Word; overload; // taken from JclLogic
+function ReverseBytes(Value: Integer): Integer; overload;
+function ReverseBytes(Value: Cardinal): Cardinal; overload;
+
+// taken from JclFileUtils
+function FindUnusedFileName(FileName: string; const FileExt: string; NumberPrefix: string = ''): string;
+
+
 implementation
 
 uses
-  Math,
+  Math, SysUtils, LazFileUtils,
   JvConsts;
 
 (******************** NOT CONVERTED
@@ -9765,6 +9775,73 @@ begin
 end;
 
 ******************** NOT CONVERTED *)
+
+// from JclLogic
+function ReverseBytes(Value: Word): Word;
+begin
+  Result := (Value shr 8) or (Value shl 8);
+end;
+
+// from JclLogic
+function ReverseBytes(Value: Integer): Integer;
+begin
+  Result := (Value shr 24) or (Value shl 24) or ((Value and $00FF0000) shr 8) or ((Value and $0000FF00) shl 8);
+end;
+
+// from JclLogic
+function ReverseBytes(Value: Cardinal): Cardinal;
+begin
+  Result := (Value shr 24) or (Value shl 24) or ((Value and $00FF0000) shr 8) or ((Value and $0000FF00) shl 8);
+end;
+
+// from JclStrings
+function StrEnsurePrefix(const Prefix, Text: string): string;
+var
+  PrefixLen: SizeInt;
+begin
+  PrefixLen := Length(Prefix);
+  if Copy(Text, 1, PrefixLen) = Prefix then
+    Result := Text
+  else
+    Result := Prefix + Text;
+end;
+
+// from JclFileUtils
+function PathAddExtension(const Path, Extension: string): string;
+begin
+  Result := Path;
+  // (obones) Extension may not contain the leading dot while ExtractFileExt
+  // always returns it. Hence the need to use StrEnsurePrefix for the SameText
+  // test to return an accurate value.
+  if (Path <> '') and (Extension <> '') and
+    (CompareFileNames(ExtractFileExt(Path), StrEnsurePrefix('.',Extension)) <> 0) then
+//    not SameText(ExtractFileExt(Path), StrEnsurePrefix('.', Extension)) then
+  begin
+    if Path[Length(Path)] = '.' then
+      Delete(Result, Length(Path), 1);
+    if Extension[1] = '.' then
+      Result := Result + Extension
+    else
+      Result := Result + '.' + Extension;
+  end;
+end;
+
+// from JclFileUtils
+function FindUnusedFileName(FileName: string; const FileExt: string; NumberPrefix: string = ''): string;
+var
+  I: Integer;
+begin
+  Result := PathAddExtension(FileName, FileExt);
+  if not FileExists(Result) then
+    Exit;
+  if SameText(Result, FileName) then
+    Delete(FileName, Length(FileName) - Length(FileExt) + 1, Length(FileExt));
+  I := 0;
+  repeat
+    Inc(I);
+    Result := PathAddExtension(FileName + NumberPrefix + IntToStr(I), FileExt);
+  until not FileExists(Result);
+end;
 
 end.
 

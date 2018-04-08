@@ -23,8 +23,9 @@ Known Issues:
 -----------------------------------------------------------------------------}
 // $Id$
 
-unit JvGradientHeaderPanel;
+{$mode objfpc}{$H+}
 
+unit JvGradientHeaderPanel;
 
 interface
 

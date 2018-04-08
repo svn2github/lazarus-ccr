@@ -1,3 +1,4 @@
+tjvid3v1.bmp
 tjvgradient.bmp
 tjvgradientheaderpanel.bmp
 tjvspecialprogress.bmp
