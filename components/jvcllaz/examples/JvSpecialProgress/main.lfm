@@ -160,7 +160,7 @@ object MainForm: TMainForm
     Top = 236
     Width = 100
     TabOrder = 10
-    Text = '%d%% done.'
+    Text = '%0:d%% done (%1:d of %2:d).'
   end
   object LblFormat: TLabel
     Left = 247

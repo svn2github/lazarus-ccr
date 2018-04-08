@@ -88,9 +88,9 @@ type
     procedure SetTextOption(const Value: TJvTextOption);
     procedure PaintRectangle;
     procedure PaintNonSolid;
-    procedure PaintSolid;
-    procedure DoEraseBackground;
+    procedure PaintSolid;                                                      
     procedure PaintText;
+    procedure DoEraseBackground;
   protected
     function ColorOrDefaultColor: TColor;
     procedure Paint; override;
@@ -111,7 +111,7 @@ type
     property BorderColor: TColor read FBorderColor write SetBorderColor default clWindowFrame;
     property BorderSpacing;
     property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsNone;
-    property Caption;
+    property Caption;  // contains FormatStr if TextOption=foFormat: #0=Percent #1=Position #2=Max #3=Min
     property Color;
     property EndColor: TColor read FEndColor write SetEndColor default clBlack;
     property Flat: Boolean read FFlat write SetFlat default true;
@@ -437,7 +437,7 @@ begin
     toPercent:
       S := Format('%d%%', [PercentDone]);
     toFormat:
-      S := Format(Caption, [PercentDone]);
+      S := Format(Caption, [PercentDone, FPosition, FMaximum, FMinimum]);
     toCaption:
       S := Caption;
   else {toNoText}
