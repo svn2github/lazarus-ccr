@@ -47,11 +47,11 @@ type
 
   TJvID3v1 = class(TComponent)   //TJvComponent)
   private
-    FSongName: AnsiString;
-    FArtist: AnsiString;
-    FAlbum: AnsiString;
-    FComment: AnsiString;
-    FYear: AnsiString;
+    FSongName: String;
+    FArtist: String;
+    FAlbum: String;
+    FComment: String;
+    FYear: String;
     FGenre: Byte;
     FFileName: TFileName;
     FActive: Boolean;
@@ -82,11 +82,11 @@ type
     property Active: Boolean read FActive write SetActive;
     property FileName: TFileName read FFileName write SetFileName;
     { Do not store dummies }
-    property SongName: AnsiString read FSongName write FSongName stored False;
-    property Artist: AnsiString read FArtist write FArtist stored False;
-    property Album: AnsiString read FAlbum write FAlbum stored False;
-    property Year: AnsiString read FYear write FYear stored False;
-    property Comment: AnsiString read FComment write FComment stored False;
+    property SongName: String read FSongName write FSongName stored False;
+    property Artist: String read FArtist write FArtist stored False;
+    property Album: String read FAlbum write FAlbum stored False;
+    property Year: String read FYear write FYear stored False;
+    property Comment: String read FComment write FComment stored False;
     property Genre: Byte read FGenre write FGenre stored False;
     property GenreAsString: string read GetGenreAsString write SetGenreAsString stored False;
     property AlbumTrack: Byte read FAlbumTrack write FAlbumTrack stored False;
@@ -101,7 +101,7 @@ function WriteID3v1Tag(const AFileName: string; const ATag: TID3v1Tag): Boolean;
 implementation
 
 uses
-  Math,
+  Math, LConvEncoding,
   JvId3v2Types, JvTypes, JvResources;
 
 const
@@ -109,6 +109,7 @@ const
 
   CTagSize = 128;
   CTagIDSize = 3;
+
 
 //=== Global procedures ======================================================
 
@@ -196,6 +197,7 @@ begin
   end;
 end;
 
+
 //=== Local procedures =======================================================
 
 procedure AnsiStringToPAnsiChar(const Source: AnsiString; Dest: PAnsiChar; const MaxLength: Integer);
@@ -214,6 +216,7 @@ begin
   { [Q..P) is valid }
   SetString(Result, Q, P - Q);
 end;
+
 
 //=== { TJvID3v1 } ===========================================================
 
@@ -249,11 +252,11 @@ begin
 
   // Set new Tag
   Move(CID3v1Tag[0], lTag.Identifier[0], 3);
-  AnsiStringToPAnsiChar(SongName, @lTag.SongName, 30);
-  AnsiStringToPAnsiChar(Artist, @lTag.Artist, 30);
-  AnsiStringToPAnsiChar(Album, @lTag.Album, 30);
+  AnsiStringToPAnsiChar(UTF8ToISO_8859_1(SongName), @lTag.SongName, 30);
+  AnsiStringToPAnsiChar(UTF8ToISO_8859_1(Artist), @lTag.Artist, 30);
+  AnsiStringToPAnsiChar(UTF8ToISO_8859_1(Album), @lTag.Album, 30);
   AnsiStringToPAnsiChar(Year, @lTag.Year, 4);
-  AnsiStringToPAnsiChar(Comment, @lTag.Comment, 30);
+  AnsiStringToPAnsiChar(UTF8ToISO_8859_1(Comment), @lTag.Comment, 30);
   lTag.Genre := FGenre;
   if lTag.Comment[28] = #0 then
     lTag.Comment[29] := AnsiChar(FAlbumTrack);
@@ -322,11 +325,11 @@ begin
 
   if Result then
   begin
-    FSongName := PAnsiCharToAnsiString(@lTag.SongName, 30);
-    FArtist := PAnsiCharToAnsiString(@lTag.Artist, 30);
-    FAlbum := PAnsiCharToAnsiString(@lTag.Album, 30);
+    FSongName := ISO_8859_1ToUTF8(PAnsiCharToAnsiString(@lTag.SongName, 30));
+    FArtist := ISO_8859_1ToUTF8(PAnsiCharToAnsiString(@lTag.Artist, 30));
+    FAlbum := ISO_8859_1ToUTF8(PAnsiCharToAnsiString(@lTag.Album, 30));
     FYear := PAnsiCharToAnsiString(@lTag.Year, 4);
-    FComment := PAnsiCharToAnsiString(@lTag.Comment, 30);
+    FComment := ISO_8859_1ToUTF8(PAnsiCharToAnsiString(@lTag.Comment, 30));
     // (p3) missing genre added
     FGenre := lTag.Genre;
     if lTag.Comment[28] = #0 then

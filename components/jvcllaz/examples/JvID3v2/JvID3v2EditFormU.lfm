@@ -1,0 +1,910 @@
+object JvID3v2EditForm: TJvID3v2EditForm
+  Left = 345
+  Height = 384
+  Top = 248
+  Width = 510
+  BorderStyle = bsDialog
+  Caption = 'JvID3v2EditForm'
+  ClientHeight = 384
+  ClientWidth = 510
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.9.0.0'
+  object PageControl1: TPageControl
+    Left = 121
+    Height = 344
+    Top = 40
+    Width = 389
+    TabStop = False
+    ActivePage = tshLyrics
+    Align = alClient
+    TabIndex = 1
+    TabOrder = 0
+    object tshWinampTags: TTabSheet
+      Caption = 'tshWinampTags'
+      ClientHeight = 316
+      ClientWidth = 381
+      TabVisible = False
+      object lblTitle: TLabel
+        AnchorSideTop.Control = edtTitle
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 51
+        Height = 15
+        Top = 8
+        Width = 26
+        Anchors = [akTop, akRight]
+        Caption = '&Title:'
+        FocusControl = edtTitle
+        ParentColor = False
+      end
+      object lblArtist: TLabel
+        AnchorSideTop.Control = edtArtist
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 46
+        Height = 15
+        Top = 35
+        Width = 31
+        Anchors = [akTop, akRight]
+        Caption = '&Artist:'
+        FocusControl = edtArtist
+        ParentColor = False
+      end
+      object lblAlbum: TLabel
+        AnchorSideTop.Control = edtAlbum
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 38
+        Height = 15
+        Top = 62
+        Width = 39
+        Anchors = [akTop, akRight]
+        Caption = 'Al&bum:'
+        FocusControl = edtAlbum
+        ParentColor = False
+      end
+      object lblYear: TLabel
+        AnchorSideTop.Control = edtYear
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 52
+        Height = 15
+        Top = 89
+        Width = 25
+        Anchors = [akTop, akRight]
+        Caption = '&Year:'
+        FocusControl = edtYear
+        ParentColor = False
+      end
+      object lblComposer: TLabel
+        AnchorSideTop.Control = edtComposer
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 19
+        Height = 15
+        Top = 189
+        Width = 58
+        Anchors = [akTop, akRight]
+        Caption = 'Co&mposer:'
+        FocusControl = edtComposer
+        ParentColor = False
+      end
+      object lblOrigArtist: TLabel
+        AnchorSideTop.Control = edtOrigArtist
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 17
+        Height = 15
+        Top = 216
+        Width = 60
+        Anchors = [akTop, akRight]
+        Caption = '&Orig. Artist:'
+        FocusControl = edtOrigArtist
+        ParentColor = False
+      end
+      object lblCopyright: TLabel
+        AnchorSideTop.Control = edtCopyright
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 21
+        Height = 15
+        Top = 243
+        Width = 56
+        Anchors = [akTop, akRight]
+        Caption = 'Co&pyright:'
+        FocusControl = edtCopyright
+        ParentColor = False
+      end
+      object lblURL: TLabel
+        AnchorSideTop.Control = edtURL
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 53
+        Height = 15
+        Top = 270
+        Width = 24
+        Anchors = [akTop, akRight]
+        Caption = '&URL:'
+        FocusControl = edtURL
+        ParentColor = False
+      end
+      object lblEncodedBy: TLabel
+        AnchorSideLeft.Control = tshWinampTags
+        AnchorSideTop.Control = edtEncodedBy
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 15
+        Top = 297
+        Width = 65
+        BorderSpacing.Left = 12
+        Caption = '&Encoded by:'
+        FocusControl = edtEncodedBy
+        ParentColor = False
+      end
+      object lblGenre: TLabel
+        AnchorSideLeft.Control = edtYear
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = lblYear
+        Left = 164
+        Height = 15
+        Top = 89
+        Width = 34
+        BorderSpacing.Left = 16
+        Caption = '&Genre:'
+        FocusControl = cmbGenre
+        ParentColor = False
+      end
+      object lblComment: TLabel
+        AnchorSideTop.Control = memComment
+        AnchorSideRight.Control = lblEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 20
+        Height = 15
+        Top = 112
+        Width = 57
+        Anchors = [akTop, akRight]
+        Caption = '&Comment:'
+        FocusControl = memComment
+        ParentColor = False
+      end
+      object edtTitle: TEdit
+        AnchorSideLeft.Control = edtEncodedBy
+        AnchorSideTop.Control = tshWinampTags
+        AnchorSideRight.Control = edtEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 81
+        Height = 23
+        Top = 4
+        Width = 296
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 0
+      end
+      object edtArtist: TEdit
+        AnchorSideLeft.Control = edtEncodedBy
+        AnchorSideTop.Control = edtTitle
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = edtEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 81
+        Height = 23
+        Top = 31
+        Width = 296
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 1
+      end
+      object edtAlbum: TEdit
+        AnchorSideLeft.Control = edtEncodedBy
+        AnchorSideTop.Control = edtArtist
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = edtEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 81
+        Height = 23
+        Top = 58
+        Width = 296
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 2
+      end
+      object edtYear: TEdit
+        AnchorSideLeft.Control = edtEncodedBy
+        AnchorSideTop.Control = edtAlbum
+        AnchorSideTop.Side = asrBottom
+        Left = 81
+        Height = 23
+        Top = 85
+        Width = 67
+        BorderSpacing.Top = 4
+        TabOrder = 3
+      end
+      object edtComposer: TEdit
+        AnchorSideLeft.Control = edtEncodedBy
+        AnchorSideTop.Control = memComment
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = edtEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 81
+        Height = 23
+        Top = 185
+        Width = 296
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 6
+      end
+      object edtOrigArtist: TEdit
+        AnchorSideLeft.Control = edtEncodedBy
+        AnchorSideTop.Control = edtComposer
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = edtEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 81
+        Height = 23
+        Top = 212
+        Width = 296
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 7
+      end
+      object edtCopyright: TEdit
+        AnchorSideLeft.Control = edtEncodedBy
+        AnchorSideTop.Control = edtOrigArtist
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = edtEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 81
+        Height = 23
+        Top = 239
+        Width = 296
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 8
+      end
+      object edtURL: TEdit
+        AnchorSideLeft.Control = edtEncodedBy
+        AnchorSideTop.Control = edtCopyright
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = edtEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 81
+        Height = 23
+        Top = 266
+        Width = 296
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 9
+      end
+      object edtEncodedBy: TEdit
+        AnchorSideLeft.Control = lblEncodedBy
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtURL
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = tshWinampTags
+        AnchorSideRight.Side = asrBottom
+        Left = 81
+        Height = 23
+        Top = 293
+        Width = 296
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 4
+        BorderSpacing.Bottom = 4
+        TabOrder = 10
+      end
+      object cmbGenre: TComboBox
+        AnchorSideLeft.Control = lblGenre
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtAlbum
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = edtEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 206
+        Height = 23
+        Top = 85
+        Width = 171
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 4
+        ItemHeight = 15
+        TabOrder = 4
+      end
+      object memComment: TMemo
+        AnchorSideLeft.Control = edtEncodedBy
+        AnchorSideTop.Control = edtYear
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = edtEncodedBy
+        AnchorSideRight.Side = asrBottom
+        Left = 81
+        Height = 69
+        Top = 112
+        Width = 296
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        Lines.Strings = (
+          ''
+        )
+        TabOrder = 5
+      end
+    end
+    object tshLyrics: TTabSheet
+      Caption = 'tshLyrics'
+      ClientHeight = 316
+      ClientWidth = 381
+      ImageIndex = 1
+      TabVisible = False
+      object lblLanguage: TLabel
+        AnchorSideLeft.Control = tshLyrics
+        AnchorSideTop.Control = cmbLanguage
+        AnchorSideTop.Side = asrCenter
+        Left = 4
+        Height = 15
+        Top = 8
+        Width = 55
+        BorderSpacing.Left = 4
+        Caption = 'Language:'
+        ParentColor = False
+      end
+      object lblDescription: TLabel
+        AnchorSideLeft.Control = memLyrics
+        AnchorSideTop.Control = edtDescription
+        AnchorSideTop.Side = asrCenter
+        Left = 4
+        Height = 15
+        Top = 240
+        Width = 63
+        Caption = 'Description:'
+        ParentColor = False
+      end
+      object lblWriter: TLabel
+        AnchorSideTop.Control = edtWriter
+        AnchorSideTop.Side = asrCenter
+        Left = 8
+        Height = 15
+        Top = 267
+        Width = 35
+        Caption = 'Writer:'
+        ParentColor = False
+      end
+      object cmbLanguage: TComboBox
+        AnchorSideLeft.Control = lblLanguage
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = tshLyrics
+        Left = 67
+        Height = 23
+        Top = 4
+        Width = 145
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 4
+        ItemHeight = 15
+        Sorted = True
+        TabOrder = 0
+      end
+      object memLyrics: TMemo
+        AnchorSideLeft.Control = tshLyrics
+        AnchorSideTop.Control = cmbLanguage
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = tshLyrics
+        AnchorSideRight.Side = asrBottom
+        Left = 4
+        Height = 201
+        Top = 31
+        Width = 373
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 4
+        TabOrder = 1
+      end
+      object edtDescription: TEdit
+        AnchorSideLeft.Control = lblDescription
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = memLyrics
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = memLyrics
+        AnchorSideRight.Side = asrBottom
+        Left = 75
+        Height = 23
+        Top = 236
+        Width = 302
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 4
+        TabOrder = 2
+      end
+      object edtWriter: TEdit
+        AnchorSideLeft.Control = edtDescription
+        AnchorSideTop.Control = edtDescription
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = memLyrics
+        AnchorSideRight.Side = asrBottom
+        Left = 75
+        Height = 23
+        Top = 263
+        Width = 302
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 3
+      end
+    end
+    object tshPictures: TTabSheet
+      Caption = 'tshPictures'
+      ClientHeight = 316
+      ClientWidth = 381
+      ImageIndex = 2
+      TabVisible = False
+      object imgPicture: TImage
+        AnchorSideLeft.Control = lsvPictures
+        AnchorSideTop.Control = lsvPictures
+        AnchorSideTop.Side = asrBottom
+        Left = 4
+        Height = 120
+        Top = 170
+        Width = 120
+        BorderSpacing.Top = 8
+        Stretch = True
+      end
+      object lblPictureName: TLabel
+        AnchorSideLeft.Control = btnChange
+        AnchorSideTop.Control = edtPictureName
+        AnchorSideTop.Side = asrCenter
+        Left = 136
+        Height = 15
+        Top = 236
+        Width = 35
+        Caption = 'Name:'
+        ParentColor = False
+      end
+      object lblPictureType: TLabel
+        AnchorSideLeft.Control = lblPictureName
+        AnchorSideTop.Control = cmbPictureType
+        AnchorSideTop.Side = asrCenter
+        Left = 136
+        Height = 15
+        Top = 263
+        Width = 28
+        Caption = 'Type:'
+        ParentColor = False
+      end
+      object lsvPictures: TListView
+        AnchorSideLeft.Control = tshPictures
+        AnchorSideTop.Control = tshPictures
+        AnchorSideRight.Control = tshPictures
+        AnchorSideRight.Side = asrBottom
+        Left = 4
+        Height = 158
+        Top = 4
+        Width = 373
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 4
+        Columns = <        
+          item
+            Caption = 'Name'
+            Width = 150
+          end        
+          item
+            Caption = 'Type'
+            Width = 70
+          end        
+          item
+            Caption = 'Format'
+            Width = 70
+          end        
+          item
+            Caption = 'Size'
+          end>
+        HideSelection = False
+        ReadOnly = True
+        RowSelect = True
+        TabOrder = 0
+        ViewStyle = vsReport
+        OnClick = lsvPicturesClick
+      end
+      object edtPictureName: TEdit
+        AnchorSideLeft.Control = lblPictureName
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = btnChange
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = lsvPictures
+        AnchorSideRight.Side = asrBottom
+        Left = 179
+        Height = 23
+        Top = 232
+        Width = 198
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 8
+        TabOrder = 5
+      end
+      object cmbPictureType: TComboBox
+        AnchorSideLeft.Control = edtPictureName
+        AnchorSideTop.Control = edtPictureName
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = lsvPictures
+        AnchorSideRight.Side = asrBottom
+        Left = 179
+        Height = 23
+        Top = 259
+        Width = 198
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        ItemHeight = 15
+        Sorted = True
+        TabOrder = 6
+      end
+      object btnChange: TButton
+        AnchorSideLeft.Control = btnAdd
+        AnchorSideTop.Control = btnAdd
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = btnAdd
+        AnchorSideRight.Side = asrBottom
+        Left = 136
+        Height = 25
+        Top = 199
+        Width = 75
+        Action = actChangePicture
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 4
+      end
+      object btnAdd: TButton
+        AnchorSideLeft.Control = imgPicture
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = imgPicture
+        Left = 136
+        Height = 25
+        Top = 170
+        Width = 75
+        Action = actAddPicture
+        BorderSpacing.Left = 12
+        TabOrder = 1
+      end
+      object btnDelete: TButton
+        AnchorSideLeft.Control = btnAdd
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = btnAdd
+        Left = 215
+        Height = 25
+        Top = 170
+        Width = 75
+        Action = actDeletePicture
+        BorderSpacing.Left = 4
+        TabOrder = 2
+      end
+      object btnSave: TButton
+        AnchorSideLeft.Control = btnDelete
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = btnAdd
+        Left = 294
+        Height = 25
+        Top = 170
+        Width = 75
+        Action = actSavePicture
+        BorderSpacing.Left = 4
+        TabOrder = 3
+      end
+    end
+    object tshAllFrames: TTabSheet
+      Caption = 'tshAllFrames'
+      ClientHeight = 316
+      ClientWidth = 381
+      ImageIndex = 3
+      TabVisible = False
+      object lsvAllFrames: TListView
+        Left = 4
+        Height = 308
+        Top = 4
+        Width = 373
+        Align = alClient
+        BorderSpacing.Around = 4
+        Columns = <        
+          item
+            Caption = 'Name'
+          end        
+          item
+            Caption = 'Supported'
+            Width = 70
+          end        
+          item
+            Caption = 'Description'
+            Width = 226
+          end>
+        ParentShowHint = False
+        ReadOnly = True
+        RowSelect = True
+        ShowHint = True
+        TabOrder = 0
+        ViewStyle = vsReport
+      end
+    end
+  end
+  object lsbNavigator: TListBox
+    Left = 0
+    Height = 344
+    Top = 40
+    Width = 121
+    Align = alLeft
+    Items.Strings = (
+      'Winamp tags'
+      'Lyrics'
+      'Pictures'
+      'All Frames'
+    )
+    ItemHeight = 15
+    OnClick = lsbNavigatorClick
+    TabOrder = 1
+  end
+  object ToolBar1: TToolBar
+    Left = 0
+    Height = 40
+    Top = 0
+    Width = 510
+    ButtonHeight = 36
+    ButtonWidth = 72
+    Caption = 'ToolBar1'
+    Images = iml16
+    ShowCaptions = True
+    TabOrder = 2
+    object ToolButton1: TToolButton
+      Left = 1
+      Top = 2
+      Action = actOK
+    end
+    object ToolButton2: TToolButton
+      Left = 73
+      Top = 2
+      Action = actCancel
+    end
+    object ToolButton3: TToolButton
+      Left = 145
+      Top = 2
+      Action = actRemove
+    end
+    object ToolButton5: TToolButton
+      Left = 217
+      Top = 2
+      Action = actCopyFromv1
+    end
+    object ToolButton4: TToolButton
+      Left = 299
+      Top = 2
+      Action = actCopyTov1
+    end
+  end
+  object acl16: TActionList
+    Images = iml16
+    left = 40
+    top = 112
+    object actOK: TAction
+      Caption = 'OK'
+      ImageIndex = 1
+      OnExecute = actOKExecute
+    end
+    object actCancel: TAction
+      Caption = 'Cancel'
+      ImageIndex = 0
+      OnExecute = actCancelExecute
+    end
+    object actRemove: TAction
+      Caption = 'Remove'
+      ImageIndex = 2
+      OnExecute = actRemoveExecute
+    end
+    object actAddPicture: TAction
+      Caption = 'Add'
+      OnExecute = actAddPictureExecute
+    end
+    object actDeletePicture: TAction
+      Caption = 'Delete'
+      OnExecute = actDeletePictureExecute
+      OnUpdate = ItemSelected
+    end
+    object actSavePicture: TAction
+      Caption = 'Save'
+      OnExecute = actSavePictureExecute
+      OnUpdate = ItemSelected
+    end
+    object actChangePicture: TAction
+      Caption = 'Change'
+      OnExecute = actChangePictureExecute
+      OnUpdate = ItemSelected
+    end
+    object actCopyTov1: TAction
+      Caption = 'Copy to v1'
+      ImageIndex = 4
+      OnExecute = actCopyTov1Execute
+    end
+    object actCopyFromv1: TAction
+      Caption = 'Copy From v1'
+      ImageIndex = 3
+      OnExecute = actCopyFromv1Execute
+    end
+  end
+  object iml16: TImageList
+    left = 40
+    top = 176
+    Bitmap = {
+      4C69050000001000000010000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
+      00FF0000000000000000000000000000000000000000000000FF000000FF9C8C
+      6FFF0000000000000000000000000000000000000000000000FF9999FFFF9999
+      FFFF000000FF000000000000000000000000000000FF9999FFFF9999FFFF0000
+      00FF9C8C6FFF00000000000000000000000000000000000000FF9999FFFF0000
+      FFFF2600C4FF000000FF00000000000000FF9999FFFF0000FFFF000099FF0000
+      00FF9C8C6FFF0000000000000000000000000000000000000000000000FF2600
+      C4FF0000FFFF2600C4FF000000FF9999FFFF0000FFFF000099FF000000FF9C8C
+      6FFF9C8C6FFF0000000000000000000000000000000000000000000000000000
+      00FF2600C4FF0000FFFF9999FFFF0000FFFF000099FF000000FF9C8C6FFF9C8C
+      6FFF000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000FFFF0000FFFF0000FFFF000000FF9C8C6FFF9C8C6FFF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00FF9999FFFF0000FFFF2600C4FF0000FFFF2600C4FF000000FF9C8C6FFF0000
+      0000000000000000000000000000000000000000000000000000000000FF9999
+      FFFF0000FFFF000099FF000000FF2600C4FF0000FFFF2600C4FF000000FF9C8C
+      6FFF0000000000000000000000000000000000000000000000FF9999FFFF0000
+      FFFF000099FF000000FF9C8C6FFF000000FF2600C4FF0000FFFF000099FF0000
+      00FF9C8C6FFF00000000000000000000000000000000000000FF9999FFFF0000
+      99FF000000FF9C8C6FFF9C8C6FFF9C8C6FFF000000FF000099FF000099FF0000
+      00FF9C8C6FFF000000000000000000000000000000009C8C6FFF000000FF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000009C8C6FFF000000FF000000FF9C8C
+      6FFF0000000000000000000000000000000000000000000000009C8C6FFF9C8C
+      6FFF9C8C6FFF000000000000000000000000000000009C8C6FFF9C8C6FFF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF00C0
+      92FF19A64DFF000000FF00000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000000000FF00C092FF19A6
+      4DFF0C4D24FF000000FF00000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000FF00C092FF19A64DFF0C4D
+      24FF000000FF9C8C6FFF000000000000000000000000000000FF000000FF0000
+      0000000000000000000000000000000000FF00C092FF19A64DFF0C4D24FF0000
+      00FF9C8C6FFF9C8C6FFF0000000000000000000000FF19A64DFF19A64DFF0000
+      00FF0000000000000000000000FF00C092FF19A64DFF0C4D24FF000000FF9C8C
+      6FFF9C8C6FFF000000000000000000000000000000FF19A64DFF00C092FF0000
+      00FF000000FF000000FF00C092FF19A64DFF0C4D24FF000000FF9C8C6FFF9C8C
+      6FFF000000000000000000000000000000009C8C6FFF000000FF19A64DFF00C0
+      92FF000000FF00C092FF19A64DFF0C4D24FF000000FF9C8C6FFF9C8C6FFF0000
+      00000000000000000000000000000000000000000000000000FF19A64DFF19A6
+      4DFF00C092FF19A64DFF0C4D24FF000000FF9C8C6FFF9C8C6FFF000000000000
+      000000000000000000000000000000000000000000009C8C6FFF000000FF19A6
+      4DFF19A64DFF0C4D24FF000000FF9C8C6FFF9C8C6FFF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0C4D
+      24FF0C4D24FF000000FF9C8C6FFF9C8C6FFF0000000000000000000000000000
+      00000000000000000000000000000000000000000000000000009C8C6FFF0000
+      00FF000000FF9C8C6FFF9C8C6FFF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000009C8C
+      6FFF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF000000FF000000FF000000FF000000FF000000FF000000000000
+      00000000000000000000000000000000000000000000000000FF000000FF0000
+      00FF000000FFBFBFBFFFFFFFFFFFBFBFBFFFBFBFBFFF000000FF000000FF0000
+      00FF000000FF00000000000000000000000000000000000000FFBFBFBFFFFFFF
+      FFFFFFFFFFFFBFBFBFFFBFBFBFFFC0928FFFC0928FFF9C8C6FFF9C8C6FFF9C8C
+      6FFF000000FF9C8C6FFF000000000000000000000000000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF9C8C6FFF00000000000000000000000000000000000000FF9C8C
+      6FFF9C8C6FFF9C8C6FFF9C8C6FFF9C8C6FFF9C8C6FFF9C8C6FFF9C8C6FFF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000FFBFBF
+      BFFFFFFFFFFFC0928FFFF9EED9FF9C8C6FFFC0928FFF404040FF9C8C6FFF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000FFBFBF
+      BFFFFFFFFFFFBFBFBFFFF9EED9FFC0928FFFBFBFBFFF666666FFD1A78FFF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000FFBFBF
+      BFFFFFFFFFFFBFBFBFFFF9EED9FFC0928FFFBFBFBFFF666666FFD1A78FFF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000FFBFBF
+      BFFFFFFFFFFFBFBFBFFFF9EED9FFC0928FFFBFBFBFFF666666FFD1A78FFF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000FFBFBF
+      BFFFFFFFFFFFBFBFBFFFF9EED9FFC0928FFFBFBFBFFF666666FFD1A78FFF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000FFBFBF
+      BFFFFFFFFFFFBFBFBFFFF9EED9FFC0928FFFBFBFBFFF666666FFD1A78FFF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000FFBFBF
+      BFFFFFFFFFFFF9EED9FFBFBFBFFFBFBFBFFFC0928FFFC0928FFF666666FF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000FFBFBF
+      BFFFFFFFFFFFBFBFBFFFBFBFBFFFC0928FFFC0928FFF666666FF666666FF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF9C8C6FFF9C8C6FFF00000000000000000000000000000000000000009C8C
+      6FFF9C8C6FFF9C8C6FFF9C8C6FFF9C8C6FFF9C8C6FFF9C8C6FFF9C8C6FFF9C8C
+      6FFF9C8C6FFF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000000000FF000000FF0000
+      00FF000000FF000000FF00000000000000000000000000000000000000000000
+      000000000000000000000000000000000000336666FF6D9FC7FFCCCCFFFFE6E6
+      E6FFCCCCFFFFA6A6A6FF000000FF000000000000000000000000000000FF0000
+      00FF000000000000000000000000336666FF4E7EA6FF6D9FC7FF6D9FC7FF0000
+      00FF6D9FC7FF6D9FC7FF4E7EA6FF000000FF0000000000000000000000FF00FF
+      FFFF000000FF0000000000000000204A6EFF4E7EA6FF4E7EA6FF000000FF0000
+      00FF6D9FC7FF57B3F7FF4E7EA6FF000000FF000000FF000000FF000000FF00FF
+      FFFF00FFFFFF000000FF000000004E7EA6FF57B3F7FF57B3F7FF57B3F7FF0000
+      00FF57B3F7FF57B3F7FF0099FFFF000000FFD6FFFFFFD6FFFFFFD6FFFFFF00FF
+      FFFF00FFFFFF00FFFFFF000000FF4E7EA6FF57B3F7FF57B3F7FF57B3F7FF0000
+      00FF58D2E8FF58D2E8FF57B3F7FF336666FF00FFFFFF00FFFFFF00FFFFFF00FF
+      FFFF00FFFFFF58D2E8FF000000FF4E7EA6FF57B3F7FF58D2E8FF99CCFFFF0000
+      00FF58D2E8FF58D2E8FF57B3F7FF336666FF000000FF000000FF000000FF00FF
+      FFFF58D2E8FF000000FF9C8C6FFF4E7EA6FF6D9FC7FF58D2E8FF9EF0FFFF0000
+      00FF9EF0FFFF9EF0FFFF58D2E8FF336666FF9C8C6FFF9C8C6FFF000000FF58D2
+      E8FF000000FF9C8C6FFF00000000000000004E7EA6FF6BD2B8FF58D2E8FF9EF0
+      FFFF9EF0FFFF6BD2B8FF336666FF000000000000000000000000000000FF0000
+      00FF9C8C6FFF00000000000000000000000000000000336666FF4E7EA6FF6699
+      99FF4E7EA6FF336666FF00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000FF000000FF000000FF0000
+      00FF000000FF00000000000000000000000000000000000000FF000000FF0000
+      00000000000000000000000000003C696EFF8591BBFFC5CDEBFFD9DFF6FFC6D5
+      EFFF929FC7FF000000FF000000000000000000000000000000FF00FFFFFF0000
+      00FF00000000000000003C696EFF3F5EA6FF6DA0DEFF82A0D9FF000000FF7AAF
+      D1FF6EA8D8FF4F7ABDFF000000FF000000FF000000FF000000FF00FFFFFF00FF
+      FFFF000000FF00000000335493FF3775C7FF3985D0FF000000FF000000FF489B
+      C5FF3C9BD3FF3281D0FF000000FFD6FFFFFFD6FFFFFFD6FFFFFF00FFFFFF00FF
+      FFFF00FFFFFF000000FF2860A2FF318EDCFF3C9EEAFF579FEAFF000000FF49B1
+      DDFF3AB1E9FF2D98E7FF000000FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FF
+      FFFF58D2E8FF000000FF3477B1FF3BA9EDFF55C3FFFF75C6FFFF000000FF64CC
+      E6FF55CDF4FF42B4F5FF437377FF000000FF000000FF000000FF00FFFFFF58D2
+      E8FF000000FF9C8C6FFF407FACFF4AB7F0FF65D7FFFF87DAFFFF000000FF78E0
+      EAFF68E2F7FF56C7F9FF437377FF9C8C6FFF9C8C6FFF000000FF58D2E8FF0000
+      00FF9C8C6FFF000000004D7D99FF50ACD6FF74E3FCFF91EBFFFF000000FF80EE
+      ECFF7AF0F9FF66CCEDFF437377FF0000000000000000000000FF000000FF9C8C
+      6FFF000000000000000000000000477383FF66BFCFFF7AE4ECFF84F2F7FF7CEB
+      EDFF6BCAD3FF3C696EFF00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000003C696EFF447F83FF519192FF4A86
+      87FF437377FF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000
+    }
+  end
+  object JvID3v21: TJvID3v2
+    Active = False
+    ProcessPictures = True
+    left = 40
+    top = 240
+  end
+end

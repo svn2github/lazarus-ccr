@@ -66,6 +66,8 @@ const
   USDecimalSeparator = '.';
 
   WideNull = WideChar(#0);
+  BOM_LSB_FIRST = WideChar($FEFF);
+  BOM_MSB_FIRST = WideChar($FFFE);
 
 (******************** NOT CONVERTED
 {$IFDEF UNIX}
@@ -1202,6 +1204,9 @@ function SecondsBetween(const Now: TDateTime; const FTime: TDateTime): Integer;
 function ReverseBytes(Value: Word): Word; overload; // taken from JclLogic
 function ReverseBytes(Value: Integer): Integer; overload;
 function ReverseBytes(Value: Cardinal): Cardinal; overload;
+
+function BEtoN(const AValue: WideString): WideString; overload;
+function NtoBE(const AValue: WideString): WideString; overload;
 
 // taken from JclFileUtils
 function FindUnusedFileName(FileName: string; const FileExt: string; NumberPrefix: string = ''): string;
@@ -9786,6 +9791,35 @@ end;
 function ReverseBytes(Value: Integer): Integer;
 begin
   Result := (Value shr 24) or (Value shl 24) or ((Value and $00FF0000) shr 8) or ((Value and $0000FF00) shl 8);
+end;
+
+// from fpexif
+function BEtoN(const AValue: WideString): WideString;
+{$IFNDEF ENDIAN_BIG}
+var
+  i: Integer;
+{$ENDIF}
+begin
+  {$IFDEF ENDIAN_BIG}
+  Result := AValue;
+  {$ELSE}
+  SetLength(Result, Length(AValue));
+  for i:=1 to Length(AValue) do
+    Result[i] := WideChar(BEToN(PDWord(@AValue[i])^));
+  {$ENDIF}
+end;
+
+function NtoBE(const AValue: WideString): WideString;
+var
+  i: Integer;
+begin
+  {$IFDEF ENDIAN_BIG}
+  Result := AValue;
+  {$ELSE}
+  SetLength(Result, Length(AValue));
+  for i:=1 to Length(AValue) do
+    Result[i] := WideChar(NtoBE(PDWord(@AValue[i])^));
+  {$ENDIF}
 end;
 
 // from JclLogic
