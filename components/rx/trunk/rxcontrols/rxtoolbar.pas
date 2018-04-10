@@ -1081,6 +1081,9 @@ begin
     if AComponent = FImageList then
       SetImageList(nil)
     else
+    if AComponent = FImageListSelected then
+      SetImageListSelected(nil)
+    else
     if AComponent is TPopupMenu then
     begin
       for i:=0 to FToolbarItems.Count - 1 do
