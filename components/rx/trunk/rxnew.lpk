@@ -275,52 +275,52 @@ translate to Lazarus by alexs in 2005 - 2018"/>
         <UnitName Value="rxspin"/>
       </Item61>
       <Item62>
-        <Filename Value="rxcontrols\rxswitch.inc"/>
-        <Type Value="Include"/>
-      </Item62>
-      <Item63>
         <Filename Value="rxcontrols\rxswitch.pas"/>
         <UnitName Value="rxswitch"/>
-      </Item63>
-      <Item64>
+      </Item62>
+      <Item63>
         <Filename Value="rxcontrols\rxsystemservices.pas"/>
         <UnitName Value="RxSystemServices"/>
-      </Item64>
-      <Item65>
+      </Item63>
+      <Item64>
         <Filename Value="rxcontrols\rxtbrsetup.pas"/>
         <UnitName Value="rxtbrsetup"/>
-      </Item65>
-      <Item66>
+      </Item64>
+      <Item65>
         <Filename Value="rxcontrols\rxtimeedit.pas"/>
         <UnitName Value="RxTimeEdit"/>
-      </Item66>
-      <Item67>
+      </Item65>
+      <Item66>
         <Filename Value="rxcontrols\rxtoolbar.pas"/>
         <UnitName Value="rxtoolbar"/>
-      </Item67>
-      <Item68>
+      </Item66>
+      <Item67>
         <Filename Value="rxcontrols\rxtooledit.pas"/>
         <UnitName Value="rxtooledit"/>
-      </Item68>
-      <Item69>
+      </Item67>
+      <Item68>
         <Filename Value="rxdb\rxdbgrid_popupfilterunit.pas"/>
         <UnitName Value="RxDBGrid_PopUpFilterUnit"/>
-      </Item69>
-      <Item70>
+      </Item68>
+      <Item69>
         <Filename Value="rxdb\rxdbverticalgrid.pas"/>
         <UnitName Value="rxdbverticalgrid"/>
-      </Item70>
-      <Item71>
+      </Item69>
+      <Item70>
         <Filename Value="rxcontrols\rxlclutils.pas"/>
         <UnitName Value="rxlclutils"/>
-      </Item71>
-      <Item72>
+      </Item70>
+      <Item71>
         <Filename Value="rxcontrols\rxrangesel.pas"/>
         <UnitName Value="RxRangeSel"/>
-      </Item72>
-      <Item73>
+      </Item71>
+      <Item72>
         <Filename Value="rxcontrols\rxxmlpropstorage.pas"/>
         <UnitName Value="RxXMLPropStorage"/>
+      </Item72>
+      <Item73>
+        <Filename Value="rxcontrols\rxswitch.res"/>
+        <Type Value="Binary"/>
       </Item73>
     </Files>
     <LazDoc Paths="docs;\usr\local\share\lazarus\components\rxnew\docs"/>

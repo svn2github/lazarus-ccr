@@ -150,7 +150,7 @@ type
     property OnOff: TNotifyEvent read FOnOff write FOnOff;
   end;
 
-{$I RXSWITCH.INC}
+{$R rxswitch.res}
 
 implementation
 
@@ -294,7 +294,11 @@ begin
 end;
 
 procedure TRxSwitch.SetSwitchGlyph(Index: TSwithState; Value: TBitmap);
+var
+  S: String;
+  B: TBitmap;
 begin
+  FBitmaps[Index].Clear;
   if Value <> nil then
   begin
     FBitmaps[Index].Assign(Value);
@@ -303,11 +307,17 @@ begin
   else
   begin
     case Index of
-      sw_off: FBitmaps[Index].Handle:=CreatePixmapIndirect(@RXSWITCH_OFF[0],
-                                          GetSysColor(COLOR_BTNFACE));
+{      sw_off: FBitmaps[Index].Handle:=CreatePixmapIndirect(@RXSWITCH_OFF[0], GetSysColor(COLOR_BTNFACE));
       sw_on: FBitmaps[Index].Handle:=CreatePixmapIndirect(@RXSWITCH_ON[0],
-                                          GetSysColor(COLOR_BTNFACE));
+                                          GetSysColor(COLOR_BTNFACE));}
+      sw_off:S:='rxswitch_off';
+      sw_on:S:='rxswitch_on';
+    else
+      Exit;
     end;
+    B:=CreateResBitmap(S);
+    FBitmaps[Index].Assign(B);
+    B.Free;
     Exclude(FUserBitmaps, Index);
   end;
 end;
