@@ -1,6 +1,9 @@
 1. Contributors
-  brick08 - from freepascal.ru
-  rtn - from freepascal.ru
-  kit - from freepascal.ru
+    brick08 - from freepascal.ru
+    rtn - from freepascal.ru
+    kit - from freepascal.ru
+  
+  Component icon images:
+    zoltanleo aka Док
 
 7. Вопросы задавать мылом или на форуме FreePascal.ru (предпочтительней)
