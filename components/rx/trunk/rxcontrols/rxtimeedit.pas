@@ -241,7 +241,9 @@ begin
   H1:=StrToInt(S[1]+S[2]);
   M2:=StrToInt(S[4]+S[5]);
   if FShowSecond then
-    S3:=StrToInt(S[7]+S[8]);
+    S3:=StrToInt(S[7]+S[8])
+  else
+    S3:=0;
   P:=GetSelStart;
   if P < 3 then
     IncHour
