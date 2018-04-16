@@ -38,29 +38,31 @@ Type
 
   TMapProvider = Class
     private
-      FLayer : integer;
-      idServer : Array of Integer;
-      FName : String;
-      FUrl : Array of string;
-      FNbSvr : Array of integer;
-      FGetSvrStr : Array of TGetSvrStr;
-      FGetXStr : Array of TGetValStr;
-      FGetYStr : Array of TGetValStr;
-      FGetZStr : Array of TGetValStr;
-      FMinZoom : Array of integer;
-      FMaxZoom : Array of integer;
-      function getLayerCount: integer;
+      FLayer: integer;
+      idServer: Array of Integer;
+      FName: String;
+      FUrl: Array of string;
+      FNbSvr: Array of integer;
+      FGetSvrStr: Array of TGetSvrStr;
+      FGetXStr: Array of TGetValStr;
+      FGetYStr: Array of TGetValStr;
+      FGetZStr: Array of TGetValStr;
+      FMinZoom: Array of integer;
+      FMaxZoom: Array of integer;
+      function GetLayerCount: integer;
       procedure SetLayer(AValue: integer);
 
     public
-      constructor Create(aName : String);
+      constructor Create(AName: String);
       destructor Destroy; override;
-      procedure AddURL(Url: String; NbSvr: integer;aMinZoom : integer;aMaxZoom : integer; GetSvrStr: TGetSvrStr; GetXStr: TGetValStr; GetYStr: TGetValStr; GetZStr: TGetValStr);
-      procedure GetZoomInfos(out zMin:integer;out zMax : integer);
-      Function GetUrlForTile(id : TTileId) : String;
-      property Name : String read FName;
-      property LayerCount : integer read getLayerCount;
-      property Layer : integer read FLayer write SetLayer;
+      procedure AddURL(Url: String; NbSvr, aMinZoom, aMaxZoom: integer;
+        GetSvrStr: TGetSvrStr; GetXStr: TGetValStr; GetYStr: TGetValStr;
+        GetZStr: TGetValStr);
+      procedure GetZoomInfos(out AZoomMin, AZoomMax: integer);
+      Function GetUrlForTile(id: TTileId): String;
+      property Name: String read FName;
+      property LayerCount: integer read GetLayerCount;
+      property Layer: integer read FLayer write SetLayer;
   end;
 
 
@@ -131,41 +133,42 @@ begin
   FLayer:=low(FUrl);
 end;
 
-procedure TMapProvider.GetZoomInfos(out zMin: integer; out zMax: integer);
+procedure TMapProvider.GetZoomInfos(out AZoomMin, AZoomMax: integer);
 begin
-  zMin:=FMinZoom[layer];
-  zMax:=FMaxZoom[layer];
+  AZoomMin := FMinZoom[layer];
+  AZoomMax := FMaxZoom[layer];
 end;
 
 function TMapProvider.GetUrlForTile(id: TTileId): String;
-var i : integer;
-    XVal,yVal,zVal,SvrVal : String;
-    idsvr: integer;
+var
+  i: integer;
+  XVal, yVal, zVal, SvrVal: String;
+  idsvr: integer;
 begin
-  Result:='';
-  i:=layer;
-  if (i>high(idServer)) or (i<low(idServer)) or (FNbSvr[i]=0) then
+  Result := '';
+  i := layer;
+  if (i > High(idServer)) or (i < Low(idServer)) or (FNbSvr[i] = 0) then
     exit;
 
-  idsvr:=idServer[i] mod FNbSvr[i];
-  idServer[i]+=1;
+  idsvr := idServer[i] mod FNbSvr[i];
+  idServer[i] += 1;
 
-  SvrVal:=inttostr(idsvr);
-  XVal:=inttostr(id.X);
-  YVal:=inttostr(id.Y);
-  ZVal:=inttostr(id.Z);
+  SvrVal := IntToStr(idsvr);
+  XVal := IntToStr(id.X);
+  YVal := IntToStr(id.Y);
+  ZVal := IntToStr(id.Z);
   if Assigned(FGetSvrStr[i]) then
-     SvrVal:=FGetSvrStr[i](idsvr);
+    SvrVal := FGetSvrStr[i](idsvr);
   if Assigned(FGetXStr[i]) then
-     XVal:=FGetXStr[i](id);
+    XVal := FGetXStr[i](id);
   if Assigned(FGetYStr[i]) then
-     YVal:=FGetYStr[i](id);
+    YVal := FGetYStr[i](id);
   if Assigned(FGetZStr[i]) then
-     ZVal:=FGetZStr[i](id);
-  Result:=StringReplace(FUrl[i],'%serv%',SvrVal,[rfreplaceall]);
-  Result:=StringReplace(Result,'%x%',XVal,[rfreplaceall]);
-  Result:=StringReplace(Result,'%y%',YVal,[rfreplaceall]);
-  Result:=StringReplace(Result,'%z%',ZVal,[rfreplaceall]);
+    ZVal := FGetZStr[i](id);
+  Result := StringReplace(FUrl[i], '%serv%', SvrVal, [rfreplaceall]);
+  Result := StringReplace(Result, '%x%', XVal, [rfreplaceall]);
+  Result := StringReplace(Result, '%y%', YVal, [rfreplaceall]);
+  Result := StringReplace(Result, '%z%', ZVal, [rfreplaceall]);
 end;
 
 end.

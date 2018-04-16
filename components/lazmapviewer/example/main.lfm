@@ -18,7 +18,7 @@ object MainForm: TMainForm
     Align = alRight
     ClientHeight = 545
     ClientWidth = 237
-    TabOrder = 0
+    TabOrder = 1
     object CbProviders: TComboBox
       AnchorSideLeft.Control = LblProviders
       AnchorSideLeft.Side = asrBottom

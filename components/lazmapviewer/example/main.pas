@@ -197,8 +197,6 @@ begin
   MapView.Zoom := 1;
   CbUseThreads.Checked := MapView.UseThreads;
   CbDoubleBuffer.Checked := MapView.DoubleBuffered;
-//  GeoNames.LocationName := 'New York';
-//  MapView.Center := GeoNames.Search('New York', MapView.DownloadEngine);
 
   ReadFromIni;
 end;
