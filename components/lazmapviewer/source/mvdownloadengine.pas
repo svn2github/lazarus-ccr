@@ -1,4 +1,4 @@
-{ Map Viewer Download Engine Synapse
+{ Map Viewer Download Engine
 
   Copyright (C) 2011 Maciej Kaczkowski / keit.co
 
@@ -33,6 +33,7 @@ type
   public
     procedure DownloadFile(const Url: string; AStream: TStream); virtual;
   end;
+
 
 implementation
 
