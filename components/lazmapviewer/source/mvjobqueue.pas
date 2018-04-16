@@ -35,46 +35,47 @@ type
 
     TJob = Class
       private
-        FLauncher : TObject;
-        FCancelled : Boolean;
+        FLauncher: TObject;
+        FCancelled: Boolean;
         FName: String;
-      protected
-        Queue : TJobQueue;
 
-        procedure DoCancel;virtual;
-        Procedure WaitForResultOf(aJob : TJob);
+      protected
+        Queue: TJobQueue;
+        procedure DoCancel; virtual;
+        Procedure WaitForResultOf(aJob: TJob);
         Procedure EnterCriticalSection;
         procedure LeaveCriticalSection;
 
         //should be called inside critical section
-        function pGetTask : integer;virtual;
-        procedure pTaskStarted(aTask: integer);virtual;abstract;
-        procedure pTaskEnded(aTask : integer;aExcept : Exception);virtual;abstract;
-        property Launcher : TObject read FLauncher;
+        function pGetTask: integer; virtual;
+        procedure pTaskStarted(aTask: integer); virtual; abstract;
+        procedure pTaskEnded(aTask: integer; aExcept: Exception); virtual; abstract;
+        property Launcher: TObject read FLauncher;
+
       public
-        procedure ExecuteTask(aTask : integer;FromWaiting : boolean);virtual;abstract;
-        function Running : boolean;virtual;abstract;
+        procedure ExecuteTask(aTask: integer; FromWaiting: boolean); virtual; abstract;
+        function Running: boolean; virtual; abstract;
         procedure Cancel;
-        property Cancelled : boolean read FCancelled;
-        property Name : String read FName write FName;
+        property Cancelled: boolean read FCancelled;
+        property Name: String read FName write FName;
      end;
 
     TJobArray = Array of TJob;
 
     { TJobQueue }
 
-    TJobQueue = Class
+    TJobQueue = class
       private
-        FMainThreadId : TThreadID;
+        FMainThreadId: TThreadID;
         FOnIdle: TNotifyEvent;
-        waitings : TStringList;
-        FNbThread : integer;
-        TerminatedThread : integer;
-        FSect : TCriticalSection;
-        FEvent,TerminateEvent : TEvent;
+        waitings: TStringList;
+        FNbThread: integer;
+        TerminatedThread: integer;
+        FSect: TCriticalSection;
+        FEvent, TerminateEvent: TEvent;
         FUseThreads: boolean;
-        Threads : TList;
-        Jobs : TObjectList;
+        Threads: TList;
+        Jobs: TObjectList;
         procedure pJobCompleted(var aJob: TJob);
         procedure SetUseThreads(AValue: boolean);
         procedure ClearWaitings;
@@ -83,29 +84,29 @@ type
         Procedure FreeThreads;
         Procedure EnterCriticalSection;
         procedure LeaveCriticalSection;
-        Procedure DoWaiting(E : Exception;TaskId : integer);
+        Procedure DoWaiting(E: Exception; TaskId: integer);
 
         //Should be called inside critical section
-        procedure pAddWaiting(aJob : TJob;aTask : integer;JobId : String);
-        procedure pTaskStarted(aJob : TJob;aTask : integer);
-        procedure pTaskEnded(var aJob : TJob;aTask : integer;aExcept : Exception);
-        function pGetJob(out TaskId : integer;out Restart : boolean) : TJob;
-        function pFindJobByName(const aName : string;ByLauncher: TObject) : TJobArray;
-        procedure pNotifyWaitings(aJob : TJob);
-        Function IsMainThread : boolean;
+        procedure pAddWaiting(aJob: TJob; aTask: integer; JobId: String);
+        procedure pTaskStarted(aJob: TJob; aTask: integer);
+        procedure pTaskEnded(var aJob: TJob; aTask: integer; aExcept: Exception);
+        function pGetJob(out TaskId: integer; out Restart: boolean) : TJob;
+        function pFindJobByName(const aName: string; ByLauncher: TObject) : TJobArray;
+        procedure pNotifyWaitings(aJob: TJob);
+        Function IsMainThread: boolean;
       public
-        constructor Create(NbThread : integer = 5);
-        destructor Destroy;override;
+        constructor Create(NbThread: integer = 5);
+        destructor Destroy; override;
         procedure QueueAsyncCall(const AMethod: TDataEvent; Data: PtrInt);
         procedure QueueSyncCall(const AMethod: TDataEvent; Data: PtrInt);
-        property UseThreads : boolean read FUseThreads write SetUseThreads;
-        Procedure AddJob(aJob : TJob;Launcher : TObject);
+        Procedure AddJob(aJob: TJob; Launcher: TObject);
         function AddUniqueJob(aJob: TJob; Launcher: TObject) : boolean;
-        function CancelAllJob(ByLauncher: TObject) : TJobArray;
-        function CancelJobByName(aJobName : String;ByLauncher: TObject) : boolean;
-        Procedure WaitForTerminate(const lstJob : TJobArray);
+        function CancelAllJob(ByLauncher: TObject): TJobArray;
+        function CancelJobByName(aJobName: String; ByLauncher: TObject): boolean;
+        Procedure WaitForTerminate(const lstJob: TJobArray);
         Procedure WaitAllJobTerminated(ByLauncher: TObject);
-        property OnIdle : TNotifyEvent read FOnIdle write FOnIdle;
+        property UseThreads: boolean read FUseThreads write SetUseThreads;
+        property OnIdle: TNotifyEvent read FOnIdle write FOnIdle;
     end;
 
 

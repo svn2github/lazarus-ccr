@@ -23,16 +23,17 @@ interface
 
 uses
   Classes, SysUtils;
-Type
+
+type
   { TTileId }
   TTileId = record
-    X,Y : int64;
-    Z : integer;
+    X, Y: int64;
+    Z: integer;
   end;
 
 
-  TGetSvrStr = Function (id : integer) : string of object;
-  TGetValStr = Function (const Tile : TTileId) : String of object;
+  TGetSvrStr = function (id: integer): string of object;
+  TGetValStr = function (const Tile: TTileId): String of object;
 
   { TMapProvider }
 

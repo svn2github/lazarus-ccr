@@ -26,7 +26,9 @@ uses
 
 
 type
+
   { TSimpleJob: job with only one task }
+
   TSimpleJob = class(TJob)
   private
     FRunning, FEnded: boolean;
@@ -35,12 +37,13 @@ type
     procedure pTaskStarted(aTask: integer); override;
     procedure pTaskEnded(aTask: integer; aExcept: Exception); override;
   public
-    function Running : boolean; override;
+    function Running: boolean; override;
   end;
 
   TJobProc = procedure (Data: TObject; Job: TJob) of object;
 
   { TEventJob: job with only one task (callback an event) }
+
   TEventJob = class(TSimpleJob)
   private
     FData: TObject;
@@ -59,7 +62,7 @@ implementation
 { TEventJob }
 
 constructor TEventJob.Create(aEvent: TJobProc; Data: TObject;
-  OwnData: Boolean; JobName: String='');
+  OwnData: Boolean; JobName: String = '');
 begin
   Name := JobName;
   FTask := aEvent;

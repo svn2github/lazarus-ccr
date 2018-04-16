@@ -30,9 +30,9 @@ Type
 
    TPictureCache = Class(TComponent)
    private
-     FMemMaxElem : integer;
-     Crit : TCriticalSection;
-     Cache : TStringList;
+     FMemMaxElem: integer;
+     Crit: TCriticalSection;
+     Cache: TStringList;
      FBasePath: String;
      FUseDisk: Boolean;
      FUseThreads: Boolean;
@@ -40,113 +40,130 @@ Type
      Procedure EnterCrit;
      Procedure LeaveCrit;
    protected
-     function GetNewImgFor(aStream : TStream) : TLazIntfImage;
+     function GetNewImgFor(aStream: TStream): TLazIntfImage;
      procedure FreeCache;
-     Function MapProvider2FileName(MapProvider : TMapProvider) : String;
-     Function DiskCached(const aFileName : String) : Boolean;
-     procedure LoadFromDisk(const aFileName : String;out img : TLazIntfImage);
-     Function GetFileName(MapProvider : TMapProvider;const TileId : TTileId) : String;
+     Function MapProvider2FileName(MapProvider: TMapProvider): String;
+     Function DiskCached(const aFileName: String): Boolean;
+     procedure LoadFromDisk(const aFileName: String; out img: TLazIntfImage);
+     Function GetFileName(MapProvider: TMapProvider;const TileId: TTileId): String;
    public
-     Procedure CheckCacheSize(sender : TObject);
-     constructor Create(aOwner : TComponent);override;
-     destructor destroy;override;
-     Procedure Add(MapProvider : TMapProvider;const TileId : TTileId;Stream : TMemoryStream);
-     Procedure GetFromCache(MapProvider : TMapProvider;const TileId : TTileId;out img : TLazIntfImage);
-     function InCache(MapProvider : TMapProvider;const TileId : TTileId) : Boolean;
+     Procedure CheckCacheSize(Sender: TObject);
+     constructor Create(aOwner: TComponent); override;
+     destructor destroy; override;
+     Procedure Add(MapProvider: TMapProvider; const TileId: TTileId; Stream: TMemoryStream);
+     Procedure GetFromCache(MapProvider: TMapProvider; const TileId: TTileId; out img: TLazIntfImage);
+     function InCache(MapProvider: TMapProvider; const TileId: TTileId): Boolean;
 
-     property UseDisk : Boolean read FUseDisk write FUseDisk;
-     property BasePath : String read FBasePath write FBasePath;
-     property UseThreads : Boolean read FUseThreads write SetUseThreads;
+     property UseDisk: Boolean read FUseDisk write FUseDisk;
+     property BasePath: String read FBasePath write FBasePath;
+     property UseThreads: Boolean read FUseThreads write SetUseThreads;
    end;
 
 
 implementation
-uses FPimage,GraphType,FPReadJPEG;
+
+uses
+  FPimage, GraphType, FPReadJPEG;
+
 
 { TPictureCache }
 
-function IsValidPNG(stream: TStream): Boolean;
+function IsValidPNG(AStream: TStream): Boolean;
 var
   s: string;
   y: Int64;
 begin
-  if Assigned(stream) then
+  if Assigned(AStream) then
   begin
     SetLength(s, 3);
-    y := stream.Position;
-    stream.Position := 1;
-    stream.Read(s[1], 3);
-    stream.Position := y;
-    Result := s = 'PNG';
+    y := AStream.Position;
+    AStream.Position := 1;
+    AStream.Read(s[1], 3);
+    AStream.Position := y;
+    Result := (s = 'PNG');
   end
   else
-    Result := False;
+    Result := false;
 end;
 
-function IsValidJPEG(stream: TStream): Boolean;
+function IsValidJPEG(AStream: TStream): Boolean;
 var
   s: string;
   y: Int64;
 begin
-  if Assigned(stream) then
+  if Assigned(AStream) then
   begin
     SetLength(s, 4);
-    y := stream.Position;
-    stream.Position := 6;
-    stream.Read(s[1], 4);
-    stream.Position := y;
+    y := AStream.Position;
+    AStream.Position := 6;
+    AStream.Read(s[1], 4);
+    AStream.Position := y;
     Result := (s = 'JFIF') or (s = 'Exif');
   end
   else
-    Result := False;
+    Result := false;
+end;
+
+constructor TPictureCache.Create(aOwner: TComponent);
+begin
+  inherited Create(aOwner);
+  FMemMaxElem := 2048 div 256;
+  Cache := TStringList.create;
+end;
+
+destructor TPictureCache.Destroy;
+begin
+  inherited;
+  FreeCache;
+  FreeAndNil(Crit);
 end;
 
 procedure TPictureCache.SetUseThreads(AValue: Boolean);
 begin
-  if FUseThreads=AValue then Exit;
-  FUseThreads:=AValue;
+  if FUseThreads = AValue then Exit;
+  FUseThreads := AValue;
   if aValue then
-    Crit:=TCriticalSection.Create
+    Crit := TCriticalSection.Create
   else
-    FreeAndnil(Crit);
+    FreeAndNil(Crit);
 end;
 
 procedure TPictureCache.EnterCrit;
 begin
   if Assigned(Crit) then
-     Crit.Enter;
+    Crit.Enter;
 end;
 
 procedure TPictureCache.LeaveCrit;
 begin
   if Assigned(Crit) then
-     Crit.Leave;
+    Crit.Leave;
 end;
 
 function TPictureCache.GetNewImgFor(aStream: TStream): TLazIntfImage;
 var
-  reader :   TFPCustomImageReader;
-  rawImg : TRawImage;
+  reader: TFPCustomImageReader;
+  rawImg: TRawImage;
 begin
-  result:=nil;
+  Result := nil;
   Reader := nil;
-  if not(assigned(aStream)) then
+  if not Assigned(aStream) then
      exit;
   if IsValidJPEG(astream) then
     Reader := TFPReaderJPEG.create
   else
-    if IsValidPNG(astream) then
-      Reader  := TLazReaderPNG.create;
+  if IsValidPNG(astream) then
+    Reader  := TLazReaderPNG.create;
   if Assigned(reader) then
-  Begin
+  begin
     try
       rawImg.Init;
-      rawImg.Description.Init_BPP24_B8G8R8_BIO_TTB(TILE_SIZE,TILE_SIZE);
-      Result:=TLazIntfImage.create(rawImg,true);
-      Try
-         Result.LoadFromStream(aStream,reader);
+      rawImg.Description.Init_BPP24_B8G8R8_BIO_TTB(TILE_SIZE, TILE_SIZE);
+      Result := TLazIntfImage.Create(rawImg, true);
+      try
+         Result.LoadFromStream(aStream, reader);
       except
-         FreeAndNil(result);
+         FreeAndNil(Result);
       end;
     finally
       FreeAndNil(Reader)
@@ -155,14 +172,13 @@ begin
 end;
 
 procedure TPictureCache.FreeCache;
-var i : integer;
+var
+  i: integer;
 begin
   EnterCrit;
-  Try
-    For i:=0 to pred(Cache.Count) do
-    begin
+  try
+    for i := 0 to pred(Cache.Count) do
       Cache.Objects[i].Free;
-    end;
     Cache.Clear;
     Cache.Free;
   finally
@@ -171,189 +187,187 @@ begin
 end;
 
 function TPictureCache.MapProvider2FileName(MapProvider: TMapProvider): String;
-var i : integer;
+var
+  i: integer;
 begin
-  Result:='';
+  Result := '';
   if Assigned(MapProvider) then
   begin
-    Result:=MapProvider.Name;
-    For i:=1 to length(Result) do
-        if not(result[i] in ['a'..'z','A'..'Z','0'..'9','_','.']) then
-           Result[i]:='-';
+    Result := MapProvider.Name;
+    for i := 1 to Length(Result) do
+      if not (Result[i] in ['a'..'z', 'A'..'Z', '0'..'9', '_', '.']) then
+        Result[i] := '-';
   end;
 end;
 
 function TPictureCache.DiskCached(const aFileNAme: String): Boolean;
-Var FullFileName : string;
+var
+  FullFileName: string;
 begin
   if UseDisk then
-  Begin
-    FullFileName:=BasePath+aFileName;
-    Result:=FileExists(FullFileName);
+  begin
+    FullFileName := BasePath + aFileName;
+    Result := FileExists(FullFileName);
   end
-  Else
-    Result:=False;
+  else
+    Result := False;
 end;
 
-procedure TPictureCache.LoadFromDisk(const aFileName: String; out
-  img: TLazIntfImage);
-var FullFileName : String;
-    aStream : TFileStream;
+procedure TPictureCache.LoadFromDisk(const aFileName: String;
+  out img: TLazIntfImage);
+var
+  FullFileName: String;
+  lStream: TFileStream;
 begin
-  img:=nil;
-  FullFileName:=BasePath+aFileName;
+  img := nil;
+  FullFileName := BasePath + aFileName;
   if FileExists(fullFileName) then
-  Begin
-    aStream:=TFileStream.Create(FullFileName,fmOpenRead);
+  begin
+    lStream := TFileStream.Create(FullFileName, fmOpenRead);
     try
-      Try
-        img:=GetNewImgFor(aStream);
+      try
+        img := GetNewImgFor(lStream);
       except
-         FreeAndNil(img);
+        FreeAndNil(img);
       end;
       if Assigned(img) then
       begin
         EnterCrit;
-        Try
-         Cache.AddObject(aFileName,img);
+        try
+          Cache.AddObject(aFileName, img);
         finally
           LeaveCrit;
         end;
       end;
     finally
-      aStream.Free;
+      lStream.Free;
     end;
   end;
 end;
 
-function TPictureCache.GetFileName(MapProvider: TMapProvider;const  TileId: TTileId
-  ): String;
+function TPictureCache.GetFileName(MapProvider: TMapProvider;
+  const  TileId: TTileId): String;
 begin
-  Result:=MapProvider2FileName(MapProvider)+'_'+inttostr(TileId.X)+'_'+inttostr(TileId.Y)+'_'+inttostr(TileId.Z);
+  Result := Format('%s_%d_%d_%d',
+    [MapProvider2FileName(MapProvider), TileId.X, TileId.Y, TileId.Z]
+  );
 end;
 
-procedure TPictureCache.CheckCacheSize(Sender : TObject);
-var i ,idx : integer;
+procedure TPictureCache.CheckCacheSize(Sender: TObject);
+var
+  i, idx: integer;
 begin
   EnterCrit;
   try
-    if Cache.Count>FMemMaxElem then
-    Begin
-        For i:=1 to 10 do
-        Begin
-             idx:=pred(Cache.Count);
-             if idx>1 then
-             Begin
-               Cache.Objects[idx].free;
-               Cache.Delete(idx);
-             end;
+    if Cache.Count > FMemMaxElem then
+    begin
+      for i:=1 to 10 do
+      begin
+        idx := pred(Cache.Count);
+        if idx > 1 then
+        begin
+          Cache.Objects[idx].Free;
+          Cache.Delete(idx);
         end;
+      end;
     end;
   finally
     LeaveCrit;
   end;
 end;
 
-constructor TPictureCache.Create(aOwner: TComponent);
+procedure TPictureCache.Add(MapProvider: TMapProvider;
+  const TileId: TTileId; Stream: TMemoryStream);
+var
+  FileName: String;
+  img: TLazIntfImage;
+  lFile: TFileStream;
+  idx: integer;
 begin
-  inherited Create(aOwner);
-  FMemMaxElem :=2048 div 256;
-  Cache:=TStringList.create;
-end;
-
-destructor TPictureCache.destroy;
-begin
-  inherited destroy;
-  FreeCache;
-  FreeAndNil(Crit);
-end;
-
-procedure TPictureCache.Add(MapProvider: TMapProvider;const  TileId: TTileId;
-  Stream: TMemoryStream);
-var FileName : String;
-    img : TLazIntfImage;
-    aFile : TFileStream;
-    idx : integer;
-begin
-  FileName:=GetFileName(MapProvider,TileId);
+  FileName := GetFileName(MapProvider, TileId);
   EnterCrit;
-  Try
-    idx:=Cache.IndexOF(FileName);
-    if idx<>-1 then
+  try
+    idx := Cache.IndexOF(FileName);
+    if idx <> -1 then
       Cache.Objects[idx].Free
     else
-    Begin
-      Cache.Insert(0,FileName);
-      idx:=0;
+    begin
+      Cache.Insert(0, FileName);
+      idx := 0;
     end;
-    img:=GetNewImgFor(Stream);
+    img:= GetNewImgFor(Stream);
     Cache.Objects[idx]:=img;
   finally
     LeaveCrit;
   end;
+
   if UseDisk then
-  Begin
+  begin
     if assigned(img) then
-    Begin
-      aFile:=TFileStream.Create(BasePath+FileName,fmCreate);
-      Try
-        Stream.Position:=0;
-        aFile.CopyFrom(Stream,0);
+    begin
+      lFile := TFileStream.Create(BasePath + FileName, fmCreate);
+      try
+        Stream.Position := 0;
+        lFile.CopyFrom(Stream, 0);
       finally
-        FreeAndNil(aFile);
+        FreeAndNil(lFile);
       end;
     end;
   end;
-  if Not(FUseThreads) then
+
+  if not FUseThreads then
     CheckCacheSize(self);
 end;
 
-procedure TPictureCache.GetFromCache(MapProvider: TMapProvider;const  TileId: TTileId; out img: TLazIntfImage);
-var FileName : String;
-    idx : integer;
+procedure TPictureCache.GetFromCache(MapProvider: TMapProvider;
+  const TileId: TTileId; out img: TLazIntfImage);
+var
+  FileName: String;
+  idx: integer;
 begin
-  img:=nil;
-  FileName:=GetFileName(MapProvider,TileId);
+  img := nil;
+  FileName := GetFileName(MapProvider, TileId);
   EnterCrit;
-  Try
-    idx:=Cache.IndexOF(FileName);
-    if idx<>-1 then
-    Begin
-      img:=TLazIntfImage(Cache.Objects[idx]);
-      if Idx>FMemMaxElem div 2 then
-      Begin
+  try
+    idx := Cache.IndexOf(FileName);
+    if idx <> -1 then
+    begin
+      img := TLazIntfImage(Cache.Objects[idx]);
+      if Idx > FMemMaxElem div 2 then
+      begin
         Cache.Delete(idx);
-        Cache.Insert(0,FileName);
-        Cache.Objects[0]:=img;
+        Cache.Insert(0, FileName);
+        Cache.Objects[0] := img;
       end;
     end;
 
   finally
-    leaveCrit;
+    LeaveCrit;
   end;
-  if idx=-1 then
-  Begin
+  if idx = -1 then
+  begin
     if UseDisk then
-       LoadFromDisk(FileName,img);
+       LoadFromDisk(FileName, img);
   end;
 end;
 
-function TPictureCache.InCache(MapProvider: TMapProvider;const  TileId: TTileId
-  ): Boolean;
-var FileName : String;
-    idx : integer;
+function TPictureCache.InCache(MapProvider: TMapProvider;
+  const TileId: TTileId): Boolean;
+var
+  FileName: String;
+  idx: integer;
 begin
-  FileName:=GetFileName(MapProvider,TileId);
+  FileName := GetFileName(MapProvider, TileId);
   EnterCrit;
   try
-    idx:=Cache.IndexOF(FileNAme);
+    idx := Cache.IndexOF(FileNAme);
   finally
-    leaveCrit;
+    LeaveCrit;
   end;
-  if idx<>-1 then
-     Result:=True
+  if idx <> -1 then
+     Result := True
   else
-     Result:=DiskCached(FileName);
+     Result := DiskCached(FileName);
 end;
 
 end.
