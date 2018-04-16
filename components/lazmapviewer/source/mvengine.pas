@@ -257,14 +257,15 @@ begin
 end;
 
 procedure TLaunchDownloadJob.ExecuteTask(aTask: integer; FromWaiting: boolean);
-var iTile : integer;
+var
+  iTile: integer;
 begin
   iTile := aTask - 1;
   Queue.AddUniqueJob(TEventJob.Create
     (
       @Engine.evDownload,
       TEnvTile.Create(FTiles[iTile], Win),
-      false,
+      false,                                    // owns data
       Engine.GetTileName(FTiles[iTile])
     ),
     Launcher
