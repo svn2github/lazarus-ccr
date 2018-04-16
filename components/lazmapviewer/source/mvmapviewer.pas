@@ -138,22 +138,14 @@ Type
       property OnMouseUp;
   end;
 
-  procedure Register;
-
 implementation
 
 uses
   {$IFDEF USE_LAZINTFIMAGE}
   Math, FPImgCanv, FPImage, LCLVersion,
   {$ENDIF}
-  LResources,
   GraphType, mvJobQueue, mvExtraData, mvDLEFpc;
 
-procedure Register;
-begin
-  {$I mvmapviewer_icon.lrs}
-  RegisterComponents('Maps',[TMapView]);
-end;
 
 {$IFDEF USE_LAZINTFIMAGE}
 // Workaround for http://mantis.freepascal.org/view.php?id=27144

@@ -10,14 +10,13 @@ interface
 uses
   mvCache, mvDownloadEngine, mvdragobj, mvEngine, mvGeoNames, mvgpsobj, 
   mvJobQueue, mvJobs, mvMapProvider, mvtypes, mvmapviewer, mvextradata, 
-  mvDLEFpc, LazarusPackageIntf;
+  mvDLEFpc, mvMapViewerReg, LazarusPackageIntf;
 
 implementation
 
 procedure Register;
 begin
-  RegisterUnit('mvGeoNames', @mvGeoNames.Register);
-  RegisterUnit('mvmapviewer', @mvmapviewer.Register);
+  RegisterUnit('mvMapViewerReg', @mvMapViewerReg.Register);
 end;
 
 initialization

@@ -45,8 +45,6 @@ type
     property OnNameFound : TNameFoundEvent read FOnNameFound write FOnNameFound;
   end;
 
-procedure Register;
-
 
 implementation
 
@@ -68,15 +66,10 @@ end;
 
 Type
   TResRec = record
-       Name : String;
-       Descr : String;
-       Loc : TRealPoint;
+    Name: String;
+    Descr: String;
+    Loc: TRealPoint;
   End;
-
-procedure Register;
-begin
-    RegisterComponents('Maps',[TMVGeoNames]);
-end;
 
 function TMVGeoNames.RemoveTag(Const str : String) : TStringArray;
 var iStart,iEnd,i : Integer;
