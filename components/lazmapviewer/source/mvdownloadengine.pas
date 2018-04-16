@@ -40,7 +40,7 @@ implementation
 
 procedure TMvCustomDownloadEngine.DownloadFile(const Url: string; AStream: TStream);
 begin
-
+  // to be overridden...
 end;
 
 end.

@@ -30,13 +30,33 @@ type
 
   TStringArray = array of string;
 
+  TResRec = record
+    Name: String;
+    Descr: String;
+    Loc: TRealPoint;
+  end;
+
+
   { TMVGeoNames }
 
   TMVGeoNames = class(TComponent)
   private
     FLocationName: string;
+    FInResTable: Boolean;
+    FInDataRows: Boolean;
+    FNamePending: Boolean;
+    FLongitudePending: Boolean;
+    FLatitudePending: Boolean;
+    FCol: Integer;
+    FCountry: String;
+    FSmall: Boolean;
+    FFirstLocation: TResRec;
+    FFoundLocation: TResRec;
     FOnNameFound: TNameFoundEvent;
-    function RemoveTag(const str: String): TStringArray;
+    procedure FoundTagHandler(NoCaseTag, ActualTag: string);
+    procedure FoundTextHandler(AText: String);
+    function Parse(AStr: PChar): TRealPoint;
+//    function RemoveTag(const str: String): TStringArray;
   public
     function Search(ALocationName: String;
       ADownloadEngine: TMvCustomDownloadEngine): TRealPoint;
@@ -47,6 +67,13 @@ type
 
 
 implementation
+
+uses
+  FastHtmlParser;
+
+const
+  SEARCH_URL = 'http://geonames.org/search.html?q=%s'; //&country=%s';
+
 
 function CleanLocationName(x: string): string;
 var
@@ -62,24 +89,122 @@ begin
   end;
 end;
 
+
 { TMVGeoNames }
 
-Type
-  TResRec = record
-    Name: String;
-    Descr: String;
-    Loc: TRealPoint;
-  End;
+procedure TMvGeoNames.FoundTagHandler(NoCaseTag, ActualTag: String);
+begin
+  if not FInResTable and (NoCaseTag = '<TABLE CLASS="RESTABLE">') then begin
+    FInResTable := true;
+    FInDataRows := false;
+    FNamePending := false;
+    FLatitudePending := false;
+    FLongitudePending := false;
+    FSmall := false;
+  end else
+  if FInResTable and (NoCaseTag = '</TABLE>') then
+    FInResTable := false;
 
+  if FInResTable then begin
+    if NoCaseTag = '</TH>' then
+      FInDataRows := true;
+
+    if FInDataRows then begin
+      if NoCaseTag = '<TR>' then begin
+        FCol := 0;
+        with FFoundLocation do begin
+          Name := ''; Descr := ''; Loc.Lon := 0; Loc.Lat := 0;
+        end;
+      end;
+
+      if NoCaseTag = '<TD>' then
+        inc(FCol);
+
+      if FCol = 2 then begin
+        if not FNamePending and (pos('<A HREF=', NoCaseTag) = 1) then
+          FNamePending := true
+        else if FNamePending and (NoCaseTag = '</A>') then
+          FNamePending := false;
+
+        if not FLatitudePending and (NoCaseTag = '<SPAN CLASS="LATITUDE">') then
+          FLatitudePending := true
+        else if FLatitudePending and (NoCaseTag = '</SPAN>') then
+          FLatitudePending := false;
+
+        if not FLongitudePending and (NoCaseTag = '<SPAN CLASS="LONGITUDE">') then
+          FLongitudePending := true
+        else if FLongitudePending and (NoCasetag = '</SPAN>') then
+          FLongitudePending := false;
+      end;
+
+      if FCol = 3 then
+        if not FSmall and (NoCaseTag = '<SMALL>') then
+          FSmall := true
+        else if FSmall and (NoCaseTag = '</SMALL>') then
+          FSmall := false;
+
+      if NoCaseTag = '</TR>' then begin
+        if (FFirstLocation.Name = '') then
+          FFirstLocation := FFoundLocation;
+        if Assigned(FOnNameFound) and (FFoundLocation.Name <> '') then
+          with FFoundLocation do
+            FOnNameFound(Name, Descr, Loc);
+      end;
+    end;
+  end;
+end;
+
+procedure TMvGeoNames.FoundTextHandler(AText: String);
+var
+  code: Integer;
+begin
+  if not FInDataRows or (AText = #10) then
+    exit;
+
+  if FNamePending then
+    FFoundLocation.Name := AText
+  else if FLatitudePending then
+    val(AText, FFoundLocation.Loc.Lat, code)
+  else if FLongitudePending then
+    val(AText, FFoundLocation.Loc.Lon, code)
+  else if (FCol = 3) and not FSmall then
+    FCountry := FCountry + AText
+  else if FCol = 4 then begin
+    if FFoundLocation.Descr = '' then
+      FFoundLocation.Descr := AText
+    else
+      FFoundLocation.Descr := FFoundLocation.Descr + ', ' + aText;
+    if FCountry <> '' then
+      FFoundLocation.Name := FFoundLocation.Name + ' (' + FCountry + ')';
+    FCountry := '';
+  end;
+end;
+
+function TMVGeonames.Parse(AStr: PChar): TRealPoint;
+var
+  parser: THtmlParser;
+begin
+  FFirstLocation.Name := '';
+  parser := THtmlParser.Create(AStr);
+  try
+    parser.OnFoundTag := @FoundTagHandler;
+    parser.OnFoundText := @FoundTextHandler;
+    parser.Exec;
+    Result := FFirstLocation.Loc;
+  finally
+    parser.Free;
+  end;
+end;
+  (*
 function TMVGeoNames.RemoveTag(Const str : String) : TStringArray;
 var iStart,iEnd,i : Integer;
     tmp : String;
     lst : TStringList;
 Begin
   SetLength(Result,0);
-  tmp:=StringReplace(str,'<br>',#13,[rfReplaceall]);
-  tmp:=StringReplace(tmp,'&nbsp;',' ',[rfReplaceall]);
-  tmp:=StringReplace(tmp,'  ',' ',[rfReplaceall]);
+  tmp := StringReplace(str,'<br>',#13,[rfReplaceall]);
+  tmp := StringReplace(tmp,'&nbsp;',' ',[rfReplaceall]);
+  tmp := StringReplace(tmp,'  ',' ',[rfReplaceall]);
   repeat
     iEnd:=-1;
     iStart:=pos('<',tmp);
@@ -103,7 +228,7 @@ Begin
   end;
 
 end;
-
+       *)
 function TMVGeoNames.Search(ALocationName: String;
   ADownloadEngine: TMvCustomDownloadEngine): TRealPoint;
 const
@@ -131,24 +256,27 @@ var
   end;
 
 var
-  m: TMemoryStream;
+  ms: TMemoryStream;
   iRes,i : integer;
   lstRes : Array  of TResRec;
   iStartDescr : integer;
   lst : TStringArray;
+  url: String;
 begin
   FLocationName := ALocationName;
-  m := TMemoryStream.Create;
+  ms := TMemoryStream.Create;
   try
-    ADownloadEngine.DownloadFile('http://www.geonames.org/search.html?q='+
-      CleanLocationName(FLocationName), m);
-    m.Position := 0;
-    SetLength(s, m.Size);
-    m.Read(s[1], m.Size);
+    url := Format(SEARCH_URL, [CleanLocationName(FLocationName)]);
+    ADownloadEngine.DownloadFile(url, ms);
+    ms.Position := 0;
+    SetLength(s, ms.Size);
+    ms.Read(s[1], ms.Size);
   finally
-    m.Free;
+    ms.Free;
   end;
 
+  Result := Parse(PChar(s));
+  (*
   Result.Lon := 0;
   Result.Lat := 0;
   SetLength(lstRes, 0);
@@ -174,9 +302,9 @@ begin
     iRes := PosEx('<span class="geo"',s,iRes+17);
   end;
 
-  if length(lstRes)>0 then
+  if Length(lstRes) > 0 then
   begin
-    if length(lstRes)>1 then
+    if Length(lstRes) > 1 then
     begin
       Result.Lon := Result.Lon/length(lstRes);
       Result.Lat := Result.Lat/length(lstRes);
@@ -184,9 +312,10 @@ begin
     if Assigned(FOnNameFound) then
       for iRes:=low(lstRes) to high(lstRes) do
       begin
-        FOnNameFound(lstRes[iRes].Name,lstRes[iRes].Descr,lstRes[iRes].Loc);
+        FOnNameFound(lstRes[iRes].Name, lstRes[iRes].Descr, lstRes[iRes].Loc);
       end;
   end;
+  *)
 end;
 
 end.

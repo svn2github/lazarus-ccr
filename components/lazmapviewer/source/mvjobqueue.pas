@@ -318,13 +318,13 @@ end;
 procedure TjobQueue.InitThreads;
 var i : integer;
 begin
-  Jobs:=TObjectList.Create(true);
-  Threads:=TObjectList.Create(true);
-  FEvent:=TEvent.Create(nil,true,false,'');
-  FSect:=TCriticalSection.Create;
+  Jobs := TObjectList.Create(true);
+  Threads := TObjectList.Create(true);
+  FEvent := TEvent.Create(nil,true,false,'');
+  FSect := TCriticalSection.Create;
   TerminatedThread := 0;
-  For i:=1 to FNbThread do
-      Threads.Add(TQueueThread.Create(self));
+  for i:=1 to FNbThread do
+    Threads.Add(TQueueThread.Create(self));
 end;
 
 procedure TjobQueue.FreeThreads;
@@ -476,9 +476,9 @@ end;
 
 constructor TjobQueue.Create(NbThread: integer);
 begin
-  waitings:=TStringList.create;
-  FNbThread:=NbThread;
-  FMainThreadId:=GetCurrentThreadId;
+  waitings := TStringList.create;
+  FNbThread := NbThread;
+  FMainThreadId := GetCurrentThreadId;
 end;
 
 destructor TjobQueue.Destroy;
@@ -492,9 +492,9 @@ end;
 procedure TjobQueue.QueueAsyncCall(const AMethod: TDataEvent; Data: PtrInt);
 begin
   if UseThreads then
-     Application.QueueAsyncCall(aMethod,Data)
+    Application.QueueAsyncCall(aMethod,Data)
   else
-     AMethod(Data);
+    AMethod(Data);
 end;
 
 

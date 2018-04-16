@@ -297,6 +297,54 @@ object MainForm: TMainForm
       OnClick = BtnSearchClick
       TabOrder = 7
     end
+    object CbFoundLocations: TComboBox
+      AnchorSideLeft.Control = CbLocations
+      AnchorSideTop.Control = Label8
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = BtnGoTo
+      Left = 9
+      Height = 21
+      Top = 318
+      Width = 156
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      BorderSpacing.Right = 8
+      DropDownCount = 24
+      ItemHeight = 15
+      ItemWidth = -2
+      OnDrawItem = CbFoundLocationsDrawItem
+      ParentShowHint = False
+      ShowHint = True
+      Style = csOwnerDrawFixed
+      TabOrder = 8
+    end
+    object Label8: TLabel
+      AnchorSideLeft.Control = LblProviders
+      AnchorSideTop.Control = CbLocations
+      AnchorSideTop.Side = asrBottom
+      Left = 9
+      Height = 15
+      Top = 299
+      Width = 177
+      BorderSpacing.Top = 12
+      Caption = 'Select one of the found locations:'
+      ParentColor = False
+    end
+    object BtnGoTo: TButton
+      AnchorSideTop.Control = CbFoundLocations
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = BtnSearch
+      AnchorSideRight.Side = asrBottom
+      Left = 173
+      Height = 25
+      Top = 316
+      Width = 55
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      Caption = 'Go to'
+      OnClick = BtnGoToClick
+      TabOrder = 9
+    end
   end
   object MapView: TMapView
     Left = 0
@@ -315,6 +363,7 @@ object MainForm: TMainForm
     OnMouseMove = MapViewMouseMove
   end
   object GeoNames: TMVGeoNames
+    OnNameFound = GeoNamesNameFound
     left = 520
     top = 288
   end

@@ -37,7 +37,7 @@ type
 
   TMVDEFPC = class(TMvCustomDownloadEngine)
   protected
-    procedure DownloadFile(const Url: string; str: TStream); override;
+    procedure DownloadFile(const Url: string; AStream: TStream); override;
   {$IF FPC_FullVersion >= 30101}
   published
     property UseProxy;
@@ -56,7 +56,7 @@ uses
 
 { TMVDEFPC }
 
-procedure TMVDEFPC.DownloadFile(const Url: string; str: TStream);
+procedure TMVDEFPC.DownloadFile(const Url: string; AStream: TStream);
 var
   http: TFpHttpClient;
 begin
@@ -73,8 +73,8 @@ begin
       http.Proxy.Password := ProxyPassword;
     end;
    {$ENDIF}
-    http.Get(Url, str);
-    str.Position := 0;
+    http.Get(Url, AStream);
+    AStream.Position := 0;
   finally
     http.Free;
   end;

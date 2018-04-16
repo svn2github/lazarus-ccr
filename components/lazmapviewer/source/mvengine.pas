@@ -80,8 +80,7 @@ Type
       function GetUseThreads: Boolean;
       function GetWidth: integer;
       function GetZoom: integer;
-      function IsValidTile(const aWin: TMapWindow; const aTile: TTIleId
-        ): boolean;
+      function IsValidTile(const aWin: TMapWindow; const aTile: TTIleId): boolean;
       procedure MoveMapCenter(Sender: TDragObj);
       procedure SetActive(AValue: boolean);
       procedure SetCacheOnDisk(AValue: Boolean);
@@ -687,45 +686,48 @@ begin
   Result:=Inttostr(Id.X)+'.'+inttostr(Id.Y)+'.'+inttostr(Id.Z);
 end;
 
-procedure TMapViewerEngine.evDownload(Data : TObject;Job : TJob);
-var Id : TTileId;
-    Url : String;
-    Env : TEnvTile;
-    MapO : TMapProvider;
-    FStream : TMemoryStream;
-Begin
-   Env:=TEnvTile(Data);
-   Id:=Env.Tile;
-   MapO:=Env.Win.MapProvider;
-   if Assigned(MapO) then
-   Begin
-     if not(Cache.InCache(MapO,Id)) then
-     Begin
-         if Assigned(FDownloadEngine) then
-         begin
-           Url:=MapO.GetUrlForTile(Id);
-           if Url<>'' then
-           begin
-             FStream:=TMemoryStream.Create;
-             Try
-                Try
-                   FDownloadEngine.DownloadFile(Url,Fstream);
-                   Cache.Add(MapO,Id,FStream);
-                except
-                end;
-             finally
-                FreeAndNil(FStream);
-             end;
-           end;
-         end;
-     end;
-   end;
-   if Job.Cancelled then
-     Exit;
-   if DrawTitleInGuiThread then
-     Queue.QueueAsyncCall(@TileDownloaded,PtrInt(Env))
-   else
-     TileDownloaded(PtrInt(Env));
+procedure TMapViewerEngine.evDownload(Data: TObject; Job: TJob);
+var
+  Id: TTileId;
+  Url: String;
+  Env: TEnvTile;
+  MapO: TMapProvider;
+  lStream: TMemoryStream;
+begin
+  Env := TEnvTile(Data);
+  Id := Env.Tile;
+  MapO := Env.Win.MapProvider;
+  if Assigned(MapO) then
+  begin
+    if not Cache.InCache(MapO, Id) then
+    begin
+      if Assigned(FDownloadEngine) then
+      begin
+        Url := MapO.GetUrlForTile(Id);
+        if Url<>'' then
+        begin
+          lStream := TMemoryStream.Create;
+          try
+            try
+              FDownloadEngine.DownloadFile(Url, lStream);
+              Cache.Add(MapO, Id, lStream);
+            except
+            end;
+          finally
+            FreeAndNil(lStream);
+          end;
+        end;
+      end;
+    end;
+  end;
+
+  if Job.Cancelled then
+    Exit;
+
+  if DrawTitleInGuiThread then
+    Queue.QueueAsyncCall(@TileDownloaded, PtrInt(Env))
+  else
+    TileDownloaded(PtrInt(Env));
 end;
 
 procedure TMapViewerEngine.TileDownloaded(Data: PtrInt);
@@ -754,17 +756,17 @@ end;
 
 function TMapViewerEngine.GetYahooSvr(id: integer): String;
 Begin
-  Result:=inttostr(id+1);
+  Result := IntToStr(id+1);
 end;
 
 function TMapViewerEngine.GetYahooY(const Tile : TTileId): string;
 Begin
-    Result :=inttostr( - (Tile.Y - (1 shl Tile.Z) div 2) - 1);
+    Result := IntToStr( -(Tile.Y - (1 shl Tile.Z) div 2) - 1);
 end;
 
 function TMapViewerEngine.GetYahooZ(const Tile : TTileId): string;
 Begin
-  result:=inttostr(Tile.Z+1);
+  result := IntToStr(Tile.Z+1);
 end;
 
 function TMapViewerEngine.GetQuadKey(const Tile : TTileId): string;
@@ -788,39 +790,37 @@ begin
   end;
 end;
 
-Type
-
 { TMemObj }
 
- TMemObj = Class
-     private
-       FWin : TMapWindow;
-     public
-       constructor Create(const aWin : TMapWindow);
-     End;
-
-{ TMemObj }
+type
+  TMemObj = Class
+    private
+      FWin : TMapWindow;
+    public
+      constructor Create(const aWin : TMapWindow);
+    end;
 
 constructor TMemObj.Create(const aWin: TMapWindow);
 begin
-  FWin:=aWin;
+  FWin := aWin;
 end;
 
 
 procedure TMapViewerEngine.MoveMapCenter(Sender: TDragObj);
-var old : TMemObj;
-    nCenter : TRealPoint;
-    Job : TJob;
-    aPt : TPoint;
+var
+  old: TMemObj;
+  nCenter: TRealPoint;
+  Job: TJob;
+  aPt: TPoint;
 Begin
   if Sender.LnkObj=nil then
-  Begin
-    Sender.LnkObj:=TMemObj.Create(MapWin);
+  begin
+    Sender.LnkObj := TMemObj.Create(MapWin);
   end;
-  old:=TMemObj(Sender.LnkObj);
-  aPt.X:=old.FWin.Width DIV 2-Sender.OfsX;
-  aPt.Y:=old.FWin.Height DIV 2-Sender.OfsY;
-  nCenter:=MapWinToLonLat(old.FWin,aPt);
+  old := TMemObj(Sender.LnkObj);
+  aPt.X := old.FWin.Width DIV 2-Sender.OfsX;
+  aPt.Y := old.FWin.Height DIV 2-Sender.OfsY;
+  nCenter := MapWinToLonLat(old.FWin,aPt);
   SetCenter(nCenter);
 end;
 
@@ -838,16 +838,15 @@ end;
 
 procedure TMapViewerEngine.DoDrag(Sender: TDragObj);
 begin
-   if Sender.DragSrc=self then
-   Begin
+   if Sender.DragSrc = self then
      MoveMapCenter(Sender);
-   end;
 end;
 
 procedure TMapViewerEngine.CancelCurrentDrawing;
-var Jobs : TJobArray;
+var
+  Jobs: TJobArray;
 begin
-  Jobs:=Queue.CancelAllJob(self);
+  Jobs := Queue.CancelAllJob(self);
   Queue.WaitForTerminate(Jobs);
 end;
 
@@ -856,22 +855,21 @@ begin
   Redraw(MapWin);
 end;
 
-
 function TMapViewerEngine.AddMapProvider(OpeName: String; Url: String;
   MinZoom : integer;MaxZoom : integer;
   NbSvr: integer; GetSvrStr: TGetSvrStr; GetXStr: TGetValStr;
   GetYStr: TGetValStr; GetZStr: TGetValStr) : TMapProvider;
 var idx :integer;
 Begin
-  idx:=lstProvider.IndexOf(OpeName);
-  if idx=-1 then
-  Begin
-    result:=TMapProvider.Create(OpeName);
-    lstProvider.AddObject(OpeName,result);
+  idx := lstProvider.IndexOf(OpeName);
+  if idx = -1 then
+  begin
+    Result := TMapProvider.Create(OpeName);
+    lstProvider.AddObject(OpeName, Result);
   end
   else
-    result:=TMapProvider(lstProvider.Objects[idx]);
-  result.AddUrl(Url,NbSvr,MinZoom,MaxZoom,GetSvrStr,GetXStr,GetYStr,GetZStr);
+    Result := TMapProvider(lstProvider.Objects[idx]);
+  Result.AddUrl(Url, NbSvr, MinZoom, MaxZoom, GetSvrStr, GetXStr, GetYStr, GetZStr);
 end;
 
 procedure TMapViewerEngine.RegisterProviders;
@@ -890,7 +888,7 @@ begin
   //AddMapProvider('Yahoo Hybrid','http://maps%serv%.yimg.com/ae/ximg?v=1.9&t=a&s=256&.intl=en&x=%x%&y=%y%&z=%z%&r=1', 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //[Random(3)+1, X, YahooY(Y), Z+1]));
   //AddMapProvider('Yahoo Hybrid','http://maps%serv%.yimg.com/hx/tl?b=1&v=4.3&t=h&.intl=en&x=%x%&y=%y%&z=%z%&r=1'    , 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //[Random(3)+1, X, YahooY(Y), Z+1]));
 
-  MapWin.MapProvider:=AddMapProvider('OpenStreetMap Mapnik','http://%serv%.tile.openstreetmap.org/%z%/%x%/%y%.png',0,19, 3, @getLetterSvr);
+  MapWin.MapProvider := AddMapProvider('OpenStreetMap Mapnik','http://%serv%.tile.openstreetmap.org/%z%/%x%/%y%.png',0,19, 3, @getLetterSvr);
   AddMapProvider('Open Cycle Map','http://%serv%.tile.opencyclemap.org/cycle/%z%/%x%/%y%.png',0,18,3, @getLetterSvr);
   AddMapProvider('Virtual Earth Bing','http://ecn.t%serv%.tiles.virtualearth.net/tiles/r%x%?g=671&mkt=en-us&lbl=l1&stl=h&shading=hill',1,19,8,nil,@GetQuadKey);
   AddMapProvider('Virtual Earth Road','http://r%serv%.ortho.tiles.virtualearth.net/tiles/r%x%.png?g=72&shading=hill',1,19,4,nil,@getQuadKey);
@@ -900,12 +898,19 @@ begin
   AddMapProvider('Ovi Satellite','http://%serv%.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/satellite.day/%z%/%x%/%y%/256/png8', 0,20,5,@getLetterSvr);
   AddMapProvider('Ovi Hybrid','http://%serv%.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/hybrid.day/%z%/%x%/%y%/256/png8', 0,20,5,@getLetterSvr);
   AddMapProvider('Ovi Physical','http://%serv%.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/terrain.day/%z%/%x%/%y%/256/png8', 0,20,5,@getLetterSvr);
+  {
+  AddMapProvider('Yahoo Normal','http://maps%serv%.yimg.com/hx/tl?b=1&v=4.3&.intl=en&x=%x%&y=%y%d&z=%d&r=1'        , 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //(Z+1]));
+  AddMapProvider('Yahoo Satellite','http://maps%serv%.yimg.com/ae/ximg?v=1.9&t=a&s=256&.intl=en&x=%d&y=%d&z=%d&r=1', 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //[Random(3)+1, X, YahooY(Y), Z+1]));
+  AddMapProvider('Yahoo Hybrid','http://maps%serv%.yimg.com/ae/ximg?v=1.9&t=a&s=256&.intl=en&x=%x%&y=%y%&z=%z%&r=1', 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //[Random(3)+1, X, YahooY(Y), Z+1]));
+  AddMapProvider('Yahoo Hybrid','http://maps%serv%.yimg.com/hx/tl?b=1&v=4.3&t=h&.intl=en&x=%x%&y=%y%&z=%z%&r=1'    , 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //[Random(3)+1, X, YahooY(Y), Z+1]));
+  }
 end;
 
-procedure TMapViewerEngine.DrawTile(const TileId : TTileId;X, Y: integer; TileImg: TLazIntfImage);
+procedure TMapViewerEngine.DrawTile(const TileId: TTileId; X, Y: integer;
+  TileImg: TLazIntfImage);
 begin
   if Assigned(FOnDrawTile) then
-    FOnDrawTile(TileId,X,Y,TileImg);
+    FOnDrawTile(TileId, X, Y, TileImg);
 end;
 
 constructor TMapViewerEngine.Create(aOwner: TComponent);

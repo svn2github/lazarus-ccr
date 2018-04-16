@@ -5,8 +5,9 @@ unit Main;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  ComCtrls, mvgeonames, mvMapViewer;
+  Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
+  ExtCtrls, StdCtrls, ComCtrls,
+  mvGeoNames, mvMapViewer, mvTypes;
 
 type
 
@@ -14,7 +15,9 @@ type
 
   TMainForm = class(TForm)
     BtnSearch: TButton;
+    BtnGoTo: TButton;
     CbDoubleBuffer: TCheckBox;
+    CbFoundLocations: TComboBox;
     CbLocations: TComboBox;
     CbProviders: TComboBox;
     CbUseThreads: TCheckBox;
@@ -22,6 +25,7 @@ type
     GbCenterCoords: TGroupBox;
     InfoCenterLatitude: TLabel;
     InfoCenterLongitude: TLabel;
+    Label8: TLabel;
     LblCenterLatitude: TLabel;
     LblPositionLongitude: TLabel;
     LblPositionLatitude: TLabel;
@@ -34,19 +38,26 @@ type
     GeoNames: TMVGeoNames;
     Panel1: TPanel;
     ZoomTrackBar: TTrackBar;
+    procedure BtnGoToClick(Sender: TObject);
     procedure BtnSearchClick(Sender: TObject);
     procedure CbDoubleBufferChange(Sender: TObject);
+    procedure CbFoundLocationsDrawItem(Control: TWinControl; Index: Integer;
+      ARect: TRect; State: TOwnerDrawState);
     procedure CbProvidersChange(Sender: TObject);
     procedure CbUseThreadsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure GeoNamesNameFound(const AName: string; const ADescr: String;
+      const ALoc: TRealPoint);
     procedure MapViewMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure MapViewZoomChange(Sender: TObject);
     procedure ZoomTrackBarChange(Sender: TObject);
 
   private
+    procedure ClearFoundLocations;
+    procedure UpdateDropdownWidth(ACombobox: TCombobox);
     procedure UpdateLocationHistory(ALocation: String);
 
   public
@@ -63,7 +74,13 @@ implementation
 {$R *.lfm}
 
 uses
-  IniFiles, mvTypes;
+  LCLType, IniFiles, Math;
+
+type
+  TLocationParam = class
+    Descr: String;
+    Loc: TRealPoint;
+  end;
 
 const
   MAX_LOCATIONS_HISTORY = 50;
@@ -82,20 +99,70 @@ end;
 
 procedure TMainForm.BtnSearchClick(Sender: TObject);
 begin
-  MapView.Center := GeoNames.Search(CbLocations.Text, MapView.DownloadEngine);
-  {
+//  MapView.Center := GeoNames.Search(CbLocations.Text, MapView.DownloadEngine);
+
   ClearFoundLocations;
-  GeoNames.LocationName := CbLocations.Text;
-  GeoNames.ListLocations(MapView.DownloadEngine);
+//  GeoNames.LocationName := CbLocations.Text;
+  GeoNames.Search(CbLocations.Text, MapView.DownloadEngine);
+//  GeoNames.ListLocations(MapView.DownloadEngine);
   //CbFoundLocations.Text := CbFoundLocations.Items[0];
   UpdateDropdownWidth(CbFoundLocations);
-  }
   UpdateLocationHistory(CbLocations.Text);
+end;
+
+procedure TMainForm.BtnGoToClick(Sender: TObject);
+var
+  s: String;
+  P: TLocationParam;
+begin
+  if CbFoundLocations.ItemIndex = -1 then
+    exit;
+
+  // Extract parameters of found locations. We need that to get the coordinates.
+  s := CbFoundLocations.Items.Strings[CbFoundLocations.ItemIndex];
+  P := TLocationParam(CbFoundLocations.Items.Objects[CbFoundLocations.ItemIndex]);
+  if P = nil then
+    exit;
+  CbFoundLocations.Text := s;
+
+  // Show location in center of mapview
+  MapView.Zoom := 12;
+  MapView.Center := P.Loc;
+  MapView.Invalidate;
 end;
 
 procedure TMainForm.CbDoubleBufferChange(Sender: TObject);
 begin
   MapView.DoubleBuffered := CbDoubleBuffer.Checked;
+end;
+
+procedure TMainForm.CbFoundLocationsDrawItem(Control: TWinControl;
+  Index: Integer; ARect: TRect; State: TOwnerDrawState);
+var
+  s: String;
+  P: TLocationParam;
+  combo: TCombobox;
+  x, y: Integer;
+begin
+  combo := TCombobox(Control);
+  if (State * [odSelected, odFocused] <> []) then begin
+    combo.Canvas.Brush.Color := clHighlight;
+    combo.Canvas.Font.Color := clHighlightText;
+  end else begin
+    combo.Canvas.Brush.Color := clWindow;
+    combo.Canvas.Font.Color := clWindowText;
+  end;
+  combo.Canvas.FillRect(ARect);
+  combo.Canvas.Brush.Style := bsClear;
+  s := combo.Items.Strings[Index];
+  P := TLocationParam(combo.Items.Objects[Index]);
+  x := ARect.Left + 2;
+  y := ARect.Top + 2;
+  combo.Canvas.Font.Style := [fsBold];
+  combo.Canvas.TextOut(x, y, s);
+  inc(y, combo.Canvas.TextHeight('Tg'));
+  combo.Canvas.Font.Style := [];
+  combo.Canvas.TextOut(x, y, P.Descr);
 end;
 
 procedure TMainForm.CbProvidersChange(Sender: TObject);
@@ -106,6 +173,18 @@ end;
 procedure TMainForm.CbUseThreadsChange(Sender: TObject);
 begin
   MapView.UseThreads := CbUseThreads.Checked;
+end;
+
+procedure TMainForm.ClearFoundLocations;
+var
+  i: Integer;
+  P: TLocationParam;
+begin
+  for i:=0 to CbFoundLocations.Items.Count-1 do begin
+    P := TLocationParam(CbFoundLocations.Items.Objects[i]);
+    P.Free;
+  end;
+  CbFoundLocations.Items.Clear;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -134,12 +213,22 @@ begin
   MapView.Active := true;
 end;
 
+procedure TMainForm.GeoNamesNameFound(const AName: string;
+  const ADescr: String; const ALoc: TRealPoint);
+var
+  P: TLocationParam;
+begin
+  P := TLocationParam.Create;
+  P.Descr := ADescr;
+  P.Loc := ALoc;
+  CbFoundLocations.Items.AddObject(AName, P);
+end;
+
 procedure TMainForm.MapViewMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 var
   rPt: TRealPoint;
 begin
-  rPt := MapView.ScreenToLonLat(Point(X, Y));
       (*
     p := MapView.GetMouseMapPixel(X, Y);
     LblZoom.Caption := Format('Pixel: %d:%d', [p.X, p.Y]);
@@ -147,8 +236,10 @@ begin
     Label3.Caption := Format('Tile: %d:%d', [p.X, p.Y]);
     r := mv.GetMouseMapLongLat(X, Y);
     *)
+
+  rPt := MapView.ScreenToLonLat(Point(X, Y));
   InfoPositionLongitude.Caption := Format('%.6f°', [rPt.Lon]);
-  InfoPositionLatitude.Caption := Format('%.6f°', [rPt.Lat]);
+  InfoPositionLatitude.Caption  := Format('%.6f°', [rPt.Lat]);
 
   rPt := MapView.Center;
   InfoCenterLongitude.Caption := Format('%.6f°', [rPt.Lon]);
@@ -204,6 +295,33 @@ begin
 
   finally
     ini.Free;
+  end;
+end;
+
+procedure TMainForm.UpdateDropdownWidth(ACombobox: TCombobox);
+var
+  cnv: TControlCanvas;
+  i, w: Integer;
+  s: String;
+  P: TLocationParam;
+begin
+  w := 0;
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := ACombobox;
+    cnv.Font.Assign(ACombobox.Font);
+    for i:=0 to ACombobox.Items.Count-1 do begin
+      cnv.Font.Style := [fsBold];
+      s := ACombobox.Items.Strings[i];
+      w := Max(w, cnv.TextWidth(s));
+      P := TLocationParam(ACombobox.Items.Objects[i]);
+      cnv.Font.Style := [];
+      w := Max(w, cnv.TextWidth(P.Descr));
+    end;
+    ACombobox.ItemWidth := w + 16;
+    ACombobox.ItemHeight := 2 * cnv.TextHeight('Tg') + 6;
+  finally
+    cnv.Free;
   end;
 end;
 
