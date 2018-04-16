@@ -26,8 +26,8 @@ unit mvEngine;
 interface
 
 uses
-  Classes, SysUtils,mvJobQueue,mvmapprovider,mvDownloadEngine,IntfGraphics,
-  mvCache,mvdragobj,controls,mvtypes;
+  Classes, SysUtils, IntfGraphics, Controls,
+  mvTypes, mvJobQueue, mvMapProvider, mvDownloadEngine, mvCache, mvDragObj;
 
 const
   EARTH_RADIUS = 6378137;
@@ -62,7 +62,7 @@ Type
       DragObj : TDragObj;
       Cache : TPictureCache;
       FActive: boolean;
-      FDownloadEngine: TCustomDownloadEngine;
+      FDownloadEngine: TMvCustomDownloadEngine;
       FDrawTitleInGuiThread: boolean;
       FOnCenterMove: TNotifyEvent;
       FOnChange: TNotifyEvent;
@@ -86,7 +86,8 @@ Type
       procedure SetActive(AValue: boolean);
       procedure SetCacheOnDisk(AValue: Boolean);
       procedure SetCachePath(AValue: String);
-      procedure SetDownloadEngine(AValue: TCustomDownloadEngine);
+      procedure SetCenter(aCenter: TRealPoint);
+      procedure SetDownloadEngine(AValue: TMvCustomDownloadEngine);
       procedure SetHeight(AValue: integer);
       procedure SetMapProvider(AValue: String);
       procedure SetUseThreads(AValue: Boolean);
@@ -113,52 +114,59 @@ Type
 
       Procedure DoDrag(Sender : TDragObj);
     public
-      Procedure CancelCurrentDrawing;
-      Procedure Redraw;
-      function AddMapProvider(OpeName: String; Url: String;   MinZoom : integer;MaxZoom : integer;NbSvr: integer; GetSvrStr: TGetSvrStr =nil; GetXStr: TGetValStr =nil; GetYStr: TGetValStr =nil; GetZStr: TGetValStr =nil) :  TMapProvider;
-      Procedure GetMapProviders(lst : TStrings);
-
-      Constructor Create(aOwner : TComponent);override;
+      constructor Create(aOwner : TComponent);override;
       destructor Destroy; override;
-      Function ScreenToLonLat(aPt : TPoint) : TRealPoint;
-      Function LonLatToScreen(aPt : TRealPoint) : TPoint;
-      Function WorldScreenToLonLat(aPt : TPoint) : TRealPoint;
-      Function LonLatToWorldScreen(aPt : TRealPoint) : TPoint;
 
-      Procedure SetSize(aWidth,aHeight : integer);
+      procedure CancelCurrentDrawing;
+      procedure Redraw;
+      function AddMapProvider(OpeName: String; Url: String;   MinZoom : integer;MaxZoom : integer;NbSvr: integer; GetSvrStr: TGetSvrStr =nil; GetXStr: TGetValStr =nil; GetYStr: TGetValStr =nil; GetZStr: TGetValStr =nil) :  TMapProvider;
+      procedure GetMapProviders(lst: TStrings);
 
-      Procedure MouseDown(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
-      Procedure MouseUp(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
-      Procedure MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-      Procedure DblClick(Sender: TObject);
-      Procedure MouseWheel(Sender: TObject; Shift: TShiftState;WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
-      Procedure SetCenter(aCenter : TRealPoint);
-      Procedure ZoomOnArea(const aArea : TRealArea);
+      function ScreenToLonLat(aPt: TPoint): TRealPoint;
+      function LonLatToScreen(aPt: TRealPoint): TPoint;
+      function WorldScreenToLonLat(aPt: TPoint): TRealPoint;
+      function LonLatToWorldScreen(aPt: TRealPoint): TPoint;
 
+      procedure SetSize(aWidth, aHeight: integer);
+
+      procedure DblClick(Sender: TObject);
+      procedure MouseDown(Sender: TObject; Button: TMouseButton;
+        Shift: TShiftState; X, Y: Integer);
+      procedure MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+      procedure MouseUp(Sender: TObject; Button: TMouseButton;
+        Shift: TShiftState; X, Y: Integer);
+      procedure MouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer;
+        MousePos: TPoint; var Handled: Boolean);
+      procedure ZoomOnArea(const aArea : TRealArea);
 
       property Center : TRealPoint read GetCenter write SetCenter;
-      property Zoom : integer read GetZoom write SetZoom;
-      property Width : integer read GetWidth write SetWidth;
-      property Height : integer read GetHeight write SetHeight;
-      property UseThreads : Boolean read GetUseThreads write SetUseThreads;
-      property MapProvider : String read GetMapProvider write SetMapProvider;
-      property DownloadEngine : TCustomDownloadEngine read FDownloadEngine write SetDownloadEngine;
+
+    published
+      property Active : boolean read FActive write SetActive default false;
       property CacheOnDisk : Boolean read GetCacheOnDisk write SetCacheOnDisk;
       property CachePath : String read GetCachePath write SetCachePath;
-      property Active : boolean read FActive write SetActive;
+      property DownloadEngine : TMvCustomDownloadEngine read FDownloadEngine write SetDownloadEngine;
+      property DrawTitleInGuiThread : boolean read FDrawTitleInGuiThread write FDrawTitleInGuiThread;
+      property Height : integer read GetHeight write SetHeight;
+      property MapProvider : String read GetMapProvider write SetMapProvider;
+      property UseThreads : Boolean read GetUseThreads write SetUseThreads;
+      property Width : integer read GetWidth write SetWidth;
+      property Zoom : integer read GetZoom write SetZoom;
 
       property OnDrawTile :TDrawTileEvent read FOnDrawTile write FOnDrawTile;
-      property DrawTitleInGuiThread : boolean read FDrawTitleInGuiThread write FDrawTitleInGuiThread;
       property OnCenterMove : TNotifyEvent read FOnCenterMove write FOnCenterMove;
       property OnZoomChange : TNotifyEvent read FOnZoomChange write FOnZoomChange;
       property Jobqueue : TJobQueue read Queue;
       property OnChange : TNotifyEvent Read FOnChange write FOnchange; //called when visiable area change
-  End;
+  end;
 
 implementation
-uses Math,mvJobs,forms,mvgpsobj;
 
-Type
+uses
+  Math, Forms,
+  mvJobs, mvGpsObj;
+
+type
 
   { TLaunchDownloadJob }
 
@@ -348,10 +356,10 @@ end;
 
 procedure TMapViewerEngine.SetCachePath(AValue: String);
 begin
-  Cache.BasePath:=aValue;
+  Cache.BasePath := aValue;
 end;
 
-procedure TMapViewerEngine.SetDownloadEngine(AValue: TCustomDownloadEngine);
+procedure TMapViewerEngine.SetDownloadEngine(AValue: TMvCustomDownloadEngine);
 begin
   if FDownloadEngine=AValue then Exit;
   FDownloadEngine:=AValue;
@@ -395,7 +403,7 @@ end;
 
 function TMapViewerEngine.GetWidth: integer;
 begin
-  Result:=MapWin.Width
+  Result := MapWin.Width
 end;
 
 function TMapViewerEngine.ScreenToLonLat(aPt: TPoint): TRealPoint;
@@ -822,8 +830,10 @@ begin
   FActive:=AValue;
   if not(FActive) then
      Queue.CancelAllJob(self)
-  else
-     Redraw(MapWin);
+  else begin
+    if Cache.UseDisk then ForceDirectories(Cache.BasePath);
+    Redraw(MapWin);
+  end;
 end;
 
 procedure TMapViewerEngine.DoDrag(Sender: TDragObj);
@@ -902,13 +912,15 @@ constructor TMapViewerEngine.Create(aOwner: TComponent);
 begin
   DrawTitleInGuiThread := true;
   DragObj := TDragObj.Create;
-  DragObj.OnDrag:=@DoDrag;
+  DragObj.OnDrag := @DoDrag;
   Cache := TPictureCache.Create(self);
-  lstProvider:=TStringList.Create;
+  lstProvider := TStringList.Create;
   RegisterProviders;
-  Queue:=TJobQueue.Create(8);
-  Queue.OnIdle:= @Cache.CheckCacheSize;
+  Queue := TJobQueue.Create(8);
+  Queue.OnIdle := @Cache.CheckCacheSize;
+
   inherited Create(aOwner);
+
   ConstraintZoom(MapWin);
   CalculateWin(mapWin);
 end;

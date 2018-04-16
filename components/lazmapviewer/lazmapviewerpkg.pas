@@ -8,20 +8,18 @@ unit lazMapViewerPkg;
 interface
 
 uses
-  mvCache, mvDLESynapse, mvDownloadEngine, mvDragObj, mvEngine, mvGeoNames,
-  mvGPSObj, mvJobQueue, mvJobs, mvMapProvider, mvTypes, mvMapViewer,
-  mvExtraData,
-  LazarusPackageIntf;
+  mvCache, mvDownloadEngine, mvdragobj, mvEngine, mvGeoNames, mvgpsobj, 
+  mvJobQueue, mvJobs, mvMapProvider, mvtypes, mvmapviewer, mvextradata, 
+  mvDLEFpc, LazarusPackageIntf;
 
 implementation
 
 procedure Register;
 begin
-  RegisterUnit('mvgeonames', @mvgeonames.Register);
+  RegisterUnit('mvGeoNames', @mvGeoNames.Register);
   RegisterUnit('mvmapviewer', @mvmapviewer.Register);
 end;
 
 initialization
   RegisterPackage('lazMapViewerPkg', @Register);
-  
 end.

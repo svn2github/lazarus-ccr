@@ -24,20 +24,21 @@ interface
 
 uses
   Classes, SysUtils;
-Type
 
-  { TCustomDownloadEngine }
+type
 
-  TCustomDownloadEngine = class(TComponent)
+  { TMvCustomDownloadEngine }
+
+  TMvCustomDownloadEngine = class(TComponent)
   public
-    procedure DownloadFile(const Url: string; str: TStream); virtual;
+    procedure DownloadFile(const Url: string; AStream: TStream); virtual;
   end;
 
 implementation
 
-{ TCustomDownloadEngine }
+{ TMvCustomDownloadEngine }
 
-procedure TCustomDownloadEngine.DownloadFile(const Url: string; str: TStream);
+procedure TMvCustomDownloadEngine.DownloadFile(const Url: string; AStream: TStream);
 begin
 
 end;

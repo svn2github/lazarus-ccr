@@ -16,69 +16,63 @@
         <UnitName Value="mvCache"/>
       </Item1>
       <Item2>
-        <Filename Value="source/mvdlesynapse.pas"/>
-        <UnitName Value="mvDLESynapse"/>
-      </Item2>
-      <Item3>
         <Filename Value="source/mvdownloadengine.pas"/>
         <UnitName Value="mvDownloadEngine"/>
-      </Item3>
-      <Item4>
+      </Item2>
+      <Item3>
         <Filename Value="source/mvdragobj.pas"/>
         <UnitName Value="mvdragobj"/>
-      </Item4>
-      <Item5>
+      </Item3>
+      <Item4>
         <Filename Value="source/mvengine.pas"/>
         <UnitName Value="mvEngine"/>
-      </Item5>
-      <Item6>
+      </Item4>
+      <Item5>
         <Filename Value="source/mvgeonames.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="mvgeonames"/>
-      </Item6>
-      <Item7>
+        <UnitName Value="mvGeoNames"/>
+      </Item5>
+      <Item6>
         <Filename Value="source/mvgpsobj.pas"/>
         <UnitName Value="mvgpsobj"/>
-      </Item7>
-      <Item8>
+      </Item6>
+      <Item7>
         <Filename Value="source/mvjobqueue.pas"/>
         <UnitName Value="mvJobQueue"/>
-      </Item8>
-      <Item9>
+      </Item7>
+      <Item8>
         <Filename Value="source/mvjobs.pas"/>
         <UnitName Value="mvJobs"/>
-      </Item9>
-      <Item10>
+      </Item8>
+      <Item9>
         <Filename Value="source/mvmapprovider.pas"/>
         <UnitName Value="mvMapProvider"/>
-      </Item10>
-      <Item11>
+      </Item9>
+      <Item10>
         <Filename Value="source/mvtypes.pas"/>
         <UnitName Value="mvtypes"/>
-      </Item11>
-      <Item12>
+      </Item10>
+      <Item11>
         <Filename Value="source/mvmapviewer.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="mvmapviewer"/>
-      </Item12>
-      <Item13>
+      </Item11>
+      <Item12>
         <Filename Value="source/mvextradata.pas"/>
         <UnitName Value="mvextradata"/>
+      </Item12>
+      <Item13>
+        <Filename Value="source/mvdlefpc.pas"/>
+        <UnitName Value="mvDLEFpc"/>
       </Item13>
     </Files>
-    <RequiredPkgs Count="4">
+    <RequiredPkgs Count="2">
       <Item1>
-        <PackageName Value="laz_synapse"/>
+        <PackageName Value="LCLBase"/>
       </Item1>
       <Item2>
-        <PackageName Value="rgb_graphics"/>
-      </Item2>
-      <Item3>
-        <PackageName Value="LCLBase"/>
-      </Item3>
-      <Item4>
         <PackageName Value="FCL"/>
-      </Item4>
+      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

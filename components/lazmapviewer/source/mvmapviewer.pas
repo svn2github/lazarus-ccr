@@ -35,7 +35,7 @@ uses
   Classes, SysUtils, Controls, Graphics, IntfGraphics,
   {$IFDEF USE_RGBGRAPHICS}RGBGraphics,{$ENDIF}
   {$IFDEF USE_LAZINTFIMAGE}FPCanvas,{$ENDIF}
-  MvTypes, MvGPSObj, MvEngine, MvMapProvider, MVDLESynapse;
+  MvTypes, MvGPSObj, MvEngine, MvMapProvider, MvDownloadEngine;
 
 Type
 
@@ -43,10 +43,10 @@ Type
 
   TMapView = class(TCustomControl)
     private
-      dl : TMVDESynapse;
-      FEngine : TMapViewerEngine;
+      FDownloadEngine: TMvCustomDownloadEngine;
+      FEngine: TMapViewerEngine;
      {$IFDEF USE_RGBGRAPHICS}
-      Buffer : TRGB32Bitmap;
+      Buffer: TRGB32Bitmap;
      {$ENDIF}
      {$IFDEF USE_LAZINTFIMAGE}
       Buffer: TLazIntfImage;
@@ -112,6 +112,7 @@ Type
       procedure ZoomOnObj(obj: TGPSObj);
       procedure WaitEndOfRendering;
       property Center: TRealPoint read GetCenter write SetCenter;
+      property DownloadEngine: TMvCustomDownloadEngine read FDownloadEngine;
       property Engine: TMapViewerEngine read FEngine;
       property GPSItems: TGPSObjectList read FGPSItems;
     published
@@ -140,11 +141,13 @@ Type
   procedure Register;
 
 implementation
+
 uses
   {$IFDEF USE_LAZINTFIMAGE}
   Math, FPImgCanv, FPImage, LCLVersion,
   {$ENDIF}
-  GraphType, mvjobqueue, mvextradata, LResources;
+  LResources,
+  GraphType, mvJobQueue, mvExtraData, mvDLEFpc;
 
 procedure Register;
 begin
@@ -286,18 +289,18 @@ end;
 
 function TDrawObjJob.Running: boolean;
 begin
-  Result:=FRunning;
+  Result := FRunning;
 end;
 
 constructor TDrawObjJob.Create(aViewer: TMapView; aLst: TGPSObjList;
   const aArea: TRealArea);
 begin
-  FArea:=aArea;
-  FLst:=aLst;
+  FArea := aArea;
+  FLst := aLst;
   SetLEngth(FStates,FLst.Count);
-  Viewer:=aViewer;
-  AllRun:=false;
-  Name:='DrawObj';
+  Viewer := aViewer;
+  AllRun := false;
+  Name := 'DrawObj';
 end;
 
 destructor TDrawObjJob.Destroy;
@@ -313,119 +316,117 @@ end;
 
 procedure TMapView.SetActive(AValue: boolean);
 begin
-  if FActive=AValue then Exit;
-  FActive:=AValue;
+  if FActive = AValue then Exit;
+  FActive := AValue;
   if FActive then
     ActivateEngine
   else
-    Engine.Active:=false;
+    Engine.Active := false;
 end;
 
 function TMapView.GetCacheOnDisk: boolean;
 begin
-  Result:=Engine.CacheOnDisk;
+  Result := Engine.CacheOnDisk;
 end;
 
 function TMapView.GetCachePath: String;
 begin
-  Result:=Engine.CachePath;
+  Result := Engine.CachePath;
 end;
 
 function TMapView.GetCenter: TRealPoint;
 begin
-  Result:=Engine.Center;
+  Result := Engine.Center;
 end;
 
 function TMapView.GetMapProvider: String;
 begin
-  result:=Engine.MapProvider;
+  result := Engine.MapProvider;
 end;
 
 function TMapView.GetOnCenterMove: TNotifyEvent;
 begin
-  result:=Engine.OnCenterMove;
+  result := Engine.OnCenterMove;
 end;
 
 function TMapView.GetOnChange: TNotifyEvent;
 begin
-  Result:=Engine.OnChange;
+  Result := Engine.OnChange;
 end;
 
 function TMapView.GetOnZoomChange: TNotifyEvent;
 begin
-  Result:=Engine.OnZoomChange;
+  Result := Engine.OnZoomChange;
 end;
 
 function TMapView.GetUseThreads: boolean;
 begin
-  Result:=Engine.UseThreads;
+  Result := Engine.UseThreads;
 end;
 
 function TMapView.GetZoom: integer;
 begin
-  result:=Engine.Zoom;
+  result := Engine.Zoom;
 end;
 
 procedure TMapView.SetCacheOnDisk(AValue: boolean);
 begin
-  Engine.CacheOnDisk:=AValue;
+  Engine.CacheOnDisk := AValue;
 end;
 
 procedure TMapView.SetCachePath(AValue: String);
 begin
-  Engine.CachePath:=CachePath;
+  Engine.CachePath := CachePath;
 end;
 
 procedure TMapView.SetCenter(AValue: TRealPoint);
 begin
-    Engine.Center:=AValue;
+  Engine.Center := AValue;
 end;
 
 procedure TMapView.SetInactiveColor(AValue: TColor);
 begin
-  if FInactiveColor=AValue then Exit;
-  FInactiveColor:=AValue;
-  if not(IsActive) then
-     invalidate;
+  if FInactiveColor = AValue then
+    exit;
+  FInactiveColor := AValue;
+  if not IsActive then
+    Invalidate;
 end;
 
 procedure TMapView.ActivateEngine;
 begin
   Engine.SetSize(ClientWidth,ClientHeight);
-  if IsActive then
-    Engine.Active:=true
-  else
-    Engine.Active:=false;
+  Engine.Active := IsActive;
 end;
 
 procedure TMapView.SetMapProvider(AValue: String);
 begin
-  Engine.MapProvider:=AValue;
+  Engine.MapProvider := AValue;
 end;
 
 procedure TMapView.SetOnCenterMove(AValue: TNotifyEvent);
 begin
-  Engine.OnCenterMove:=AValue;
+  Engine.OnCenterMove := AValue;
 end;
 
 procedure TMapView.SetOnChange(AValue: TNotifyEvent);
 begin
-  Engine.OnChange:=AValue;
+  Engine.OnChange := AValue;
 end;
 
 procedure TMapView.SetOnZoomChange(AValue: TNotifyEvent);
 begin
-    Engine.OnZoomChange:=AValue;
+  Engine.OnZoomChange := AValue;
 end;
 
 procedure TMapView.SetUseThreads(AValue: boolean);
 begin
-  Engine.UseThreads:=aValue;
+  Engine.UseThreads := aValue;
 end;
 
 procedure TMapView.SetZoom(AValue: integer);
 begin
-  Engine.Zoom:=AValue;
+  Engine.Zoom := AValue;
 end;
 
 function TMapView.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
@@ -445,15 +446,16 @@ begin
 end;
 
 procedure TMapView.MouseUp(Button: TMouseButton; Shift: TShiftState;
-  X: Integer; Y: Integer);
+  X, Y: Integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
   if IsActive then
     Engine.MouseUp(self,Button,Shift,X,Y);
 end;
 
-procedure TMapView.MouseMove(Shift: TShiftState; X: Integer; Y: Integer);
-var aPt : TPoint;
+procedure TMapView.MouseMove(Shift: TShiftState; X, Y: Integer);
+var
+  aPt: TPoint;
 begin
   inherited MouseMove(Shift, X, Y);
   if IsActive then
@@ -515,14 +517,15 @@ end;
 
 procedure TMapView.OnGPSItemsModified(Sender: TObject; objs: TGPSObjList;
   Adding: boolean);
-var Area,ObjArea,vArea : TRealArea;
+var
+  Area,ObjArea,vArea: TRealArea;
 begin
   if Adding and assigned(Objs) then
-  Begin
-    ObjArea:=GetAreaOf(Objs);
-    vArea:=GetVisibleArea;
+  begin
+    ObjArea := GetAreaOf(Objs);
+    vArea := GetVisibleArea;
     if hasIntersectArea(ObjArea,vArea) then
-    Begin
+    begin
       Area:=IntersectArea(ObjArea,vArea);
       Engine.Jobqueue.AddJob(TDrawObjJob.Create(self,Objs,Area),Engine);
     end
@@ -530,7 +533,7 @@ begin
       objs.Free;
   end
   else
-  Begin
+  begin
     Engine.Redraw;
     Objs.free;
   end;
@@ -564,16 +567,16 @@ Begin
                if not(LastInside) then
                  Old:=Engine.LonLatToScreen(trk.Points[pred(i)].RealPoint);
                {$IFDEF USE_RGBGRAPHICS}
-               Buffer.canvas.OutlineColor := trkColor;
-               Buffer.canvas.Line(Old.X,Old.y,New.X,New.Y);
+               Buffer.Canvas.OutlineColor := trkColor;
+               Buffer.Canvas.Line(Old.X, Old.y, New.X, New.Y);
                {$ENDIF}
                {$IFDEF USE_LAZINTFIMAGE}
                BufferCanvas.Pen.FPColor := TColorToFPColor(trkColor);
                BufferCanvas.Line(Old.X, Old.Y, New.X, New.Y);
                {$ENDIF}
              end;
-             Old:=New;
-             LastInside:=IsInside;
+             Old := New;
+             LastInside := IsInside;
            end;
        end;
      end;
@@ -727,7 +730,7 @@ begin
   FGPSItems.OnModified := @OnGPSItemsModified;
   FInactiveColor := clWhite;
   FEngine := TMapViewerEngine.Create(self);
-  dl := TMVDESynapse.Create(self);
+  FdownloadEngine := TMvDEFpc.Create(self);
   {$IFDEF USE_RGBGRAPHICS}
   Buffer := TRGB32Bitmap.Create(Width,Height);
   {$ENDIF}
@@ -738,7 +741,7 @@ begin
   Engine.CacheOnDisk := true;
   Engine.OnDrawTile := @DoDrawTile;
   Engine.DrawTitleInGuiThread := false;
-  Engine.DownloadEngine := dl;
+  Engine.DownloadEngine := FDownloadengine;
   inherited Create(AOwner);
   Width := 150;
   Height := 150;
