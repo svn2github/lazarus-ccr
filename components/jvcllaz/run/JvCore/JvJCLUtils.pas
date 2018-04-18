@@ -8201,7 +8201,7 @@ end;
 function MinimizeFileName(const FileName: string; Canvas: TCanvas; MaxLen: Integer): string;
 var
   R: TRect;
-  flags: Word;
+  flags: Cardinal;
 begin
   Result := FileName;
   R := Rect(0, 0, MaxLen, Canvas.TextHeight('Wq'));
