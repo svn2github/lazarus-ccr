@@ -1,0 +1,79 @@
+object JvID3DefineDlg: TJvID3DefineDlg
+  Left = 382
+  Height = 88
+  Top = 194
+  Width = 295
+  BorderStyle = bsDialog
+  Caption = 'JvID3DefineDlg'
+  ClientHeight = 88
+  ClientWidth = 295
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object lblFrames: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 63
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Frame Kind:'
+    ParentColor = False
+  end
+  object cmbFrames: TComboBox
+    AnchorSideLeft.Control = lblFrames
+    AnchorSideTop.Control = lblFrames
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 23
+    Top = 27
+    Width = 280
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 8
+    Constraints.MinWidth = 280
+    DropDownCount = 24
+    ItemHeight = 15
+    Sorted = True
+    Style = csDropDownList
+    TabOrder = 0
+  end
+  object OkBtn: TButton
+    AnchorSideTop.Control = CancelBtn
+    AnchorSideRight.Control = CancelBtn
+    Left = 134
+    Height = 25
+    Top = 58
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 4
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    OnClick = OkBtnClick
+    TabOrder = 1
+  end
+  object CancelBtn: TButton
+    AnchorSideTop.Control = cmbFrames
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = cmbFrames
+    AnchorSideRight.Side = asrBottom
+    Left = 213
+    Height = 25
+    Top = 58
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 2
+  end
+end

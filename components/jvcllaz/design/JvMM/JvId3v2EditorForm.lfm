@@ -1,0 +1,44 @@
+object JvId3FramesEditor: TJvId3FramesEditor
+  Left = 540
+  Height = 293
+  Top = 208
+  Width = 231
+  BorderStyle = bsSizeToolWin
+  Caption = 'Frame editor'
+  ClientHeight = 293
+  ClientWidth = 231
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  PopupMenu = LocalMenu
+  LCLVersion = '1.9.0.0'
+  object FrameListBox: TListBox
+    Left = 0
+    Height = 293
+    Top = 0
+    Width = 231
+    Align = alClient
+    ItemHeight = 0
+    TabOrder = 0
+  end
+  object LocalMenu: TPopupMenu
+    left = 81
+    top = 96
+    object NewItem: TMenuItem
+      Caption = '&New frame...'
+      ShortCut = 16462
+      OnClick = NewFrameClick
+    end
+    object Separator: TMenuItem
+      Caption = '-'
+    end
+    object DeleteItem: TMenuItem
+      Caption = '&Delete'
+      ShortCut = 46
+    end
+    object SelectAllItem: TMenuItem
+      Caption = 'Se&lect all'
+      ShortCut = 16460
+    end
+  end
+end
