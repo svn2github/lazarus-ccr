@@ -43,7 +43,10 @@ The highlighter formats DOT source code ref.: http://www.research.att.com/sw/too
 }
 unit SynHighlighterDOT;
 
-{$I synedit.inc}
+// extrasyn.inc is the synedit.inc from laz 1.2.0 synedit package source,
+// If it has changed in newer version you might need to copy it again.
+// Remember to redclare the syn_lazarus define.
+{$I extrasyn.inc}
 
 interface
 

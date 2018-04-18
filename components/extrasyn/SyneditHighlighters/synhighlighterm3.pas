@@ -39,7 +39,10 @@ The SynHighlighterM3 unit provides SynEdit with a Modula-3 (.m3) highlighter.
 }
 unit SynHighlighterM3;
 
-{$I synedit.inc}
+// extrasyn.inc is the synedit.inc from laz 1.2.0 synedit package source,
+// If it has changed in newer version you might need to copy it again.
+// Remember to redclare the syn_lazarus define.
+{$I extrasyn.inc}
 
 interface
 

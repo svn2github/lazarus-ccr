@@ -42,9 +42,10 @@ The highlighter formats Lua Script source code highlighting keywords, strings, n
 
 unit SynHighlighterLua;
 
-  //SynEdit.inc is the synedit.inc from laz 1.2.0 synedit package source if it has changed
-  //in newer version you might need to copy it again. REmeber to redclare the syn_lazarus define.
-{$I synedit.inc}
+// extrasyn.inc is the synedit.inc from laz 1.2.0 synedit package source,
+// If it has changed in newer version you might need to copy it again.
+// Remember to redclare the syn_lazarus define.
+{$I extrasyn.inc}
 
 interface
 
