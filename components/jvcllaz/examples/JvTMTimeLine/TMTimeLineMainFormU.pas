@@ -32,7 +32,6 @@ unit TMTimeLineMainFormU;
 interface
 
 uses
-  //Windows, Messages,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls, ComCtrls, StdCtrls, Buttons, ImgList, DateTimePicker,
   Menus, CheckLst, JvTMTimeLine;

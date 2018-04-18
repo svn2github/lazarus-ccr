@@ -20,15 +20,15 @@
     <Version Major="1" Release="4"/>
     <Files Count="9">
       <Item1>
-        <Filename Value="..\run\JvCustomControls\jvtimeline.pas"/>
+        <Filename Value="..\run\JvCustomControls\JvTimeLine.pas"/>
         <UnitName Value="JvTimeLine"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvCustomControls\jvtmtimeline.pas"/>
+        <Filename Value="..\run\JvCustomControls\JvTMTimeLine.pas"/>
         <UnitName Value="JvTMTimeLine"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvCustomControls\jvoutlookbar.pas"/>
+        <Filename Value="..\run\JvCustomControls\JvOutlookBar.pas"/>
         <UnitName Value="JvOutlookBar"/>
       </Item3>
       <Item4>

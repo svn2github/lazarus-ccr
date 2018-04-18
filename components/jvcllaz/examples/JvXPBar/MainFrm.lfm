@@ -51,6 +51,9 @@ object frmMain: TfrmMain
       BorderStyle = bsNone
       ClientHeight = 345
       ClientWidth = 204
+      Font.Color = clWindowText
+      Font.Height = -11
+      ParentFont = False
       TabOrder = 0
       object JvXPContainer1: TJvXPContainer
         Left = 0
@@ -98,12 +101,8 @@ object frmMain: TfrmMain
             item
             end>
           RollImages = ilWhiteButtons
-          Font.Color = 17877
-          Font.Height = -13
-          Font.Name = 'MS Shell Dlg 2'
-          HeaderFont.Color = clWindowText
-          HeaderFont.Height = -13
-          HeaderFont.Name = 'MS Shell Dlg 2'
+          Font.Color = 8650752
+          HeaderFont.Color = 8650752
           HeaderFont.Style = [fsBold]
           HotTrackColor = 4227327
           OwnerDraw = False
@@ -138,7 +137,6 @@ object frmMain: TfrmMain
           ShowItemFrame = False
           RoundedItemFrame = 0
           Align = alTop
-          ParentFont = False
           object tvSelfView: TTreeView
             Left = 4
             Height = 0
@@ -176,12 +174,8 @@ object frmMain: TfrmMain
               ImageList = imlWinXPBar
             end>
           RollImages = ilRedButtons
-          Font.Color = 1573351
-          Font.Height = -13
-          Font.Name = 'MS Shell Dlg 2'
-          HeaderFont.Color = 1573351
-          HeaderFont.Height = -13
-          HeaderFont.Name = 'MS Shell Dlg 2'
+          Font.Color = clMaroon
+          HeaderFont.Color = 8650752
           HeaderFont.Style = [fsBold]
           HotTrackColor = clMaroon
           OwnerDraw = False
@@ -291,12 +285,8 @@ object frmMain: TfrmMain
               Action = acHowDoI
             end>
           RollImages = ilWhiteButtons
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'MS Shell Dlg 2'
-          HeaderFont.Color = clWhite
-          HeaderFont.Height = -13
-          HeaderFont.Name = 'MS Shell Dlg 2'
+          Font.Color = 8650752
+          HeaderFont.Color = 8650752
           HeaderFont.Style = [fsBold]
           HotTrackColor = clNone
           OwnerDraw = False
@@ -331,7 +321,6 @@ object frmMain: TfrmMain
           ShowItemFrame = False
           RoundedItemFrame = 0
           Align = alTop
-          ParentFont = False
         end
         object dxWinXPBar2: TJvXPBar
           Left = 4

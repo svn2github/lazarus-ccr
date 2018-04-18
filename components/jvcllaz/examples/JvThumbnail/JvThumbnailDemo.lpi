@@ -53,7 +53,7 @@
         <ResourceBaseClass Value="Form"/>
       </Unit2>
       <Unit3>
-        <Filename Value="jvthumbnaildatamodule.pas"/>
+        <Filename Value="JvThumbnailDatamodule.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="DataModule1"/>
         <HasResources Value="True"/>

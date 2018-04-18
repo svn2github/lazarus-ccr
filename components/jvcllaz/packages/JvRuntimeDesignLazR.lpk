@@ -17,19 +17,19 @@
     <Version Major="1" Release="4"/>
     <Files Count="4">
       <Item1>
-        <Filename Value="..\run\JvRuntimeDesign\jvdesignclip.pas"/>
+        <Filename Value="..\run\JvRuntimeDesign\JvDesignClip.pas"/>
         <UnitName Value="JvDesignClip"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvRuntimeDesign\jvdesignimp.pas"/>
+        <Filename Value="..\run\JvRuntimeDesign\JvDesignImp.pas"/>
         <UnitName Value="JvDesignImp"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
+        <Filename Value="..\run\JvRuntimeDesign\JvDesignSurface.pas"/>
         <UnitName Value="JvDesignSurface"/>
       </Item3>
       <Item4>
-        <Filename Value="..\run\JvRuntimeDesign\jvdesignutils.pas"/>
+        <Filename Value="..\run\JvRuntimeDesign\JvDesignUtils.pas"/>
         <UnitName Value="JvDesignUtils"/>
       </Item4>
     </Files>

@@ -19,7 +19,7 @@ uses
   //JvCSVData, JvCSVBaseControls, //JvCsvBaseEditor,
   JvMarkupViewer, JvMarkupLabel,
   JvSimScope, JvSimIndicator, JvSimPID, JvSimPIDLinker, JvSimLogic,
-  JvJanLed, JvJanToggle;
+  JvJanLED, JvJanToggle;
 
 procedure Register;
 begin

@@ -2,47 +2,38 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="JvCustomLazD"/>
+    <Name Value="jvcmpd"/>
     <Type Value="RunAndDesignTime"/>
     <Author Value="Various authors - see header of each unit for original author."/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="..\design\JvCustomControls"/>
-        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvCustom"/>
+        <OtherUnitFiles Value="..\design\JvCmp"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvCmp"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (designtime code):
-- TimeLine componentx
-- OutlookBar component
-"/>
+    <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code):
+- Spellchecker component
+- EnterAsTab component"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
-    <Files Count="3">
+    <Files Count="1">
       <Item1>
-        <Filename Value="..\design\JvCustomControls\jvcustomreg.pas"/>
+        <Filename Value="..\design\JvCmp\JvCmpReg.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="JvCustomReg"/>
+        <UnitName Value="JvCmpReg"/>
       </Item1>
-      <Item2>
-        <Filename Value="..\design\JvCustomControls\jvtimelineeditor.pas"/>
-        <UnitName Value="JvTimeLineEditor"/>
-      </Item2>
-      <Item3>
-        <Filename Value="..\design\JvCustomControls\jvoutlookbareditors.pas"/>
-        <UnitName Value="JvOutlookBarEditors"/>
-      </Item3>
     </Files>
     <RequiredPkgs Count="4">
       <Item1>
-        <PackageName Value="IDEIntf"/>
+        <PackageName Value="JvCoreLazD"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvCoreLazD"/>
+        <PackageName Value="IDEIntf"/>
       </Item2>
       <Item3>
-        <PackageName Value="JvCustomLazR"/>
+        <PackageName Value="JvCmpR"/>
       </Item3>
       <Item4>
         <PackageName Value="FCL"/>

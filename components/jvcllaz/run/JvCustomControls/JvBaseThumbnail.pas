@@ -632,7 +632,9 @@ end;
 procedure TJvFileName.SetName(NewName: string);
 begin
   FFileName := NewName;
+  {$IFDEF WINDOWS}
   if (NewName <> LongName) and (NewName <> ShortName) then
+  {$ENDIF}
     Init;
 end;
 
@@ -646,6 +648,7 @@ begin
   begin
     FindClose(sr);
 
+    {$IFDEF WINDOWS}
     FLongName := sr.FindData.cFileName;
     FShortName := sr.FindData.cAlternateFileName;
     if FLongName = '' then
@@ -671,6 +674,7 @@ begin
     **************)
     FFileSize := (sr.FindData.nFileSizeHigh * MAXDWORD) + sr.FindData.nFileSizeLow;
     //FFileName:=NewName;
+    {$ENDIF}
   end;
 end;
 

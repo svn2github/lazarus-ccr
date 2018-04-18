@@ -10,15 +10,23 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <OtherUnitFiles Value="..\design\JvMM"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Files Count="1">
+    <Files Count="3">
       <Item1>
-        <Filename Value="..\design\JvMM\jvmmreg.pas"/>
+        <Filename Value="..\design\JvMM\JvMMReg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="JvMMReg"/>
       </Item1>
+      <Item2>
+        <Filename Value="..\design\JvMM\JvId3v2EditorForm.pas"/>
+        <UnitName Value="JvId3v2EditorForm"/>
+      </Item2>
+      <Item3>
+        <Filename Value="..\design\JvMM\JvId3v2DefineForm.pas"/>
+        <UnitName Value="JvId3v2DefineForm"/>
+      </Item3>
     </Files>
     <RequiredPkgs Count="4">
       <Item1>

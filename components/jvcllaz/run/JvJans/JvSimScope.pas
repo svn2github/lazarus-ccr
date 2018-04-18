@@ -198,6 +198,7 @@ type
 
     property Align;
     property Anchors;
+    property BorderSpacing;
     property ParentShowHint;
     property ShowHint;
     property Visible;

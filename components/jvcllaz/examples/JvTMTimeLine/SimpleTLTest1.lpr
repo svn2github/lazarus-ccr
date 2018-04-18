@@ -7,7 +7,7 @@ uses
   frmMemoEdit in 'frmMemoEdit.pas' {MemoEditFrm},
   TMTimeLineMainFormU in 'TMTimeLineMainFormU.pas' {TMTimeLineMainForm};
 
-{$R *.RES}
+{$R *.res}
 
 begin
   Application.Scaled := True;

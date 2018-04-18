@@ -511,7 +511,7 @@ resourcestring
 
   // (rom) from JvConsts.pas
   RsID3CommitTag = '&Commit';
-  RsID3FileInfoTag = 'File &info';
+  RsID3FileInfoTag = 'File &info...';
   RsID3FrameEditorTag = 'Frame edi&tor';
   RsID3RemoveTag = '&Remove tag...';
   RsID3RemoveTagConfirmation = 'Remove tag?';

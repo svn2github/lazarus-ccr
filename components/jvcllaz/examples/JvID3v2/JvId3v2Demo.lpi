@@ -4,12 +4,9 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <General>
-      <Flags>
-        <UseDefaultCompilerOptions Value="True"/>
-      </Flags>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <Title Value="JvID3v2Demo"/>
+      <Title Value="JvId3v2Demo"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -38,22 +35,24 @@
     </RequiredPackages>
     <Units Count="3">
       <Unit0>
-        <Filename Value="JvID3v2Demo.lpr"/>
+        <Filename Value="JvId3v2Demo.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="JvID3v2EditFormU.pas"/>
+        <Filename Value="JvId3v2EditFormU.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="JvID3v2EditForm"/>
+        <ComponentName Value="JvId3v2EditForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="JvId3v2EditFormU"/>
       </Unit1>
       <Unit2>
-        <Filename Value="JvID3v2MainFormU.pas"/>
+        <Filename Value="JvId3v2MainFormU.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="JvID3v2MainForm"/>
+        <ComponentName Value="JvId3v2MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="JvId3v2MainFormU"/>
       </Unit2>
     </Units>
   </ProjectOptions>
@@ -61,7 +60,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="JvID3v2Demo"/>
+      <Filename Value="JvId3v2Demo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

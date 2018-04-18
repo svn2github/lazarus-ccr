@@ -30,15 +30,18 @@ interface
 
 uses
   SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, JvSimScope, StdCtrls;
+  Dialogs, JvSimScope, StdCtrls, ExtCtrls;
 
 type
+
+  { TfrmMain }
+
   TfrmMain = class(TForm)
     jssRandom: TJvSimScope;
-    lblRandomDetails1: TLabel;
     btnActivateDeactivateRandom: TButton;
     btnAdjustMax: TButton;
     Label1: TLabel;
+    lblRandomDetails1: TLabel;
     lblWelcome: TLabel;
     procedure jssRandomUpdate(Sender: TObject);
     procedure btnActivateDeactivateRandomClick(Sender: TObject);

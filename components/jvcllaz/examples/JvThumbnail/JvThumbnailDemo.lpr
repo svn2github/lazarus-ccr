@@ -3,7 +3,7 @@ program JvThumbnailDemo;
 uses
   Forms, Interfaces, JvThumbnailMainFormU, JvThumbnailChildFormU, JvThumbnailDatamodule {JvThumbnailMainForm};
 
-{$R *.RES}
+{$R *.res}
 
 begin
   Application.Scaled := True;

@@ -19,7 +19,7 @@ uses
   JvOutlookBar, JvOutlookBarEditors,
   JvTabBar, JvTabBarXPPainter,
   JvThumbImage, JvThumbnails, JvThumbViews,
-  JvTimeLine, JvTMTimeline, JvTimeLineEditor;
+  JvTimeLine, JvTMTimeLine, JvTimeLineEditor;
 
 procedure Register;
 begin

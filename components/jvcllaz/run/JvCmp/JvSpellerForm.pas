@@ -407,12 +407,5 @@ begin
   Result := (FWordEnd <= L);
 end;
 
-{$IFDEF UNITVERSIONING}
-initialization
-  RegisterUnitVersion(HInstance, UnitVersioning);
-
-finalization
-  UnregisterUnitVersion(HInstance);
-{$ENDIF UNITVERSIONING}
 
 end.

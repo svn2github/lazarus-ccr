@@ -17,7 +17,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
   OnMouseWheelUp = FormMouseWheelUp
   Position = poScreenCenter
   ShowHint = True
-  LCLVersion = '1.8.0.6'
+  LCLVersion = '1.9.0.0'
   Scaled = False
   object Splitter1: TSplitter
     Cursor = crVSplit

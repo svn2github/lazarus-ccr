@@ -24,17 +24,17 @@
 
 ******************************************************************}
 
-unit JvID3v2MainFormU;
+unit JvId3v2MainFormU;
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Windows, SysUtils, FileUtil, Classes, Controls, Forms, //JvSearchFiles,
+  SysUtils, FileUtil, Classes, Controls, Forms, //JvSearchFiles,
   ComCtrls,
   //JvDriveCtrls,
-  ExtCtrls, JvID3v2Base, JvId3v2, JvID3v2Types, //JvComponent,
+  ExtCtrls, JvId3v2Base, JvId3v2, JvId3v2Types, //JvComponent,
   StdCtrls, ShellCtrls; //, JvListBox, JvCombobox, JvExStdCtrls, JvComponentBase;
 
 type
@@ -68,7 +68,7 @@ implementation
 
 uses
   LazFileUtils,
-  JvID3v2EditFormU;
+  JvId3v2EditFormU;
 
 {$R *.lfm}
 

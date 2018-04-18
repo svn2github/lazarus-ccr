@@ -30,19 +30,19 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
       ClientWidth = 923
       object Splitter1: TSplitter
         Left = 205
-        Height = 546
-        Top = 58
+        Height = 544
+        Top = 60
         Width = 3
       end
       object Panel1: TPanel
         Left = 0
-        Height = 58
+        Height = 60
         Top = 0
         Width = 923
         Align = alTop
         AutoSize = True
         BevelOuter = bvNone
-        ClientHeight = 58
+        ClientHeight = 60
         ClientWidth = 923
         TabOrder = 0
         object LblThumbSize: TLabel
@@ -234,11 +234,11 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           AnchorSideRight.Side = asrBottom
           Left = 449
           Height = 25
-          Top = 2
+          Top = 4
           Width = 135
           Anchors = [akTop, akLeft, akRight]
           AutoSize = True
-          BorderSpacing.Top = 2
+          BorderSpacing.Top = 4
           Caption = 'Stop Loading'
           Enabled = False
           OnClick = BtnStopLoadingClick
@@ -251,7 +251,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           AnchorSideTop.Side = asrBottom
           Left = 449
           Height = 25
-          Top = 29
+          Top = 31
           Width = 135
           AutoSize = True
           BorderSpacing.Left = 16
@@ -264,18 +264,18 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
       end
       object Panel2: TPanel
         Left = 0
-        Height = 546
-        Top = 58
+        Height = 544
+        Top = 60
         Width = 205
         Align = alLeft
         BevelOuter = bvNone
         Caption = 'Panel2'
-        ClientHeight = 546
+        ClientHeight = 544
         ClientWidth = 205
         TabOrder = 1
         object ShellTreeView: TShellTreeView
           Left = 0
-          Height = 376
+          Height = 374
           Hint = 'Set directory where your images are located and watch the thumbview creating the thumbs'
           Top = 0
           Width = 205
@@ -294,7 +294,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Left = 0
           Height = 77
           Hint = 'Change the AlignView property to either use the thumbGup (VTNormal) autocalculate the empty space to equall parts(VTSPACEEQUAL) or Cender the thumbs in the using the htumbgup between them.'
-          Top = 384
+          Top = 382
           Width = 205
           Align = alBottom
           AutoFill = True
@@ -323,7 +323,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Left = 0
           Height = 77
           Hint = 'Change the ScrollMode to change the direction the thumb are scrolling in the screen SMVertical You will see a vertical scrollbar SMHorizontal For A horizontal ScrollBar or SMBoth to create a square view '
-          Top = 469
+          Top = 467
           Width = 205
           Align = alBottom
           AutoFill = True
@@ -351,20 +351,20 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
       end
       object Panel3: TPanel
         Left = 208
-        Height = 546
-        Top = 58
+        Height = 544
+        Top = 60
         Width = 715
         Align = alClient
         BevelOuter = bvNone
         Caption = 'Panel3'
-        ClientHeight = 546
+        ClientHeight = 544
         ClientWidth = 715
         TabOrder = 2
         object DirInfoPanel: TPanel
           Left = 0
           Height = 16
           Hint = 'Read the selectedFile property to get the path+filename of the selected thumb'
-          Top = 530
+          Top = 528
           Width = 715
           Align = alBottom
           BevelOuter = bvLowered
@@ -374,7 +374,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
         end
         object ThumbView: TJvThumbView
           Left = 0
-          Height = 530
+          Height = 528
           Top = 0
           Width = 553
           HorzScrollBar.Page = 1
@@ -408,14 +408,14 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
         end
         object Panel4: TPanel
           Left = 561
-          Height = 530
+          Height = 528
           Top = 0
           Width = 146
           Align = alRight
           BorderSpacing.Left = 8
           BorderSpacing.Right = 8
           BevelOuter = bvNone
-          ClientHeight = 530
+          ClientHeight = 528
           ClientWidth = 146
           TabOrder = 2
           object GroupBox1: TGroupBox
@@ -469,11 +469,13 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
             end
             object CbTitleColor: TColorButton
               AnchorSideLeft.Control = CbThumbColor
+              AnchorSideTop.Control = CbThumbColor
               AnchorSideTop.Side = asrBottom
               Left = 90
               Height = 25
               Top = 27
               Width = 27
+              BorderSpacing.Top = 2
               BorderSpacing.Right = 8
               BorderSpacing.Bottom = 8
               BorderWidth = 2

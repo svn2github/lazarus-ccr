@@ -258,6 +258,7 @@ type
     property DefaultColWidth: Integer read GetDefaultColWidth write SetDefaultColWidth  default 16;
     property DefaultRowHeight default 18; //: Integer read GetDefaultRowHeight write SetDefaultRowHeihgt default 18;
 
+    property BorderSpacing;
     property BorderStyle;
     property Flat read GetFlat write SetFlat default true;
     property ScrollBars;

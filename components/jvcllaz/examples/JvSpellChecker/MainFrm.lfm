@@ -11,8 +11,6 @@ object frmMain: TfrmMain
   Constraints.MinWidth = 320
   DefaultMonitor = dmDesktop
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Shell Dlg 2'
   Menu = mmMain
   Position = poScreenCenter
   LCLVersion = '1.9.0.0'
@@ -23,11 +21,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 535
     Align = alClient
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'MS Shell Dlg 2'
     HideSelection = False
-    ParentFont = False
     ScrollBars = ssBoth
     TabOrder = 0
     WantTabs = True

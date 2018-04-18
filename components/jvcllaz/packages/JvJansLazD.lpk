@@ -20,7 +20,7 @@
     <Version Major="1" Release="4"/>
     <Files Count="1">
       <Item1>
-        <Filename Value="..\design\JvJans\jvjansreg.pas"/>
+        <Filename Value="..\design\JvJans\JvJansReg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="JvJansReg"/>
       </Item1>
@@ -30,7 +30,7 @@
         <PackageName Value="JvCoreLazD"/>
       </Item1>
       <Item2>
-        <PackageName Value="jvjanslazr"/>
+        <PackageName Value="JvJansLazR"/>
       </Item2>
       <Item3>
         <PackageName Value="FCL"/>

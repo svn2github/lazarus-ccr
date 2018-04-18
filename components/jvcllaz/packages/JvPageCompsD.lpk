@@ -23,7 +23,7 @@
         <UnitName Value="JvPageCompsReg"/>
       </Item1>
       <Item2>
-        <Filename Value="..\design\JvPageComps\jvnavpaneeditors.pas"/>
+        <Filename Value="..\design\JvPageComps\JvNavPaneEditors.pas"/>
         <UnitName Value="JvNavPaneEditors"/>
       </Item2>
       <Item3>

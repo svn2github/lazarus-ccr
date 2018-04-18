@@ -1,21 +1,27 @@
 object frmMain: TfrmMain
-  Left = 0
-  Height = 271
-  Top = 0
-  Width = 541
+  Left = 411
+  Height = 352
+  Top = 332
+  Width = 594
+  AutoSize = True
   BorderStyle = bsSingle
   Caption = 'JvSimScope demo'
-  ClientHeight = 271
-  ClientWidth = 541
+  ClientHeight = 352
+  ClientWidth = 594
   Color = clBtnFace
   Font.Color = clWindowText
   Position = poScreenCenter
   LCLVersion = '1.9.0.0'
   object jssRandom: TJvSimScope
-    Left = 264
-    Height = 208
+    AnchorSideLeft.Control = lblRandomDetails1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblRandomDetails1
+    AnchorSideBottom.Control = btnActivateDeactivateRandom
+    AnchorSideBottom.Side = asrBottom
+    Left = 276
+    Height = 207
     Top = 48
-    Width = 256
+    Width = 252
     Active = False
     BaseLine = 0
     BaseLineUnit = jluAbsolute
@@ -38,34 +44,35 @@ object frmMain: TfrmMain
     Maximum = 100
     TotalTimeSteps = 240
     OnUpdate = jssRandomUpdate
-  end
-  object lblRandomDetails1: TLabel
-    Left = 16
-    Height = 80
-    Top = 48
-    Width = 232
-    AutoSize = False
-    Caption = 'This scope shows random values but uses logical units to show a more advanced usage. Here, the Minimum and Maximum values are used and can be adjusted to make the lines fit in the display.'
-    ParentColor = False
-    WordWrap = True
+    Anchors = [akTop, akLeft, akBottom]
+    BorderSpacing.Right = 24
   end
   object Label1: TLabel
+    AnchorSideLeft.Control = lblRandomDetails1
+    AnchorSideTop.Control = lblRandomDetails1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = lblRandomDetails1
+    AnchorSideRight.Side = asrBottom
     Left = 16
-    Height = 96
-    Top = 128
-    Width = 225
-    AutoSize = False
+    Height = 75
+    Top = 131
+    Width = 244
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 8
     Caption = 'The yellow line values are meant to go higher than the maximum value set at design time for the scope. Use the button below to change that value and notice how the lines are completely adjusted to this change.'
+    Constraints.MaxWidth = 250
     ParentColor = False
     WordWrap = True
   end
   object lblWelcome: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
-    Left = 114
+    AnchorSideTop.Control = Owner
+    Left = 141
     Height = 28
     Top = 8
     Width = 312
+    BorderSpacing.Top = 8
     Caption = 'Welcome to the TJvSimScope demo'
     Font.Color = clWindowText
     Font.Height = -20
@@ -73,21 +80,53 @@ object frmMain: TfrmMain
     ParentFont = False
   end
   object btnActivateDeactivateRandom: TButton
+    AnchorSideLeft.Control = lblRandomDetails1
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
     Left = 32
     Height = 25
-    Top = 232
-    Width = 75
+    Top = 230
+    Width = 69
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 24
+    BorderSpacing.Bottom = 24
     Caption = 'Activate'
     OnClick = btnActivateDeactivateRandomClick
     TabOrder = 0
   end
   object btnAdjustMax: TButton
-    Left = 113
+    AnchorSideLeft.Control = btnActivateDeactivateRandom
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = btnActivateDeactivateRandom
+    AnchorSideBottom.Control = jssRandom
+    AnchorSideBottom.Side = asrBottom
+    Left = 117
     Height = 25
-    Top = 232
-    Width = 100
+    Top = 230
+    Width = 116
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Bottom = 16
     Caption = 'Adjust Max value'
     OnClick = btnAdjustMaxClick
     TabOrder = 1
+  end
+  object lblRandomDetails1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblWelcome
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 75
+    Top = 48
+    Width = 244
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 12
+    BorderSpacing.Right = 16
+    Caption = 'This scope shows random values but uses logical units to show a more advanced usage. Here, the Minimum and Maximum values are used and can be adjusted to make the lines fit in the display.'
+    Constraints.MaxWidth = 250
+    ParentColor = False
+    WordWrap = True
   end
 end

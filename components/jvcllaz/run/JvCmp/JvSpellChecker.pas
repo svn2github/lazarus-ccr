@@ -79,7 +79,10 @@ uses
 const
   WordTableSize = 10007; {a prime}
   SoundexTableSize = 26 * 7 * 7 * 7; {the exact number of Soundexes}
-  cDelimiters: TSysCharSet = [#0..#32, '.', ',', '<', '>', '=', '!', '?', ':', ';', '"', '''', '(', ')', '[', ']', '{', '}', '+', '|'];
+  cDelimiters: TSysCharSet = [
+    #0..#32, '.', ',', '<', '>', '=', '!', '?', ':', ';', '"', '''',
+    '(', ')', '[', ']', '{', '}', '+', '|'
+  ];
 
 type
   TSoundex = string[4];
@@ -608,14 +611,5 @@ begin
   SpellChecker.UserDictionary := Value;
 end;
 
-{$IFDEF UNITVERSIONING}
-initialization
-  RegisterUnitVersion(HInstance, UnitVersioning);
-{$ENDIF UNITVERSIONING}
-
-{$IFDEF UNITVERSIONING}
-finalization
-  UnregisterUnitVersion(HInstance);
-{$ENDIF UNITVERSIONING}
 
 end.

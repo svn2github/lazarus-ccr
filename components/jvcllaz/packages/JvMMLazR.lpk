@@ -37,7 +37,7 @@
         <UnitName Value="JvId3v2Types"/>
       </Item5>
       <Item6>
-        <Filename Value="..\run\JvMM\JvID3v2Base.pas"/>
+        <Filename Value="..\run\JvMM\JvId3v2Base.pas"/>
         <UnitName Value="JvID3v2Base"/>
       </Item6>
       <Item7>

@@ -33,7 +33,7 @@ interface
 uses
   Classes, Controls, Graphics, Forms, StdCtrls, ExtCtrls, ComCtrls, Dialogs,
   Spin, ShellCtrls,
-  JvThumbNails, JvThumbViews, {%H-}JvThumbnailDatamodule;
+  JvThumbnails, JvThumbViews, {%H-}JvThumbnailDatamodule;
 
   {JvSpecialProgress,
   JvListBox, JvDriveCtrls, JvCombobox, JvExControls, JvComponent,

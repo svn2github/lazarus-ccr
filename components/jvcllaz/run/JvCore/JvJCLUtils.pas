@@ -972,7 +972,8 @@ procedure SwitchToWindow(Wnd: THandle; Restore: Boolean);
 procedure ActivateWindow(Wnd: THandle);
 procedure ShowWinNoAnimate(Handle: THandle; CmdShow: Integer);
 ******************** NOT CONVERTED *)
-procedure KillMessage(Wnd: THandle; Msg: Cardinal);
+
+//procedure KillMessage(Wnd: THandle; Msg: Cardinal);
 
 (******************** NOT CONVERTED
 { SetWindowTop put window to top without recreating window }
@@ -8970,7 +8971,7 @@ begin
     SWP_NOSIZE or SWP_NOZORDER);
 end;
 ******************** NOT CONVERTED *)
-
+                                       (*
 { Delete the requested message from the queue, but throw back }
 { any WM_QUIT msgs that PeekMessage may also return.          }
 { Copied from DbGrid.pas                                      }
@@ -8978,14 +8979,14 @@ procedure KillMessage(Wnd: THandle; Msg: Cardinal);
 var
   M: TMsg;
 begin
-  M.Message := 0;
+  //M.Message := 0;
   {  wp ---- PostQuitMessage does not exist in Lazarus
 
   if PeekMessage(M, Wnd, Msg, Msg, PM_REMOVE) and (M.Message = LM_QUIT) then
     PostQuitMessage(M.WParam);
   }
 end;
-
+                                         *)
 (******************** NOT CONVERTED
 procedure SetWindowTop(const Handle: THandle; const Top: Boolean);
 const

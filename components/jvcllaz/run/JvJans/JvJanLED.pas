@@ -1,4 +1,4 @@
-unit JvJanLed;
+unit JvJanLED;
 
 {$mode objfpc}{$H+}
 

@@ -324,9 +324,11 @@ type
     procedure SetThemed(const Value: Boolean);
     procedure SetWordWrap(const Value: Boolean);
   protected
+    (*
     {$IF LCL_FullVersion >= 1090000}
     function DoEraseBackground(ACanvas: TCanvas; Param: LPARAM): Boolean; override;
     {$ENDIF}
+    *)
     procedure FontChanged; override;
     function GetButtonHeight(PageIndex, ButtonIndex: Integer): Integer;
     function GetButtonTopHeight(PageIndex, ButtonIndex: Integer): Integer;
@@ -2605,6 +2607,7 @@ begin
   Inc(Result, 4);
 end;
 
+(*
 {$IF LCL_FullVersion >= 1090000}
 function TJvCustomOutlookBar.DoEraseBackground(ACanvas: TCanvas; Param: LPARAM): Boolean;
 begin
@@ -2612,6 +2615,7 @@ begin
   Result := True;
 end;
 {$ENDIF}
+*)
 
 procedure TJvCustomOutlookBar.RedrawRect(R: TRect; Erase: Boolean = False);
 begin

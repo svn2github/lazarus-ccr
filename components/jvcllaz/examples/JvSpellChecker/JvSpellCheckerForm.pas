@@ -130,7 +130,7 @@ begin
   // If you don't load a dictionary, all words are misspelled and you won't get any suggestions
   S := ExtractFilePath(Application.ExeName) + 'english.dic';
   if not FileExists(S) then
-    S := '..\Dict\english.dic';
+    S := '..' + PathDelim + 'Dict' + PathDelim + 'english.dic';
   if FileExists(S) then
     ASpellChecker.Dictionary := S
   else

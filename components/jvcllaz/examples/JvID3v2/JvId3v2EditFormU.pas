@@ -24,7 +24,7 @@
 
 ******************************************************************}
 
-unit JvID3v2EditFormU;
+unit JvId3v2EditFormU;
 
 {$mode objfpc}{$H+}
 

@@ -59,12 +59,12 @@
         <UnitName Value="JvMarkupLabel"/>
       </Item10>
       <Item11>
-        <Filename Value="..\run\JvJans\jvjanled.pas"/>
-        <UnitName Value="JvJanLed"/>
+        <Filename Value="..\run\JvJans\JvJanLED.pas"/>
+        <UnitName Value="JvJanLED"/>
       </Item11>
       <Item12>
-        <Filename Value="..\run\JvJans\jvjantoggle.pas"/>
-        <UnitName Value="jvjantoggle"/>
+        <Filename Value="..\run\JvJans\JvJanToggle.pas"/>
+        <UnitName Value="JvJanToggle"/>
       </Item12>
     </Files>
     <RequiredPkgs Count="2">

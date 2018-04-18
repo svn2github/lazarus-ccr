@@ -27,7 +27,7 @@ Known Issues:
 -----------------------------------------------------------------------------}
 // $Id$
 
-unit JvID3v2Base;
+unit JvId3v2Base;
 
 {$mode objfpc}{$H+}
 
