@@ -32,16 +32,18 @@ unit TMTimeLineMainFormU;
 interface
 
 uses
-  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls, ComCtrls, StdCtrls, Buttons, ImgList, DateTimePicker,
-  Menus, CheckLst, JvTMTimeLine;
+  Menus, CheckLst, ComboEx, JvTMTimeLine, Types;
 
 type
+
+  { TTMTimeLineMainForm }
+
   TTMTimeLineMainForm = class(TForm)
-    Splitter1: TSplitter;
+    LbImages: TListBox;
     Panel1: TPanel;
-    Label6: TLabel;
-    lvImages: TListView;
+    LblImages: TLabel;
     popTimeLine: TPopupMenu;
     mnuToday: TMenuItem;
     mnuInsertImage: TMenuItem;
@@ -103,17 +105,27 @@ type
     btnTodayColor: TButton;
     btnLineColor: TButton;
     btnPenColor: TButton;
-    Label7: TLabel;
+    LblKeyboardNavigation: TLabel;
     Label18: TLabel;
     Label19: TLabel;
     Label20: TLabel;
     chkShowTodayIcon: TCheckBox;
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
+    procedure FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure FormMouseWheelUp(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure FormShow(Sender: TObject);
+
     procedure btnFontClick(Sender: TObject);
     procedure btnMonthFontClick(Sender: TObject);
     procedure chkReadOnlyClick(Sender: TObject);
     procedure dtpFirstDateChange(Sender: TObject);
     procedure dtpSelDateChange(Sender: TObject);
+    procedure LbImagesDrawItem(Control: TWinControl; Index: Integer;
+      ARect: TRect; State: TOwnerDrawState);
+    procedure LbImagesSelectionChange(Sender: TObject; User: boolean);
     procedure udDayWidthClick(Sender: TObject; Button: TUDBtnType);
     procedure btnColorClick(Sender: TObject);
     procedure chkFlatClick(Sender: TObject);
@@ -131,7 +143,6 @@ type
     procedure udScrollLargeClick(Sender: TObject; Button: TUDBtnType);
     procedure mnuRemoveImageClick(Sender: TObject);
     procedure mnuEditMemoClick(Sender: TObject);
-    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure udButtonWidthClick(Sender: TObject; Button: TUDBtnType);
     procedure btnLoadClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
@@ -142,15 +153,11 @@ type
     procedure chkShowMonthsClick(Sender: TObject);
     procedure chkShowWeeksClick(Sender: TObject);
     procedure chkShowTodayClick(Sender: TObject);
-    procedure FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
-      MousePos: TPoint; var Handled: Boolean);
-    procedure FormMouseWheelUp(Sender: TObject; Shift: TShiftState;
-      MousePos: TPoint; var Handled: Boolean);
     procedure btnLineColorClick(Sender: TObject);
     procedure chkShowTodayIconClick(Sender: TObject);
   private
     { Private declarations }
-    JvTimeLine1:TJvTMTimeline;
+    JvTimeLine1: TJvTMTimeline;
     procedure DoClick(Sender: TObject);
     procedure DoDateChange(Sender: TObject);
     procedure DoDblClick(Sender: TObject);
@@ -164,10 +171,13 @@ var
 implementation
 
 uses
-  //ShellAPI,
+  Math,
   frmMemoEdit;
 
 {$R *.lfm}
+
+const
+  IMAGE_DIST = 4;
 
 procedure TTMTimeLineMainForm.FormCreate(Sender: TObject);
 var
@@ -182,6 +192,7 @@ begin
   JvTimeLine1.OnDblClick := @DoDblClick;
   JvTimeLine1.Images := il16;
   JvTimeLine1.Align := alClient;
+  JvTimeLine1.Constraints.MinHeight := 60;
   JvTimeLine1.Hint :=
     'Double-click a date to edit it''s memo content.' +
     LineEnding +
@@ -195,14 +206,15 @@ begin
   JvTimeLine1.SelDate := dtpSelDate.Date;
   lbObjFontStyle.Checked[2] := true;
   for i := 0 to il16.Count - 1 do
-  begin
-    with lvImages.Items.Add do
-    begin
-      ImageIndex := i;
-      Caption := IntToStr(i);
-    end;
-  end;
-  Splitter1.Top := JvTimeLine1.Height + 5;
+    LbImages.Items.Add(IntToStr(i));
+  LblKeyboardNavigation.Font.Style := [fsBold];
+  LbImages.ItemHeight := Max(il16.Height, abs(LbImages.Font.Height)) + IMAGE_DIST;
+  i := LbImages.Canvas.TextWidth('99');
+  LbImages.Width := Max(
+    il16.Width + 4 * abs(LbImages.Font.Height) + 3 * IMAGE_DIST,
+    LblImages.Width
+  );
+  ActiveControl := JvTimeLine1;
 end;
 
 // Free any stringlists still around in the Objects array by calling the ClearObjects method
@@ -376,6 +388,48 @@ end;
 procedure TTMTimeLineMainForm.dtpSelDateChange(Sender: TObject);
 begin
   JvTimeLine1.SelDate := dtpSelDate.Date;
+end;
+
+procedure TTMTimeLineMainForm.LbImagesDrawItem(Control: TWinControl;
+  Index: Integer; ARect: TRect; State: TOwnerDrawState);
+var
+  h: Integer;
+begin
+  LbImages.Canvas.Font.Assign(LbImages.Font);
+  h := LbImages.Canvas.TextHeight('Tg');
+  if State * [odSelected, odFocused] <> [] then begin
+    LbImages.Canvas.Brush.Color := clHighlight;
+    LbImages.Canvas.font.Color := clHighlightText;
+  end else begin
+    lbImages.Canvas.Brush.Color := clWindow;
+    LbImages.Canvas.Font.Color := clWindowText;
+  end;
+  LbImages.Canvas.FillRect(ARect);
+  InflateRect(ARect, -IMAGE_DIST, 0);
+  il16.Draw(
+    LbImages.Canvas, ARect.Left,
+    (ARect.Top + ARect.Bottom - il16.Height) div 2,
+    Index
+  );
+  LbImages.Canvas.TextOut(
+    ARect.Left + il16.Width + IMAGE_DIST,
+    (ARect.Top + ARect.Bottom - h) div 2,
+    IntToStr(Index)
+  );
+end;
+
+procedure TTMTimeLineMainForm.LbImagesSelectionChange(Sender: TObject;
+  User: boolean);
+begin
+  if User then
+    udImageNo.Position := LbImages.ItemIndex;
+end;
+
+procedure TTMTimeLineMainForm.FormShow(Sender: TObject);
+begin
+  Constraints.MinWidth := GbDates.Left + GbDates.Width;
+  AutoSize := true;
+  AutoSize := false;
 end;
 
 // change the selection frame Pen color

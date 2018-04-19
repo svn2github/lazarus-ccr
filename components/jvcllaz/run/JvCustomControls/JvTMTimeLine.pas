@@ -166,7 +166,7 @@ type
     function GetVisibleDays: Integer;
 
     property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle;
-    property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default 12;
+    property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default 16;
     property Cursor;
     property DayWidth: Integer read FDayWidth write SetDayWidth default 19;
     property ObjectsFontStyle: TFontStyles read FObjectsFontStyle write SetObjectsFontStyle default [fsUnderline];
@@ -325,7 +325,7 @@ uses
   LCLStrConsts, Themes,
   JvConsts, JvJCLUtils, JvJVCLUtils, JvResources;
 
-{$R ..\..\resource\JvTMTimeLine.res}
+{$R ..\..\resource\jvtmtimeline.res}
 
 const
   cMagic = 'Jv.TMTIMELINE1';
@@ -388,6 +388,8 @@ end;
 //=== { TJvCustomTMTimeline } ================================================
 
 constructor TJvCustomTMTimeline.Create(AOwner: TComponent);
+var
+  png: TPortableNetworkGraphic;
 begin
   inherited Create(AOwner);
   DoubleBuffered := True;
@@ -412,7 +414,7 @@ begin
   FMonthFont.Size := 18;
 
   FObjectsFontStyle := [fsUnderline];
-  FButtonWidth := 12;
+  FButtonWidth := 16;
   FDate := SysUtils.Date - 7;
   FSelDate := FDate - 1;
   FDayWidth := 19;
@@ -425,8 +427,8 @@ begin
   FShowTodayIcon := True;
   FShowWeeks := True;
   FShowMonths := True;
-  Font.Size := 7;
-  Font.Name := 'Times New Roman';
+  Font.Size := 0;
+  Font.Name := 'default';
 
   FLeftBtn := TSpeedButton.Create(Self);
   with FLeftBtn do
@@ -436,7 +438,13 @@ begin
     Parent := Self;
     Transparent := False;
     Layout := blGlyphTop;
-    Glyph.LoadFromResourceName(HInstance, 'JvCustomTMTimelineSCROLLLEFT');
+    png := TPortableNetworkGraphic.Create;
+    try
+      png.LoadFromResourceName(HInstance, 'jvcustomtmtimelinescrollleft');
+      Glyph.Assign(png);
+    finally
+      png.Free;
+    end;
 
     OnMouseDown := @DoLMouseDown;
     OnMouseUp := @DoMouseUp;
@@ -451,7 +459,13 @@ begin
     Parent := Self;
     Transparent := False;
     Layout := blGlyphTop;
-    Glyph.LoadFromResourceName(HInstance, 'JvCustomTMTimelineSCROLLRIGHT');
+    png := TPortableNetworkGraphic.Create;
+    try
+      png.LoadFromResourceName(HInstance, 'jvcustomtmtimelinescrollright');
+      Glyph.Assign(png);
+    finally
+      png.Free;
+    end;
 
     OnMouseDown := @DoRMouseDown;
     OnMouseUp := @DoMouseUp;
@@ -592,40 +606,30 @@ end;
 procedure TJvCustomTMTimeline.DrawToday(ACanvas: TCanvas; const ARect: TRect);
 var
   Tmp: TColor;
-  Bmp: TBitmap;
+  png: TPortableNetworkGraphic;
   R: TRect;
+  x, y: Integer;
 begin
-  if ShowTodayIcon then
-    Bmp := TBitmap.Create
-  else
-    Bmp := nil;
   Tmp := ACanvas.Brush.Color;
   try
-    if ShowTodayIcon then
-      Bmp.LoadFromResourceName(HInstance, 'JvCustomTMTimelineMILESTONELARGE');
-    if ShowToday then
-    begin
+    if ShowToday then begin
       ACanvas.Brush.Color := FTodayColor;
       ACanvas.FillRect(ARect);
     end;
-    if ShowTodayIcon then
-    begin
-      R := Classes.Rect(ARect.Left + ((ARect.Right - ARect.Left) - Bmp.Width) div 2,
-        ARect.Top + CanvasMaxTextHeight(ACanvas) + 2,
-        ARect.Left + ((ARect.Right - ARect.Left) - Bmp.Width) div 2 + Bmp.Width,
-        ARect.Top + Bmp.Height + CanvasMaxTextHeight(ACanvas) + 2);
-(*      {$IFDEF VCL}
-      ACanvas.BrushCopy(R, Bmp, Rect(0, 0, Bmp.Width, Bmp.Height), clFuchsia);
-      {$ENDIF VCL}
-      {$IFDEF VisualCLX}
-      *)
-      Bmp.Transparent := True;
-      ACanvas.Draw(R.Left, R.Top, Bmp);
-//      {$ENDIF VisualCLX}
+    if ShowTodayIcon then begin
+      png := TPortableNetworkGraphic.Create;
+      try
+        png.LoadFromResourceName(HInstance, 'jvcustomtmtimelinemilestonelarge');
+        x := (ARect.Left + ARect.Right - png.Width) div 2;
+        y := ARect.Top + CanvasMaxTextHeight(ACanvas) + 4;
+        R := Classes.Rect(x, y, x + png.Width, y + png.Height);
+        ACanvas.Draw(R.Left, R.Top, png);
+      finally
+        png.Free;
+      end;
     end;
   finally
     ACanvas.Brush.Color := Tmp;
-    Bmp.Free;
   end;
 end;
 
@@ -656,7 +660,7 @@ begin
       DrawToday(ACanvas, R);
 
     DecodeDate(Self.Date + I, Y, M, D);
-    R := Classes.Rect(I * FDayWidth, 4, I * FDayWidth + FDayWidth, Font.Size + 4);
+    R := Classes.Rect(I * FDayWidth, 8, I * FDayWidth + FDayWidth, Font.Size+8);
     OffsetRect(R, FirstOffset, 0);
     S := Format('%.2d', [D]);
     SetBkMode(ACanvas.Handle, TRANSPARENT);

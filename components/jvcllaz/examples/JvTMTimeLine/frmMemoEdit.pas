@@ -35,6 +35,9 @@ uses
   StdCtrls, ComCtrls, ExtCtrls, Menus;
 
 type
+
+  { TMemoEditFrm }
+
   TMemoEditFrm = class(TForm)
     Panel1: TPanel;
     btnOK: TButton;
@@ -49,6 +52,7 @@ type
     Paste1: TMenuItem;
     Selectall1: TMenuItem;
     N2: TMenuItem;
+    procedure FormShow(Sender: TObject);
     procedure Load1Click(Sender: TObject);
     procedure Save1Click(Sender: TObject);
     procedure Cut1Click(Sender: TObject);
@@ -93,6 +97,12 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TMemoEditFrm.FormShow(Sender: TObject);
+begin
+  btnOK.Width := btnCancel.Width;
+  btnOK.Height := btnCancel.Height;
 end;
 
 procedure TMemoEditFrm.Save1Click(Sender: TObject);

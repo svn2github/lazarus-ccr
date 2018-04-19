@@ -1,11 +1,11 @@
 object TMTimeLineMainForm: TTMTimeLineMainForm
   Left = 371
-  Height = 580
+  Height = 591
   Top = 154
-  Width = 733
+  Width = 926
   Caption = 'Team Manager Timeline demo'
-  ClientHeight = 580
-  ClientWidth = 733
+  ClientHeight = 591
+  ClientWidth = 926
   Color = clBtnFace
   Constraints.MinHeight = 376
   Constraints.MinWidth = 710
@@ -15,149 +15,155 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
   OnCreate = FormCreate
   OnMouseWheelDown = FormMouseWheelDown
   OnMouseWheelUp = FormMouseWheelUp
+  OnShow = FormShow
   Position = poScreenCenter
   ShowHint = True
   LCLVersion = '1.9.0.0'
   Scaled = False
-  object Splitter1: TSplitter
-    Cursor = crVSplit
-    Left = 0
-    Height = 3
-    Top = 148
-    Width = 733
-    Align = alBottom
-    AutoSnap = False
-    ResizeAnchor = akBottom
-  end
   object Panel1: TPanel
     Left = 0
-    Height = 406
-    Top = 151
-    Width = 733
+    Height = 335
+    Top = 224
+    Width = 926
     Align = alBottom
+    AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 406
-    ClientWidth = 733
+    ClientHeight = 335
+    ClientWidth = 926
     TabOrder = 0
     TabStop = True
-    object Label6: TLabel
-      Left = 8
+    object LblImages: TLabel
+      AnchorSideLeft.Control = LbImages
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 4
       Height = 15
-      Top = 0
-      Width = 725
-      Align = alTop
-      BorderSpacing.Left = 8
+      Top = 4
+      Width = 41
+      BorderSpacing.Top = 4
       Caption = 'Images:'
       ParentColor = False
     end
-    object Label7: TLabel
-      Left = 480
-      Height = 13
-      Top = 272
-      Width = 121
+    object LblKeyboardNavigation: TLabel
+      AnchorSideLeft.Control = gbDates
+      AnchorSideTop.Control = gbDates
+      AnchorSideTop.Side = asrBottom
+      Left = 597
+      Height = 15
+      Top = 188
+      Width = 112
+      BorderSpacing.Top = 24
       Caption = 'Keyboard navigation:'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
       ParentColor = False
-      ParentFont = False
     end
     object Label18: TLabel
-      Left = 496
+      AnchorSideLeft.Control = LblKeyboardNavigation
+      AnchorSideTop.Control = LblKeyboardNavigation
+      AnchorSideTop.Side = asrBottom
+      Left = 613
       Height = 30
-      Top = 290
+      Top = 207
       Width = 181
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 4
       Caption = 'Left/Right arrow:'#13#10#9'move Small Change days'
       ParentColor = False
     end
     object Label19: TLabel
-      Left = 496
+      AnchorSideLeft.Control = Label18
+      AnchorSideTop.Control = Label18
+      AnchorSideTop.Side = asrBottom
+      Left = 613
       Height = 30
-      Top = 322
+      Top = 241
       Width = 181
+      BorderSpacing.Top = 4
       Caption = 'Ctrl+Left/Right arrow:'#13#10#9'move Large Change days'
       ParentColor = False
     end
     object Label20: TLabel
-      Left = 496
+      AnchorSideLeft.Control = Label19
+      AnchorSideTop.Control = Label19
+      AnchorSideTop.Side = asrBottom
+      Left = 613
       Height = 30
-      Top = 354
+      Top = 275
       Width = 173
+      BorderSpacing.Top = 4
       Caption = 'Shift+Left/Right arrow:'#13#10#9'move selection one day'
       ParentColor = False
     end
-    object lvImages: TListView
-      AnchorSideLeft.Control = Panel1
-      AnchorSideRight.Control = Panel1
-      Left = 8
-      Height = 56
-      Hint = 'The images available for the control'
-      Top = 15
-      Width = 717
-      Align = alTop
-      BorderSpacing.Left = 8
-      BorderSpacing.Right = 8
-      Columns = <>
-      IconOptions.Arrangement = iaLeft
-      LargeImages = il16
-      PopupMenu = popTimeLine
-      ReadOnly = True
-      SmallImages = il16
-      TabOrder = 0
-      OnSelectItem = lvImagesSelectItem
-    end
     object gbDates: TGroupBox
-      Left = 480
-      Height = 176
-      Top = 80
-      Width = 241
+      AnchorSideLeft.Control = gbAppearance
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = gbWidths
+      Left = 597
+      Height = 160
+      Top = 4
+      Width = 230
+      AutoSize = True
+      BorderSpacing.Left = 24
       Caption = ' Dates: '
-      ClientHeight = 156
-      ClientWidth = 237
-      TabOrder = 3
+      ClientHeight = 140
+      ClientWidth = 226
+      TabOrder = 2
       object Label2: TLabel
-        Left = 8
+        AnchorSideLeft.Control = gbDates
+        AnchorSideTop.Control = gbDates
+        Left = 12
         Height = 15
-        Top = -1
+        Top = 0
         Width = 87
+        BorderSpacing.Left = 12
         Caption = 'First visible date:'
         ParentColor = False
       end
       object Label3: TLabel
-        Left = 8
+        AnchorSideLeft.Control = Label2
+        AnchorSideTop.Control = dtpFirstDate
+        AnchorSideTop.Side = asrBottom
+        Left = 12
         Height = 15
-        Top = 47
+        Top = 48
         Width = 73
+        BorderSpacing.Top = 8
         Caption = 'Selected date:'
         ParentColor = False
       end
       object Label4: TLabel
-        Left = 136
+        AnchorSideLeft.Control = edImageNo
+        AnchorSideTop.Control = Label2
+        Left = 131
         Height = 15
-        Top = -1
+        Top = 0
         Width = 61
         Caption = 'Add image:'
         ParentColor = False
       end
       object Label5: TLabel
-        Left = 136
+        AnchorSideLeft.Control = edImageNo
+        AnchorSideTop.Control = Label3
+        Left = 131
         Height = 15
-        Top = 47
+        Top = 48
         Width = 39
         Caption = 'at date:'
         ParentColor = False
       end
       object dtpFirstDate: TDateTimePicker
-        Left = 8
+        AnchorSideLeft.Control = Label2
+        AnchorSideTop.Control = Label2
+        AnchorSideTop.Side = asrBottom
+        Left = 12
         Height = 23
         Hint = 'Sets the first displayed date'
-        Top = 15
+        Top = 17
         Width = 79
         CenturyFrom = 1941
         MaxDate = 2958465
         MinDate = -53780
         TabOrder = 0
+        BorderSpacing.Top = 2
         TrailingSeparator = False
         LeadingZeros = True
         Kind = dtkDate
@@ -173,15 +179,19 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         OnChange = dtpFirstDateChange
       end
       object dtpSelDate: TDateTimePicker
-        Left = 8
+        AnchorSideLeft.Control = Label2
+        AnchorSideTop.Control = Label3
+        AnchorSideTop.Side = asrBottom
+        Left = 12
         Height = 23
         Hint = 'Sets the selected day'
-        Top = 63
+        Top = 65
         Width = 79
         CenturyFrom = 1941
         MaxDate = 2958465
         MinDate = -53780
         TabOrder = 1
+        BorderSpacing.Top = 2
         TrailingSeparator = False
         LeadingZeros = True
         Kind = dtkDate
@@ -197,37 +207,53 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         OnChange = dtpSelDateChange
       end
       object edImageNo: TEdit
-        Left = 136
+        AnchorSideLeft.Control = dtpFirstDate
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Label2
+        AnchorSideTop.Side = asrBottom
+        Left = 131
         Height = 23
         Hint = 'Sets the imageindex to insert at the current date'#13#10'(use -1 to remove image)'
-        Top = 15
-        Width = 81
+        Top = 17
+        Width = 68
+        BorderSpacing.Left = 40
+        BorderSpacing.Top = 2
         TabOrder = 2
         Text = '-1'
       end
       object udImageNo: TUpDown
-        Left = 217
+        AnchorSideLeft.Control = edImageNo
+        AnchorSideLeft.Side = asrBottom
+        Left = 199
         Height = 23
-        Top = 15
+        Top = 17
         Width = 15
         Associate = edImageNo
+        BorderSpacing.Right = 12
         Min = -1
         Position = -1
         TabOrder = 3
         Wrap = False
       end
       object dtpImageDate: TDateTimePicker
-        Left = 136
+        AnchorSideLeft.Control = edImageNo
+        AnchorSideTop.Control = Label5
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = udImageNo
+        AnchorSideRight.Side = asrBottom
+        Left = 131
         Height = 23
         Hint = 'Sets the date to insert  / delete an image'
-        Top = 63
-        Width = 79
+        Top = 65
+        Width = 83
         CenturyFrom = 1941
         MaxDate = 2958465
         MinDate = -53780
         TabOrder = 4
+        BorderSpacing.Top = 2
         TrailingSeparator = False
         LeadingZeros = True
+        Anchors = [akTop, akLeft, akRight]
         Kind = dtkDate
         TimeFormat = tf24
         TimeDisplay = tdHMS
@@ -240,47 +266,57 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         CalAlignment = dtaLeft
       end
       object btnAdd: TButton
-        Left = 157
+        AnchorSideRight.Control = udImageNo
+        AnchorSideRight.Side = asrBottom
+        Left = 166
         Height = 25
         Hint = 'Adds an image to the chosen date'
         Top = 103
-        Width = 75
+        Width = 48
+        Anchors = [akTop, akRight]
+        AutoSize = True
+        BorderSpacing.Bottom = 12
         Caption = '&Add'
         OnClick = btnAddClick
         TabOrder = 5
       end
     end
     object gbAppearance: TGroupBox
-      Left = 208
-      Height = 176
-      Top = 80
-      Width = 257
+      AnchorSideLeft.Control = gbWidths
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = gbWidths
+      Left = 315
+      Height = 194
+      Top = 4
+      Width = 258
+      AutoSize = True
+      BorderSpacing.Left = 24
       Caption = ' Appearance: '
-      ClientHeight = 156
-      ClientWidth = 253
-      TabOrder = 2
+      ClientHeight = 174
+      ClientWidth = 254
+      TabOrder = 1
       object Label13: TLabel
         AnchorSideLeft.Control = chkRClick
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = chkEnabled
-        Left = 127
+        Left = 128
         Height = 15
-        Top = 57
+        Top = 63
         Width = 114
         BorderSpacing.Left = 8
-        BorderSpacing.Right = 8
+        BorderSpacing.Right = 12
         Caption = 'Assigned object style:'
         ParentColor = False
       end
       object chkReadOnly: TCheckBox
         AnchorSideLeft.Control = gbAppearance
         AnchorSideTop.Control = gbAppearance
-        Left = 11
+        Left = 12
         Height = 19
         Hint = 'Makes the control read-only'
         Top = 0
         Width = 74
-        BorderSpacing.Left = 11
+        BorderSpacing.Left = 12
         Caption = 'Read-only'
         OnClick = chkReadOnlyClick
         TabOrder = 0
@@ -289,11 +325,12 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = chkReadOnly
         AnchorSideTop.Control = chkReadOnly
         AnchorSideTop.Side = asrBottom
-        Left = 11
+        Left = 12
         Height = 19
         Hint = 'Makes the control flat'
-        Top = 19
+        Top = 21
         Width = 39
+        BorderSpacing.Top = 2
         Caption = 'Flat'
         OnClick = chkFlatClick
         TabOrder = 1
@@ -302,11 +339,12 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = chkReadOnly
         AnchorSideTop.Control = chkFlat
         AnchorSideTop.Side = asrBottom
-        Left = 11
+        Left = 12
         Height = 19
         Hint = 'Moves the selection on right-click too'
-        Top = 38
+        Top = 42
         Width = 108
+        BorderSpacing.Top = 2
         Caption = 'Right click select'
         OnClick = chkRClickClick
         TabOrder = 2
@@ -315,11 +353,12 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = chkReadOnly
         AnchorSideTop.Control = chkRClick
         AnchorSideTop.Side = asrBottom
-        Left = 11
+        Left = 12
         Height = 19
         Hint = 'Enables the control'
-        Top = 57
+        Top = 63
         Width = 62
+        BorderSpacing.Top = 2
         Caption = 'Enabled'
         Checked = True
         OnClick = chkEnabledClick
@@ -330,10 +369,11 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = chkReadOnly
         AnchorSideTop.Control = chkEnabled
         AnchorSideTop.Side = asrBottom
-        Left = 11
+        Left = 12
         Height = 19
-        Top = 76
+        Top = 84
         Width = 82
+        BorderSpacing.Top = 2
         Caption = 'Show today'
         Checked = True
         OnClick = chkShowTodayClick
@@ -344,10 +384,11 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = chkReadOnly
         AnchorSideTop.Control = chkShowTodayIcon
         AnchorSideTop.Side = asrBottom
-        Left = 11
+        Left = 12
         Height = 19
-        Top = 114
+        Top = 126
         Width = 84
+        BorderSpacing.Top = 2
         Caption = 'Show weeks'
         Checked = True
         OnClick = chkShowWeeksClick
@@ -358,10 +399,12 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = chkReadOnly
         AnchorSideTop.Control = chkShowWeeks
         AnchorSideTop.Side = asrBottom
-        Left = 11
+        AnchorSideBottom.Side = asrBottom
+        Left = 12
         Height = 19
-        Top = 133
+        Top = 147
         Width = 93
+        BorderSpacing.Top = 2
         BorderSpacing.Bottom = 8
         Caption = 'Show months'
         Checked = True
@@ -373,16 +416,18 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = Label13
         AnchorSideTop.Control = Label13
         AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Control = Label13
         AnchorSideRight.Side = asrBottom
-        Left = 127
-        Height = 78
+        AnchorSideBottom.Control = chkShowMonths
+        AnchorSideBottom.Side = asrBottom
+        Left = 128
+        Height = 86
         Hint = 'Sets the font to use for day items that'#13#10'have a non-nil Objects item'
-        Top = 74
-        Width = 114
-        Anchors = [akTop, akLeft, akRight]
+        Top = 80
+        Width = 107
+        Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Top = 2
-        BorderSpacing.Bottom = 8
+        BorderSpacing.Right = 12
+        IntegralHeight = True
         Items.Strings = (
           'Bold'
           'Italic'
@@ -400,10 +445,11 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = chkReadOnly
         AnchorSideTop.Control = chkShowToday
         AnchorSideTop.Side = asrBottom
-        Left = 11
+        Left = 12
         Height = 19
-        Top = 95
+        Top = 105
         Width = 108
+        BorderSpacing.Top = 2
         Caption = 'Show today icon'
         Checked = True
         OnClick = chkShowTodayIconClick
@@ -412,120 +458,191 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
       end
     end
     object gbMisc: TGroupBox
-      Left = 264
-      Height = 129
-      Top = 264
-      Width = 192
+      AnchorSideLeft.Control = gbFonts
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = gbFonts
+      AnchorSideBottom.Side = asrBottom
+      Left = 369
+      Height = 94
+      Top = 206
+      Width = 145
+      AutoSize = True
+      BorderSpacing.Left = 24
+      BorderSpacing.Bottom = 16
       Caption = ' Misc. '
-      ClientHeight = 109
-      ClientWidth = 188
-      TabOrder = 5
+      ClientHeight = 74
+      ClientWidth = 141
+      TabOrder = 4
       object btnLoad: TButton
-        Left = 14
+        AnchorSideLeft.Control = gbMisc
+        AnchorSideTop.Control = gbMisc
+        Left = 16
         Height = 25
         Hint = 'Loads a previously saved timeline file'
-        Top = 6
-        Width = 110
+        Top = 4
+        Width = 109
+        AutoSize = True
+        BorderSpacing.Left = 16
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 16
         Caption = 'Load from file...'
         OnClick = btnLoadClick
         TabOrder = 0
       end
       object btnSave: TButton
-        Left = 14
+        AnchorSideLeft.Control = btnLoad
+        AnchorSideTop.Control = btnLoad
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = btnLoad
+        AnchorSideRight.Side = asrBottom
+        Left = 16
         Height = 25
         Hint = 'Saves the current content to a timeline file'
-        Top = 38
-        Width = 110
+        Top = 37
+        Width = 109
+        Anchors = [akTop, akLeft, akRight]
+        AutoSize = True
+        BorderSpacing.Top = 8
+        BorderSpacing.Bottom = 12
         Caption = 'Save to file...'
         OnClick = btnSaveClick
         TabOrder = 1
       end
     end
     object gbFonts: TGroupBox
-      Left = 8
+      AnchorSideLeft.Control = gbWidths
+      AnchorSideTop.Control = gbAppearance
+      AnchorSideTop.Side = asrBottom
+      Left = 100
       Height = 129
-      Top = 264
-      Width = 241
+      Top = 206
+      Width = 245
+      AutoSize = True
+      BorderSpacing.Top = 8
       Caption = ' Fonts and colors: '
       ClientHeight = 109
-      ClientWidth = 237
-      TabOrder = 4
+      ClientWidth = 241
+      TabOrder = 3
       object btnFont: TButton
-        Left = 14
+        AnchorSideLeft.Control = btnColor
+        AnchorSideTop.Control = btnColor
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = btnMonthFont
+        AnchorSideRight.Side = asrBottom
+        Left = 12
         Height = 25
         Hint = 'Sets the font for days'
-        Top = 40
-        Width = 90
+        Top = 37
+        Width = 96
+        Anchors = [akTop, akLeft, akRight]
+        AutoSize = True
+        BorderSpacing.Top = 8
         Caption = 'Font...'
         OnClick = btnFontClick
         TabOrder = 1
       end
       object btnColor: TButton
-        Left = 14
+        AnchorSideLeft.Control = btnMonthFont
+        AnchorSideTop.Control = gbFonts
+        AnchorSideRight.Control = btnMonthFont
+        AnchorSideRight.Side = asrBottom
+        Left = 12
         Height = 25
         Hint = 'Sets the background color'
-        Top = 8
-        Width = 90
+        Top = 4
+        Width = 96
+        Anchors = [akTop, akLeft, akRight]
+        AutoSize = True
+        BorderSpacing.Top = 4
         Caption = 'Color...'
         OnClick = btnColorClick
         TabOrder = 0
       end
       object btnMonthFont: TButton
-        Left = 14
+        AnchorSideLeft.Control = gbFonts
+        AnchorSideTop.Control = btnFont
+        AnchorSideTop.Side = asrBottom
+        Left = 12
         Height = 25
         Hint = 'Sets the font for months and years'
-        Top = 72
-        Width = 90
+        Top = 70
+        Width = 96
+        AutoSize = True
+        BorderSpacing.Left = 12
+        BorderSpacing.Top = 8
         Caption = 'Month font...'
         OnClick = btnMonthFontClick
         TabOrder = 2
       end
       object btnTodayColor: TButton
-        Left = 118
+        AnchorSideLeft.Control = btnPenColor
+        AnchorSideTop.Control = btnFont
+        AnchorSideRight.Control = btnPenColor
+        AnchorSideRight.Side = asrBottom
+        Left = 116
         Height = 25
         Hint = 'Sets the background color for the today item'
-        Top = 40
-        Width = 106
+        Top = 37
+        Width = 113
+        Anchors = [akTop, akLeft, akRight]
+        AutoSize = True
         Caption = 'Today color...'
         OnClick = btnTodayColorClick
         TabOrder = 4
       end
       object btnLineColor: TButton
-        Left = 118
+        AnchorSideLeft.Control = btnPenColor
+        AnchorSideTop.Control = btnColor
+        AnchorSideRight.Control = btnPenColor
+        AnchorSideRight.Side = asrBottom
+        Left = 116
         Height = 25
-        Top = 8
-        Width = 106
+        Top = 4
+        Width = 113
+        Anchors = [akTop, akLeft, akRight]
+        AutoSize = True
         Caption = 'Line color...'
         OnClick = btnLineColorClick
         TabOrder = 3
       end
       object btnPenColor: TButton
-        Left = 118
+        AnchorSideLeft.Control = btnMonthFont
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = btnMonthFont
+        Left = 116
         Height = 25
         Hint = 'Sets the color of the selection frame'
-        Top = 72
-        Width = 106
+        Top = 70
+        Width = 113
+        AutoSize = True
+        BorderSpacing.Left = 8
+        BorderSpacing.Right = 12
+        BorderSpacing.Bottom = 14
         Caption = 'Selection color...'
         OnClick = btnPenColorClick
         TabOrder = 5
       end
     end
     object gbWidths: TGroupBox
-      Left = 8
+      AnchorSideLeft.Control = LbImages
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = LblImages
+      Left = 100
       Height = 161
-      Top = 80
-      Width = 185
+      Top = 4
+      Width = 191
       AutoSize = True
+      BorderSpacing.Left = 12
       Caption = ' Widths and sizes: '
       ClientHeight = 141
-      ClientWidth = 181
-      TabOrder = 1
+      ClientWidth = 187
+      TabOrder = 0
       object Label1: TLabel
         AnchorSideTop.Control = edDayWidth
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = Label9
         AnchorSideRight.Side = asrBottom
-        Left = 28
+        Left = 30
         Height = 15
         Top = 60
         Width = 56
@@ -539,7 +656,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = Label9
         AnchorSideRight.Side = asrBottom
-        Left = 8
+        Left = 10
         Height = 15
         Top = 87
         Width = 76
@@ -552,12 +669,12 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideTop.Control = edScrollSmall
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = edScrollSmall
-        Left = 10
+        Left = 12
         Height = 15
         Top = 6
         Width = 74
         Anchors = [akTop, akRight]
-        BorderSpacing.Left = 8
+        BorderSpacing.Left = 12
         BorderSpacing.Right = 4
         Caption = 'Small change:'
         ParentColor = False
@@ -567,7 +684,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = Label9
         AnchorSideRight.Side = asrBottom
-        Left = 10
+        Left = 12
         Height = 15
         Top = 33
         Width = 74
@@ -581,7 +698,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = Label9
         AnchorSideRight.Side = asrBottom
-        Left = 12
+        Left = 14
         Height = 15
         Top = 114
         Width = 72
@@ -594,7 +711,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = Label15
         AnchorSideTop.Control = edScrollSmall
         AnchorSideTop.Side = asrCenter
-        Left = 144
+        Left = 146
         Height = 15
         Top = 6
         Width = 24
@@ -605,7 +722,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = Label15
         AnchorSideTop.Control = edScrollLarge
         AnchorSideTop.Side = asrCenter
-        Left = 144
+        Left = 146
         Height = 15
         Top = 33
         Width = 24
@@ -615,14 +732,13 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
       object Label15: TLabel
         AnchorSideTop.Control = edDayWidth
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = gbWidths
         AnchorSideRight.Side = asrBottom
-        Left = 144
+        Left = 146
         Height = 15
         Top = 60
         Width = 29
         Anchors = [akTop, akRight]
-        BorderSpacing.Right = 8
+        BorderSpacing.Right = 12
         Caption = 'pixels'
         ParentColor = False
       end
@@ -630,7 +746,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = Label15
         AnchorSideTop.Control = edPenWidth
         AnchorSideTop.Side = asrCenter
-        Left = 144
+        Left = 146
         Height = 15
         Top = 87
         Width = 29
@@ -641,7 +757,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideLeft.Control = Label15
         AnchorSideTop.Control = edButtonWidth
         AnchorSideTop.Side = asrCenter
-        Left = 144
+        Left = 146
         Height = 15
         Top = 114
         Width = 29
@@ -654,7 +770,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = edScrollSmall
         AnchorSideRight.Side = asrBottom
-        Left = 88
+        Left = 90
         Height = 23
         Hint = 'Sets the width in pixels of a single day'
         Top = 56
@@ -667,7 +783,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
       object udDayWidth: TUpDown
         AnchorSideRight.Control = udScrollSmall
         AnchorSideRight.Side = asrBottom
-        Left = 125
+        Left = 127
         Height = 23
         Top = 56
         Width = 15
@@ -686,7 +802,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = edScrollSmall
         AnchorSideRight.Side = asrBottom
-        Left = 88
+        Left = 90
         Height = 23
         Hint = 'Sets the width of the selection frame'
         Top = 83
@@ -699,7 +815,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
       object udPenWidth: TUpDown
         AnchorSideRight.Control = udScrollSmall
         AnchorSideRight.Side = asrBottom
-        Left = 125
+        Left = 127
         Height = 23
         Top = 83
         Width = 15
@@ -714,7 +830,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
       object edScrollSmall: TEdit
         AnchorSideTop.Control = gbWidths
         AnchorSideRight.Control = udScrollSmall
-        Left = 88
+        Left = 90
         Height = 23
         Hint = 'Sets the number of days to scroll when clicking the buttons '#13#10'or when using the arrow-keys'
         Top = 2
@@ -727,7 +843,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
       end
       object udScrollSmall: TUpDown
         AnchorSideRight.Control = Label11
-        Left = 125
+        Left = 127
         Height = 23
         Top = 2
         Width = 15
@@ -747,7 +863,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = edScrollSmall
         AnchorSideRight.Side = asrBottom
-        Left = 88
+        Left = 90
         Height = 23
         Hint = 'Sets the number of days to scroll when Ctrl + clicking the buttons '#13#10'or when using Ctrl+left arrow or Ctrl+right arrow'
         Top = 29
@@ -760,7 +876,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
       object udScrollLarge: TUpDown
         AnchorSideRight.Control = udScrollSmall
         AnchorSideRight.Side = asrBottom
-        Left = 125
+        Left = 127
         Height = 23
         Top = 29
         Width = 15
@@ -779,7 +895,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = edScrollSmall
         AnchorSideRight.Side = asrBottom
-        Left = 88
+        Left = 90
         Height = 23
         Hint = 'Sets the width of the scrollbuttons'
         Top = 110
@@ -793,7 +909,7 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
       object udButtonWidth: TUpDown
         AnchorSideRight.Control = udScrollSmall
         AnchorSideRight.Side = asrBottom
-        Left = 125
+        Left = 127
         Height = 23
         Top = 110
         Width = 15
@@ -807,13 +923,33 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
         Wrap = False
       end
     end
+    object LbImages: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = LblImages
+      AnchorSideTop.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 4
+      Height = 312
+      Top = 23
+      Width = 84
+      Anchors = [akTop, akLeft, akBottom]
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 4
+      ItemHeight = 0
+      OnDrawItem = LbImagesDrawItem
+      OnSelectionChange = LbImagesSelectionChange
+      Style = lbOwnerDrawFixed
+      TabOrder = 5
+    end
   end
   object StatusBar: TStatusBar
     Left = 0
     Height = 23
     Hint = 'Displays info about the control'
-    Top = 557
-    Width = 733
+    Top = 568
+    Width = 926
+    BorderSpacing.Top = 9
     Panels = <    
       item
         Width = 300
@@ -859,8 +995,8 @@ object TMTimeLineMainForm: TTMTimeLineMainForm
   object il16: TImageList
     Height = 18
     Width = 14
-    left = 560
-    top = 16
+    left = 360
+    top = 43
     Bitmap = {
       4C69080000000E00000012000000000000000000000000000000000000000000
       000000000000000000FF000000FF000000000000000000000000000000000000
