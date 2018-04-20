@@ -96,9 +96,9 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  OpenDialog1.InitialDir := '..\examples\JvTabBar';
-  LoadFile('..\examples\JvTabBar\main.pas');
-  LoadFile('..\examples\JvTabBar\main.lfm');
+  OpenDialog1.InitialDir := '..' + PathDelim + 'examples' + PathDelim + 'JvTabBar';
+  LoadFile(OpenDialog1.InitialDir + PathDelim + 'main.pas');
+  LoadFile(OpenDialog1.InitialDir + PathDelim + 'main.lfm');
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
