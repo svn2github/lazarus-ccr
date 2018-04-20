@@ -395,10 +395,15 @@ begin
   Rect := Bounds(0, 0, ABitmap.Width, ABitmap.Height);
   ColorMap := TBitmap.Create;
   try
+    // Just the create the handle
+    ColorMap.Canvas.Brush.Color := clWhite;
+    ColorMap.Canvas.FillRect(0, 0, 1, 1);
+    // Assign the source bitmap
     ColorMap.Assign(ABitmap);
     ABitmap.FreeImage;
     with ColorMap.Canvas do
     begin
+      // Replace color clBlack by AColor
       Brush.Color := AColor;
       BrushCopy(Rect, ABitmap, Rect, clBlack);
     end;

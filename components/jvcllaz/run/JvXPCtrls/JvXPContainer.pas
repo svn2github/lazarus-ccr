@@ -56,7 +56,7 @@ type
     FLayout: TTextLayout;
     FShowBoundLines: Boolean;
     FShowCaption: Boolean;
-    FSpacing: Byte;
+    FSpacing: Integer;
     FWordWrap: Boolean;
     FOnEnabledChanged: TNotifyEvent;
     FOnPaint: TJvXPPaintEvent;
@@ -70,15 +70,18 @@ type
     procedure SetLayout(Value: TTextLayout);
     procedure SetShowBoundLines(Value: Boolean);
     procedure SetShowCaption(Value: Boolean);
-    procedure SetSpacing(Value: Byte);
+    procedure SetSpacing(Value: Integer);
     procedure SetWordWrap(Value: Boolean);
   protected
     procedure CreateParams(var Params: TCreateParams); override;
     procedure AdjustClientRect(var Rect: TRect); override;
+    procedure GetPreferredSize(var PreferredWidth, PreferredHeight: integer;
+      Raw: boolean = false; WithThemeSpace: boolean = true); override;
     procedure HookEnabledChanged; override;
     procedure HookMouseDown; override;
     procedure HookPosChanged; override;
     procedure Paint; override;
+    procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
     property Alignment: TAlignment read FAlignment write SetAlignment default taCenter;
     property BorderWidth: TBorderWidth read FBorderWidth write SetBorderWidth default 0;
     property BoundColor: TColor read FBoundColor write SetBoundColor default clGray;
@@ -94,7 +97,7 @@ type
       default True;
     property ShowCaption: Boolean read FShowCaption write SetShowCaption
       default False;
-    property Spacing: Byte read FSpacing write SetSpacing default 5;
+    property Spacing: Integer read FSpacing write SetSpacing default 5;
     property Width default 185;
     property WordWrap: Boolean read FWordWrap write SetWordWrap default False;
     property OnEnabledChanged: TNotifyEvent read FOnEnabledChanged write FOnEnabledChanged;
@@ -190,8 +193,9 @@ constructor TJvXPCustomContainer.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   ControlStyle := ControlStyle + [csAcceptsControls];
-  Height := 41;
-  Width := 185;
+  SetInitialBounds(0, 0, 41, 185);
+//  Height := 41;
+//  Width := 185;
   FAlignment := taCenter;
   FBoundColor := clGray;
   FBoundLines := [];
@@ -219,6 +223,18 @@ begin
   inherited CreateParams(Params);
   with Params do
     WindowClass.Style := WindowClass.Style and not (CS_HREDRAW or CS_VREDRAW);
+end;
+
+
+procedure TJvXPCustomContainer.GetPreferredSize(
+  var PreferredWidth, PreferredHeight: integer;
+  Raw: boolean = false; WithThemeSpace: boolean = true);
+begin
+  inherited;
+  if FShowCaption and (Caption <> '') and HandleAllocated then begin
+    Canvas.Font.Assign(Font);
+    PreferredHeight := Canvas.TextHeight('Tg') + 2;
+  end;
 end;
 
 
@@ -268,6 +284,16 @@ begin
   end;
 end;
 
+procedure TJvXPCustomContainer.SetBorderWidth(Value: TBorderWidth);
+begin
+  if Value <> FBorderWidth then
+  begin
+    FBorderWidth := Value;
+    Realign;
+    InternalRedraw;
+  end;
+end;
+
 procedure TJvXPCustomContainer.SetBoundColor(Value: TColor);
 begin
   if Value <> FBoundColor then
@@ -287,14 +313,13 @@ begin
   end;
 end;
 
-procedure TJvXPCustomContainer.SetBorderWidth(Value: TBorderWidth);
+procedure TJvXPCustomContainer.SetBounds(aLeft, aTop, aWidth, aHeight: integer);
 begin
-  if Value <> FBorderWidth then
-  begin
-    FBorderWidth := Value;
-    Realign;
-    InternalRedraw;
-  end;
+  if (ALeft = Left) and (ATop = Top) and (AWidth = Width) and (AHeight = Height) then
+    exit;
+  if AutoSize and WordWrap then
+    InvalidatePreferredSize;
+  inherited;
 end;
 
 procedure TJvXPCustomContainer.SetEnabledMode(Value: TJvXPEnabledMode);
@@ -353,7 +378,7 @@ begin
   end;
 end;
 
-procedure TJvXPCustomContainer.SetSpacing(Value: Byte);
+procedure TJvXPCustomContainer.SetSpacing(Value: Integer);
 begin
   if Value <> FSpacing then
   begin
@@ -390,6 +415,7 @@ var
 begin
   with AParent, Canvas do
   begin
+    Canvas.Font.Assign(AFont);
     DrawStyle := Alignments[AAlignment];
     if (DrawStyle <> DT_LEFT) and (ARect.Right - ARect.Left < TextWidth(ACaption)) then
       DrawStyle := DT_LEFT;
@@ -437,7 +463,6 @@ begin
     end;
     if FShowCaption then
     begin
-      Font.Assign(Self.Font);
       InflateRect(Rect, -FSpacing, -1);
       if csDesigning in ComponentState then
       begin

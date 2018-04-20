@@ -31,7 +31,7 @@ unit JvXPButtons;
 interface
 
 uses
-  Classes, TypInfo, LCLIntf, LCLType, LCLProc, LMessages, Graphics,
+  Classes, TypInfo, LCLIntf, LCLType, LCLProc, LMessages, Types, Graphics,
   Controls, Forms, ActnList, ImgList, Menus,
   JvXPCore, JvXPCoreUtils;
 
@@ -202,13 +202,13 @@ type
     procedure SetDropDownMenu(const Value: TPopupMenu);
     procedure DoImagesChange(Sender: TObject);
   protected
+    class function GetControlClassDefaultSize: TSize; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: Integer; Y: Integer); override;
     procedure SetToolType(Value: TJvXPToolType); virtual;
     procedure Paint; override;
     procedure HookResized; override;
-
     property ToolType: TJvXPToolType read FToolType write SetToolType default ttClose;
     property DropDownMenu: TPopupMenu read FDropDownMenu write SetDropDownMenu;
     property Images: TCustomImageList read FImages write SetImages;
@@ -286,7 +286,6 @@ type
 
 implementation
 
-//{$R ../resource/JvXPCore.res}
 
 //=== { TJvXPCustomButtonActionLink } ========================================
 
@@ -593,13 +592,6 @@ begin
   }
 end;
 
-{
-procedure TJvXPCustomButton.HookResized;
-begin
-  UpdateBitmaps;
-  inherited;
-end;
- }
 
 procedure TJvXPCustomButton.SetBounds(ALeft, ATop, AWidth, AHeight: integer);
 begin
@@ -787,7 +779,8 @@ begin
   FToolType := ttClose;
   FChangeLink := TChangeLink.Create;
   FChangeLink.OnChange := DoImagesChange;
-  HookResized;
+  Width := 15;
+  Height := 15;
 end;
 
 destructor TJvXPCustomToolButton.Destroy;
@@ -796,13 +789,24 @@ begin
   inherited Destroy;
 end;
 
+class function TJvXPCustomToolButton.GetControlClassDefaultSize: TSize;
+begin
+  Result.CX := 15;
+  Result.CY := 15;
+end;
+
 procedure TJvXPCustomToolButton.HookResized;
 begin
+  // Don't change the size here - it will cause an infinite ChangeBoundsLoop
+  // And: why must the size stay at 15 x 15 pixels?
+  {
+  inherited;
   if ToolType <> ttImage then
   begin
     Height := 15;
     Width := 15;
   end;
+  }
 end;
 
 procedure TJvXPCustomToolButton.SetToolType(Value: TJvXPToolType);
