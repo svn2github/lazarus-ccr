@@ -13,7 +13,6 @@
       <XPManifest>
         <DpiAware Value="True"/>
       </XPManifest>
-      <Icon Value="0"/>
     </General>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -41,18 +40,16 @@
       <Unit1>
         <Filename Value="JvId3v2EditFormU.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="JvId3v2EditForm"/>
+        <ComponentName Value="JvID3v2EditForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="JvId3v2EditFormU"/>
       </Unit1>
       <Unit2>
         <Filename Value="JvId3v2MainFormU.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="JvId3v2MainForm"/>
+        <ComponentName Value="JvID3v2MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="JvId3v2MainFormU"/>
       </Unit2>
     </Units>
   </ProjectOptions>

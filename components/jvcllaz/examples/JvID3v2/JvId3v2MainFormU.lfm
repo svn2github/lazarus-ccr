@@ -49,6 +49,7 @@ object JvID3v2MainForm: TJvID3v2MainForm
       end>
     ReadOnly = True
     RowSelect = True
+    SortType = stText
     TabOrder = 0
     ViewStyle = vsReport
     OnDblClick = ListView1DblClick
@@ -68,7 +69,7 @@ object JvID3v2MainForm: TJvID3v2MainForm
       Top = 1
       Width = 183
       Align = alClient
-      FileSortType = fstNone
+      FileSortType = fstAlphabet
       Images = ImageList1
       ReadOnly = True
       TabOrder = 0

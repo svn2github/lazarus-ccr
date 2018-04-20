@@ -37,13 +37,17 @@ uses
   JvID3v2Base, JvId3v2; //, JvComponent, ImgList, ToolWin; //, JvComponentBase;
 
 type
+
+  { TJvID3v2EditForm }
+
   TJvID3v2EditForm = class(TForm)
-    PageControl1: TPageControl;
+    Notebook1: TNotebook;
+    PgWinAmpTags: TPage;
+    PgLyrics: TPage;
+    PgPicture: TPage;
+    PgAllFrames: TPage;
     lsbNavigator: TListBox;
     ToolBar1: TToolBar;
-    tshWinampTags: TTabSheet;
-    tshLyrics: TTabSheet;
-    tshPictures: TTabSheet;
     lblTitle: TLabel;
     lblArtist: TLabel;
     lblAlbum: TLabel;
@@ -91,7 +95,6 @@ type
     lblPictureType: TLabel;
     edtPictureName: TEdit;
     cmbPictureType: TComboBox;
-    tshAllFrames: TTabSheet;
     lsvAllFrames: TListView;
     btnChange: TButton;
     actChangePicture: TAction;
@@ -108,6 +111,7 @@ type
     procedure actAddPictureExecute(Sender: TObject);
     procedure actDeletePictureExecute(Sender: TObject);
     procedure actSavePictureExecute(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure lsvPicturesClick(Sender: TObject);
     procedure lsbNavigatorClick(Sender: TObject);
     procedure actChangePictureExecute(Sender: TObject);
@@ -354,15 +358,11 @@ end;
 procedure TJvID3v2EditForm.Init;
 begin
   Caption := Format('Edit ''%s''', [ExtractFileName(JvID3v21.FileName)]);
-
   JvID3v21.Open;
-
   TagToCtrls;
-
   imgPicture.Picture.Assign(nil);
-
   lsbNavigator.ItemIndex := 0;
-  PageControl1.ActivePage := tshWinampTags;
+  Notebook1.PageIndex := lsbNavigator.ItemIndex;
 end;
 
 function ChangeYear(const ADateTime: TDateTime; const NewYear: Word): TDateTime;
@@ -553,6 +553,15 @@ begin
     end;
 end;
 
+procedure TJvID3v2EditForm.FormShow(Sender: TObject);
+var
+  P: TPoint;
+begin
+  P := Point(0, EdtEncodedBy.Top + EdtEncodedby.Height + EdtEncodedBy.BorderSpacing.Bottom);
+  P := ScreenToClient(EdtEncodedBy.Parent.ClientToScreen(P));
+  Height := P.Y;
+end;
+
 procedure TJvID3v2EditForm.lsvPicturesClick(Sender: TObject);
 var
   Frame: TJvID3PictureFrame;
@@ -574,12 +583,7 @@ end;
 
 procedure TJvID3v2EditForm.lsbNavigatorClick(Sender: TObject);
 begin
-  case lsbNavigator.ItemIndex of
-    0: PageControl1.ActivePage := tshWinampTags;
-    1: PageControl1.ActivePage := tshLyrics;
-    2: PageControl1.ActivePage := tshPictures;
-    3: PageControl1.ActivePage := tshAllFrames;
-  end;
+  Notebook1.PageIndex := lsbNavigator.ItemIndex;
 end;
 
 procedure TJvID3v2EditForm.FillPictureTypes(Strings: TStrings);
