@@ -101,6 +101,7 @@ type
     property Align;
     property Anchors;
     //property AutoSize;
+    property BorderSpacing;
     property Constraints;
     property BiDiMode;
     property DragCursor;

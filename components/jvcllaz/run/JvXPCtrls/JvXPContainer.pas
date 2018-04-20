@@ -108,6 +108,7 @@ type
   published
     property Alignment;
     property AutoSize;
+    property BorderSpacing;
     property BorderWidth;
     property BoundColor;
     property BoundLines;
