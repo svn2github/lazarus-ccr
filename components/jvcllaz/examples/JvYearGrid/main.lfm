@@ -1,0 +1,276 @@
+object Form1: TForm1
+  Left = 310
+  Height = 777
+  Top = 127
+  Width = 838
+  AutoSize = True
+  Caption = 'Form1'
+  ClientHeight = 777
+  ClientWidth = 838
+  OnCreate = FormCreate
+  LCLVersion = '1.9.0.0'
+  object JvYearGrid1: TJvYearGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 248
+    Top = 8
+    Width = 734
+    HTMLBorder = False
+    HTMLFontName = 'Arial'
+    Year = 2018
+    AutoSizeOptions = [aoGrid, aoFirstColumn, aoFirstRow, aoColumns, aoRows]
+    FirstColWidth = 67
+    FirstRowHeight = 19
+    CellMargins.Left = 2
+    CellMargins.Top = 2
+    CellMargins.Right = 2
+    CellMargins.Bottom = 2
+    WeekendDays = [wdSaturday, wdSunday]
+    MonthNamesAlignment = taCenter
+    DayNamesAlignment = taCenter
+    DaysAlignment = taCenter
+    BorderSpacing.Around = 8
+    ScrollBars = ssNone
+    TitleStyle = tsStandard
+    ColWidths = (
+      67
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+      18
+    )
+    RowHeights = (
+      19
+      19
+      19
+      19
+      19
+      19
+      19
+      19
+      19
+      19
+      19
+      19
+      19
+    )
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = JvYearGrid1
+    AnchorSideTop.Side = asrBottom
+    Left = 0
+    Height = 97
+    Top = 264
+    Width = 558
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 97
+    ClientWidth = 558
+    TabOrder = 1
+    object EdLeftMargin: TSpinEdit
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = EdTopMargin
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 23
+      Top = 31
+      Width = 50
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 4
+      OnChange = EdLeftMarginChange
+      TabOrder = 0
+    end
+    object EdRightMargin: TSpinEdit
+      AnchorSideLeft.Control = EdTopMargin
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = EdLeftMargin
+      Left = 136
+      Height = 23
+      Top = 31
+      Width = 50
+      BorderSpacing.Left = 4
+      OnChange = EdRightMarginChange
+      TabOrder = 1
+    end
+    object EdTopMargin: TSpinEdit
+      AnchorSideLeft.Control = EdLeftMargin
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      Left = 74
+      Height = 23
+      Top = 4
+      Width = 58
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 4
+      OnChange = EdTopMarginChange
+      TabOrder = 2
+    end
+    object EdBottomMargin: TSpinEdit
+      AnchorSideLeft.Control = EdTopMargin
+      AnchorSideTop.Control = EdLeftMargin
+      AnchorSideTop.Side = asrBottom
+      Left = 74
+      Height = 23
+      Top = 58
+      Width = 58
+      BorderSpacing.Top = 4
+      OnChange = EdBottomMarginChange
+      TabOrder = 3
+    end
+    object CbDayNamesAlignment: TComboBox
+      AnchorSideLeft.Control = Label1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = EdTopMargin
+      Left = 363
+      Height = 23
+      Top = 4
+      Width = 100
+      BorderSpacing.Left = 8
+      ItemHeight = 15
+      Items.Strings = (
+        'taLeftJustify'
+        'taRightJustify'
+        'taCenter'
+      )
+      OnChange = CbDayNamesAlignmentChange
+      Style = csDropDownList
+      TabOrder = 4
+    end
+    object Label1: TLabel
+      AnchorSideTop.Control = CbDayNamesAlignment
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label2
+      AnchorSideRight.Side = asrBottom
+      Left = 242
+      Height = 15
+      Top = 8
+      Width = 113
+      Anchors = [akTop, akRight]
+      Caption = 'DayNamesAlignment'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = EdRightMargin
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = CbMonthNamesAlignment
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label1
+      AnchorSideRight.Side = asrBottom
+      Left = 226
+      Height = 15
+      Top = 35
+      Width = 129
+      BorderSpacing.Left = 40
+      Caption = 'MonthNamesAlignment'
+      ParentColor = False
+    end
+    object CbMonthNamesAlignment: TComboBox
+      AnchorSideLeft.Control = CbDayNamesAlignment
+      AnchorSideTop.Control = CbDayNamesAlignment
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = CbDayNamesAlignment
+      AnchorSideRight.Side = asrBottom
+      Left = 363
+      Height = 23
+      Top = 31
+      Width = 100
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      ItemHeight = 15
+      Items.Strings = (
+        'taLeftJustify'
+        'taRightJustify'
+        'taCenter'
+      )
+      OnChange = CbMonthNamesAlignmentChange
+      Style = csDropDownList
+      TabOrder = 5
+    end
+    object Label3: TLabel
+      AnchorSideTop.Control = CbDaysAlignment
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label1
+      AnchorSideRight.Side = asrBottom
+      Left = 274
+      Height = 15
+      Top = 62
+      Width = 81
+      Anchors = [akTop, akRight]
+      Caption = 'DaysAlignment'
+      ParentColor = False
+    end
+    object CbDaysAlignment: TComboBox
+      AnchorSideLeft.Control = CbDayNamesAlignment
+      AnchorSideTop.Control = CbMonthNamesAlignment
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = CbDayNamesAlignment
+      AnchorSideRight.Side = asrBottom
+      Left = 363
+      Height = 23
+      Top = 58
+      Width = 100
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      BorderSpacing.Bottom = 16
+      ItemHeight = 15
+      Items.Strings = (
+        'taLeftJustify'
+        'taRightJustify'
+        'taCenter'
+      )
+      OnChange = CbDaysAlignmentChange
+      Style = csDropDownList
+      TabOrder = 6
+    end
+    object CbFlat: TCheckBox
+      AnchorSideLeft.Control = CbDayNamesAlignment
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = CbMonthNamesAlignment
+      AnchorSideTop.Side = asrCenter
+      Left = 503
+      Height = 19
+      Top = 33
+      Width = 39
+      BorderSpacing.Left = 40
+      BorderSpacing.Right = 16
+      Caption = 'Flat'
+      OnChange = CbFlatChange
+      TabOrder = 7
+    end
+  end
+end
