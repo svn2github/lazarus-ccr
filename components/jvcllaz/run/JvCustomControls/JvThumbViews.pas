@@ -31,7 +31,7 @@ unit JvThumbViews;
 interface
 
 uses
-  LCLType, LMessages, Types,
+  LCLIntf, LCLType, LMessages, Types,
   Classes, Controls, Forms, ExtCtrls,
   SysUtils, Graphics,
   JvThumbnails, JvBaseThumbnail, JvExControls;

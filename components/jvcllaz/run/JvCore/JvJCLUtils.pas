@@ -69,6 +69,11 @@ const
   BOM_LSB_FIRST = WideChar($FEFF);
   BOM_MSB_FIRST = WideChar($FFFE);
 
+{$IF FPC_FullVersion < 30000}
+type
+  TSysCharSet = set of AnsiChar;
+{$ENDIF}
+
 (******************** NOT CONVERTED
 {$IFDEF UNIX}
 type
@@ -199,7 +204,13 @@ function CurrencyToStr(const Cur: Currency): string;
 function HasChar(const Ch: Char; const S: string): Boolean;
 function HasCharW(const Ch: WideChar; const S: WideString): Boolean; {$IFDEF SUPPORTS_INLINE} inline; {$ENDIF SUPPORTS_INLINE}
 function HasAnyChar(const Chars: string; const S: string): Boolean;
+********************)
+
+{$IF FPC_FullVersion < 30000}
 function CharInSet(const Ch: Char; const SetOfChar: TSysCharSet): Boolean; {$IFDEF SUPPORTS_INLINE} inline; {$ENDIF SUPPORTS_INLINE}
+{$ENDIF}
+
+(*********************
 function CharInSetW(const Ch: WideChar; const SetOfChar: TSysCharSet): Boolean; {$IFDEF SUPPORTS_INLINE} inline; {$ENDIF SUPPORTS_INLINE}
 function CountOfChar(const Ch: Char; const S: string): Integer;
 function DefStr(const S: string; Default: string): string; {$IFDEF SUPPORTS_INLINE} inline; {$ENDIF SUPPORTS_INLINE}
@@ -2738,12 +2749,16 @@ function FileNewExt(const FileName, NewExt: TFileName): TFileName;
 begin
   Result := Copy(FileName, 1, Length(FileName) - Length(ExtractFileExt(FileName))) + NewExt;
 end;
+*****************************)
 
+{$IF FPC_FULLVERSION < 30000}
 function CharInSet(const Ch: Char; const SetOfChar: TSysCharSet): Boolean;
 begin
   Result := Ch in SetOfChar;
 end;
+{$ENDIF}
 
+(*****************************
 function CharInSetW(const Ch: WideChar; const SetOfChar: TSysCharSet): Boolean;
 begin
   if Word(Ch) > 255 then

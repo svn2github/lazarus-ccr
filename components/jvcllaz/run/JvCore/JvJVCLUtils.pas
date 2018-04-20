@@ -38,7 +38,7 @@ uses
   Windows,          // before Types!
  {$ENDIF}
   Classes, Graphics, Controls, ImgList,
-  LCLType, LCLProc, LMessages, Types,
+  LCLType, LCLProc, LCLVersion, LMessages, Types,
   JvTypes;
 
 (******************** NOT CONVERTED
@@ -851,6 +851,10 @@ function GetGraphicObject(AStream: TStream; ASender: TObject; AOnProc: TJvGetGra
 function ReplaceComponentReference(This, NewReference: TComponent; var VarReference: TComponent): Boolean;
 function ReplaceImageListReference(This: TComponent; NewReference: TCustomImageList;
   var VarReference: TCustomImageList; ChangeLink: TChangeLink): Boolean;
+
+{$IF LCL_FullVersion < 3000000}
+function Scale96ToForm(ASize: Integer): Integer;
+{$ENDIF}
 
 implementation
 
@@ -7841,6 +7845,14 @@ begin
     end;
   end;
 end;
+
+{$IF LCL_FullVersion < 3000000}
+function Scale96ToForm(ASize: Integer): Integer;
+begin
+  Result := MulDiv(ASize, ScreenInfo.PixelsPerInchX, 96);
+end;
+{$ENDIF}
+
 
 (************
 

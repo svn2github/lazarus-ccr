@@ -166,6 +166,7 @@ type
     procedure DrawTimerTimer(Sender: TObject);
     function GetLinePixelPosition(Line: TJvScopeLine; Position: Integer): Integer;
     procedure Loaded; override;
+    procedure Resize; override;
   public
     procedure Paint; override;
     constructor Create(AOwner: TComponent); override;
@@ -495,6 +496,12 @@ begin
   ClearValues;
 
   FAllowed := True;
+end;
+
+procedure TJvSimScope.Resize;
+begin
+  inherited;
+  SetBounds(Left, Top, Width, Height);
 end;
 
 procedure TJvSimScope.Clear;
