@@ -37,6 +37,14 @@ msgstr "Влево"
 msgid "Right"
 msgstr "Вправо"
 
+#: rxconst.sclose
+msgid "Close"
+msgstr ""
+
+#: rxconst.scloseaftersec
+msgid "Close after %d sec"
+msgstr ""
+
 #: rxconst.scloseallexceptthis
 msgid "Close all except this"
 msgstr "Закрыть все окна, за исключением этого"

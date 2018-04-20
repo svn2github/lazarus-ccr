@@ -26,7 +26,7 @@ Copyright (c) 1998 Master-Bank
 translate to Lazarus by alexs in 2005 - 2018"/>
     <License Value="LGPL"/>
     <Version Major="3" Minor="2" Release="1" Build="210"/>
-    <Files Count="73">
+    <Files Count="74">
       <Item1>
         <Filename Value="registerrx.pas"/>
         <HasRegisterProc Value="True"/>
@@ -322,6 +322,10 @@ translate to Lazarus by alexs in 2005 - 2018"/>
         <Filename Value="rxcontrols\rxswitch.res"/>
         <Type Value="Binary"/>
       </Item73>
+      <Item74>
+        <Filename Value="rxcontrols\rxpopupnotifier.pas"/>
+        <UnitName Value="rxPopupNotifier"/>
+      </Item74>
     </Files>
     <LazDoc Paths="docs;\usr\local\share\lazarus\components\rxnew\docs"/>
     <i18n>

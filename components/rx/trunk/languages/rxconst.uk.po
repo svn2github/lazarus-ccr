@@ -48,6 +48,14 @@ msgstr "Ліворуч"
 msgid "Right"
 msgstr "Праворуч"
 
+#: rxconst.sclose
+msgid "Close"
+msgstr ""
+
+#: rxconst.scloseaftersec
+msgid "Close after %d sec"
+msgstr ""
+
 #: rxconst.scloseallexceptthis
 msgid "Close all except this"
 msgstr "Закрити всі вікна, за виключенням цього"

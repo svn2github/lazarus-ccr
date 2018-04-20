@@ -129,6 +129,9 @@ resourcestring
   sVariableIsNotDT      = 'Variable %s is not date/time';
   sVariableIsNotBoolean = 'Variable %s is not boolean';
 
+  { TRxNotifierForm }
+  sClose                = 'Close';
+  sCloseAfterSec        = 'Close after %d sec';
 implementation
 
 end.
