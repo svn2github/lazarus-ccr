@@ -31,7 +31,6 @@ unit JvID3v1MainFormU;
 interface
 
 uses
-  //Windows, Messages,
   SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, //JvComponent,
   StdCtrls, //Mask, //JvToolEdit,

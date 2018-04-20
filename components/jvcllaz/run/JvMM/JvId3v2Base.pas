@@ -1225,7 +1225,7 @@ procedure ID3ErrorFmt(const Msg: string; const Args: array of const;
 function CreateUniqueName(AController: TJvID3Controller; const FrameName: AnsiString;
   FrameClass: TJvID3FrameClass; Component: TComponent): string;
 procedure GetID3v2Version(const AFileName: string; var HasTag: Boolean;
-  var Version: TJvID3Version);
+  out Version: TJvID3Version);
 function ExtToMIMEType(const Ext: string): string;
 function MIMETypeToExt(const MIMEType: string): string;
 function GenreToNiceGenre(const AGenre: string): string;
@@ -1235,7 +1235,7 @@ function NiceGenreToGenre(const ANiceGenre: string): string;
 implementation
 
 uses
-  Graphics, Math, LazUTF8, LConvEncoding, LazFileUtils, DateUtils,
+  Graphics, Math, LazUTF8, LConvEncoding, LazFileUtils, DateUtils, StrUtils,
   (*
   {$IFDEF HAS_UNIT_ANSISTRINGS}
   AnsiStrings,
@@ -2336,7 +2336,7 @@ begin
 end;
 
 procedure GetID3v2Version(const AFileName: string; var HasTag: Boolean;
-  var Version: TJvID3Version);
+  out Version: TJvID3Version);
 var
   Header: TID3v2HeaderRec;
 begin
@@ -2996,7 +2996,7 @@ begin
   if Result then
     Result :=
       AnsiSameStr(TJvID3ContentFrame(Frame).Language, Self.Language) and
-      SameStr(TJvID3ContentFrame(Frame).Description, Self.Description)
+      (TJvID3ContentFrame(Frame).Description = Self.Description)
   else
     Result := inherited SameUniqueIDAs(Frame);
 end;
@@ -6073,8 +6073,8 @@ begin
     Exit;
 
   while (Frame is TJvID3GeneralObjFrame) and
-    not SameStr(TJvID3GeneralObjFrame(Frame).ContentDescription, AContentDescription) do
-
+    (TJvID3GeneralObjFrame(Frame).ContentDescription <> AContentDescription)
+  do
     AController.FindNextFrame(fiGeneralObject, Frame);
 
   if Frame is TJvID3GeneralObjFrame then
@@ -6174,7 +6174,7 @@ begin
     (Frame.FrameID = FrameID) and (FrameID = fiGeneralObject);
 
   if Result then
-    Result := SameStr(TJvID3GeneralObjFrame(Frame).ContentDescription, ContentDescription)
+    Result := (TJvID3GeneralObjFrame(Frame).ContentDescription = ContentDescription)
   else
     Result := inherited SameUniqueIDAs(Frame);
 end;
@@ -6933,7 +6933,7 @@ begin
     Result :=
       (TJvID3PictureFrame(Frame).PictureType = PictureType) and
       ((PictureType in [ptFileIcon, ptOtherFileIcon]) or
-      SameStr(Description, TJvID3PictureFrame(Frame).Description))
+      (Description = TJvID3PictureFrame(Frame).Description))
   else
     Result := inherited SameUniqueIDAs(Frame);
 end;

@@ -105,22 +105,21 @@ type
     ToolButton5: TToolButton;
     actCopyTov1: TAction;
     actCopyFromv1: TAction;
-    procedure actOKExecute(Sender: TObject);
-    procedure actCancelExecute(Sender: TObject);
-    procedure actRemoveExecute(Sender: TObject);
     procedure actAddPictureExecute(Sender: TObject);
-    procedure actDeletePictureExecute(Sender: TObject);
-    procedure actSavePictureExecute(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure lsvPicturesClick(Sender: TObject);
-    procedure lsbNavigatorClick(Sender: TObject);
+    procedure actCancelExecute(Sender: TObject);
     procedure actChangePictureExecute(Sender: TObject);
-    procedure ItemSelected(Sender: TObject);
-    procedure actCopyTov1Execute(Sender: TObject);
     procedure actCopyFromv1Execute(Sender: TObject);
+    procedure actCopyTov1Execute(Sender: TObject);
+    procedure actDeletePictureExecute(Sender: TObject);
+    procedure actOKExecute(Sender: TObject);
+    procedure actRemoveExecute(Sender: TObject);
+    procedure actSavePictureExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure lsvAllFramesInfoTip(Sender: TObject; Item: TListItem;
-      var InfoTip: String);
+    procedure FormShow(Sender: TObject);
+    procedure ItemSelected(Sender: TObject);
+    procedure lsbNavigatorClick(Sender: TObject);
+    procedure lsvAllFramesInfoTip(Sender: TObject; Item: TListItem; var InfoTip: String);
+    procedure lsvPicturesClick(Sender: TObject);
   private
     FTagDeleted: Boolean;
   protected
@@ -245,7 +244,7 @@ var
     'User defined URL link', {fiWWWUser}
     'Encrypted meta frame', {fiMetaCrypto}
     'Compressed meta frame' {fiMetaCompression}
-    );
+  );
 
   CPictureTypeStr: array[TJvID3PictureType] of string = (
     'Other',
@@ -269,20 +268,17 @@ var
     'Illustration',
     'Band/artist logotype',
     'Publisher/Studio logotype'
-    );
+  );
 
 procedure SetPictureListItemTo(ListItem: TListItem; Frame: TJvID3PictureFrame);
 begin
-  with ListItem, Frame do
-  begin
-    Caption := Description;
-    while SubItems.Count < 3 do
-      SubItems.Add('');
-    SubItems[0] := CPictureTypeStr[PictureType]; //Type
-    SubItems[1] := string(MIMEType); //Format
-    SubItems[2] := IntToStr(DataSize); //Size
-    Data := Frame;
-  end;
+  ListItem.Caption := Frame.Description;
+  while ListItem.SubItems.Count < 3 do
+    ListItem.SubItems.Add('');
+  ListItem.SubItems[0] := CPictureTypeStr[Frame.PictureType]; //Type
+  ListItem.SubItems[1] := Frame.MIMEType; //Format
+  ListItem.SubItems[2] := IntToStr(Frame.DataSize); //Size
+  ListItem.Data := Frame;
 end;
 
 procedure TJvID3v2EditForm.FormCreate(Sender: TObject);
@@ -307,9 +303,9 @@ begin
     HasTag := True;
     if JvID3v21.FrameCount = 0 then
       GetID3v2Version(JvID3v21.FileName, HasTag, Version);
-
     if HasTag then
       JvID3v21.Commit;
+
     ModalResult := mrOk;
   finally
     Screen.Cursor := lCursor;
@@ -362,7 +358,6 @@ begin
   TagToCtrls;
   imgPicture.Picture.Assign(nil);
   lsbNavigator.ItemIndex := 0;
-  Notebook1.PageIndex := lsbNavigator.ItemIndex;
 end;
 
 function ChangeYear(const ADateTime: TDateTime; const NewYear: Word): TDateTime;
@@ -560,6 +555,7 @@ begin
   P := Point(0, EdtEncodedBy.Top + EdtEncodedby.Height + EdtEncodedBy.BorderSpacing.Bottom);
   P := ScreenToClient(EdtEncodedBy.Parent.ClientToScreen(P));
   Height := P.Y;
+  Notebook1.PageIndex := lsbNavigator.ItemIndex;
 end;
 
 procedure TJvID3v2EditForm.lsvPicturesClick(Sender: TObject);

@@ -12,7 +12,7 @@ object JvID3v2EditForm: TJvID3v2EditForm
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '1.6.4.0'
   object lsbNavigator: TListBox
     Left = 4
     Height = 483
@@ -73,7 +73,7 @@ object JvID3v2EditForm: TJvID3v2EditForm
     Height = 487
     Top = 40
     Width = 474
-    PageIndex = 0
+    PageIndex = 1
     Align = alClient
     TabOrder = 2
     object PgWinAmpTags: TPage
@@ -451,6 +451,7 @@ object JvID3v2EditForm: TJvID3v2EditForm
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 4
         BorderSpacing.Right = 4
+        ScrollBars = ssAutoBoth
         TabOrder = 1
       end
       object edtDescription: TEdit

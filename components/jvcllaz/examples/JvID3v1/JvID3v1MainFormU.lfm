@@ -18,8 +18,7 @@ object JvID3v1MainForm: TJvID3v1MainForm
   OnDropFiles = FormDropFiles
   Position = poScreenCenter
   ShowHint = True
-  LCLVersion = '1.9.0.0'
-  Scaled = False
+  LCLVersion = '1.6.4.0'
   object lblArtist: TLabel
     AnchorSideTop.Control = edtArtist
     AnchorSideTop.Side = asrCenter
@@ -283,7 +282,7 @@ object JvID3v1MainForm: TJvID3v1MainForm
       ShowHint = True
     end
     object ToolButton2: TToolButton
-      Left = 46
+      Left = 48
       Hint = 'Save changes of the tag to the file'
       Top = 0
       Action = actSave
@@ -291,7 +290,7 @@ object JvID3v1MainForm: TJvID3v1MainForm
       ShowHint = True
     end
     object ToolButton3: TToolButton
-      Left = 90
+      Left = 92
       Hint = 'Erase the tag of the file'
       Top = 0
       Action = actErase
@@ -299,7 +298,7 @@ object JvID3v1MainForm: TJvID3v1MainForm
       ShowHint = True
     end
     object ToolButton4: TToolButton
-      Left = 134
+      Left = 136
       Hint = 'Toggle ''Always on Top'''
       Top = 0
       Action = actOnTop
@@ -307,7 +306,7 @@ object JvID3v1MainForm: TJvID3v1MainForm
       ShowHint = True
     end
     object ToolButton5: TToolButton
-      Left = 178
+      Left = 184
       Hint = 'Show ''About'' dialog'
       Top = 0
       Action = actAbout
@@ -315,7 +314,7 @@ object JvID3v1MainForm: TJvID3v1MainForm
       ShowHint = True
     end
     object ToolButton6: TToolButton
-      Left = 222
+      Left = 228
       Hint = 'Close program'
       Top = 0
       Action = actExit
