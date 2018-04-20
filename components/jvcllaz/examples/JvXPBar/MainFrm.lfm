@@ -548,10 +548,19 @@ object frmMain: TfrmMain
     ParentColor = False
     Align = alClient
     object lbWelcome: TLabel
-      Left = 8
+      AnchorSideLeft.Control = cntDetails
+      AnchorSideTop.Control = cntDetails
+      AnchorSideRight.Control = cntDetails
+      AnchorSideRight.Side = asrBottom
+      Left = 9
       Height = 13
-      Top = 16
-      Width = 230
+      Top = 9
+      Width = 280
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Bottom = 24
       Caption = 'Welcome to the JVCL XP Controls Demo...'
       Font.Color = clWindowText
       Font.Height = -11
@@ -561,45 +570,69 @@ object frmMain: TfrmMain
       ParentFont = False
     end
     object btnCollapseAll: TJvXPButton
-      Left = 8
+      AnchorSideLeft.Control = lbWelcome
+      AnchorSideTop.Control = lbWelcome
+      AnchorSideTop.Side = asrBottom
+      Left = 9
       Height = 25
-      Top = 48
+      Top = 46
       Width = 75
       Caption = 'Collapse All'
       TabOrder = 0
       OnClick = btnCollapseAllClick
     end
     object btnExpandAll: TJvXPButton
-      Left = 88
+      AnchorSideLeft.Control = btnCollapseAll
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = btnCollapseAll
+      Left = 92
       Height = 25
-      Top = 48
+      Top = 46
       Width = 75
       Caption = 'Expand All'
       TabOrder = 1
+      BorderSpacing.Left = 8
       OnClick = btnExpandAllClick
     end
     object btnToogleEnableMode: TJvXPButton
-      Left = 8
+      AnchorSideLeft.Control = btnCollapseAll
+      AnchorSideTop.Control = btnCollapseAll
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = btnExpandAll
+      AnchorSideRight.Side = asrBottom
+      Left = 9
       Height = 25
-      Top = 80
-      Width = 153
+      Top = 79
+      Width = 158
       Caption = 'Toggle Enable Mode'
       TabOrder = 2
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 8
       OnClick = btnToogleEnableModeClick
     end
     object btnToggleVisibleMode: TJvXPButton
-      Left = 8
+      AnchorSideLeft.Control = btnToogleEnableMode
+      AnchorSideTop.Control = btnToogleEnableMode
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = btnToogleEnableMode
+      AnchorSideRight.Side = asrBottom
+      Left = 9
       Height = 25
       Top = 112
-      Width = 153
+      Width = 158
       Caption = 'Toggle Visible Mode'
       TabOrder = 3
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 8
       OnClick = btnToggleVisibleModeClick
     end
     object chkGrouped: TJvXPCheckbox
-      Left = 24
+      AnchorSideLeft.Control = btnToogleEnableMode
+      AnchorSideTop.Control = btnToggleVisibleMode
+      AnchorSideTop.Side = asrBottom
+      Left = 9
       Height = 17
-      Top = 152
+      Top = 161
       Width = 97
       Caption = 'Grouped'
       TabOrder = 4
@@ -618,7 +651,7 @@ object frmMain: TfrmMain
     SimplePanel = False
   end
   object imlWinXPBar: TImageList
-    left = 288
+    left = 312
     top = 280
     Bitmap = {
       4C69190000001000000010000000000000000000000000000000000000006858
@@ -1426,7 +1459,7 @@ object frmMain: TfrmMain
   end
   object aclWinXPBar: TActionList
     Images = imlWinXPBar
-    left = 220
+    left = 80
     top = 280
     object acConnectRemoteServer: TAction
       Category = 'Connect'
@@ -1514,8 +1547,8 @@ object frmMain: TfrmMain
     BkColor = clFuchsia
     Height = 19
     Width = 19
-    left = 332
-    top = 198
+    left = 432
+    top = 112
     Bitmap = {
       4C69020000001300000013000000F800F800F800F800F800F800F800F800F800
       F800F800F800F800F800F800F800F800F800F800F800F800F800F800F800F800
@@ -2021,8 +2054,8 @@ object frmMain: TfrmMain
   object ilMSN: TImageList
     Height = 15
     Width = 15
-    left = 392
-    top = 198
+    left = 432
+    top = 216
     Bitmap = {
       4C69020000000F0000000F00000000000000000000000000000000000000E098
       78FFE0A080FFE0A088FFE0A088FFE09880FFE09070FFD88868FF000000000000
@@ -2086,8 +2119,8 @@ object frmMain: TfrmMain
   object ilMSN2: TImageList
     Height = 15
     Width = 15
-    left = 434
-    top = 198
+    left = 432
+    top = 272
     Bitmap = {
       4C69020000000F0000000F00000000000000B06858FFB06858FFB06858FFB068
       58FFB06858FFB06858FFB06858FFB06858FFB06858FFB06858FFB06858FFB068
@@ -2152,8 +2185,8 @@ object frmMain: TfrmMain
     BkColor = clFuchsia
     Height = 15
     Width = 15
-    left = 364
-    top = 198
+    left = 432
+    top = 160
     Bitmap = {
       4C69020000000F0000000F000000F800F800F800F800F800F800F800F800F0C8
       A8FFE8B898FFE8B898FFE8B898FFE8B898FFE8B898FFF0C0A8FFF800F800F800

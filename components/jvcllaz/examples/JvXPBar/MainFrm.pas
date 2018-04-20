@@ -59,12 +59,12 @@ type
     ilMSN2: TImageList;
     ilFB: TImageList;
     procedure acConnectRemoteServerExecute(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure btnCollapseAllClick(Sender: TObject);
     procedure btnExpandAllClick(Sender: TObject);
     procedure btnToogleEnableModeClick(Sender: TObject);
     procedure btnToggleVisibleModeClick(Sender: TObject);
     procedure chkGroupedClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     procedure DoGrouped(Control:TControl);
@@ -93,8 +93,10 @@ end;
 
 procedure TfrmMain.acConnectRemoteServerExecute(Sender: TObject);
 begin
-  with TAction(Sender) do
-    StatusBar1.Panels[0].Text :=  Format(SClickEvent, [Name]);
+  if Sender is TAction then
+    StatusBar1.Panels[0].Text :=  Format(SClickEvent, [TAction(Sender).Caption]);
+  if Sender is TJvXPBarItem then
+    StatusBar1.Panels[0].Text := Format(SClickEvent, [TJvXPBarItem(Sender).Caption]);
 end;
 
 procedure TfrmMain.btnCollapseAllClick(Sender: TObject);
@@ -180,12 +182,12 @@ begin
       ABar := TJvXPBar(Components[i]);
       Parent := tvSelfView.Items.AddChild(nil,ABar.Caption);
       if ABar.ControlCount = 0 then
-      for j := 0 to ABar.Items.Count - 1 do
-      begin
-        Child := tvSelfView.Items.AddChild(Parent,ABar.Items[j].Caption);
-        Child.ImageIndex := ABar.Items[j].ImageIndex;
-        Child.SelectedIndex := Child.ImageIndex;
-      end;
+        for j := 0 to ABar.Items.Count - 1 do
+        begin
+          Child := tvSelfView.Items.AddChild(Parent,ABar.Items[j].Caption);
+          Child.ImageIndex := ABar.Items[j].ImageIndex;
+          Child.SelectedIndex := Child.ImageIndex;
+        end;
     end;
   tvSelfView.FullExpand;
 end;

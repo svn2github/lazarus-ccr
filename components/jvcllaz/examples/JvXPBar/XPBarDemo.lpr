@@ -3,6 +3,9 @@ program XPBarDemo;
 {$MODE DELPHI}
 
 uses
+ {$IFDEF UNIX}
+  cthreads,
+ {$ENDIF}
   Forms, Interfaces,
   MainFrm in 'MainFrm.pas' {frmMain};
 

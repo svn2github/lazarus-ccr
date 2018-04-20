@@ -121,16 +121,33 @@ type
     property Width default 73;
 
     // advanced properties.
+    property Align;
+    property Anchors;
+    //property AutoSize;
+    property BorderSpacing;
     property AutoGray;
     property Cancel;
+    property Constraints;
     property Default;
+    property DragCursor;
+    property DragKind;
+    property DragMode;
+    property Font;
     property Glyph;
     property Layout;
     property ModalResult;
+    property ParentFont;
+    property ParentShowHint;
+    property PopupMenu;
     property ShowAccelChar;
     property ShowFocusRect;
     property SmoothEdges;
+    property ShowHint;
     property Spacing;
+    property Style;
+    property StyleManager;
+    property UseDockManager default True;
+    property Visible;
     property WordWrap;
 
     //property BevelInner;
@@ -143,24 +160,8 @@ type
     //property ParentCtl3D;
     //property TabOrder;
     //property TabStop;
-    property UseDockManager default True;
-    property Align;
-    property Anchors;
-    //property AutoSize;
-    property Constraints;
-    property DragCursor;
-    property DragKind;
 //    property OnCanResize;
-    property DragMode;
 //    property Enabled;
-    property Font;
-    property ParentFont;
-    property ParentShowHint;
-    property PopupMenu;
-    property ShowHint;
-    property Style;
-    property StyleManager;
-    property Visible;
     //property OnDockDrop;
     //property OnDockOver;
     //property OnEndDock;
