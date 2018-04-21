@@ -43,7 +43,7 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
       Align = alTop
       BackgroundColor = clDefault
       Color = clDefault
-      FileSortType = fstNone
+      FileSortType = fstAlphabet
       HideSelection = False
       Images = DataModule1.ImageList1
       ReadOnly = True
@@ -63,6 +63,7 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
       HideSelection = False
       Mask = '*.ICO;*.BMP;*.EMF;*.WMF;*.JPG;*.JPEG;'
       ReadOnly = True
+      SortType = stText
       TabOrder = 1
       OnChange = ShellListViewChange
       ObjectTypes = [otNonFolders]
@@ -431,9 +432,9 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
         Constraints.MinWidth = 152
         TabOrder = 2
         OnClick = ThumbNailClick
+        ShadowColor = clSilver
         TitleColor = clBtnFace
         TitleFont.Color = clWindowText
-        ShadowColor = clSilver
       end
       object Panel1: TPanel
         AnchorSideLeft.Control = ThumbNail

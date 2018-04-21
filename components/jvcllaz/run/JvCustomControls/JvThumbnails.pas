@@ -50,7 +50,13 @@ unit JvThumbnails;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
+  {$IFDEF WINDOWS}
+  Windows,
+  {$ENDIF}
+  {$IFDEF UNIX}
+  baseunix,
+  {$ENDIF}
+  LCLIntf, LCLType, LMessages, Types,
   Classes, Controls, ExtCtrls, SysUtils, Graphics, Forms,
   JvThumbImage, JvBaseThumbnail, Dialogs;
 
@@ -71,9 +77,9 @@ type
     FTitleColor: TColor;
     FTitleFont: TFont;
     FStreamFileKind: TGRFKind;
-    FDFileCreated: string;
-    FDFileChanged: string;
-    FDFileAccessed: string;
+    FDFileCreated: TDateTime;
+    FDFileChanged: TDateTime;
+    FDFileAccessed: TDateTime;
     FShowTitle: Boolean;
     FDFileSize: Longint;
     FStream: TStream;
@@ -172,17 +178,17 @@ type
     property TitlePlacement: TTitlePos read FTitlePlacement write SetTitlePlacement default tpUp;
     property OnGetTitle: TTitleNotify read FOnGetTitle write FOnGetTitle;
     { Do not store dummies }
-    property FileSize: Longint read FDFileSize write SetDummyCard stored False;
-    property FileAccessed: string read FDFileAccessed write SetDummyStr stored False;
-    property FileCreated: string read FDFileCreated write SetDummyStr stored False;
-    property FileChanged: string read FDFileChanged write SetDummyStr stored False;
+    property FileSize: Longint read FDFileSize stored false; // write SetDummyCard stored False;
+    property FileAccessed: TDateTime read FDFileAccessed stored false; // write SetDummyStr stored False;
+    property FileCreated: TDateTime read FDFileCreated stored false; // write SetDummyStr stored False;
+    property FileChanged: TDateTime read FDFileChanged stored false; // write SetDummyStr stored False;
   end;
 
 
 implementation
 
 uses
-  FileUtil,
+  FileUtil, DateUtils,
   JvThumbViews, JvResources;
 
 constructor TJvThumbnail.Create(AOwner: TComponent);
@@ -321,50 +327,60 @@ end;
 
 procedure TJvThumbnail.GetFileInfo(AName: String);
 var
-  FileInfo: TSearchRec;
-begin
-  if FileExists(AName) then begin
-    FDFilesize := FileUtil.FileSize(AName);
-    // Other fields not supported
-  end;
-end;
-{ wp ----------- partly replaced by above
-procedure TJvThumbnail.GetFileInfo(AName: string);
-var
-  FileInfo: TWin32FindData;
+  {$IFDEF WINDOWS}
+  info: TWin32FindDataW;
+  dft: DWORD;
+  lft: TFileTime;
   H: THandle;
-  Dft: DWORD;
-  Lft: TFileTime;
+  ws: WideString;
+  {$ENDIF}
+  {$IFDEF UNIX}
+  info: stat;
+  {$ENDIF}
 begin
-  H := Windows.FindFirstFile(PChar(AName), FileInfo);
+  {$IFDEF WINDOWS}
+  ws := UTF8Decode(AName);
+  H := Windows.FindFirstFileW(PWideChar(ws), info);
   if H <> INVALID_HANDLE_VALUE then
   begin
     Windows.FindClose(H);
-    FileTimeToLocalFileTime(FileInfo.ftLastAccessTime, Lft);
-    FileTimeToDosDateTime(Lft, LongRec(Dft).Hi, LongRec(Dft).Lo);
+    //fdFileAccessed
+    FileTimeToLocalFileTime(info.ftLastAccessTime, lft);
+    FileTimeToDosDateTime(lft, LongRec(dft).Hi, LongRec(dft).Lo);
     try
-      FDFileAccessed := DateTimeToStr(FileDateToDateTime(Dft));
+      FDFileAccessed := FileDateToDateTime(dft);
     except
-      FDFileAccessed := RsUnknown;
+      FDFileAccessed := 0;
     end;
-    FileTimeToLocalFileTime(FileInfo.ftLastwriteTime, Lft);
-    FileTimeToDosDateTime(Lft, LongRec(Dft).Hi, LongRec(Dft).Lo);
+    //fdFilechanged
+    FileTimeToLocalFileTime(info.ftLastwriteTime, lft);
+    FileTimeToDosDateTime(lft, LongRec(dft).Hi, LongRec(dft).Lo);
     try
-      FDFileChanged := DateTimeToStr(FileDateToDateTime(Dft));
+      FDFileChanged := FileDateToDateTime(dft);
     except
-      FDFileChanged := RsUnknown;
+      FDFileChanged := 0;
     end;
-    FileTimeToLocalFileTime(FileInfo.ftCreationTime, Lft);
-    FileTimeToDosDateTime(Lft, LongRec(Dft).Hi, LongRec(Dft).Lo);
+    //fdFileCreated
+    FileTimeToLocalFileTime(info.ftCreationTime, lft);
+    FileTimeToDosDateTime(lft, LongRec(dft).Hi, LongRec(dft).Lo);
     try
-      FDFileCreated := DateTimeToStr(FileDateToDateTime(Dft));
+      FDFileCreated := FileDateToDateTime(dft);
     except
-      FDFileCreated := RsUnknown;
+      FDFileCreated := 0;
     end;
-    FDFileSize := (FileInfo.nFileSizeHigh * MAXDWORD) + FileInfo.nFileSizeLow;
+    FDFileSize := info.nFileSizeHigh * MAXDWORD + info.nFileSizeLow;
   end;
+  {$ENDIF}
+
+  {$IFDEF UNIX}
+  if fpstat(AName, info) = 0 then begin
+    FDFileAccessed := UnixToDateTime(info.st_atime);
+    FDFileChanged := UnixToDateTime(info.st_mtime);
+    FDFileCreated := UnixToDateTime(info.st_ctime);
+    FDFileSize := info.Size;
+  end;
+  {$ENDIF}
 end;
----------------- }
 
 function TJvThumbnail.GetFileName: string;
 begin
@@ -731,3 +747,4 @@ begin
 end;
 
 end.
+

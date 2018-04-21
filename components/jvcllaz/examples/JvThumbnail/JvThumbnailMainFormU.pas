@@ -31,8 +31,8 @@ unit JvThumbnailMainFormU;
 interface
 
 uses
-  Classes, Controls, Graphics, Forms, StdCtrls, ExtCtrls, ComCtrls, Dialogs,
-  Spin, ShellCtrls,
+  SysUtils, Classes, Controls, Graphics, Forms, Spin,
+  StdCtrls, ExtCtrls, ComCtrls, Dialogs, ShellCtrls,
   JvThumbnails, JvThumbViews, {%H-}JvThumbnailDatamodule;
 
   {JvSpecialProgress,
@@ -55,16 +55,28 @@ type
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
+    GroupBox4: TGroupBox;
+    InfoDateAccessed: TLabel;
+    InfoFileName: TLabel;
     Label1: TLabel;
     Label10: TLabel;
+    LblDateAccessed: TLabel;
+    LblFileSize: TLabel;
+    InfoFileSize: TLabel;
+    LblDateCreated: TLabel;
+    InfoDateCreated: TLabel;
+    LblDateModified: TLabel;
+    InfoDateModified: TLabel;
     Label2: TLabel;
     Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
+    LblFilename: TLabel;
     PageControl1: TPageControl;
     Panel4: TPanel;
+    Splitter2: TSplitter;
     TabSheet1: TTabSheet;
     Splitter1: TSplitter;
     Panel1: TPanel;
@@ -74,22 +86,28 @@ type
     TbThumbSize: TTrackBar;
     CbAutoScrolling: TCheckBox;
     CbAutoHandleKeyboard: TCheckBox;
-    SpinEdit1: TSpinEdit;
-    SpinEdit2: TSpinEdit;
+    EdGap: TSpinEdit;
+    EdSelected: TSpinEdit;
     CbSorted: TCheckBox;
     CbMinMemory: TCheckBox;
     Panel2: TPanel;
     ShellTreeView: TShellTreeView;
-    RadioGroup1: TRadioGroup;
-    RadioGroup2: TRadioGroup;
+    RgAlignView: TRadioGroup;
+    RgScrollMode: TRadioGroup;
     Panel3: TPanel;
-    DirInfoPanel: TPanel;
     BtnStopLoading: TButton;
     BtnEditSelThumb: TButton;
-    ThumbView: TJVTHumbview;
+    ThumbView: TJVThumbview;
     Panel5: TPanel;
     ProgressBar: TProgressBar;
     Bevel1: TBevel;
+
+    procedure BtnEditSelThumbClick(Sender: TObject);
+    procedure BtnStopLoadingClick(Sender: TObject);
+
+    procedure CbAutoHandleKeyboardClick(Sender: TObject);
+    procedure CbAutoScrollingClick(Sender: TObject);
+    procedure CbMinMemoryClick(Sender: TObject);
     procedure CbThumbBevelInnerChange(Sender: TObject);
     procedure CbThumbBevelOuterChange(Sender: TObject);
     procedure CbThumbBorderStyleChange(Sender: TObject);
@@ -98,28 +116,23 @@ type
     procedure CbThumbTitleBevelOuterChange(Sender: TObject);
     procedure CbThumbTitleBorderStyleChange(Sender: TObject);
     procedure CbTitleColorColorChanged(Sender: TObject);
+    procedure EdGapChange(Sender: TObject);
+    procedure EdSelectedChange(Sender: TObject);
+
+    procedure FormShow(Sender: TObject);
+
+    procedure RgAlignViewClick(Sender: TObject);
+    procedure RgScrollModeClick(Sender: TObject);
     procedure ShellTreeViewChange(Sender: TObject; Node: TTreeNode);
     procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
-    procedure ThumbViewKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure ThumbViewMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure TbThumbSizeChange(Sender: TObject);
+    procedure ThumbViewChange(Sender: TObject);
+    procedure ThumbViewDblClick(Sender: TObject);
     procedure ThumbViewScanProgress(Sender: TObject; APosition: Integer;
       var Break: Boolean);
     procedure ThumbViewStartScanning(Sender: TObject; AMax: Integer);
     procedure ThumbViewStopScanning(Sender: TObject);
-    procedure BtnStopLoadingClick(Sender: TObject);
-    procedure CbAutoScrollingClick(Sender: TObject);
-    procedure CbAutoHandleKeyboardClick(Sender: TObject);
-    procedure CbMinMemoryClick(Sender: TObject);
-    procedure SpinEdit1Change(Sender: TObject);
-    procedure SpinEdit2Change(Sender: TObject);
-    procedure RadioGroup1Click(Sender: TObject);
-    procedure RadioGroup2Click(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure TbThumbSizeChange(Sender: TObject);
-    procedure ThumbViewDblClick(Sender: TObject);
-    procedure BtnEditSelThumbClick(Sender: TObject);
-    procedure ThumbViewChange(Sender: TObject);
+
   public
     NewDir: Boolean;
     Scanning: Boolean;
@@ -130,21 +143,11 @@ var
 
 implementation
 
-uses JvThumbnailChildFormU;
+uses
+  StrUtils,
+  JvThumbnailChildFormU;
 
 {$R *.lfm}
-
-procedure TJvThumbnailMainForm.ThumbViewMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  DirInfoPanel.Caption := ThumbView.SelectedFile;
-end;
-
-procedure TJvThumbnailMainForm.ThumbViewKeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  DirInfoPanel.Caption := ThumbView.SelectedFile;
-end;
 
 procedure TJvThumbnailMainForm.ThumbViewScanProgress(Sender: TObject;
   APosition: Integer;
@@ -167,11 +170,12 @@ procedure TJvThumbnailMainForm.ThumbViewStopScanning(Sender: TObject);
 begin
   Scanning := False;
 //  ShellTreeView.Enabled := True;
-  Spinedit2.MaxValue := ThumbView.Count - 1;
+  EdSelected.MaxValue := ThumbView.Count - 1;
   newdir := False;
   BtnStopLoading.Enabled := False;
   ProgressBar.Position := 0;
   ProgressBar.Visible := false;
+  ThumbViewChange(nil);
 end;
 
 procedure TJvThumbnailMainForm.BtnStopLoadingClick(Sender: TObject);
@@ -234,24 +238,24 @@ begin
   ThumbView.ThumbTitleColor := CbTitleColor.ButtonColor;
 end;
 
-procedure TJvThumbnailMainForm.SpinEdit1Change(Sender: TObject);
+procedure TJvThumbnailMainForm.EdGapChange(Sender: TObject);
 begin
-  if spinedit1.Text <> '' then ThumbView.ThumbGap := spinedit1.Value;
+  if EdGap.Text <> '' then ThumbView.ThumbGap := EdGap.Value;
 end;
 
-procedure TJvThumbnailMainForm.SpinEdit2Change(Sender: TObject);
+procedure TJvThumbnailMainForm.EdSelectedChange(Sender: TObject);
 begin
-  ThumbView.Selected := spinedit2.Value;
+  ThumbView.Selected := EdSelected.Value;
 end;
 
-procedure TJvThumbnailMainForm.RadioGroup1Click(Sender: TObject);
+procedure TJvThumbnailMainForm.RgAlignViewClick(Sender: TObject);
 begin
-  ThumbView.AlignView := TViewType(radiogroup1.ItemIndex);
+  ThumbView.AlignView := TViewType(RgAlignView.ItemIndex);
 end;
 
-procedure TJvThumbnailMainForm.RadioGroup2Click(Sender: TObject);
+procedure TJvThumbnailMainForm.RgScrollModeClick(Sender: TObject);
 begin
-  ThumbView.ScrollMode := TscrollMode(radiogroup2.ItemIndex);
+  ThumbView.ScrollMode := TscrollMode(RgScrollMode.ItemIndex);
 end;
 
 procedure TJvThumbnailMainForm.ShellTreeViewChange(Sender: TObject;
@@ -283,11 +287,11 @@ begin
   CbAutoHandleKeyboard.Checked := ThumbView.AutoHandleKeyb;
   CbSorted.Checked := ThumbView.Sorted;
   CbSorted.Checked := ThumbView.MinMemory;
-  spinedit1.Value := ThumbView.ThumbGap;
-  spinedit2.MaxValue := 0;
-  spinedit1.MinValue := 0;
-  radiogroup1.ItemIndex := integer(ThumbView.alignview);
-  radiogroup2.ItemIndex := integer(ThumbView.scrollMode);
+  EdGap.Value := ThumbView.ThumbGap;
+  EdSelected.MaxValue := 0;
+  EdGap.MinValue := 0;
+  RgAlignView.ItemIndex := integer(ThumbView.alignview);
+  RgScrollMode.ItemIndex := integer(ThumbView.scrollMode);
   Newdir := False;
   Scanning := False;
 end;
@@ -305,15 +309,9 @@ begin
   try
     F.ShelLTreeView.Path := ShellTreeView.Path;
     if Sender is TJvThumbView then
-    begin
       F.SetFileName(TJvThumbView(Sender).SelectedFile);
-//      F.FileListBox1.FileName := tjvThumbView(Sender).SelectedFile;
-    end;
     if Sender is TJvThumbnail then
-    begin
       F.SetFileName(TJvThumbnail(Sender).FileName);
-  //    F.FileListBox1.FileName := tjvthumbnail(Sender).FileName;
-    end;
     F.ShowModal;
   finally
     F.Free;
@@ -326,8 +324,27 @@ begin
 end;
 
 procedure TJvThumbnailMainForm.ThumbViewChange(Sender: TObject);
+var
+  thumbnail: TJvThumbnail;
 begin
-  DirInfoPanel.Caption := ThumbView.SelectedFile;
+  Caption := 'JvThumbView Demo - ' + ThumbView.SelectedFile;
+  if ThumbView.Selected > -1 then begin
+    thumbnail := ThumbView.ThumbList[ThumbView.Selected];
+    InfoFilename.Caption := ExtractfileName(thumbnail.FileName);
+    InfoFileSize.Caption := Format('%.1n kB', [thumbnail.FileSize/1024]);
+    InfoDateCreated.Caption := IfThen(thumbnail.FileCreated = 0, '-',
+      DateTimeToStr(thumbnail.FileCreated));
+    InfoDateAccessed.Caption := IfThen(thumbnail.FileAccessed = 0, '-',
+      DateTimeToStr(thumbnail.FileAccessed));
+    InfoDateModified.Caption := IfThen(thumbnail.FileChanged = 0, '-',
+      DateTimeToStr(thumbnail.FileChanged));
+  end else begin
+    InfoFileSize.Caption := '-';
+    InfoDateCreated.Caption := '-';
+    InfoDateAccessed.Caption := '-';
+    InfoDateModified.Caption := '-';
+  end;
+  EdSelected.Value := ThumbView.Selected;
 end;
 
 end.

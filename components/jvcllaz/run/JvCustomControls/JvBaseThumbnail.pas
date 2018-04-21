@@ -64,6 +64,9 @@ type
       02) SaveToStream(AStream: TStream; APos: Integer); Save the FileName to AStream
           if APos > -1 then AStream.Seek(APos, 0);
           SaveData;
+
+    wp: removed LongName and ShortName - seem to be old DOS-style filenames not
+        useful in Linux, are not used anywhere.
   }
   TProgressNotify = procedure(Sender: TObject; Position: Integer; var Stop: Boolean) of object;
   TInvalidImageEvent = procedure(Sender: TObject; const AFileName: string) of object;
@@ -74,13 +77,17 @@ type
   {$M+}
   TJvFileName = class(TObject)  // was: TFileName, renamed to TJvFileName to avoid conflict with existing type
   private
+    { wp: removed -- not used anywhere
     FLongName: string;
     FShortName: string;
+    }
     FFileName: string;
+    { wp: not used anywhere
     FCreated: TDateTime;
     FAccessed: TDateTime;
     FModified: TDateTime;
     FFileSize: Longint;
+    }
   protected
     procedure SetName(NewName: string); virtual;
     function GetLength: Integer;
@@ -91,12 +98,14 @@ type
     // both of this routines are inserting extract data to the stream its self
     // like a header and data end string;
     procedure SaveToStream(AStream: TStream; APos: Integer); // Save to a Stream
+    { wp -- not used anywhere
     // (rom) moved to public
     property LongName: string read FLongName; // The LongName of this filename
     property ShortName: string read FShortName; // shortname of this filename
+    }
   published
     property FileName: string read FFileName write SetName; // The FileName as given by the user
-    property Length: Integer read GetLength write SetLength;
+    //property Length: Integer read GetLength write SetLength;
   end;
   {$M-}
 
@@ -185,8 +194,14 @@ function InRange(Min, Max, Value: Integer; WithBorder: Boolean = false): Boolean
 implementation
 
 uses
-  SysUtils, Types,
-  JvJCLUtils, JvThemes;
+  {$IFDEF WINDOWS}
+  Windows,
+  {$ENDIF}
+  {$IFDEF UNIX}
+  baseunix,
+  {$ENDIF}
+  SysUtils, Types, DateUtils,
+  JvThemes;
 
 function ReplaceAllStr(const Str, SearchFor, ReplaceWith: string;
   CaseSensitive: Boolean): string;
@@ -627,55 +642,74 @@ begin
 end;
 }
 
+
 //=== { TJvFileName } ==========================================================
 
 procedure TJvFileName.SetName(NewName: string);
 begin
+  if FFileName = NewName then exit;
   FFileName := NewName;
-  {$IFDEF WINDOWS}
-  if (NewName <> LongName) and (NewName <> ShortName) then
-  {$ENDIF}
-    Init;
+  Init;
 end;
+
+{$IFDEF WINDOWS}
+function FileTimeToDateTime(FileTime: TFileTime): TDateTime;
+var
+  LocalTime: TFileTime;
+  DOSTime: Integer;
+begin
+  FileTimeToLocalFileTime(FileTime, LocalTime);
+  FileTimeToDosDateTime(LocalTime, LongRec(DOSTime).Hi, LongRec(DOSTime).Lo);
+  Result := FileDateToDateTime(DOSTime);
+end;
+{$ENDIF}
 
 procedure TJvFileName.Init;
 var
+  {$IFDEF WINDOWS}
   Dft: DWORD;
   Lft: TFileTime;
   sr: TSearchRec;
+  {$ENDIF}
+  {$IFDEF UNIX}
+  info: stat;
+  {$ENDIF}
 begin
+  (*  wp: not used anywhere...
+
+  {$IFDEF WINDOWS}
   if FindFirst(FFileName, faAnyFile or faDirectory, sr) = 0 then
   begin
     FindClose(sr);
 
-    {$IFDEF WINDOWS}
-    FLongName := sr.FindData.cFileName;
-    FShortName := sr.FindData.cAlternateFileName;
-    if FLongName = '' then
-      FLongName := FShortName;
-    if FShortName = '' then
-      FShortName := FLongName;
-
-    // FIX ME !!!
-
-    (**************** NOT CONVERTED ***
     //fdFileAccessed
     FileTimeToLocalFileTime(sr.FindData.ftLastAccessTime, Lft);
     FileTimeToDosDateTime(Lft, LongRec(Dft).Hi, LongRec(Dft).Lo);
     FAccessed := Dft;
+
     //fdFilechanged
     FileTimeToLocalFileTime(sr.FindData.ftLastwriteTime, Lft);
     FileTimeToDosDateTime(Lft, LongRec(Dft).Hi, LongRec(Dft).Lo);
     FModified := Dft;
+
     //fdFilecreated
     FileTimeToLocalFileTime(sr.FindData.ftCreationTime, Lft);
     FileTimeToDosDateTime(Lft, LongRec(Dft).Hi, LongRec(Dft).Lo);
     FCreated := Dft;
-    **************)
+
     FFileSize := (sr.FindData.nFileSizeHigh * MAXDWORD) + sr.FindData.nFileSizeLow;
-    //FFileName:=NewName;
-    {$ENDIF}
   end;
+  {$ENDIF}
+
+  {$IFDEF UNIX}
+  if fpstat(FFileName, info) = 0 then begin
+    FAccessed := UnixToDateTime(info.st_atime);
+    FModified := UnixToDateTime(info.st_mtime);
+    FCreated := UnixToDateTime(info.st_ctime);
+    FFileSize := info.Size;
+  end;
+  {$ENDIF}
+  *)
 end;
 
 procedure TJvFileName.LoadFromStream(AStream: TStream; APos: Integer);

@@ -1,10 +1,10 @@
 object JvThumbnailMainForm: TJvThumbnailMainForm
   Left = 296
-  Height = 656
+  Height = 748
   Top = 126
   Width = 931
   Caption = 'JvThumbView Demo'
-  ClientHeight = 656
+  ClientHeight = 748
   ClientWidth = 931
   Color = clBtnFace
   Constraints.MinHeight = 430
@@ -17,7 +17,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
   Scaled = False
   object PageControl1: TPageControl
     Left = 0
-    Height = 632
+    Height = 724
     Top = 0
     Width = 931
     ActivePage = TabSheet1
@@ -26,11 +26,11 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'ThumbView Component'
-      ClientHeight = 604
+      ClientHeight = 696
       ClientWidth = 923
       object Splitter1: TSplitter
         Left = 205
-        Height = 544
+        Height = 636
         Top = 60
         Width = 3
       end
@@ -61,9 +61,9 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           ParentColor = False
         end
         object Label3: TLabel
-          AnchorSideLeft.Control = SpinEdit1
+          AnchorSideLeft.Control = EdGap
           AnchorSideTop.Control = Panel1
-          AnchorSideRight.Control = SpinEdit1
+          AnchorSideRight.Control = EdGap
           AnchorSideRight.Side = asrBottom
           Left = 600
           Height = 16
@@ -80,9 +80,9 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           ShowHint = True
         end
         object Label4: TLabel
-          AnchorSideLeft.Control = SpinEdit2
+          AnchorSideLeft.Control = EdSelected
           AnchorSideTop.Control = Label3
-          AnchorSideRight.Control = SpinEdit2
+          AnchorSideRight.Control = EdSelected
           AnchorSideRight.Side = asrBottom
           Left = 680
           Height = 16
@@ -159,7 +159,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           State = cbChecked
           TabOrder = 2
         end
-        object SpinEdit1: TSpinEdit
+        object EdGap: TSpinEdit
           AnchorSideLeft.Control = BtnEditSelThumb
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Label3
@@ -173,16 +173,16 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           BorderSpacing.Top = 3
           MaxValue = 300
           MinValue = 1
-          OnChange = SpinEdit1Change
+          OnChange = EdGapChange
           ParentShowHint = False
           ShowHint = True
           TabOrder = 3
           Value = 1
         end
-        object SpinEdit2: TSpinEdit
-          AnchorSideLeft.Control = SpinEdit1
+        object EdSelected: TSpinEdit
+          AnchorSideLeft.Control = EdGap
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = SpinEdit1
+          AnchorSideTop.Control = EdGap
           Left = 680
           Height = 23
           Hint = 'Selects the thumbnail with this index'
@@ -190,7 +190,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Width = 64
           BorderSpacing.Left = 16
           MaxValue = 0
-          OnChange = SpinEdit2Change
+          OnChange = EdSelectedChange
           ParentShowHint = False
           ShowHint = True
           TabOrder = 4
@@ -264,23 +264,23 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
       end
       object Panel2: TPanel
         Left = 0
-        Height = 544
+        Height = 636
         Top = 60
         Width = 205
         Align = alLeft
         BevelOuter = bvNone
         Caption = 'Panel2'
-        ClientHeight = 544
+        ClientHeight = 636
         ClientWidth = 205
         TabOrder = 1
         object ShellTreeView: TShellTreeView
           Left = 0
-          Height = 374
+          Height = 438
           Hint = 'Set directory where your images are located and watch the thumbview creating the thumbs'
           Top = 0
           Width = 205
           Align = alClient
-          FileSortType = fstNone
+          FileSortType = fstAlphabet
           HideSelection = False
           Images = DataModule1.ImageList1
           ReadOnly = True
@@ -290,102 +290,173 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
           ObjectTypes = [otFolders]
         end
-        object RadioGroup1: TRadioGroup
+        object GroupBox4: TGroupBox
           Left = 0
-          Height = 77
-          Hint = 'Change the AlignView property to either use the thumbGup (VTNormal) autocalculate the empty space to equall parts(VTSPACEEQUAL) or Cender the thumbs in the using the htumbgup between them.'
-          Top = 382
+          Height = 190
+          Top = 446
           Width = 205
           Align = alBottom
-          AutoFill = True
           AutoSize = True
           BorderSpacing.Top = 8
-          Caption = ' AlignView '
-          ChildSizing.LeftRightSpacing = 6
-          ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-          ChildSizing.EnlargeVertical = crsHomogenousChildResize
-          ChildSizing.ShrinkHorizontal = crsScaleChilds
-          ChildSizing.ShrinkVertical = crsScaleChilds
-          ChildSizing.Layout = cclLeftToRightThenTopToBottom
-          ChildSizing.ControlsPerLine = 1
-          ClientHeight = 57
+          Caption = 'File info'
+          ClientHeight = 170
           ClientWidth = 201
-          ItemIndex = 0
-          Items.Strings = (
-            'VTNormal'
-            'VTCenter'
-            'VTFitToScreen'
-          )
-          OnClick = RadioGroup1Click
           TabOrder = 1
-        end
-        object RadioGroup2: TRadioGroup
-          Left = 0
-          Height = 77
-          Hint = 'Change the ScrollMode to change the direction the thumb are scrolling in the screen SMVertical You will see a vertical scrollbar SMHorizontal For A horizontal ScrollBar or SMBoth to create a square view '
-          Top = 467
-          Width = 205
-          Align = alBottom
-          AutoFill = True
-          AutoSize = True
-          BorderSpacing.Top = 8
-          Caption = ' ScrollMode '
-          ChildSizing.LeftRightSpacing = 6
-          ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-          ChildSizing.EnlargeVertical = crsHomogenousChildResize
-          ChildSizing.ShrinkHorizontal = crsScaleChilds
-          ChildSizing.ShrinkVertical = crsScaleChilds
-          ChildSizing.Layout = cclLeftToRightThenTopToBottom
-          ChildSizing.ControlsPerLine = 1
-          ClientHeight = 57
-          ClientWidth = 201
-          ItemIndex = 2
-          Items.Strings = (
-            'SMHorizontal'
-            'SMVertical'
-            'SMBoth'
-          )
-          OnClick = RadioGroup2Click
-          TabOrder = 2
+          object LblFileSize: TLabel
+            AnchorSideLeft.Control = GroupBox4
+            AnchorSideTop.Control = InfoFileName
+            AnchorSideTop.Side = asrBottom
+            Left = 12
+            Height = 15
+            Top = 34
+            Width = 23
+            BorderSpacing.Left = 12
+            Caption = 'Size:'
+            ParentColor = False
+          end
+          object InfoFileSize: TLabel
+            AnchorSideLeft.Control = GroupBox4
+            AnchorSideTop.Control = LblFileSize
+            AnchorSideTop.Side = asrBottom
+            Left = 20
+            Height = 15
+            Top = 49
+            Width = 5
+            BorderSpacing.Left = 20
+            BorderSpacing.Bottom = 4
+            Caption = '-'
+            ParentColor = False
+          end
+          object LblDateCreated: TLabel
+            AnchorSideLeft.Control = GroupBox4
+            AnchorSideTop.Control = InfoFileSize
+            AnchorSideTop.Side = asrBottom
+            Left = 12
+            Height = 15
+            Top = 68
+            Width = 69
+            BorderSpacing.Left = 12
+            BorderSpacing.Top = 4
+            Caption = 'Date created:'
+            ParentColor = False
+          end
+          object InfoDateCreated: TLabel
+            AnchorSideLeft.Control = GroupBox4
+            AnchorSideTop.Control = LblDateCreated
+            AnchorSideTop.Side = asrBottom
+            Left = 20
+            Height = 15
+            Top = 83
+            Width = 5
+            BorderSpacing.Left = 20
+            BorderSpacing.Bottom = 4
+            Caption = '-'
+            ParentColor = False
+          end
+          object LblDateModified: TLabel
+            AnchorSideLeft.Control = GroupBox4
+            AnchorSideTop.Control = InfoDateCreated
+            AnchorSideTop.Side = asrBottom
+            Left = 12
+            Height = 15
+            Top = 102
+            Width = 75
+            BorderSpacing.Left = 12
+            BorderSpacing.Top = 4
+            Caption = 'Date modified'
+            ParentColor = False
+          end
+          object InfoDateModified: TLabel
+            AnchorSideLeft.Control = GroupBox4
+            AnchorSideTop.Control = LblDateModified
+            AnchorSideTop.Side = asrBottom
+            Left = 20
+            Height = 15
+            Top = 117
+            Width = 5
+            BorderSpacing.Left = 20
+            BorderSpacing.Bottom = 4
+            Caption = '-'
+            ParentColor = False
+          end
+          object LblDateAccessed: TLabel
+            AnchorSideLeft.Control = GroupBox4
+            AnchorSideTop.Control = InfoDateModified
+            AnchorSideTop.Side = asrBottom
+            Left = 12
+            Height = 15
+            Top = 136
+            Width = 77
+            BorderSpacing.Left = 12
+            BorderSpacing.Top = 4
+            Caption = 'Date accessed:'
+            ParentColor = False
+          end
+          object InfoDateAccessed: TLabel
+            AnchorSideLeft.Control = GroupBox4
+            AnchorSideTop.Control = LblDateAccessed
+            AnchorSideTop.Side = asrBottom
+            Left = 20
+            Height = 15
+            Top = 151
+            Width = 5
+            BorderSpacing.Left = 20
+            BorderSpacing.Bottom = 4
+            Caption = '-'
+            ParentColor = False
+          end
+          object LblFilename: TLabel
+            AnchorSideLeft.Control = GroupBox4
+            AnchorSideTop.Control = GroupBox4
+            Left = 12
+            Height = 15
+            Top = 0
+            Width = 54
+            BorderSpacing.Left = 12
+            Caption = 'File name:'
+            ParentColor = False
+          end
+          object InfoFileName: TLabel
+            AnchorSideLeft.Control = GroupBox4
+            AnchorSideTop.Control = LblFilename
+            AnchorSideTop.Side = asrBottom
+            Left = 20
+            Height = 15
+            Top = 15
+            Width = 5
+            BorderSpacing.Left = 20
+            BorderSpacing.Bottom = 4
+            Caption = '-'
+            ParentColor = False
+          end
         end
       end
       object Panel3: TPanel
         Left = 208
-        Height = 544
+        Height = 636
         Top = 60
         Width = 715
         Align = alClient
         BevelOuter = bvNone
         Caption = 'Panel3'
-        ClientHeight = 544
+        ClientHeight = 636
         ClientWidth = 715
         TabOrder = 2
-        object DirInfoPanel: TPanel
-          Left = 0
-          Height = 16
-          Hint = 'Read the selectedFile property to get the path+filename of the selected thumb'
-          Top = 528
-          Width = 715
-          Align = alBottom
-          BevelOuter = bvLowered
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 0
-        end
         object ThumbView: TJvThumbView
           Left = 0
-          Height = 528
+          Height = 636
           Top = 0
           Width = 553
-          HorzScrollBar.Page = 1
+          HorzScrollBar.Page = 5
           HorzScrollBar.Tracking = True
-          VertScrollBar.Page = 1
+          VertScrollBar.Page = 50
           VertScrollBar.Tracking = True
           Align = alClient
-          TabOrder = 1
+          ClientHeight = 632
+          ClientWidth = 549
+          TabOrder = 0
           TabStop = True
           OnDblClick = ThumbViewDblClick
-          OnMouseUp = ThumbViewMouseUp
           AlignView = vtNormal
           AsButtons = False
           AutoHandleKeyb = True
@@ -401,23 +472,28 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           Sorted = True
           ThumbColor = clNone
           OnChange = ThumbViewChange
-          OnKeyUp = ThumbViewKeyUp
           OnScanProgress = ThumbViewScanProgress
           OnStartScanning = ThumbViewStartScanning
           OnStopScanning = ThumbViewStopScanning
+          object Splitter2: TSplitter
+            Left = 0
+            Height = 632
+            Top = 0
+            Width = 5
+          end
         end
         object Panel4: TPanel
           Left = 561
-          Height = 528
+          Height = 636
           Top = 0
           Width = 146
           Align = alRight
           BorderSpacing.Left = 8
           BorderSpacing.Right = 8
           BevelOuter = bvNone
-          ClientHeight = 528
+          ClientHeight = 636
           ClientWidth = 146
-          TabOrder = 2
+          TabOrder = 1
           object GroupBox1: TGroupBox
             Left = 0
             Height = 80
@@ -730,6 +806,64 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
               Text = 'bsNone'
             end
           end
+          object RgAlignView: TRadioGroup
+            Left = 0
+            Height = 93
+            Hint = 'Change the AlignView property to either use the thumbGup (VTNormal) autocalculate the empty space to equall parts(VTSPACEEQUAL) or Cender the thumbs in the using the htumbgup between them.'
+            Top = 432
+            Width = 146
+            Align = alTop
+            AutoFill = False
+            AutoSize = True
+            BorderSpacing.Top = 8
+            BorderSpacing.InnerBorder = 4
+            Caption = ' AlignView '
+            ChildSizing.LeftRightSpacing = 16
+            ChildSizing.VerticalSpacing = 4
+            ChildSizing.ShrinkHorizontal = crsScaleChilds
+            ChildSizing.ShrinkVertical = crsScaleChilds
+            ChildSizing.Layout = cclLeftToRightThenTopToBottom
+            ChildSizing.ControlsPerLine = 1
+            ClientHeight = 73
+            ClientWidth = 142
+            ItemIndex = 0
+            Items.Strings = (
+              'VTNormal'
+              'VTCenter'
+              'VTFitToScreen'
+            )
+            OnClick = RgAlignViewClick
+            TabOrder = 3
+          end
+          object RgScrollMode: TRadioGroup
+            Left = 0
+            Height = 93
+            Hint = 'Change the ScrollMode to change the direction the thumb are scrolling in the screen SMVertical You will see a vertical scrollbar SMHorizontal For A horizontal ScrollBar or SMBoth to create a square view '
+            Top = 533
+            Width = 146
+            Align = alTop
+            AutoFill = False
+            AutoSize = True
+            BorderSpacing.Top = 8
+            BorderSpacing.InnerBorder = 4
+            Caption = ' ScrollMode '
+            ChildSizing.LeftRightSpacing = 16
+            ChildSizing.VerticalSpacing = 4
+            ChildSizing.ShrinkHorizontal = crsScaleChilds
+            ChildSizing.ShrinkVertical = crsScaleChilds
+            ChildSizing.Layout = cclLeftToRightThenTopToBottom
+            ChildSizing.ControlsPerLine = 1
+            ClientHeight = 73
+            ClientWidth = 142
+            ItemIndex = 2
+            Items.Strings = (
+              'SMHorizontal'
+              'SMVertical'
+              'SMBoth'
+            )
+            OnClick = RgScrollModeClick
+            TabOrder = 4
+          end
         end
       end
     end
@@ -737,7 +871,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
   object Panel5: TPanel
     Left = 0
     Height = 24
-    Top = 632
+    Top = 724
     Width = 931
     Align = alBottom
     BorderWidth = 2

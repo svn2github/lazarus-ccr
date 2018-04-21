@@ -829,6 +829,7 @@ begin
   //  setfocus;
   if Count > 0 then begin
     SelNo := -1;
+    No := -1;
     case ScrollMode of
       smVertical, smBoth:
         begin
@@ -837,12 +838,6 @@ begin
           if TempX >= FMaxX then TempX := FMaxX - 1;
           if TempY < 0 then TempY := 0;
           No := TempY * FMaxX + TempX;
-          if No < Count then begin
-            thumb := FThumbList.Thumbnail[No];
-            if thumb <> nil then
-              if InRange(thumb.Left, thumb.Left + thumb.Width, X) and
-                 InRange(thumb.Top, thumb.Top + thumb.Height, Y) then SelNo := No;
-          end;
         end;
       smHorizontal:
         begin
@@ -851,13 +846,15 @@ begin
           if TempY >= FMaxX then TempY := FMaxX - 1;
           if TempX < 0 then TempX := 0;
           No := TempX * FMaxX + TempY;
-          if No < Count then begin
-            thumb := TJvThumbnail(FThumbList.Objects[No]);
-            if thumb <> nil then
-              if InRange(thumb.Left, thumb.Left + thumb.Width, X) and
-                 InRange(thumb.Top, thumb.Top + thumb.Height, Y) then SelNo := No;
-          end;
         end;
+    end;
+    if (No > -1) and (No < Count) then begin
+      thumb := FThumblist.Thumbnail[No];
+      if thumb <> nil then
+        if InRange(thumb.Left, thumb.Left + thumb.Width, X) and
+           InRange(thumb.Top, thumb.Top + thumb.Height, Y)
+        then
+          SelNo := No;
     end;
     SetSelected(SelNo);
   end;
@@ -1132,6 +1129,7 @@ end;
 procedure TJvThumbView.SetSelected(Number: Longint);
 var
   TN: TJvThumbnail;
+  scrolled: Boolean = false;
 begin
   if (Number < 0) or (Number >= FThumbList.Count) then
     Number := -1;
@@ -1151,19 +1149,21 @@ begin
       TN.TitleFont.Color := clHighlightText;
       if AutoScrolling then
       begin
-        if (TN.Top + TN.Height > Height) or (TN.Top < 0) then
+        if (TN.Top + TN.Height > Height) or (TN.Top < 0) then begin
           ScrollTo(Number);
-        if (TN.Left + TN.Width > Width) or (TN.Left < 0) then
+          scrolled := true;
+        end;
+        if (TN.Left + TN.Width > Width) or (TN.Left < 0) then begin
           ScrollTo(Number);
+          scrolled := true;
+        end;
       end
     end;
-    if FSelected <> Number then
+    if (FSelected <> Number) or scrolled then
     begin
       if Assigned(FOnChanging) then
         FOnChanging(Self);
-
       FSelected := Number;
-
       if Assigned(FOnChange) then
         FOnChange(Self);
     end;
