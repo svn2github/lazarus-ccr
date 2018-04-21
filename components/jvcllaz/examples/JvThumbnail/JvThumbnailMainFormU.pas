@@ -307,10 +307,8 @@ var
 begin
   F := TJvThumbnailChildForm.Create(Self);
   try
-    F.ShellListView.Mask := GraphicFileMask(TCustomBitmap);
     {$IFNDEF Windows}
     F.ShellListView.Mask := Uppercase(F.ShellListView.Mask)+';'+Lowercase(F.ShellListView.Mask);
-    // ShellListView, by default, has an uppercase Mask which is usually not good for Linux.
     {$ENDIF}
     F.ShelLTreeView.Path := ShellTreeView.Path;
     if Sender is TJvThumbView then

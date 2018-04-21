@@ -237,6 +237,8 @@ begin
   ThumbImage.Parent.DoubleBuffered := true;
   ShellListView.DoubleBuffered := true;
   {$ENDIF}
+  FilterCombobox.ItemIndex := 0;
+  ShellListView.Mask := FilterCombobox.Mask;
 end;
 
 procedure TJvThumbnailChildForm.GbTitlePlacementClick(Sender: TObject);

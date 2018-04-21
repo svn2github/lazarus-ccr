@@ -67,7 +67,7 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
       BorderSpacing.Right = 4
       Color = clDefault
       HideSelection = False
-      Mask = '*.ICO;*.BMP;*.EMF;*.WMF;*.JPG;*.JPEG'
+      Mask = '*.ico;*.bmp;*.jpg;*.jpeg;*.png'
       ReadOnly = True
       SortType = stText
       TabOrder = 1
@@ -312,7 +312,7 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
         Top = 0
         Width = 230
         Anchors = [akTop, akLeft, akRight]
-        Filter = 'All Known Formats|*.ICO;*.BMP;*.EMF;*.WMF;*.JPG;*.JPEG;|All Files (*.*)|*.*|JPEG Files|*.JPG;*.JPEG;|BMP Files|*.BMP|WMF Files|*.WMF|EMF Files |*.EMF|ICONS |*.ICO'
+        Filter = 'All Known Formats|*.ico;*.bmp;*.jpg;*.jpeg;*.png|All Files (*.*)|*.*|JPEG Files|*.jpg;*.jpeg;|BMP Files|*.bmp|PNG Files|*.png|ICONS|*.ico'
         ItemIndex = 0
         ShellListView = ShellListView
         TabOrder = 0

@@ -771,7 +771,7 @@ begin
         Bmp.SetSize(w, h);
         Bmp.Canvas.Brush.Color := clWhite;
         Bmp.Canvas.FillRect(0, 0, w, h);
-        Bmp.Assign(Picture);
+        Bmp.Assign(Picture.Graphic);
         SrcIntfImg.LoadFromBitmap(Bmp.Handle, Bmp.MaskHandle);
         DestIntfImg.LoadFromBitmap(Bmp.Handle, Bmp.MaskHandle);
         TransformProc(SrcIntfImg, DestIntfImg, ARedData, AGreenData, ABlueData);
