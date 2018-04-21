@@ -40,7 +40,7 @@ type
   { TJvThumbnailChildForm }
 
   TJvThumbnailChildForm = class(TForm)
-    Bevel2: TBevel;
+    CenterBevel: TBevel;
     Panel1: TPanel;
     Panel2: TPanel;
     SpinEdit1: TSpinEdit;
@@ -167,6 +167,7 @@ begin
     Node.ImageIndex := 0
   else
     Node.ImageIndex := 1;
+  Node.SelectedIndex := Node.ImageIndex;
 end;
 
 procedure TJvThumbnailChildForm.SpinEdit1Change(Sender: TObject);
@@ -176,23 +177,35 @@ end;
 
 procedure TJvThumbnailChildForm.ThumbImageMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  W, H: Integer;
 begin
   FMousePt := Point(X, Y);
-  ThumbImage.Cursor := crDrag;
+  W := ThumbImage.Parent.Width;
+  H := ThumbImage.Parent.Height;
+  if (ThumbImage.Width > W) or (ThumbImage.Height > H) then
+    ThumbImage.Cursor := crDrag;
 end;
 
 procedure TJvThumbnailChildForm.ThumbImageMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 var
   L, T: Integer;
+  W, H: Integer;
 begin
   if ssLeft in Shift then begin
+    W := ThumbImage.Parent.Width;
+    H := ThumbImage.Parent.Height;
+    if (ThumbImage.Width <= W) and (ThumbImage.Height <= H) then
+      exit;
     L := ThumbImage.Left + (X - FMousePt.X);
     T := ThumbImage.Top + (Y - FMousePt.Y);
-    if L > 0 then L := 0;
+    {
+    if L < 0 then L := 0;
     if T > 0 then T := 0;
-    if L + ThumbImage.Width < Width then L := Width - ThumbImage.Width;
-    if T + ThumbImage.Height < Height then T := Height - ThumbImage.Height;
+    if L + ThumbImage.Width > W then L := W - ThumbImage.Width;
+    if T + ThumbImage.Height > H then T := H - ThumbImage.Height;
+    }
     ThumbImage.SetBounds(L, T, ThumbImage.Width, ThumbImage.Height);
   end;
 end;
