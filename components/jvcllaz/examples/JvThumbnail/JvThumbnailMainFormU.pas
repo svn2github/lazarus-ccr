@@ -125,6 +125,7 @@ type
     procedure RgScrollModeClick(Sender: TObject);
     procedure ShellTreeViewChange(Sender: TObject; Node: TTreeNode);
     procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
+    procedure ShellTreeViewGetSelectedIndex(Sender: TObject; Node: TTreeNode);
     procedure TbThumbSizeChange(Sender: TObject);
     procedure ThumbViewChange(Sender: TObject);
     procedure ThumbViewDblClick(Sender: TObject);
@@ -277,6 +278,15 @@ begin
   else
     Node.ImageIndex := 1;
   Node.SelectedIndex := Node.ImageIndex;
+end;
+
+procedure TJvThumbnailMainForm.ShellTreeViewGetSelectedIndex(Sender: TObject;
+  Node: TTreeNode);
+begin
+  if Node.Level = 0 then
+    Node.SelectedIndex := 0
+  else
+    Node.SelectedIndex := 1;
 end;
 
 procedure TJvThumbnailMainForm.FormShow(Sender: TObject);

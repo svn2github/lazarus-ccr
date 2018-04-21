@@ -129,13 +129,14 @@ procedure GrayScaleProc(ASrcImg, ADestImg: TLazIntfImage;
 var
   r, c: Integer;
   clr: TColor;
+  col: TFPColor;
   intens: Integer;
 begin
-  for r := 0 to ASrcImg.Height-1 do
-    for c := 0 to ASrcImg.Width-1 do begin
-      clr := ASrcImg.TColors[c, r];
-      intens := (GetRValue(clr) + GetGValue(clr) + GetBValue(clr)) div 3;
-      ADestImg.TColors[c, r] := RGBToColor(intens, intens, intens);
+  for r := 0 to ASrcImg.Height - 1 do
+    for c := 0 to ASrcImg.Width - 1 do begin
+      col := ASrcImg.Colors[c, r];
+      intens := (integer(col.Red) + col.Green + col.Blue) div 3;
+      ADestImg.Colors[c, r] := FPColor(intens, intens, intens, col.Alpha);
     end;
 end;
 
@@ -143,12 +144,44 @@ procedure InvertProc(ASrcImg, ADestImg: TLazIntfImage;
   ARedData, AGreenData, ABlueData: Pointer);
 var
   r, c: Integer;
-  clr: TColor;
+  col: TFPColor;
+  a: Word;
 begin
   for r := 0 to ASrcImg.Height - 1 do
     for c := 0 to ASrcImg.Width - 1 do begin
-      clr := ASrcImg.TColors[c, r];
-      ADestImg.TColors[c, r] := RGBToColor(255 - GetRValue(clr), 255 - GetGValue(clr), 255 - GetBValue(clr));
+      col := ASrcImg.Colors[c, r];
+      a := col.Alpha;
+      ADestImg.Colors[c, r] := FPColor(word(-col.Red), word(-col.Green), word(-col.Blue), a);
+    end;
+end;
+
+procedure MirrorHorProc(ASrcImg, ADestImg: TLazIntfImage;
+  ARedData, AGreenData, ABlueData: Pointer);
+var
+  r, c, w, h: Integer;
+  col: TFPColor;
+begin
+  w := ASrcImg.Width;
+  h := ASrcImg.Height;
+  for r := 0 to h - 1 do
+    for c := 0 to w - 1 do begin
+      col := ASrcImg.Colors[c, r];
+      ADestImg.Colors[w-1-c, r] := col;
+    end;
+end;
+
+procedure MirrorVertProc(ASrcImg, ADestImg: TLazIntfImage;
+  ARedData, AGreenData, ABlueData: Pointer);
+var
+  r, c, w, h: Integer;
+  col: TFPColor;
+begin
+  w := ASrcImg.Width;
+  h := ASrcImg.Height;
+  for r := 0 to h - 1 do
+    for c := 0 to w - 1 do begin
+      col := ASrcImg.Colors[c, r];
+      ADestImg.Colors[c, h-1-r] := col;
     end;
 end;
 
@@ -156,15 +189,31 @@ procedure Rotate90Proc(ASrcImg, ADestImg: TLazIntfImage;
   ARedData, AGreenData, ABlueData: Pointer);
 var
   r, c, w, h: Integer;
-  clr: TColor;
+  col: TFPColor;
 begin
   w := ASrcImg.Width;
   h := ASrcImg.Height;
   ADestImg.SetSize(h, w);
   for r := 0 to h - 1 do
     for c := 0 to w - 1 do begin
-      clr := ASrcImg.TColors[c, r];
-      ADestImg.TColors[r, w-1-c] := clr;
+      col := ASrcImg.Colors[c, r];
+      ADestImg.Colors[r, w-1-c] := col;
+    end;
+end;
+
+procedure Rotate180Proc(ASrcImg, ADestImg: TLazIntfImage;
+  ARedData, AGreenData, ABlueData: Pointer);
+var
+  r, c, w, h: Integer;
+  col: TFPColor;
+begin
+  w := ASrcImg.Width;
+  h := ASrcImg.Height;
+  ADestImg.SetSize(h, w);
+  for r := 0 to h - 1 do
+    for c := 0 to w - 1 do begin
+      col := ASrcImg.Colors[c, r];
+      ADestImg.Colors[w-1-c, h-1-r] := col;
     end;
 end;
 
@@ -172,15 +221,15 @@ procedure Rotate270Proc(ASrcImg, ADestImg: TLazIntfImage;
   ARedData, AGreenData, ABlueData: Pointer);
 var
   r, c, w, h: Integer;
-  clr: TColor;
+  col: TFPColor;
 begin
   w := ASrcImg.Width;
   h := ASrcImg.Height;
   ADestImg.SetSize(h, w);
   for r := 0 to h - 1 do
     for c := 0 to w - 1 do begin
-      clr := ASrcImg.TColors[c, r];
-      ADestImg.TColors[h-1-r, c] := clr;
+      col := ASrcImg.Colors[c, r];
+      ADestImg.Colors[h-1-r, c] := col;
     end;
 end;
 
@@ -189,6 +238,8 @@ procedure RGBProc(ASrcImg, ADestImg: TLazIntfImage;
 var
   r, c: Integer;
   clr: TColor;
+  col: TFPColor;
+  a: Word;
   rVal, gVal, bVal: Byte;
   deltaR, deltaG, deltaB: Integer;
 begin
@@ -197,11 +248,14 @@ begin
   deltaB := PtrUInt(ABlueData);
   for r := 0 to ASrcImg.Height - 1 do
     for c := 0 to ASrcImg.Width - 1 do begin
+      a := ASrcImg.Colors[c, r].Alpha;
       clr := ASrcImg.TColors[c, r];
       rVal := BoundByte(0, 255, GetBValue(clr) + deltaR);
       gVal := BoundByte(0, 255, GetGValue(clr) + deltaG);
       bVal := BoundByte(0, 255, GetBValue(clr) + deltaB);
-      ADestImg.TColors[c, r] := RGBToColor(rVal, gVal, bVal);
+      col := FPColor(rval shl 8, gval shl 8, bval shl 8, a);
+      ADestImg.Colors[c, r] := col;
+//      ADestImg.TColors[c, r] := RGBToColor(rVal, gVal, bVal);
     end;
 end;
 
@@ -211,14 +265,19 @@ var
   r, c: Integer;
   clr: TColor;
   rVal, gVal, bVal: Byte;
+  a: Word;
+  col: TFPColor;
 begin
   for r := 0 to ASrcImg.Height - 1 do
     for c := 0 to ASrcImg.Width - 1 do begin
+      a := ASrcImg.Colors[c, r].Alpha;
       clr := ASrcImg.TColors[c, r];
       rVal := TCurveArray(ARedData^)[GetRValue(clr)];
       gVal := TCurveArray(AGreenData^)[GetGValue(clr)];
       bVal := TCurveArray(ABlueData^)[GetBValue(clr)];
-      ADestImg.TColors[c, r] := RGBToColor(rVal, gVal, bVal);
+      col := FPColor(rVal shl 8, gVal shl 8, bVal shl 8, a);
+      ADestImg.Colors[c, r] := col;
+      //ADestImg.TColors[c, r] := RGBToColor(rVal, gVal, bVal);
     end;
 end;
 
@@ -260,7 +319,7 @@ begin
     AT90:
       Transform(@Rotate90Proc);
     AT180:
-      Mirror(mtBoth);
+      Transform(@Rotate180Proc);
     AT270:
       Transform(@Rotate270Proc);
   end;
@@ -691,65 +750,36 @@ end;
 *)
 
 procedure TJvThumbImage.Mirror(MirrorType: TMirror);
-var
-  MemBmp: Graphics.TBitmap;
-  Dest: TRect;
 begin
-  if Assigned(Picture.Graphic) then
-    if CanModify then
-    begin
-      MemBmp := Graphics.TBitmap.Create;
-      try
-        MemBmp.PixelFormat := pf32bit;
-        MemBmp.HandleType := bmDIB;
-        MemBmp.Width := Self.Picture.Graphic.Width;
-        MemBmp.Height := Self.Picture.Height;
-        MemBmp.Canvas.Draw(0, 0, Picture.Graphic);
-        case MirrorType of
-          mtHorizontal:
-            begin
-              Dest.Left := MemBmp.Width;
-              Dest.Top := 0;
-              Dest.Right := -MemBmp.Width;
-              Dest.Bottom := MemBmp.Height;
-            end;
-          mtVertical:
-            begin
-              Dest.Left := 0;
-              Dest.Top := MemBmp.Height;
-              Dest.Right := MemBmp.Width;
-              Dest.Bottom := -MemBmp.Height;
-            end;
-          mtBoth:
-            begin
-              Dest.Left := MemBmp.Width;
-              Dest.Top := MemBmp.Height;
-              Dest.Right := -MemBmp.Width;
-              Dest.Bottom := -MemBmp.Height;
-            end;
-        end;
-        StretchBlt(MemBmp.Canvas.Handle, Dest.Left, Dest.Top, Dest.Right, Dest.Bottom,
-          MemBmp.Canvas.Handle, 0, 0, MemBmp.Width, MemBmp.Height, SRCCOPY);
-        Picture.Graphic.Assign(MemBmp);
-        Invalidate;
-      finally
-        FreeAndNil(MemBmp);
-      end;
+  if Assigned(Picture.Graphic) and CanModify then begin
+    case MirrorType of
+      mtHorizontal: Transform(@MirrorHorProc);
+      mtVertical  : Transform(@MirrorVertProc);
+      mtBoth      : Transform(@Rotate180Proc);
     end;
+    Invalidate;
+    {
+    RotateByDelta(ord(AAngle) - ord(FAngle));
+    FAngle := AAngle;
+    FModified := FAngle <> AT0;
+    }
+  end;
 end;
 
 { Just a simple procedure to increase or decrease the values of the each channel
-  in the image idependendly from each other. E.G.
-  lets say the R,G,B vars have the values of 5,-3,7 this means that the red
-  channel should be increased buy 5 points in all the image the green value will
-  be decreased by 3 points and the blue value will be increased by 7 points.
-  This will happen to all the image by the same value no Color limunocity is
-  been preserved or values calculations depenting on the current channel values. }
+  in the image independendly from each other. E.g., lets say the R,G,B variables
+  have the values of 5, -3, 7. This means that the red channel should be
+  increased by 5 points in the entire image, the green value will be decreased
+  by 3 points and the blue value will be increased by 7 points.
+  This will happen to the entire image by the same value. Color luminosity is
+  not preserved or values calculations depending on the current channel values. }
 procedure TJvThumbImage.ChangeRGB(R, G, B: Longint);
 begin
   Transform(@RGBProc, Pointer(PtrUInt(R)), Pointer(PtrUInt(G)), Pointer(PtrUInt(B)));
 end;
 
+{ General bitmap transformation method using LazIntfImages. The operation is
+  specified by the procedure pointer TransformProc. }
 procedure TJvThumbImage.Transform(TransformProc: TJvTransformProc;
   ARedData: Pointer = nil; AGreenData: Pointer = nil; ABlueData: Pointer = nil);
 var
@@ -765,8 +795,27 @@ begin
       h := Picture.Height;
       SrcIntfImg := TLazIntfImage.Create(0, 0);
       DestIntfImg := TLazIntfImage.Create(0, 0);
-      Bmp := TBitmap.Create;
-      try
+      if Picture.Graphic is TPortableNetworkGraphic then
+      begin
+        SrcIntfImg := TPortableNetworkGraphic(Picture.Graphic).CreateIntfImage;
+        DestIntfImg := TPortableNetworkGraphic(Picture.Graphic).CreateIntfImage;
+        TransformProc(SrcIntfImg, DestIntfImg, ARedData, AGreenData, ABlueData);
+        DestIntfImg.CreateBitmaps(DestImgHandle, DestImgMaskHandle);
+        bmp := TBitmap.Create;
+        bmp.SetSize(DestIntfImg.Width, DestIntfImg.Height);
+        bmp.Canvas.Brush.Color := clWhite;
+        bmp.Canvas.FillRect(0, 0, 1, 1);
+        bmp.Handle := DestImgHandle;
+        bmp.MaskHandle := DestImgMaskHandle;
+        Picture.Graphic.Clear;
+        TPortableNetworkGraphic(Picture.Graphic).Assign(bmp);
+        Invalidate;
+        bmp.Free;
+        DestIntfImg.Free;
+        SrcIntfImg.Free;
+      end else
+      begin
+        Bmp := TBitmap.Create;
         Bmp.PixelFormat := pf32bit;
         Bmp.SetSize(w, h);
         Bmp.Canvas.Brush.Color := clWhite;
@@ -784,7 +833,6 @@ begin
         else if Picture.Graphic is Graphics.TBitmap then
           Picture.Bitmap.Assign(Bmp);
         Invalidate;
-      finally
         Bmp.Free;
         SrcIntfImg.Free;
         DestIntfImg.Free;
@@ -807,7 +855,7 @@ procedure TJvThumbImage.SetAngle(AAngle: TAngle);
             SendMessage(TJvThumbnail(Parent).Handle, TH_IMAGESIZECHANGED, 0, 0);
         end;
       AT180:
-        Mirror(mtBoth);
+        Transform(@Rotate180Proc);
       AT270:
         begin
           Transform(@Rotate270Proc);

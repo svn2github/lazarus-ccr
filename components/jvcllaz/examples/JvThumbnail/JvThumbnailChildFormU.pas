@@ -93,6 +93,7 @@ type
     procedure Panel8Resize(Sender: TObject);
     procedure ShellListViewChange(Sender: TObject);
     procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
+    procedure ShellTreeViewGetSelectedIndex(Sender: TObject; Node: TTreeNode);
     procedure SpinEdit1Change(Sender: TObject);
     procedure ThumbNailClick(Sender: TObject);
     procedure ThumbImageMouseDown(Sender: TObject; Button: TMouseButton;
@@ -168,6 +169,15 @@ begin
   else
     Node.ImageIndex := 1;
   Node.SelectedIndex := Node.ImageIndex;
+end;
+
+procedure TJvThumbnailChildForm.ShellTreeViewGetSelectedIndex(Sender: TObject;
+  Node: TTreeNode);
+begin
+  if Node.Level = 0 then
+    Node.SelectedIndex := 0
+  else
+    Node.SelectedIndex := 1;
 end;
 
 procedure TJvThumbnailChildForm.SpinEdit1Change(Sender: TObject);

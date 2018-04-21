@@ -287,6 +287,7 @@ object JvThumbnailMainForm: TJvThumbnailMainForm
           TabOrder = 0
           OnChange = ShellTreeViewChange
           OnGetImageIndex = ShellTreeViewGetImageIndex
+          OnGetSelectedIndex = ShellTreeViewGetSelectedIndex
           Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
           ObjectTypes = [otFolders]
         end

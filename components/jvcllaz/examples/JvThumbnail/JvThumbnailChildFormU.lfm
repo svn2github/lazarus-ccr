@@ -53,6 +53,7 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
       ReadOnly = True
       TabOrder = 0
       OnGetImageIndex = ShellTreeViewGetImageIndex
+      OnGetSelectedIndex = ShellTreeViewGetSelectedIndex
       Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
       ObjectTypes = [otFolders]
       ShellListView = ShellListView
