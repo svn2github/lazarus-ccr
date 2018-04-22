@@ -40,6 +40,7 @@ type
   { TOLBarMainForm }
 
   TOLBarMainForm = class(TForm)
+    ChkThemedBackground: TCheckBox;
     chkThemed: TCheckBox;
     popOL: TPopupMenu;
     Splitter1: TSplitter;
@@ -50,7 +51,7 @@ type
     popPage: TPopupMenu;
     Editbuttoncaption1: TMenuItem;
     Editpagecaption1: TMenuItem;
-    StatusBar1: TStatusBar;
+    StatusBar: TStatusBar;
     JvOutlookBar1: TJvOutlookBar;
     Panel1: TPanel;
     Panel2: TPanel;
@@ -71,6 +72,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure chkThemedChange(Sender: TObject);
+    procedure ChkThemedBackgroundChange(Sender: TObject);
     procedure JvOutlookBar1ButtonClick(Sender: TObject; Index: Integer);
     procedure JvOutlookBar1PageChanging(Sender: TObject; Index: Integer;
       var AllowChange: Boolean);
@@ -135,11 +137,12 @@ procedure TOLBarMainForm.JvOutlookBar1ButtonClick(Sender: TObject;
 var P:TJvOutlookBarPage;
 begin
   if (Index > -1) then
-  with JvOutlookBar1 do
-  begin
-    P := Pages[ActivePageIndex];
-    Caption := Format('Clicked button "%s" on page "%s"',[P.Buttons[Index].Caption,P.Caption]);
-  end;
+    with JvOutlookBar1 do
+    begin
+      P := Pages[ActivePageIndex];
+      Statusbar.SimpleText := Format('Clicked button "%s" on page "%s"',
+        [P.Buttons[Index].Caption,P.Caption]);
+    end;
 end;
 
 procedure TOLBarMainForm.JvOutlookBar1PageChanging(Sender: TObject;
@@ -147,7 +150,7 @@ procedure TOLBarMainForm.JvOutlookBar1PageChanging(Sender: TObject;
 begin
   with JvOutlookBar1 do
     if (ActivePageIndex > -1) and (Index > -1) then
-      Caption := Format('Page changing from "%s" to "%s"',
+      Statusbar.SimpleText :=  Format('Page changing from "%s" to "%s"',
         [Pages[ActivePageIndex].Caption, Pages[Index].Caption]);
 end;
 
@@ -155,7 +158,8 @@ procedure TOLBarMainForm.JvOutlookBar1PageChange(Sender: TObject;
   Index: Integer);
 begin
   if Index > -1 then
-    Caption := Format('Page changed to "%s"',[JvOutlookBar1.Pages[Index].Caption]);
+    Statusbar.SimpleText := Format('Page changed to "%s"',
+      [JvOutlookBar1.Pages[Index].Caption]);
 end;
 
 procedure TOLBarMainForm.JvOutlookBar1ContextPopup(Sender: TObject;
@@ -200,6 +204,11 @@ end;
 procedure TOLBarMainForm.chkThemedChange(Sender: TObject);
 begin
   JvOutlookbar1.Themed := chkThemed.Checked;
+end;
+
+procedure TOLBarMainForm.ChkThemedBackgroundChange(Sender: TObject);
+begin
+  JvOutlookbar1.ThemedBackground := ChkThemedBackground.Checked;
 end;
 
 procedure TOLBarMainForm.FormCreate(Sender: TObject);

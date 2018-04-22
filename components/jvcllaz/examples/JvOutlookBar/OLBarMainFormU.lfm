@@ -24,7 +24,7 @@ object OLBarMainForm: TOLBarMainForm
     Width = 5
     AutoSnap = False
   end
-  object StatusBar1: TStatusBar
+  object StatusBar: TStatusBar
     Left = 0
     Height = 23
     Top = 365
@@ -81,11 +81,9 @@ object OLBarMainForm: TOLBarMainForm
         Caption = 'Standard Shortcuts'
         Color = 4210816
         DownFont.Color = clWindowText
-        DownFont.Height = -11
-        DownFont.Name = 'MS Sans Serif'
+        DownFont.Height = -12
         Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'Tahoma'
+        Font.Height = -12
         ParentColor = False
         TopButtonIndex = 0
       end    
@@ -118,15 +116,14 @@ object OLBarMainForm: TOLBarMainForm
         ButtonSize = olbsLarge
         Caption = 'My Shortcuts'
         DownFont.Color = clWindowText
-        DownFont.Height = -11
-        DownFont.Name = 'MS Sans Serif'
+        DownFont.Height = -12
         Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'Tahoma'
+        Font.Height = -12
         ParentColor = False
         TopButtonIndex = 0
       end    
       item
+        Alignment = taRightJustify
         Buttons = <        
           item
             Caption = 'My Computer'
@@ -150,21 +147,22 @@ object OLBarMainForm: TOLBarMainForm
         Caption = 'Other Shortcuts'
         Color = clInactiveCaption
         DownFont.Color = clWindowText
-        DownFont.Height = -11
-        DownFont.Name = 'MS Sans Serif'
-        Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'Tahoma'
+        DownFont.Height = -12
+        Font.Color = clWindowText
+        Font.Height = -12
         ParentColor = False
         TopButtonIndex = 0
       end>
     LargeImages = ImageList1
     SmallImages = ImageList2
     ActivePageIndex = 1
-    ThemedBackground = False
     OnButtonClick = JvOutlookBar1ButtonClick
     OnPageChange = JvOutlookBar1PageChange
     OnPageChanging = JvOutlookBar1PageChanging
+    BorderStyle = bsNone
+    Font.Color = clWindowText
+    Font.Height = -12
+    ParentFont = False
     PopupMenu = popOL
     TabOrder = 1
     OnContextPopup = JvOutlookBar1ContextPopup
@@ -180,84 +178,132 @@ object OLBarMainForm: TOLBarMainForm
     ClientWidth = 557
     TabOrder = 2
     object Panel2: TPanel
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrBottom
       Left = 0
-      Height = 63
-      Top = 302
+      Height = 56
+      Top = 309
       Width = 557
       Align = alBottom
+      Anchors = [akLeft, akRight]
+      AutoSize = True
       BevelOuter = bvNone
-      ClientHeight = 63
+      ClientHeight = 56
       ClientWidth = 557
       TabOrder = 0
       object Button1: TButton
-        Left = 3
+        AnchorSideLeft.Control = Panel2
+        AnchorSideTop.Control = Panel2
+        Left = 0
         Height = 25
-        Top = 11
+        Top = 4
         Width = 102
         AutoSize = True
+        BorderSpacing.Top = 4
         Caption = 'Assign images'
         OnClick = Button1Click
         TabOrder = 0
       end
       object chkSmallImages: TCheckBox
-        Left = 8
+        AnchorSideLeft.Control = Panel2
+        AnchorSideTop.Control = Button1
+        AnchorSideTop.Side = asrBottom
+        Left = 0
         Height = 19
-        Top = 41
+        Top = 33
         Width = 93
         Action = acSmallButtons
+        BorderSpacing.Top = 4
+        BorderSpacing.Bottom = 4
         TabOrder = 1
       end
       object Button2: TButton
-        Left = 109
+        AnchorSideLeft.Control = Button1
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Button1
+        Left = 106
         Height = 25
-        Top = 11
+        Top = 4
         Width = 110
         AutoSize = True
+        BorderSpacing.Left = 4
         Caption = 'Remove images'
         OnClick = Button2Click
         TabOrder = 2
       end
       object Button3: TButton
-        Left = 224
+        AnchorSideLeft.Control = Button2
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Button1
+        Left = 220
         Height = 25
-        Top = 11
-        Width = 91
+        Top = 4
+        Width = 59
+        AutoSize = True
+        BorderSpacing.Left = 4
         Caption = 'Font...'
         OnClick = Button3Click
         TabOrder = 3
       end
       object chkButtonFont: TCheckBox
-        Left = 224
+        AnchorSideLeft.Control = chkFlat
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = chkSmallImages
+        Left = 180
         Height = 19
-        Top = 41
+        Top = 33
         Width = 125
+        BorderSpacing.Left = 24
         Caption = 'Change button font'
         TabOrder = 4
       end
       object chkFlat: TCheckBox
-        Left = 112
+        AnchorSideLeft.Control = chkSmallImages
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = chkSmallImages
+        Left = 117
         Height = 19
-        Top = 40
+        Top = 33
         Width = 39
+        BorderSpacing.Left = 24
         Caption = 'Flat'
         OnClick = chkFlatClick
         TabOrder = 5
       end
       object chkThemed: TCheckBox
-        Left = 378
+        AnchorSideLeft.Control = chkButtonFont
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = chkSmallImages
+        Left = 329
         Height = 19
-        Top = 40
+        Top = 33
         Width = 64
+        BorderSpacing.Left = 24
         Caption = 'Themed'
         Checked = True
         OnChange = chkThemedChange
         State = cbChecked
         TabOrder = 6
       end
+      object ChkThemedBackground: TCheckBox
+        AnchorSideLeft.Control = chkThemed
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = chkSmallImages
+        Left = 417
+        Height = 19
+        Top = 33
+        Width = 131
+        BorderSpacing.Left = 24
+        Caption = 'Themed background'
+        Checked = True
+        OnChange = ChkThemedBackgroundChange
+        State = cbChecked
+        TabOrder = 7
+      end
     end
     object Memo1: TMemo
       Left = 0
-      Height = 302
+      Height = 309
       Top = 0
       Width = 557
       Align = alClient

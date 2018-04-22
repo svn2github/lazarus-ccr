@@ -67,7 +67,9 @@ type
     function DoGetElementSize(DC: HDC; Details: TThemedElementDetails; Rect: PRect;
       ElementSize: TElementSize; out Size: TSize): Boolean;
   {$ENDIF ~COMPILER16_UP}
+  *******************)
   public
+    (****************
     {$IFNDEF COMPILER7_UP}
     procedure ApplyThemeChange;
     {$ENDIF ~COMPILER7_UP}
@@ -79,8 +81,10 @@ type
     function GetElementSize(DC: HDC; Details: TThemedElementDetails; const Rect: TRect;
       ElementSize: TElementSize; out Size: TSize): Boolean; overload;
     function IsSystemStyle: Boolean;
+    ********************)
     function Enabled: Boolean;
     function Available: Boolean;
+    (********************
     function GetSystemColor(Color: TColor): TColor;
     {$ENDIF ~COMPILER16_UP}
     ****************)
@@ -842,6 +846,7 @@ function TThemeServicesEx.IsSystemStyle: Boolean;
 begin
   Result := True;
 end;
+**********************)
 
 function TThemeServicesEx.Enabled: Boolean;
 begin
@@ -852,6 +857,8 @@ function TThemeServicesEx.Available: Boolean;
 begin
   Result := ThemesAvailable;
 end;
+
+(******************************
 {$ENDIF ~COMPILER16_UP}
 *******************)
 
