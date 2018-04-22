@@ -33,7 +33,7 @@ interface
 uses
   LCLIntf, LCLType,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, DateTimePicker,
-  ComCtrls, StdCtrls, ExtCtrls, Menus, ImgList, JvTimeLine;
+  ComCtrls, StdCtrls, ExtCtrls, Menus, ImgList, ComboEx, JvTimeLine;
 
 type
 
@@ -42,6 +42,7 @@ type
   TTimelineMainForm = class(TForm)
     Bevel1: TBevel;
     Bevel2: TBevel;
+    CbImgIndex: TComboBoxEx;
     ImageList1: TImageList;
     Splitter1: TSplitter;
     PopupMenu1: TPopupMenu;
@@ -65,9 +66,7 @@ type
     lblLevel: TLabel;
     btnAdd: TButton;
     edCaption: TEdit;
-    edImIndex: TEdit;
     dtpItemdate: TDateTimePicker;
-    udImIndex: TUpDown;
     edLevel: TEdit;
     udLevel: TUpDown;
     btnColor: TButton;
@@ -177,11 +176,11 @@ var aItem: TJvTimeItem;
 begin
   aItem := TimeLine1.Items.Add;
   aItem.Caption := edCaption.Text;
-  aItem.ImageIndex := StrToIntDef(edImIndex.Text, -1);
+  aItem.ImageIndex := CbImgIndex.ItemIndex;
   aItem.Level := StrToIntDef(edLevel.Text, 0);
   aItem.Date := dtpItemDate.Date;
   aItem.Color := FCurColor;
-  if FCurColor <> clWhite then
+  if Integer(GetRValue(FCurColor)) + GetGValue(FCurColor) + GetBValue(FCurColor) < 3*128-1 then
     aItem.TextColor := clWhite
   else
     aItem.TextColor := clBlack;
@@ -381,13 +380,20 @@ end;
 { save all notes data and dispose of memory }
 
 procedure TTimelineMainForm.FormCreate(Sender: TObject);
+var
+  i: Integer;
 begin
   FCurColor := TimeLine1.Color;
   cbDragging.ItemIndex := 0;
   TimelineNotesForm := TTimelineNotesForm.Create(nil);
   cbDraggingChange(nil);
+
   TimeLine1.ShowSelection := false;
   TimeLine1.DoubleBuffered := false;
+
+  for i := 0 to ImageList1.Count-1 do
+    CbImgIndex.Add(IntToStr(i), 0, i);
+  CbImgIndex.ItemIndex := 0;
 end;
 
 
@@ -559,7 +565,7 @@ procedure TTimelineMainForm.FormDestroy(Sender: TObject);
 var
   i: integer;
 begin
-  TimelineNotesForm.free;
+  TimelineNotesForm.Free;
   { free allocated memory }
   for i := 0 to TimeLine1.Items.Count - 1 do
     if TimeLine1.Items[i].Data <> nil then

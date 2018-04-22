@@ -18,7 +18,7 @@ object TimelineNotesForm: TTimelineNotesForm
     Top = 0
     Width = 207
     Align = alClient
-    Color = clInfoBk
+    Color = clCream
     Font.Color = clWindowText
     ParentFont = False
     TabOrder = 0

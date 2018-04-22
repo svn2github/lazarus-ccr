@@ -43,7 +43,7 @@ object TimelineMainForm: TTimelineMainForm
     Top = 3
     Width = 731
     Align = alClient
-    Color = clInfoBk
+    Color = clCream
     HelperYears = False
     PopupMenu = PopupMenu1
     ParentShowHint = False
@@ -240,6 +240,7 @@ object TimelineMainForm: TTimelineMainForm
       end>
     ItemHeight = 40
     HorzSupports = True
+    SupportsColor = clSilver
     OnItemClick = TimeLine1ItemClick
     OnDrawItem = TimeLine1DrawItem
     OnSaveItem = TimeLine1SaveItem
@@ -282,7 +283,7 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Side = asrCenter
         Left = 12
         Height = 15
-        Top = 4
+        Top = 6
         Width = 45
         BorderSpacing.Left = 12
         Caption = '&Caption:'
@@ -295,11 +296,10 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 15
-        Top = 62
+        Top = 64
         Width = 64
         BorderSpacing.Top = 8
         Caption = 'ImageInde&x:'
-        FocusControl = edImIndex
         ParentColor = False
       end
       object lblDate: TLabel
@@ -308,7 +308,7 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Side = asrCenter
         Left = 12
         Height = 15
-        Top = 35
+        Top = 37
         Width = 27
         Caption = '&Date:'
         FocusControl = dtpItemdate
@@ -320,7 +320,7 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Control = lblImIndex
         Left = 104
         Height = 15
-        Top = 62
+        Top = 64
         Width = 30
         Caption = 'Le&vel:'
         FocusControl = edLevel
@@ -336,7 +336,7 @@ object TimelineMainForm: TTimelineMainForm
         Width = 75
         Caption = '&Add'
         OnClick = btnAddClick
-        TabOrder = 7
+        TabOrder = 5
       end
       object edCaption: TEdit
         AnchorSideLeft.Control = lblCaption
@@ -346,27 +346,14 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideRight.Side = asrBottom
         Left = 65
         Height = 23
-        Top = 0
+        Top = 2
         Width = 115
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 8
+        BorderSpacing.Top = 2
         BorderSpacing.Right = 12
         TabOrder = 0
         Text = 'New item'
-      end
-      object edImIndex: TEdit
-        AnchorSideLeft.Control = lblImIndex
-        AnchorSideTop.Control = lblImIndex
-        AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Control = udImIndex
-        Left = 12
-        Height = 23
-        Top = 81
-        Width = 61
-        Anchors = [akTop, akLeft, akRight]
-        BorderSpacing.Top = 4
-        TabOrder = 1
-        Text = '0'
       end
       object dtpItemdate: TDateTimePicker
         AnchorSideLeft.Control = edCaption
@@ -374,12 +361,12 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Side = asrBottom
         Left = 65
         Height = 23
-        Top = 31
+        Top = 33
         Width = 79
         CenturyFrom = 1941
         MaxDate = 2958465
         MinDate = -53780
-        TabOrder = 6
+        TabOrder = 4
         BorderSpacing.Top = 8
         TrailingSeparator = False
         LeadingZeros = True
@@ -394,30 +381,15 @@ object TimelineMainForm: TTimelineMainForm
         MonthNames = 'Long'
         CalAlignment = dtaLeft
       end
-      object udImIndex: TUpDown
-        AnchorSideRight.Control = Bevel1
-        Left = 73
-        Height = 23
-        Top = 81
-        Width = 15
-        Anchors = [akTop, akRight]
-        Associate = edImIndex
-        Max = 8
-        Min = 0
-        Position = 0
-        TabOrder = 2
-        Wrap = False
-      end
       object edLevel: TEdit
         AnchorSideLeft.Control = lblLevel
-        AnchorSideTop.Control = edImIndex
         AnchorSideRight.Control = udLevel
         Left = 104
         Height = 23
         Top = 81
         Width = 61
         Anchors = [akTop, akLeft, akRight]
-        TabOrder = 3
+        TabOrder = 1
         Text = '0'
       end
       object udLevel: TUpDown
@@ -432,7 +404,7 @@ object TimelineMainForm: TTimelineMainForm
         Max = 8
         Min = 0
         Position = 0
-        TabOrder = 4
+        TabOrder = 2
         Wrap = False
       end
       object btnColor: TButton
@@ -445,7 +417,7 @@ object TimelineMainForm: TTimelineMainForm
         BorderSpacing.Left = 16
         Caption = 'Color...'
         OnClick = btnColorClick
-        TabOrder = 5
+        TabOrder = 3
       end
       object Bevel1: TBevel
         AnchorSideLeft.Control = GroupBox1
@@ -455,6 +427,23 @@ object TimelineMainForm: TTimelineMainForm
         Top = 64
         Width = 16
         Shape = bsSpacer
+      end
+      object CbImgIndex: TComboBoxEx
+        AnchorSideLeft.Control = lblImIndex
+        AnchorSideTop.Control = lblImIndex
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Bevel1
+        Left = 12
+        Height = 24
+        Top = 81
+        Width = 76
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 2
+        DropDownCount = 24
+        Images = ImageList1
+        ItemHeight = 16
+        ItemsEx = <>
+        TabOrder = 6
       end
     end
     object GroupBox2: TGroupBox
@@ -646,10 +635,10 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Control = GroupBox3
         Left = 12
         Height = 15
-        Top = 4
+        Top = 2
         Width = 47
         BorderSpacing.Left = 12
-        BorderSpacing.Top = 4
+        BorderSpacing.Top = 2
         Caption = '&Year size:'
         FocusControl = edYrSize
         ParentColor = False
@@ -658,7 +647,7 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Control = lblYrSize
         Left = 111
         Height = 15
-        Top = 4
+        Top = 2
         Width = 61
         Caption = 'Item&height:'
         FocusControl = edItemHeight
@@ -670,7 +659,7 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 15
-        Top = 54
+        Top = 52
         Width = 87
         BorderSpacing.Top = 8
         Caption = '&First visible date:'
@@ -703,7 +692,7 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 23
+        Top = 21
         Width = 50
         BorderSpacing.Top = 4
         TabOrder = 0
@@ -712,7 +701,7 @@ object TimelineMainForm: TTimelineMainForm
       object udYrSize: TUpDown
         Left = 62
         Height = 23
-        Top = 23
+        Top = 21
         Width = 15
         Associate = edYrSize
         Increment = 120
@@ -728,7 +717,7 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Control = edYrSize
         Left = 111
         Height = 23
-        Top = 23
+        Top = 21
         Width = 50
         TabOrder = 2
         Text = '36'
@@ -736,7 +725,7 @@ object TimelineMainForm: TTimelineMainForm
       object udItemHeight: TUpDown
         Left = 161
         Height = 23
-        Top = 23
+        Top = 21
         Width = 15
         Associate = edItemHeight
         Min = 0
@@ -751,7 +740,7 @@ object TimelineMainForm: TTimelineMainForm
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 73
+        Top = 71
         Width = 79
         CenturyFrom = 1941
         MaxDate = 2958465
