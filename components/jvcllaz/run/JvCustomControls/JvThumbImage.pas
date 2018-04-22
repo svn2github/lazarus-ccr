@@ -63,7 +63,10 @@ type
   TFilterEmpty = function: Byte;
   TFilterArray = array [1..9] of Byte;
 
-  TJvTransformProc = procedure (ASourceIntfImage, ADestIntfImage: TLazIntfImage;
+  TJvTransformProc = procedure (AIntfImage: TLazIntfImage;
+    ARedData, AGreenData, ABlueData: Pointer);
+
+  TJvTransformProc2 = procedure (ASourceIntfImage, ADestIntfImage: TLazIntfImage;
     ARedData, AGreenData, ABlueData: Pointer);
 
   { TJvThumbImage }
@@ -78,8 +81,6 @@ type
     FFileName: string;
     FClass: TGraphicClass;
     FOnInvalidImage: TInvalidImageEvent;
-//    procedure Rotate90;
-//    procedure Rotate270;
     procedure SetAngle(AAngle: TAngle);
     function GetModify: Boolean;
   public
@@ -95,7 +96,9 @@ type
     procedure SaveToFile(AFile: string);
     procedure Save;
     procedure Transform(TransformProc: TJvTransformProc; ARedData: Pointer = nil;
-      AGreenData: Pointer = nil; ABlueData: Pointer = nil);
+      AGreenData: Pointer = nil; ABlueData: Pointer = nil); overload;
+    procedure Transform(TransformProc: TJvTransformProc2; ARedData: Pointer = nil;
+      AGreenData: Pointer = nil; ABlueData: Pointer = nil); overload;
     procedure BitmapNeeded;
     //    Procedure FilterFactory(Filter: TFilterArray; Divider: Byte);
     procedure Invert;
@@ -104,6 +107,7 @@ type
     procedure Grayscale;
     procedure Rotate(AAngle: TAngle);
     function GetFilter: string;
+    property FileName: String read FFileName;
     //property JpegScale: TJPegScale read vJPegScale write vJpegScale;
   published
     property Angle: TAngle read FAngle write SetAngle;
@@ -124,64 +128,66 @@ uses
   FPImage,
   JvThumbnails, JvTypes, JvResources;
 
-procedure GrayScaleProc(ASrcImg, ADestImg: TLazIntfImage;
-  ARedData, AGreenData, ABlueData: Pointer);
+procedure GrayScaleProc(AImg: TLazIntfImage; ARedData, AGreenData, ABlueData: Pointer);
 var
   r, c: Integer;
   clr: TColor;
   col: TFPColor;
   intens: Integer;
 begin
-  for r := 0 to ASrcImg.Height - 1 do
-    for c := 0 to ASrcImg.Width - 1 do begin
-      col := ASrcImg.Colors[c, r];
+  for r := 0 to AImg.Height - 1 do
+    for c := 0 to AImg.Width - 1 do begin
+      col := AImg.Colors[c, r];
       intens := (integer(col.Red) + col.Green + col.Blue) div 3;
-      ADestImg.Colors[c, r] := FPColor(intens, intens, intens, col.Alpha);
+      AImg.Colors[c, r] := FPColor(intens, intens, intens, col.Alpha);
     end;
 end;
 
-procedure InvertProc(ASrcImg, ADestImg: TLazIntfImage;
-  ARedData, AGreenData, ABlueData: Pointer);
+procedure InvertProc(AImg: TLazIntfImage; ARedData, AGreenData, ABlueData: Pointer);
+const
+  MX: word = $FFFF;
 var
   r, c: Integer;
   col: TFPColor;
   a: Word;
 begin
-  for r := 0 to ASrcImg.Height - 1 do
-    for c := 0 to ASrcImg.Width - 1 do begin
-      col := ASrcImg.Colors[c, r];
+  for r := 0 to AImg.Height - 1 do
+    for c := 0 to AImg.Width - 1 do begin
+      col := AImg.Colors[c, r];
       a := col.Alpha;
-      ADestImg.Colors[c, r] := FPColor(word(-col.Red), word(-col.Green), word(-col.Blue), a);
+      AImg.Colors[c, r] := FPColor(MX-col.Red, MX-col.Green, MX-col.Blue, a);
     end;
 end;
 
-procedure MirrorHorProc(ASrcImg, ADestImg: TLazIntfImage;
-  ARedData, AGreenData, ABlueData: Pointer);
+procedure MirrorHorProc(AImg: TLazIntfImage; ARedData, AGreenData, ABlueData: Pointer);
 var
   r, c, w, h: Integer;
-  col: TFPColor;
+  col1, col2: TFPColor;
 begin
-  w := ASrcImg.Width;
-  h := ASrcImg.Height;
+  w := AImg.Width;
+  h := AImg.Height;
   for r := 0 to h - 1 do
-    for c := 0 to w - 1 do begin
-      col := ASrcImg.Colors[c, r];
-      ADestImg.Colors[w-1-c, r] := col;
+    for c := 0 to w div 2 do begin
+      col1 := AImg.Colors[c, r];
+      col2 := AImg.Colors[w-1-c, r];
+      AImg.Colors[c, r] := col2;
+      AImg.Colors[w-1-c, r] := col1;
     end;
 end;
 
-procedure MirrorVertProc(ASrcImg, ADestImg: TLazIntfImage;
-  ARedData, AGreenData, ABlueData: Pointer);
+procedure MirrorVertProc(AImg: TLazIntfImage; ARedData, AGreenData, ABlueData: Pointer);
 var
   r, c, w, h: Integer;
-  col: TFPColor;
+  col1, col2: TFPColor;
 begin
-  w := ASrcImg.Width;
-  h := ASrcImg.Height;
-  for r := 0 to h - 1 do
-    for c := 0 to w - 1 do begin
-      col := ASrcImg.Colors[c, r];
-      ADestImg.Colors[c, h-1-r] := col;
+  w := AImg.Width;
+  h := AImg.Height;
+  for c := 0 to w - 1 do
+    for r := 0 to h div 2 do begin
+      col1 := AImg.Colors[c, r];
+      col2 := AImg.Colors[c, h-1-r];
+      AImg.Colors[c, r] := col2;
+      AImg.Colors[c, h-1-r] := col1;
     end;
 end;
 
@@ -209,7 +215,6 @@ var
 begin
   w := ASrcImg.Width;
   h := ASrcImg.Height;
-  ADestImg.SetSize(h, w);
   for r := 0 to h - 1 do
     for c := 0 to w - 1 do begin
       col := ASrcImg.Colors[c, r];
@@ -233,8 +238,7 @@ begin
     end;
 end;
 
-procedure RGBProc(ASrcImg, ADestImg: TLazIntfImage;
-  ARedData, AGreenData, ABlueData: Pointer);
+procedure RGBProc(AImg: TLazIntfImage; ARedData, AGreenData, ABlueData: Pointer);
 var
   r, c: Integer;
   clr: TColor;
@@ -246,21 +250,19 @@ begin
   deltaR := PtrUInt(ARedData);
   deltaG := PtrUInt(AGreenData);
   deltaB := PtrUInt(ABlueData);
-  for r := 0 to ASrcImg.Height - 1 do
-    for c := 0 to ASrcImg.Width - 1 do begin
-      a := ASrcImg.Colors[c, r].Alpha;
-      clr := ASrcImg.TColors[c, r];
+  for r := 0 to AImg.Height - 1 do
+    for c := 0 to AImg.Width - 1 do begin
+      a := AImg.Colors[c, r].Alpha;
+      clr := AImg.TColors[c, r];
       rVal := BoundByte(0, 255, GetBValue(clr) + deltaR);
       gVal := BoundByte(0, 255, GetGValue(clr) + deltaG);
       bVal := BoundByte(0, 255, GetBValue(clr) + deltaB);
       col := FPColor(rval shl 8, gval shl 8, bval shl 8, a);
-      ADestImg.Colors[c, r] := col;
-//      ADestImg.TColors[c, r] := RGBToColor(rVal, gVal, bVal);
+      AImg.Colors[c, r] := col;
     end;
 end;
 
-procedure RGBCurveProc(ASrcImg, ADestImg: TLazIntfImage;
-  ARedData, AGreenData, ABlueData: Pointer);
+procedure RGBCurveProc(AImg: TLazIntfImage; ARedData, AGreenData, ABlueData: Pointer);
 var
   r, c: Integer;
   clr: TColor;
@@ -268,16 +270,15 @@ var
   a: Word;
   col: TFPColor;
 begin
-  for r := 0 to ASrcImg.Height - 1 do
-    for c := 0 to ASrcImg.Width - 1 do begin
-      a := ASrcImg.Colors[c, r].Alpha;
-      clr := ASrcImg.TColors[c, r];
+  for r := 0 to AImg.Height - 1 do
+    for c := 0 to AImg.Width - 1 do begin
+      a := AImg.Colors[c, r].Alpha;
+      clr := AImg.TColors[c, r];
       rVal := TCurveArray(ARedData^)[GetRValue(clr)];
       gVal := TCurveArray(AGreenData^)[GetGValue(clr)];
       bVal := TCurveArray(ABlueData^)[GetBValue(clr)];
       col := FPColor(rVal shl 8, gVal shl 8, bVal shl 8, a);
-      ADestImg.Colors[c, r] := col;
-      //ADestImg.TColors[c, r] := RGBToColor(rVal, gVal, bVal);
+      AImg.Colors[c, r] := col;
     end;
 end;
 
@@ -552,13 +553,14 @@ var
   Ext: string;
   Jpg: TJpegImage;
   Bmp: TBitmap;
+  png: TPortableNetworkGraphic;
   {*************** NOT CONVERTED ***
   Wmf: TMetafile;
   ********************************}
 begin
   // (rom) enforcing a file extension is bad style
-  Ext := UpperCase(ExtractFileExt(AFile));
-  if (Ext = '.JPG') or (Ext = '.JPEG') then
+  Ext := LowerCase(ExtractFileExt(AFile));
+  if (Ext = '.jpg') or (Ext = '.jpeg') then
     try
       Jpg := TJpegImage.Create;
       Jpg.Assign(Picture.Graphic);
@@ -568,18 +570,28 @@ begin
       **********************************}
       Jpg.SaveToFile(AFile);
     finally
-      FreeAndNil(Jpg);
+      Jpg.Free;
     end
   else
-  if Ext = '.BMP' then
+  if Ext = '.bmp' then
     try
       Bmp := Graphics.TBitmap.Create;
       Bmp.Assign(Picture.Graphic);
       Bmp.Canvas.Draw(0, 0, Picture.Graphic);
       Bmp.SaveToFile(AFile);
     finally
-      FreeAndNil(Bmp);
-  end
+      Bmp.Free;
+    end
+  else
+  if Ext = '.png' then
+    try
+      png := TPortableNetworkGraphic.Create;
+      png.Assign(Picture.Graphic);
+      png.Canvas.Draw(0, 0, Picture.Graphic);
+      png.SaveToFile(AFile);
+    finally
+      png.Free;
+    end
   { ********************** NOT CONVERTED ***
   else
   if Ext = '.WMF' then
@@ -783,61 +795,43 @@ end;
 procedure TJvThumbImage.Transform(TransformProc: TJvTransformProc;
   ARedData: Pointer = nil; AGreenData: Pointer = nil; ABlueData: Pointer = nil);
 var
-  Bmp: TBitmap;
+  IntfImg: TLazIntfImage;
+  ImgHandle, ImgMaskHandle: HBitmap;
+begin
+  if Assigned(Picture.Graphic) and CanModify then begin
+    IntfImg := TPortableNetworkGraphic(Picture.Graphic).CreateIntfImage;
+    try
+      TransformProc(IntfImg, ARedData, AGreenData, ABlueData);
+      IntfImg.CreateBitmaps(ImgHandle, ImgMaskHandle);
+      Picture.Bitmap.LoadFromIntfImage(IntfImg);
+      FModified := true;
+    finally
+      IntfImg.Free;
+    end;
+  end;
+end;
+
+{ General bitmap transformation method using LazIntfImages. The operation is
+  specified by the procedure pointer TransformProc. }
+procedure TJvThumbImage.Transform(TransformProc: TJvTransformProc2;
+  ARedData: Pointer = nil; AGreenData: Pointer = nil; ABlueData: Pointer = nil);
+var
   SrcIntfImg, DestIntfImg: TLazIntfImage;
   DestImgHandle, DestImgMaskHandle: HBitmap;
-  w, h: Integer;
 begin
-  if Assigned(Picture.Graphic) then
-    if CanModify then
-    begin
-      w := Picture.Width;
-      h := Picture.Height;
-      SrcIntfImg := TLazIntfImage.Create(0, 0);
-      DestIntfImg := TLazIntfImage.Create(0, 0);
-      if Picture.Graphic is TPortableNetworkGraphic then
-      begin
-        SrcIntfImg := TPortableNetworkGraphic(Picture.Graphic).CreateIntfImage;
-        DestIntfImg := TPortableNetworkGraphic(Picture.Graphic).CreateIntfImage;
-        TransformProc(SrcIntfImg, DestIntfImg, ARedData, AGreenData, ABlueData);
-        DestIntfImg.CreateBitmaps(DestImgHandle, DestImgMaskHandle);
-        bmp := TBitmap.Create;
-        bmp.SetSize(DestIntfImg.Width, DestIntfImg.Height);
-        bmp.Canvas.Brush.Color := clWhite;
-        bmp.Canvas.FillRect(0, 0, 1, 1);
-        bmp.Handle := DestImgHandle;
-        bmp.MaskHandle := DestImgMaskHandle;
-        Picture.Graphic.Clear;
-        TPortableNetworkGraphic(Picture.Graphic).Assign(bmp);
-        Invalidate;
-        bmp.Free;
-        DestIntfImg.Free;
-        SrcIntfImg.Free;
-      end else
-      begin
-        Bmp := TBitmap.Create;
-        Bmp.PixelFormat := pf32bit;
-        Bmp.SetSize(w, h);
-        Bmp.Canvas.Brush.Color := clWhite;
-        Bmp.Canvas.FillRect(0, 0, w, h);
-        Bmp.Assign(Picture.Graphic);
-        SrcIntfImg.LoadFromBitmap(Bmp.Handle, Bmp.MaskHandle);
-        DestIntfImg.LoadFromBitmap(Bmp.Handle, Bmp.MaskHandle);
-        TransformProc(SrcIntfImg, DestIntfImg, ARedData, AGreenData, ABlueData);
-        DestIntfImg.CreateBitmaps(DestImgHandle, DestImgMaskHandle);
-        Bmp.Handle := DestImgHandle;
-        Bmp.MaskHandle := DestImgMaskHandle;
-        Picture.Graphic.Clear;
-        if Picture.Graphic is TJpegImage then
-          TJpegImage(Picture.Graphic).Assign(Bmp)
-        else if Picture.Graphic is Graphics.TBitmap then
-          Picture.Bitmap.Assign(Bmp);
-        Invalidate;
-        Bmp.Free;
-        SrcIntfImg.Free;
-        DestIntfImg.Free;
-      end;
+  if Assigned(Picture.Graphic) and CanModify then begin
+    SrcIntfImg := TPortableNetworkGraphic(Picture.Graphic).CreateIntfImage;
+    DestIntfImg := TPortableNetworkGraphic(Picture.Graphic).CreateIntfImage;
+    try
+      TransformProc(SrcIntfImg, DestIntfImg, ARedData, AGreenData, ABlueData);
+      DestIntfImg.CreateBitmaps(DestImgHandle, DestImgMaskHandle);
+      Picture.Bitmap.LoadFromIntfImage(DestIntfImg);
+      FModified := true;
+    finally
+      DestIntfImg.Free;
+      SrcIntfImg.Free;
     end;
+  end;
 end;
 
 { Procedure to actually decide what should be the rotation in conjuction with the

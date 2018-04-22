@@ -31,14 +31,14 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
       Cursor = crVSplit
       Left = 0
       Height = 3
-      Top = 124
+      Top = 149
       Width = 238
       Align = alTop
       ResizeAnchor = akTop
     end
     object ShellTreeView: TShellTreeView
       Left = 4
-      Height = 120
+      Height = 145
       Top = 4
       Width = 230
       Align = alTop
@@ -60,8 +60,8 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
     end
     object ShellListView: TShellListView
       Left = 4
-      Height = 216
-      Top = 150
+      Height = 191
+      Top = 175
       Width = 230
       Align = alClient
       BorderSpacing.Left = 4
@@ -244,15 +244,14 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
         AnchorSideLeft.Control = Panel8
         AnchorSideTop.Control = ContrastBar
         AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Control = Panel8
-        AnchorSideRight.Side = asrBottom
+        AnchorSideRight.Control = CenterBevel
         Left = 4
         Height = 25
         Top = 205
-        Width = 225
+        Width = 107
+        Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 4
         BorderSpacing.Top = 2
-        BorderSpacing.Right = 4
         BorderSpacing.Bottom = 4
         Caption = 'APPLY'
         OnClick = BtnApplyClick
@@ -288,11 +287,27 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
         Width = 16
         Shape = bsSpacer
       end
+      object BtnSave: TButton
+        AnchorSideLeft.Control = CenterBevel
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = BtnApply
+        AnchorSideRight.Control = Panel8
+        AnchorSideRight.Side = asrBottom
+        Left = 127
+        Height = 25
+        Top = 205
+        Width = 107
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Right = 4
+        Caption = 'SAVE'
+        OnClick = BtnSaveClick
+        TabOrder = 6
+      end
     end
     object Panel10: TPanel
       Left = 4
       Height = 23
-      Top = 127
+      Top = 152
       Width = 230
       Align = alTop
       AutoSize = True
@@ -346,17 +361,16 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
         AnchorSideLeft.Control = Panel1
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Panel5
-        AnchorSideRight.Control = GbAngle
         AnchorSideRight.Side = asrBottom
         Left = 431
-        Height = 82
+        Height = 117
         Top = 0
         Width = 131
         Anchors = [akTop, akLeft, akRight]
         AutoSize = True
         BorderSpacing.Left = 8
         Caption = 'THUMBIMAGE'
-        ClientHeight = 62
+        ClientHeight = 97
         ClientWidth = 127
         TabOrder = 0
         object BtnInvert: TButton
@@ -394,44 +408,33 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
           OnClick = BtnGrayScaleClick
           TabOrder = 1
         end
-      end
-      object GbAngle: TRadioGroup
-        AnchorSideLeft.Control = Panel1
-        AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = GbThumbImage
-        AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = Panel1
-        AnchorSideBottom.Side = asrBottom
-        Left = 431
-        Height = 81
-        Top = 94
-        Width = 131
-        Anchors = [akTop, akLeft, akBottom]
-        AutoFill = True
-        AutoSize = True
-        BorderSpacing.Left = 8
-        BorderSpacing.Top = 12
-        BorderSpacing.Right = 8
-        Caption = ' ThumbImage Angle '
-        ChildSizing.LeftRightSpacing = 16
-        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-        ChildSizing.EnlargeVertical = crsHomogenousChildResize
-        ChildSizing.ShrinkHorizontal = crsScaleChilds
-        ChildSizing.ShrinkVertical = crsScaleChilds
-        ChildSizing.Layout = cclLeftToRightThenTopToBottom
-        ChildSizing.ControlsPerLine = 2
-        ClientHeight = 61
-        ClientWidth = 127
-        Columns = 2
-        Items.Strings = (
-          '0'
-          '90'
-          '180'
-          '270'
-        )
-        OnClick = GbAngleClick
-        TabOrder = 1
+        object CbTransform: TComboBox
+          AnchorSideLeft.Control = BtnInvert
+          AnchorSideTop.Control = BtnGrayScale
+          AnchorSideTop.Side = asrBottom
+          AnchorSideRight.Control = BtnInvert
+          AnchorSideRight.Side = asrBottom
+          Left = 8
+          Height = 23
+          Top = 62
+          Width = 111
+          Anchors = [akTop, akLeft, akRight]
+          BorderSpacing.Bottom = 12
+          ItemHeight = 15
+          ItemIndex = 0
+          Items.Strings = (
+            'Rotate by 0°'
+            'Rotate by 90°'
+            'Rotate by 180°'
+            'Rotate by 270°'
+            'Mirror horizontally'
+            'Mirror vertically'
+          )
+          OnChange = CbTransformChange
+          Style = csDropDownList
+          TabOrder = 2
+          Text = 'Rotate by 0°'
+        end
       end
       object ThumbNail: TJvThumbnail
         AnchorSideLeft.Control = Panel5
@@ -448,7 +451,7 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
         ClientHeight = 175
         ClientWidth = 152
         Constraints.MinWidth = 152
-        TabOrder = 2
+        TabOrder = 1
         OnClick = ThumbNailClick
         ShadowColor = clSilver
         TitleColor = clBtnFace
@@ -468,7 +471,7 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
         BevelOuter = bvLowered
         ClientHeight = 175
         ClientWidth = 261
-        TabOrder = 3
+        TabOrder = 2
         object CbAsButton: TCheckBox
           AnchorSideLeft.Control = Panel1
           AnchorSideTop.Control = Panel1
@@ -597,23 +600,36 @@ object JvThumbnailChildForm: TJvThumbnailChildForm
           Height = 15
           Hint = 'You can set the thumbnails title to what ever you want it to be '
           Top = 123
-          Width = 89
+          Width = 84
           BorderSpacing.Top = 9
           BorderSpacing.Bottom = 4
-          Caption = 'Thumbnails Title'
+          Caption = 'Thumbnail Title'
           ParentColor = False
         end
         object SpinEdit1: TSpinEdit
+          AnchorSideLeft.Control = LblMargin
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = BtnExit
+          AnchorSideTop.Side = asrCenter
+          Left = 60
+          Height = 23
+          Top = 90
+          Width = 60
+          BorderSpacing.Left = 12
+          OnChange = SpinEdit1Change
+          TabOrder = 6
+        end
+        object LblMargin: TLabel
           AnchorSideLeft.Control = Panel1
           AnchorSideTop.Control = BtnExit
           AnchorSideTop.Side = asrCenter
           Left = 10
-          Height = 23
-          Top = 90
-          Width = 86
+          Height = 15
+          Top = 94
+          Width = 38
           BorderSpacing.Left = 8
-          OnChange = SpinEdit1Change
-          TabOrder = 6
+          Caption = 'Margin'
+          ParentColor = False
         end
       end
     end

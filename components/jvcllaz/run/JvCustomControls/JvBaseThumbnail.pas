@@ -137,6 +137,8 @@ type
   private
     FIgnoreMouse: Boolean;
   protected
+    procedure Click; override;
+    procedure DblClick; override;
     { wp removed
     function HitTest(X, Y: Integer): Boolean; override; }
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -144,8 +146,6 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X, Y: Integer); override;
-    procedure Click; override;
-    procedure DblClick; override;
   public
     constructor Create(AOwner: TComponent); override;
   published

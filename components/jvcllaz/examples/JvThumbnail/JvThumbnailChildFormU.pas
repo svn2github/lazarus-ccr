@@ -40,7 +40,10 @@ type
   { TJvThumbnailChildForm }
 
   TJvThumbnailChildForm = class(TForm)
+    BtnSave: TButton;
     CenterBevel: TBevel;
+    CbTransform: TComboBox;
+    LblMargin: TLabel;
     Panel1: TPanel;
     Panel2: TPanel;
     SpinEdit1: TSpinEdit;
@@ -75,18 +78,18 @@ type
     LblLightness: TLabel;
     LightnessBar: TTrackBar;
     BtnExit: TButton;
-    GbAngle: TRadioGroup;
     ThumbNail: TJVThumbNail;
     ThumbImage: TJvThumbImage;
     procedure BtnApplyClick(Sender: TObject);
     procedure BtnInvertClick(Sender: TObject);
     procedure BtnGrayScaleClick(Sender: TObject);
+    procedure BtnSaveClick(Sender: TObject);
     procedure CbAsButtonClick(Sender: TObject);
     procedure CbAutoLoadClick(Sender: TObject);
     procedure CbMinimizeMemClick(Sender: TObject);
+    procedure CbTransformChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure GbAngleClick(Sender: TObject);
     procedure GbTitlePlacementClick(Sender: TObject);
     procedure Panel10Resize(Sender: TObject);
     procedure Panel2Resize(Sender: TObject);
@@ -130,6 +133,7 @@ begin
   BlueBar.Position := 0;
   ContrastBar.Position := 0;
   LightnessBar.Position := 0;
+  BtnSave.Enabled := true;
 end;
 
 procedure TJvThumbnailChildForm.LoadFile(const AFileName: String);
@@ -241,6 +245,25 @@ begin
   ThumbNail.MinimizeMemory := CbMinimizeMem.Checked;
 end;
 
+procedure TJvThumbnailChildForm.CbTransformChange(Sender: TObject);
+var
+  w, h: Integer;
+begin
+  w := ThumbImage.Picture.Width;
+  h := ThumbImage.Picture.Height;
+  case CbTransform.ItemIndex of
+    0: ThumbImage.Angle := AT0;
+    1: ThumbImage.Angle := AT90;
+    2: ThumbImage.Angle := AT180;
+    3: ThumbImage.Angle := AT270;
+    4: ThumbImage.Mirror(mtHorizontal);
+    5: ThumbImage.Mirror(mtVertical);
+  end;
+  if (w <> ThumbImage.Picture.Width) or (h <> ThumbImage.Picture.Height) then
+    with ThumbImage do SetBounds(0, 0, Picture.Width, Picture.Height);
+  BtnSave.Enabled := true;
+end;
+
 procedure TJvThumbnailChildForm.FormCreate(Sender: TObject);
 begin
   {$IFDEF WINDOWS}
@@ -249,6 +272,7 @@ begin
   {$ENDIF}
   FilterCombobox.ItemIndex := 0;
   ShellListView.Mask := FilterCombobox.Mask;
+  BtnSave.Enabled := false;
 end;
 
 procedure TJvThumbnailChildForm.GbTitlePlacementClick(Sender: TObject);
@@ -264,11 +288,23 @@ end;
 procedure TJvThumbnailChildForm.BtnInvertClick(Sender: TObject);
 begin
   ThumbImage.Invert;
+  BtnSave.Enabled := true;
 end;
 
 procedure TJvThumbnailChildForm.BtnGrayScaleClick(Sender: TObject);
 begin
   ThumbImage.GrayScale;
+  BtnSave.Enabled := true;
+end;
+
+procedure TJvThumbnailChildForm.BtnSaveClick(Sender: TObject);
+var
+  fn: String;
+begin
+  if ThumbImage.Modified then begin
+    fn := ChangeFileExt(ThumbImage.FileName, '') + '_modified' + ExtractFileExt(ThumbImage.FileName);
+    ThumbImage.SaveToFile(fn);
+  end;
 end;
 
 procedure TJvThumbnailChildForm.ThumbNailClick(Sender: TObject);
@@ -299,21 +335,9 @@ end;
 
 procedure TJvThumbnailChildForm.FormShow(Sender: TObject);
 begin
-  //ThumbImage.Picture.Free;
   GbTitlePlacement.ItemIndex := integer(ThumbNail.titlePlacement);
-  GbAngle.ItemIndex := integer(ThumbImage.angle);
+  CbTransform.ItemIndex := 0;
   SpinEdit1.Value := Thumbnail.Margin;
-end;
-
-procedure TJvThumbnailChildForm.GbAngleClick(Sender: TObject);
-var
-  w, h: Integer;
-begin
-  w := ThumbImage.Picture.Width;
-  h := ThumbImage.Picture.Height;
-  ThumbImage.Angle := TAngle(GbAngle.ItemIndex);
-  if (w <> ThumbImage.Picture.Width) or (h <> ThumbImage.Picture.Height) then
-    with ThumbImage do SetBounds(0, 0, Picture.Width, Picture.Height);
 end;
 
 function TJvThumbnailChildForm.GetfileName: String;
