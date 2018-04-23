@@ -33,7 +33,7 @@ interface
 uses
   SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, StdCtrls, Menus, ExtCtrls, ActnList,
-  JvExControls, JvOutlookBar;
+  JvOutlookBar;
 
 type
 
@@ -44,8 +44,8 @@ type
     chkThemed: TCheckBox;
     popOL: TPopupMenu;
     Splitter1: TSplitter;
-    ImageList1: TImageList;
-    ImageList2: TImageList;
+    LargeImages: TImageList;
+    SmallImages: TImageList;
     Defaultpopupmenu1: TMenuItem;
     popButton: TPopupMenu;
     popPage: TPopupMenu;
@@ -96,12 +96,12 @@ implementation
 {$R *.lfm}
 
 uses
-  Themes;
+  Themes, LCLVersion;
 
 procedure TOLBarMainForm.Button1Click(Sender: TObject);
 begin
-  JvOutlookBar1.LargeImages := ImageList1;
-  JvOutlookBar1.SmallImages := ImageList2;
+  JvOutlookBar1.LargeImages := LargeImages;
+  JvOutlookBar1.SmallImages := SmallImages;
 end;
 
 procedure TOLBarMainForm.Button2Click(Sender: TObject);
@@ -213,6 +213,10 @@ end;
 
 procedure TOLBarMainForm.FormCreate(Sender: TObject);
 begin
+ {$IF LCL_FullVersion >= 1090000}
+  LargeImages.Scaled := true;
+  SmallImages.Scaled := true;
+ {$ENDIF}
   Memo1.Wordwrap := True;
   chkThemed.Visible := ThemeServices.ThemesEnabled;
 end;
