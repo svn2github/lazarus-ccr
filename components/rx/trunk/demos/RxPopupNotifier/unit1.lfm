@@ -3,61 +3,136 @@ object Form1: TForm1
   Height = 381
   Top = 449
   Width = 577
-  Caption = 'Form1'
+  Caption = 'RxPopupNotifier demo'
   ClientHeight = 381
   ClientWidth = 577
   LCLVersion = '1.9.0.0'
   object Button4: TButton
-    Left = 224
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Button1
+    AnchorSideTop.Side = asrBottom
+    Left = 232
     Height = 36
     Top = 48
     Width = 113
     AutoSize = True
+    BorderSpacing.Top = 6
     Caption = 'Static message'
     OnClick = Button4Click
     TabOrder = 0
   end
   object Button5: TButton
-    Left = 216
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Button4
+    AnchorSideTop.Side = asrBottom
+    Left = 225
     Height = 36
-    Top = 96
+    Top = 90
     Width = 127
     AutoSize = True
+    BorderSpacing.Top = 6
     Caption = 'Dinamic message'
     OnClick = Button5Click
     TabOrder = 1
   end
   object Button6: TButton
-    Left = 176
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = ColorBox1
+    AnchorSideTop.Side = asrBottom
+    Left = 191
     Height = 36
-    Top = 152
+    Top = 158
     Width = 195
     AutoSize = True
+    BorderSpacing.Top = 6
     Caption = 'Message without auto close'
     OnClick = Button6Click
     TabOrder = 2
   end
   object Label1: TLabel
-    Left = 384
+    AnchorSideTop.Control = Button4
+    AnchorSideTop.Side = asrBottom
+    Left = 416
     Height = 20
-    Top = 112
-    Width = 34
-    Caption = 'Color'
+    Top = 90
+    Width = 147
+    BorderSpacing.Around = 6
+    Caption = 'Dinamic message color'
     ParentColor = False
   end
   object ColorBox1: TColorBox
-    Left = 424
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 422
     Height = 36
-    Top = 96
-    Width = 100
+    Top = 116
+    Width = 149
     Selected = clYellow
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Around = 6
     ItemHeight = 0
     TabOrder = 3
   end
+  object RadioGroup1: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 6
+    Height = 117
+    Top = 6
+    Width = 140
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'Message positon'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 96
+    ClientWidth = 138
+    ItemIndex = 3
+    Items.Strings = (
+      'rpcTopLeft'
+      'rpcTopRight'
+      'rpcBootomLeft'
+      'rpcBottomRight'
+    )
+    OnClick = RadioGroup1Click
+    TabOrder = 4
+  end
+  object Button1: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    Left = 228
+    Height = 36
+    Top = 6
+    Width = 121
+    AutoSize = True
+    BorderSpacing.Top = 6
+    Caption = 'Design message'
+    OnClick = Button1Click
+    TabOrder = 5
+  end
   object RxPopupNotifier1: TRxPopupNotifier
-    Items = <>
+    Items = <    
+      item
+        Active = False
+        Color = clAqua
+        Caption = 'Design message'
+        Message = 'Design time message'
+      end>
     OnNotifiClick = RxPopupNotifier1NotifiClick
-    Left = 56
-    Top = 38
+    Left = 176
+    Top = 16
   end
 end

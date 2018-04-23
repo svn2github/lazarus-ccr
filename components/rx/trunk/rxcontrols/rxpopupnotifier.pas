@@ -42,6 +42,8 @@ type
   TRxPopupNotifierItem = class;
   TRxPopupNotifier = class;
   TRxPopupNotifierState = (rpsInactive, rpsMaximazed, rpsShowing, rpsMinimized);
+  TRxPopupNotifierCorner = (rpcTopLeft, rpcTopRight, rpcBootomLeft, rpcBottomRight);
+
   TRxPopupNotifierEvent = procedure(Sender:TRxPopupNotifier; AItem:TRxPopupNotifierItem) of object;
 
   { TRxNotifierForm }
@@ -102,10 +104,13 @@ type
   { TNotifierCollection }
 
   TNotifierCollection = class(TOwnedCollection)
+  private
+    function GetItems(AIndex: Integer): TRxPopupNotifierItem;
   protected
     procedure Update(Item: TCollectionItem); override;
   public
     constructor Create(AOwner: TPersistent);
+    property Items[AIndex:Integer]:TRxPopupNotifierItem read GetItems; default;
   end;
 
   { TRxPopupNotifier }
@@ -118,6 +123,7 @@ type
     FDefNotifierFormHeight: Cardinal;
     FDefNotifierFormWidth: Cardinal;
     FItems: TNotifierCollection;
+    FMessageCorner: TRxPopupNotifierCorner;
     FOnNotifiClick: TRxPopupNotifierEvent;
     FTimer:TTimer;
     procedure SetActive(AValue: boolean);
@@ -137,6 +143,7 @@ type
   published
     property Active:boolean read FActive write SetActive default True;
     property Items:TNotifierCollection read FItems write SetItems;
+    property MessageCorner:TRxPopupNotifierCorner read FMessageCorner write FMessageCorner default rpcBottomRight;
     property DefaultColor:TColor read FDefaultColor write FDefaultColor default clYellow;
     property DefNotifierFormWidth:Cardinal read FDefNotifierFormWidth write FDefNotifierFormWidth default 0;
     property DefNotifierFormHeight:Cardinal read FDefNotifierFormHeight write FDefNotifierFormHeight default 0;
@@ -214,6 +221,11 @@ begin
 end;
 
 { TNotifierCollection }
+
+function TNotifierCollection.GetItems(AIndex: Integer): TRxPopupNotifierItem;
+begin
+  Result:=TRxPopupNotifierItem(GetItem(AIndex));
+end;
 
 procedure TNotifierCollection.Update(Item: TCollectionItem);
 var
@@ -301,8 +313,33 @@ begin
   FNotifyForm:=TRxNotifierForm.CreateNotifierForm(Self);
   FNotifyForm.Width:=TRxPopupNotifier(Collection.Owner).NotifierFormWidth;
   FNotifyForm.Height:=1;
-  FNotifyForm.Left:=Screen.Width - FNotifyForm.Width - 2;
-  FNotifyForm.Top:=Screen.Height - FNotifyForm.Height - 2;
+
+  case TRxPopupNotifier(Collection.Owner).FMessageCorner of
+    rpcTopLeft:
+      begin
+        //TODO : доделать
+        FNotifyForm.Left := 2;
+        FNotifyForm.Top := 2;
+      end;
+    rpcTopRight:
+      begin
+        //TODO : доделать
+        FNotifyForm.Left := Screen.Width - FNotifyForm.Width - 2;
+        FNotifyForm.Top := 2;
+      end;
+    rpcBootomLeft:
+      begin
+        //TODO : доделать
+        FNotifyForm.Left := 2;
+        FNotifyForm.Top := Screen.Height - FNotifyForm.Height - 2;
+      end;
+    rpcBottomRight:
+      begin
+        FNotifyForm.Left:=Screen.Width - FNotifyForm.Width - 2;
+        FNotifyForm.Top:=Screen.Height - FNotifyForm.Height - 2;
+      end;
+  end;
+
   FNotifyForm.BorderStyle:=bsNone;
   FNotifyForm.FormStyle:=fsStayOnTop;
   FNotifyForm.ShowInTaskBar:=stNever;
@@ -329,7 +366,12 @@ begin
       if (TRxPopupNotifier(Collection.Owner).NotifierFormHeight > FNotifyForm.Height) then
       begin
         FNotifyForm.Height:=FNotifyForm.Height + 1;
-        FNotifyForm.Top:=ATop - FNotifyForm.Height;
+        case TRxPopupNotifier(Collection.Owner).FMessageCorner of
+          //rpcTopLeft:;
+          //rpcTopRight:;
+          rpcBootomLeft:FNotifyForm.Top:=ATop - FNotifyForm.Height;
+          rpcBottomRight:FNotifyForm.Top:=ATop - FNotifyForm.Height;
+        end;
       end
       else
       begin
@@ -343,13 +385,21 @@ begin
       if (FNotifyForm.Height > 1) then
       begin
         FNotifyForm.Height:=FNotifyForm.Height - 1;
-        FNotifyForm.Top:=ATop - FNotifyForm.Height;
+        case TRxPopupNotifier(Collection.Owner).FMessageCorner of
+          //rpcTopLeft:;
+          //rpcTopRight:;
+          rpcBootomLeft:FNotifyForm.Top:=ATop - FNotifyForm.Height;
+          rpcBottomRight:FNotifyForm.Top:=ATop - FNotifyForm.Height;
+        end;
       end
       else
         FState:=rpsInactive;
     end;
-    ATop:=ATop - FNotifyForm.Height;
-    ATop:=ATop - 2;
+
+    if TRxPopupNotifier(Collection.Owner).FMessageCorner in [rpcTopLeft, rpcTopRight] then
+      ATop:=ATop + FNotifyForm.Height + 2
+    else
+      ATop:=ATop - FNotifyForm.Height - 2;
   end;
 end;
 
@@ -357,8 +407,20 @@ procedure TRxPopupNotifierItem.UpdateFormPosition(var ATop: integer);
 begin
   if Assigned(FNotifyForm) then
   begin
-    FNotifyForm.Top:=ATop - FNotifyForm.Height;
-    ATop:=ATop - FNotifyForm.Height - 2;
+    case TRxPopupNotifier(Collection.Owner).FMessageCorner of
+      rpcTopLeft,
+      rpcTopRight:
+        begin
+          FNotifyForm.Top:=ATop;
+          ATop:=ATop + FNotifyForm.Height + 2;
+        end;
+      rpcBootomLeft,
+      rpcBottomRight:
+        begin
+          FNotifyForm.Top:=ATop - FNotifyForm.Height;
+          ATop:=ATop - FNotifyForm.Height - 2;
+        end;
+    end;
   end;
 end;
 
@@ -398,7 +460,11 @@ var
   Y, i: Integer;
   FReposition: Boolean;
 begin
-  Y:=Screen.Height - 2;
+  if FMessageCorner in [rpcTopLeft, rpcTopRight] then
+    Y:=2
+  else
+    Y:=Screen.Height - 2;
+
   FReposition:=false;
   for i:=FItems.Count - 1 downto 0 do
   begin
@@ -417,7 +483,18 @@ begin
       if FReposition then
         F.UpdateFormPosition(Y)
       else
-        Y:=Y - F.FNotifyForm.Height - 2;
+      begin
+        if FMessageCorner in [rpcTopLeft, rpcTopRight] then
+          Y:=Y + F.FNotifyForm.Height + 2
+        else
+          Y:=Y - F.FNotifyForm.Height - 2;
+      end;
+
+      if Y<0 then
+        Y:=2
+      else
+      if Y>Screen.Height then
+        Y:=Screen.Height - 2;
     end;
   end;
 end;
@@ -480,6 +557,7 @@ begin
   inherited Create(AOwner);
   FDefaultColor:=clYellow;
   FCloseInterval:=5;
+  FMessageCorner:=rpcBottomRight;
   FActive:=true;
   FItems:=TNotifierCollection.Create(Self);
   FTimer:=TTimer.Create(Self);

@@ -12,6 +12,7 @@ uses
 {$R *.res}
 
 begin
+  Application.Title:='RxPopupNotifier demo';
   RequireDerivedFormResource:=True;
   Application.Scaled:=True;
   Application.Initialize;

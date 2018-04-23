@@ -13,15 +13,19 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    Button1: TButton;
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
     ColorBox1: TColorBox;
     Label1: TLabel;
+    RadioGroup1: TRadioGroup;
     RxPopupNotifier1: TRxPopupNotifier;
+    procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure RadioGroup1Click(Sender: TObject);
     procedure RxPopupNotifier1NotifiClick(Sender: TRxPopupNotifier;
       AItem: TRxPopupNotifierItem);
   private
@@ -49,6 +53,18 @@ begin
     FR:=RxPopupNotifier1.AddNotifyItem('Information', 'Static text information');
 end;
 
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  R: TRxPopupNotifierItem;
+begin
+  if RxPopupNotifier1.Items.Count>0 then
+  begin
+    R:=RxPopupNotifier1.Items[0];
+    R.Active:=true;
+
+  end;
+end;
+
 procedure TForm1.Button5Click(Sender: TObject);
 var
   R1: TRxPopupNotifierItem;
@@ -68,6 +84,11 @@ begin
     FRClose:=RxPopupNotifier1.AddNotifyItem('Information', 'Static text information without close');
     FRClose.ShowCloseTimer:=false;
   end
+end;
+
+procedure TForm1.RadioGroup1Click(Sender: TObject);
+begin
+  RxPopupNotifier1.MessageCorner:=TRxPopupNotifierCorner(RadioGroup1.ItemIndex);
 end;
 
 procedure TForm1.RxPopupNotifier1NotifiClick(Sender: TRxPopupNotifier;
