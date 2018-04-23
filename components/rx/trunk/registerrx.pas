@@ -175,6 +175,8 @@ begin
   RegisterComponents(RxCtrllPageName,[TRxRangeSelector]);
 end;
 
+
+
 procedure Register;
 begin
   //RX
@@ -204,7 +206,6 @@ begin
   RegisterUnit('RxMDI', @RegisterRxMDI);
   RegisterUnit('rxDateRangeEditUnit', @RegisterrxDateRangeEditUnit);
   RegisterUnit('RxRangeSel', @RegisterRxRangeSelUnit);
-
 end;
 
 //initialization

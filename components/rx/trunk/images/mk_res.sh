@@ -9,7 +9,7 @@ rm rx.res
   TRxDBColorBox.png TRxDBColorBox_150.png TRxDBColorBox_200.png \
   TRxDBCurrEdit.png TRxDBCurrEdit_150.png TRxDBCurrEdit_200.png \
   TRxMemoryData.png TRxMemoryData_150.png TRxMemoryData_200.png \
-  TRxDBVerticalGrid.png TRxDBVerticalGrid_150.svg TRxDBVerticalGrid_200.png \
+  TRxDBVerticalGrid.png TRxDBVerticalGrid_150.png TRxDBVerticalGrid_200.png \
   TRxDBTrackBar.png TRxDBTrackBar_150.png TRxDBTrackBar_200.png \
   TRxDBTimeEdit.png TRxDBTimeEdit_150.png TRxDBTimeEdit_200.png \
   TRxDBSpinEdit.png TRxDBSpinEdit_150.png TRxDBSpinEdit_200.png \
