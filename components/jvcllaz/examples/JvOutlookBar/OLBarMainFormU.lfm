@@ -1,12 +1,12 @@
 object OLBarMainForm: TOLBarMainForm
   Left = 299
-  Height = 388
+  Height = 366
   Top = 199
-  Width = 697
+  Width = 771
   ActiveControl = Memo1
   Caption = 'JvOutlookBar Demo'
-  ClientHeight = 388
-  ClientWidth = 697
+  ClientHeight = 366
+  ClientWidth = 771
   Color = clBtnFace
   Constraints.MinHeight = 300
   Constraints.MinWidth = 220
@@ -19,7 +19,7 @@ object OLBarMainForm: TOLBarMainForm
   Scaled = False
   object Splitter1: TSplitter
     Left = 135
-    Height = 365
+    Height = 343
     Top = 0
     Width = 5
     AutoSnap = False
@@ -27,13 +27,13 @@ object OLBarMainForm: TOLBarMainForm
   object StatusBar: TStatusBar
     Left = 0
     Height = 23
-    Top = 365
-    Width = 697
+    Top = 343
+    Width = 771
     Panels = <>
   end
   object JvOutlookBar1: TJvOutlookBar
     Left = 0
-    Height = 365
+    Height = 343
     Hint = 'Right-click the bar to see the options'
     Top = 0
     Width = 135
@@ -45,45 +45,45 @@ object OLBarMainForm: TOLBarMainForm
             Caption = 'Today'
             ImageIndex = 0
             Tag = 0
-            AutoToggle = False
+            Down = True
+            AutoToggle = True
           end        
           item
             Caption = 'Inbox'
             ImageIndex = 1
             Tag = 0
-            AutoToggle = False
+            AutoToggle = True
           end        
           item
             Caption = 'Calendar'
             ImageIndex = 2
             Tag = 0
-            AutoToggle = False
+            AutoToggle = True
           end        
           item
             Caption = 'Contacts'
             ImageIndex = 3
             Tag = 0
-            AutoToggle = False
+            AutoToggle = True
           end        
           item
             Caption = 'Tasks'
             ImageIndex = 4
             Tag = 0
-            AutoToggle = False
+            AutoToggle = True
           end        
           item
             Caption = 'Deleted'
             ImageIndex = 5
             Tag = 0
-            AutoToggle = False
+            AutoToggle = True
           end>
         ButtonSize = olbsLarge
         Caption = 'Standard Shortcuts'
         Color = 4210816
-        DownFont.Color = clWindowText
-        DownFont.Height = -12
+        DownFont.Color = clYellow
+        DownFont.Style = [fsBold]
         Font.Color = clWhite
-        Font.Height = -12
         ParentColor = False
         TopButtonIndex = 0
       end    
@@ -116,9 +116,8 @@ object OLBarMainForm: TOLBarMainForm
         ButtonSize = olbsLarge
         Caption = 'My Shortcuts'
         DownFont.Color = clWindowText
-        DownFont.Height = -12
+        DownFont.Style = [fsBold]
         Font.Color = clWhite
-        Font.Height = -12
         ParentColor = False
         TopButtonIndex = 0
       end    
@@ -147,9 +146,8 @@ object OLBarMainForm: TOLBarMainForm
         Caption = 'Other Shortcuts'
         Color = clInactiveCaption
         DownFont.Color = clWindowText
-        DownFont.Height = -12
+        DownFont.Style = [fsBold]
         Font.Color = clWindowText
-        Font.Height = -12
         ParentColor = False
         TopButtonIndex = 0
       end>
@@ -161,7 +159,6 @@ object OLBarMainForm: TOLBarMainForm
     OnPageChanging = JvOutlookBar1PageChanging
     BorderStyle = bsNone
     Font.Color = clWindowText
-    Font.Height = -12
     ParentFont = False
     PopupMenu = popOL
     TabOrder = 1
@@ -169,27 +166,27 @@ object OLBarMainForm: TOLBarMainForm
   end
   object Panel1: TPanel
     Left = 140
-    Height = 365
+    Height = 343
     Top = 0
-    Width = 557
+    Width = 631
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 365
-    ClientWidth = 557
+    ClientHeight = 343
+    ClientWidth = 631
     TabOrder = 2
     object Panel2: TPanel
       AnchorSideTop.Control = Panel1
       AnchorSideTop.Side = asrBottom
       Left = 0
       Height = 56
-      Top = 309
-      Width = 557
+      Top = 287
+      Width = 631
       Align = alBottom
       Anchors = [akLeft, akRight]
       AutoSize = True
       BevelOuter = bvNone
       ClientHeight = 56
-      ClientWidth = 557
+      ClientWidth = 631
       TabOrder = 0
       object Button1: TButton
         AnchorSideLeft.Control = Panel2
@@ -273,10 +270,11 @@ object OLBarMainForm: TOLBarMainForm
       object chkThemed: TCheckBox
         AnchorSideLeft.Control = chkButtonFont
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = chkSmallImages
+        AnchorSideTop.Control = Button1
+        AnchorSideTop.Side = asrCenter
         Left = 329
         Height = 19
-        Top = 33
+        Top = 7
         Width = 64
         BorderSpacing.Left = 24
         Caption = 'Themed'
@@ -287,13 +285,11 @@ object OLBarMainForm: TOLBarMainForm
       end
       object ChkThemedBackground: TCheckBox
         AnchorSideLeft.Control = chkThemed
-        AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = chkSmallImages
-        Left = 417
+        Left = 329
         Height = 19
         Top = 33
         Width = 131
-        BorderSpacing.Left = 24
         Caption = 'Themed background'
         Checked = True
         OnChange = ChkThemedBackgroundChange
@@ -303,9 +299,9 @@ object OLBarMainForm: TOLBarMainForm
     end
     object Memo1: TMemo
       Left = 0
-      Height = 309
+      Height = 287
       Top = 0
-      Width = 557
+      Width = 631
       Align = alClient
       Lines.Strings = (
         'Right-click in the outlookbar to see the popup menus. There is one menu for the outlook bar itself, one for the pages and one for the buttons.'
@@ -316,7 +312,6 @@ object OLBarMainForm: TOLBarMainForm
       )
       ScrollBars = ssBoth
       TabOrder = 1
-      WordWrap = False
     end
   end
   object popOL: TPopupMenu

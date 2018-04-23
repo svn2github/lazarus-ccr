@@ -107,10 +107,10 @@ type
     procedure DoActionChange(Sender: TObject);
     procedure ActionChange(Sender: TObject; CheckDefaults: Boolean); dynamic;
   public
-    procedure Click; dynamic;
     constructor Create(ACollection: Classes.TCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
+    procedure Click; dynamic;
     procedure EditCaption;
 
     // A property for user's usage, allowing to link an object to the button
@@ -260,8 +260,8 @@ type
   TJvCustomOutlookBar = class(TJvCustomControl)
   private
     FPageBtnProps:TJvPageBtnProps;
-    FTopButton: TSpeedButton;
-    FBtmButton: TSpeedButton;
+    FUpButton: TSpeedButton;
+    FDownButton: TSpeedButton;
     FPages: TJvOutlookBarPages;
     FLargeChangeLink: TChangeLink;
     FSmallChangeLink: TChangeLink;
@@ -292,84 +292,95 @@ type
     FDisabledFontColor2: TColor;
     FWordWrap: Boolean;
 
-    procedure SetPages(const Value: TJvOutlookBarPages);
-    procedure DoChangeLinkChange(Sender: TObject);
+    function GetActivePage: TJvOutlookBarPage;
+    function GetActivePageIndex: Integer;
     procedure SetActivePageIndex(const Value: Integer);
     procedure SetButtonSize(const Value: TJvBarButtonSize);
+    procedure SetDisabledFontColor1(const Value: TColor);
+    procedure SetDisabledFontColor2(const Value: TColor);
     procedure SetLargeImages(const Value: TCustomImageList);
-    procedure SetSmallImages(const Value: TCustomImageList);
-    procedure SetPageImages(const Value: TCustomImageList);
     procedure SetPageButtonHeight(const Value: Integer);
+    procedure SetPageImages(const Value: TCustomImageList);
+    procedure SetPages(const Value: TJvOutlookBarPages);
+    procedure SetSmallImages(const Value: TCustomImageList);
+    procedure SetThemed(const Value: Boolean);
+    procedure SetThemedBackground(const Value: Boolean);
+    procedure SetWordWrap(const Value: Boolean);
 
-    function DrawTopPages: Integer;
-    procedure DrawCurrentPage(PageIndex: Integer);
-    procedure DrawPageButton(R: TRect; Index: Integer; Pressed: Boolean);
-    procedure DrawBottomPages(StartIndex: Integer);
-    procedure DrawButtons(Index: Integer);
-    procedure DrawArrowButtons(Index: Integer);
-    procedure DrawButtonFrame(PageIndex, ButtonIndex, PressedIndex: Integer);
-    function DrawPicture(R: TRect; Picture: TPicture): Boolean;
-
-    procedure DoDwnClick(Sender: TObject);
-    procedure DoUpClick(Sender: TObject);
-    procedure RedrawRect(R: TRect; Erase: Boolean = False);
     procedure CMCaptionEditing(var Msg: TLMessage); message CM_CAPTION_EDITING;
     procedure CMCaptionEditAccept(var Msg: TLMessage); message CM_CAPTION_EDIT_ACCEPT;
     procedure CMCaptionEditCancel(var Msg: TLMessage); message CM_CAPTION_EDIT_CANCEL;
     procedure CMDialogChar(var Msg: TCMDialogChar); message CM_DIALOGCHAR;
-    procedure DoButtonEdit(NewText: string; B: TJvOutlookBarButton);
-    procedure DoPageEdit(NewText: string; P: TJvOutlookBarPage);
-    function GetActivePage: TJvOutlookBarPage;
-    function GetActivePageIndex: Integer;
-    procedure SetDisabledFontColor1(const Value: TColor);
-    procedure SetDisabledFontColor2(const Value: TColor);
-    procedure SetThemed(const Value: Boolean);
-    procedure SetThemedBackground(const Value: Boolean);
-    procedure SetWordWrap(const Value: Boolean);
+
   protected
+    function CalcPageButtonHeight: Integer;
+    procedure CalculatePreferredSize(var PreferredWidth,
+      PreferredHeight: integer; WithThemeSpace: Boolean); override;
+    procedure ColorChanged; override;
+    procedure CreateHandle; override;
+    {$IF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    procedure FixDesignFontsPPI(const ADesignTimePPI: Integer); override;
+    {$ENDIF}
+
+    procedure DoButtonClick(Index: Integer); virtual;
+    procedure DoButtonEdit(NewText: string; B: TJvOutlookBarButton);
+    procedure DoChangeLinkChange(Sender: TObject);
+    procedure DoContextPopup( MousePos: TPoint; var Handled: Boolean); override;
+    function DoCustomDraw(ARect: TRect; Stage: TJvOutlookBarCustomDrawStage;
+      Index: Integer; Down, Inside: Boolean): Boolean; virtual;
+    function DoDrawBackGround: Boolean;
+    function DoDrawButton(ARect: TRect; Index: Integer; Down, Inside: Boolean): Boolean;
+    function DoDrawButtonFrame(ARect: TRect; Index: Integer; Down, Inside: Boolean): Boolean;
+    function DoDrawPage(ARect: TRect; Index: Integer): Boolean;
+    function DoDrawPageButton(ARect: TRect; Index: Integer; Down: Boolean): Boolean;
+    procedure DoDwnClick(Sender: TObject);
+    function DoPageChanging(Index: Integer): Boolean; virtual;
+    procedure DoPageChange(Index: Integer); virtual;
+    procedure DoPageEdit(NewText: string; P: TJvOutlookBarPage);
+    procedure DoUpClick(Sender: TObject);
     (*
     {$IF LCL_FullVersion >= 1090000}
     function DoEraseBackground(ACanvas: TCanvas; Param: LPARAM): Boolean; override;
     {$ENDIF}
     *)
-    procedure CreateHandle; override;
+    procedure DrawArrowButtons(Index: Integer);
+    procedure DrawBottomPages(StartIndex: Integer);
+    procedure DrawButtonFrame(PageIndex, ButtonIndex, PressedIndex: Integer);
+    procedure DrawButtons(Index: Integer);
+    procedure DrawCurrentPage(PageIndex: Integer);
+    procedure DrawPageButton(R: TRect; Index: Integer; Pressed: Boolean);
+    function DrawPicture(R: TRect; Picture: TPicture): Boolean;
+    function DrawTopPages: Integer;
+
     procedure FontChanged; override;
-    function GetButtonHeight(PageIndex, ButtonIndex: Integer): Integer;
-    function GetButtonTopHeight(PageIndex, ButtonIndex: Integer): Integer;
+    class function GetControlClassDefaultSize: TSize; override;
     function GetButtonFrameRect(PageIndex, ButtonIndex: Integer): TRect;
-    function GetButtonTextRect(PageIndex, ButtonIndex: Integer): TRect;
+    function GetButtonHeight(PageIndex, ButtonIndex: Integer): Integer;
     function GetButtonRect(PageIndex, ButtonIndex: Integer): TRect;
+    function GetButtonTextRect(PageIndex, ButtonIndex: Integer): TRect;
+    function GetButtonTextSize(PageIndex, ButtonIndex: Integer): TSize;
+    function GetButtonTopHeight(PageIndex, ButtonIndex: Integer): Integer;
     function GetPageButtonRect(Index: Integer): TRect;
     function GetPageTextRect(Index: Integer): TRect;
     function GetPageRect(Index: Integer): TRect;
-    function GetTextSize(PageIndex, ButtonIndex: Integer): TSize;
     function IsThemedStored: Boolean;
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    procedure Paint; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseEnter(Control: TControl); override;
     procedure MouseLeave(Control: TControl); override;
-    procedure ColorChanged; override;
-    function DoPageChanging(Index: Integer): Boolean; virtual;
-    procedure DoPageChange(Index: Integer); virtual;
-    procedure DoButtonClick(Index: Integer); virtual;
-    procedure DoContextPopup( MousePos: TPoint; var Handled: Boolean); override;
-    function DoDrawBackGround: Boolean;
-    function DoDrawPage(ARect: TRect; Index: Integer): Boolean;
-    function DoDrawPageButton(ARect: TRect; Index: Integer; Down: Boolean): Boolean;
-    function DoDrawButton(ARect: TRect; Index: Integer; Down, Inside: Boolean): Boolean;
-    function DoDrawButtonFrame(ARect: TRect; Index: Integer; Down, Inside: Boolean): Boolean;
-    function DoCustomDraw(ARect: TRect; Stage: TJvOutlookBarCustomDrawStage;
-      Index: Integer; Down, Inside: Boolean): Boolean; virtual;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure Paint; override;
+    procedure RedrawRect(R: TRect; Erase: Boolean = False);
     procedure Resize; override;
-  protected
+
     property PopUpObject: TObject read FPopUpObject write FPopUpObject;
-    property Width default 100;
-    property Height default 220;
-    property TopButton: TSpeedButton read FTopButton;
-    property BtmButton: TSpeedButton read FBtmButton;
+//    property Width default 100;
+//    property Height default 220;
+    property UpButton: TSpeedButton read FUpButton;
+    property DownButton: TSpeedButton read FDownButton;
     property BorderStyle default bsSingle;
     property Font;
     property Color default clBtnShadow;
@@ -378,7 +389,7 @@ type
     property SmallImages: TCustomImageList read FSmallImages write SetSmallImages;
     property PageImages: TCustomImageList read FPageImages write SetPageImages;
     property ButtonSize: TJvBarButtonSize read FButtonSize write SetButtonSize default olbsLarge;
-    property PageButtonHeight: Integer read FPageButtonHeight write SetPageButtonHeight default 19;
+    property PageButtonHeight: Integer read FPageButtonHeight write SetPageButtonHeight default 0; //DEFAULT_PAGEBUTTONHEIGHT;
     property ActivePageIndex: Integer read GetActivePageIndex write SetActivePageIndex default 0;
     property Themed: Boolean read FThemed write SetThemed stored IsThemedStored;
     property ThemedBackground: Boolean read FThemedBackGround write SetThemedBackground default True;
@@ -475,6 +486,9 @@ const
   cInitRepeatPause = 400;
   cRepeatPause = 100;
 
+  UP_DOWN_DEFAULT_SIZE = 14;
+
+  (*
 {$IFDEF MSWINDOWS}
 function JclCheckWinVersion(Major, Minor: Integer): Boolean;
 begin
@@ -489,7 +503,7 @@ begin
   {$ELSE}
   Result := false;
   {$ENDIF}
-end;
+end;   *)
 
 function MethodsEqual(const Method1, Method2: TMethod): Boolean;
 begin
@@ -1048,11 +1062,9 @@ begin
   if (ACollection <> nil) and (TJvOutlookBarPages(ACollection).Owner <> nil) then
   begin
     FButtonSize := TJvCustomOutlookBar(TJvOutlookBarPages(ACollection).Owner).ButtonSize;
-//    FColor := TJvCustomOutlookBar(TJvOutlookBarPages(ACollection).Owner).Color;
     Font := TJvCustomOutlookBar(TJvOutlookBarPages(ACollection).Owner).Font;
     DownFont := Font;
-  end
-  else
+  end else
   begin
     FButtonSize := olbsLarge;
   end;
@@ -1393,8 +1405,6 @@ end;
 //=== { TJvCustomOutlookBar } ================================================
 
 constructor TJvCustomOutlookBar.Create(AOwner: TComponent);
-var
-  Bmp: TBitmap;
 begin
   inherited Create(AOwner);
 
@@ -1406,53 +1416,29 @@ begin
 
   ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
   IncludeThemeStyle(Self, [csNeedsBorderPaint]);
-  Bmp := TBitmap.Create;
   FDisabledFontColor1 := clWhite;
   FDisabledFontColor2 := clGrayText;
 
-  try
-   // {$IFDEF JVCLThemesEnabled}
-    {
-    FTopButton := TJvThemedTopBottomButton.Create(Self);
-    TJvThemedTopBottomButton(FTopButton).FIsUpBtn := True;
-    }
-  //  {$ELSE}
-    FTopButton := TSpeedButton.Create(self); //TJvRepeatButton.Create(Self);
-  //  {$ENDIF JVCLThemesEnabled}
-    with FTopButton do
-    begin
-      Parent := Self;
-      Visible := False;
-      Transparent := False;
-      Bmp.LoadFromResourceName(HInstance, 'JvCustomOutlookBarUPARROW');
-      Glyph := Bmp;
-      OnClick := @DoUpClick;
-      if csDesigning in ComponentState then
-        Top := -1000;
-    end;
+  FUpButton := TSpeedButton.Create(self); //TJvRepeatButton.Create(Self);
+  with FUpButton do
+  begin
+    Parent := Self;
+    Visible := False;
+    Transparent := False;
+    OnClick := @DoUpClick;
+    if csDesigning in ComponentState then
+      Top := -1000;
+  end;
 
-   // {$IFDEF JVCLThemesEnabled}
-    {
-    FBtmButton := TJvThemedTopBottomButton.Create(Self);
-    TJvThemedTopBottomButton(FBtmButton).FIsUpBtn := False;
-    }
-    //{$ELSE}
-    FBtmButton := TSpeedButton.Create(Self); //TJvRepeatButton.Create(Self);
-    //{$ENDIF JVCLThemesEnabled}
-    with FBtmButton do
-    begin
-      Parent := Self;
-      Visible := False;
-      Transparent := False;
-      Bmp.Assign(nil); // fixes GDI resource leak
-      Bmp.LoadFromResourceName(HInstance, 'JvCustomOutlookBarDOWNARROW');
-      Glyph := Bmp;
-      OnClick := @DoDwnClick;
-      if csDesigning in ComponentState then
-        Top := -1000;
-    end;
-  finally
-    Bmp.Free;
+  FDownButton := TSpeedButton.Create(Self); //TJvRepeatButton.Create(Self);
+  with FDownButton do
+  begin
+    Parent := Self;
+    Visible := False;
+    Transparent := False;
+    OnClick := @DoDwnClick;
+    if csDesigning in ComponentState then
+      Top := -1000;
   end;
 
   FPages := TJvOutlookBarPages.Create(Self);
@@ -1464,23 +1450,23 @@ begin
   FPageChangeLink.OnChange := @DoChangeLinkChange;
   FEdit := TJvOutlookBarEdit.CreateInternal(Self, Self, nil);
   FEdit.Top := -1000;
+
   // set up defaults
-  Width := 100;
-  Height := 220;
   Color := clBtnShadow;
   BorderStyle := bsSingle;
-  ButtonSize := olbsLarge;
-  PageButtonHeight := 19;
 
+  FButtonSize := olbsLarge;
+  FPageButtonHeight := 0;
   FPressedPageBtn := -1;
   FNextActivePage := -1;
   FLastButtonIndex := -1;
   FPressedButtonIndex := -1;
-  {$IFDEF JVCLThemesEnabled}
   FHotPageBtn := -1;
   FThemedBackGround := True;
-  {$ENDIF JVCLThemesEnabled}
   ActivePageIndex := 0;
+
+  with GetControlClassDefaultSize do
+    SetInitialBounds(0, 0, CX, CY);
 end;
 
 destructor TJvCustomOutlookBar.Destroy;
@@ -1494,9 +1480,43 @@ begin
   inherited Destroy;
 end;
 
+function TJvCustomOutlookBar.CalcPageButtonHeight: Integer;
+var
+  DC: THandle;
+  OldFont: HFONT;
+begin
+  OldFont := SelectObject(Canvas.Handle, Canvas.Font.Handle);
+  try
+    Canvas.Font.Assign(Font);
+    if Canvas.Font.IsDefault then
+      Canvas.Font := Screen.SystemFont;
+    if FPageButtonHeight = 0 then
+      Result := Canvas.TextHeight('Tg') + Scale96ToForm(4)
+    else
+      Result := FPageButtonHeight;
+  finally
+    SelectObject(Canvas.Handle, OldFont);
+  end;
+end;
+
+procedure TJvCustomOutlookBar.CalculatePreferredSize(var PreferredWidth,
+  PreferredHeight: integer; WithThemeSpace: Boolean);
+begin
+  inherited;
+  PreferredWidth := 100;
+  PreferredHeight := 220;
+  if (FPageButtonHeight = 0) and HandleAllocated then
+    FPageButtonHeight := Canvas.TextHeight('Tg') + 4;
+end;
+
+procedure TJvCustomOutlookBar.CreateHandle;
+begin
+  inherited;
+end;
+
 procedure TJvCustomOutlookBar.DoDwnClick(Sender: TObject);
 begin
-  if FBtmButton.Visible then
+  if FDownButton.Visible then
     with Pages[ActivePageIndex] do
       if TopButtonIndex < Buttons.Count then
         TopButtonIndex := TopButtonIndex + 1;
@@ -1504,7 +1524,7 @@ end;
 
 procedure TJvCustomOutlookBar.DoUpClick(Sender: TObject);
 begin
-  if FTopButton.Visible then
+  if FUpButton.Visible then
     with Pages[ActivePageIndex] do
       if TopButtonIndex > 0 then
         TopButtonIndex := TopButtonIndex - 1;
@@ -1549,8 +1569,8 @@ var
   SavedColor: TColor;
   Flags: Cardinal;
   HasImage: Boolean;
-  Btn: TThemedButton;
   Details: TThemedElementDetails;
+  margin: Integer;
 begin
   Assert(Assigned(FPageBtnProps));
   ATop := R.Top + 1;
@@ -1599,35 +1619,36 @@ begin
   HasImage := Assigned(PageImages) and (Pages[Index].ImageIndex >= 0) and (Pages[Index].ImageIndex < PageImages.Count);
   SavedDC := SaveDC(Canvas.Handle);
   try
+    margin := Scale96ToForm(4);
     case Pages[Index].Alignment of
       taLeftJustify:
         begin
           if HasImage then
           begin
-            PageImages.Draw(Canvas, 4, ATop, Pages[Index].ImageIndex,
+            PageImages.Draw(Canvas, margin, ATop, Pages[Index].ImageIndex,
                Pages[Index].Enabled);
-            Inc(R.Left, PageImages.Width + 8);
+            Inc(R.Left, PageImages.Width + 2*margin);
           end
           else
-            Inc(R.Left, 4);
+            Inc(R.Left, margin);
           Flags := DT_LEFT or DT_VCENTER or DT_SINGLELINE;
         end;
       taCenter:
         if HasImage then
         begin
-          PageImages.Draw(Canvas, 4, ATop, Pages[Index].ImageIndex,
+          PageImages.Draw(Canvas, margin, ATop, Pages[Index].ImageIndex,
              Pages[Index].Enabled);
-          Inc(R.Left, PageImages.Width + 4);
+          Inc(R.Left, PageImages.Width + margin);
         end;
       taRightJustify:
         begin
           if HasImage then
           begin
-            PageImages.Draw(Canvas, 4, ATop, Pages[Index].ImageIndex,
+            PageImages.Draw(Canvas, margin, ATop, Pages[Index].ImageIndex,
               Pages[Index].Enabled);
-            Inc(R.Left, PageImages.Width + 8);
+            Inc(R.Left, PageImages.Width + margin*2);
           end;
-          Dec(R.Right, 4);
+          Dec(R.Right, margin);
           Flags := DT_RIGHT or DT_VCENTER or DT_SINGLELINE;
         end;
     end;
@@ -1670,12 +1691,14 @@ var
   ToolBar: TThemedToolBar;
   Details: TThemedElementDetails;
   ClipRect: TRect;
-  LColor: Cardinal;
+  pgBtnHeight: Integer;
 begin
   Result := -1;
   if csDestroying in ComponentState then
     Exit;
+
   R := GetPageButtonRect(0);
+  pgBtnHeight := R.Bottom - R.Top;
 
   for I := 0 to Pages.Count - 1 do
   begin
@@ -1713,7 +1736,7 @@ begin
       end;
       DrawPageButton(R, I, FPressedPageBtn = I);
     end;
-    OffsetRect(R, 0, PageButtonHeight);
+    OffsetRect(R, 0, pgBtnHeight);
     if I >= ActivePageIndex then
     begin
       Result := I;
@@ -1737,23 +1760,18 @@ begin
   if csDestroying in ComponentState then
     Exit;
   if (Index < 0) or (Index >= Pages.Count) or (Pages[Index].Buttons = nil) or
-    (Pages[Index].Buttons.Count <= 0) then
+    (Pages[Index].Buttons.Count <= 0)
+  then
     Exit;
   R2 := GetPageRect(Index);
   R := GetButtonRect(Index, Pages[Index].TopButtonIndex);
   C := Canvas.Pen.Color;
-  Canvas.Font := Pages[Index].Font;
   try
     Canvas.Brush.Style := bsClear;
     for I := Pages[Index].TopButtonIndex to Pages[Index].Buttons.Count - 1 do
     begin
-      Canvas.Font := Pages[Index].Font;
-//      Canvas.Rectangle(R);  // DEBUG
       if Pages[Index].Buttons[I].Down then
-      begin
-        Canvas.Font := Pages[Index].DownFont;
         DrawButtonFrame(Index, I, I);
-      end;
       if DoDrawButton(R, I, Pages[Index].Buttons[I].Down, I = FLastButtonIndex) then
         case Pages[Index].ButtonSize of
           olbsLarge:
@@ -1785,6 +1803,10 @@ begin
                     Details := StyleServices.GetElementDetails(ttbButtonDisabled);
                   StyleServices.DrawText(Canvas, Details, Pages[Index].Buttons[I].Caption, R3, Flags, 0);
                 end else begin
+                  if Pages[Index].Buttons[I].Down then
+                    Canvas.Font.Assign(Pages[Index].DownFont)
+                  else
+                    Canvas.Font.Assign(Pages[Index].Font);
                   if not Pages[Index].Enabled or not Pages[Index].Buttons[I].Enabled then
                   begin
                     if ColorToRGB(Pages[Index].Color) = ColorToRGB(clGrayText) then
@@ -1798,6 +1820,7 @@ begin
                 Canvas.Font.Color := SavedColor;
               end;
             end;
+
           olbsSmall:
             begin
               SavedColor := Canvas.Font.Color;
@@ -1824,6 +1847,10 @@ begin
                   StyleServices.DrawText(Canvas, Details, Pages[Index].Buttons[I].Caption, R3, Flags, 0);
                 end else
                 begin
+                  if Pages[Index].Buttons[I].Down then
+                    Canvas.Font.Assign(Pages[Index].DownFont)
+                  else
+                    Canvas.Font.Assign(Pages[Index].Font);
                   if not Pages[Index].Enabled or not Pages[Index].Buttons[I].Enabled then
                   begin
                     if ColorToRGB(Pages[Index].Color) = ColorToRGB(clGrayText) then
@@ -1851,36 +1878,77 @@ end;
 procedure TJvCustomOutlookBar.DrawArrowButtons(Index: Integer);
 var
   R: TRect;
+  h, w, margin, delta: Integer;
+  png: TPortableNetworkGraphic;
+  resName: String;
 begin
   if csDestroying in ComponentState then
     Exit;
   if (Index < 0) or (Index >= Pages.Count) or (Pages[Index].Buttons = nil) or
     (Pages[Index].Buttons.Count <= 0) then
   begin
-    TopButton.Visible := False;
-    BtmButton.Visible := False;
+    FUpButton.Visible := False;
+    FDownButton.Visible := False;
   end
   else
   begin
     R := GetPageRect(Index);
-    TopButton.Visible := (Pages.Count > 0) and (R.Top < R.Bottom - 20) and (Pages[Index].TopButtonIndex > 0);
-    BtmButton.Visible := (Pages.Count > 0) and (R.Top < R.Bottom - 20) and
+    h := Scale96ToForm(UP_DOWN_DEFAULT_SIZE-1);
+    w := Scale96ToForm(UP_DOWN_DEFAULT_SIZE);
+    margin := Scale96ToForm(4);
+    delta := h + margin;
+    FUpButton.Visible := (Pages.Count > 0) and
+      (R.Top < R.Bottom - delta) and
+      (Pages[Index].TopButtonIndex > 0);
+    FDownButton.Visible := (Pages.Count > 0) and
+      (R.Top < R.Bottom - delta) and
       (R.Bottom - R.Top < GetButtonTopHeight(Index, Pages[Index].Buttons.Count - 1) + GetButtonHeight(Index, Pages[Index].Buttons.Count - 1));
   // remove the last - ButtonHeight to show arrow
   // button when the bottom of the last button is beneath the edge
   end;
-  if TopButton.Visible then
-    TopButton.SetBounds(ClientWidth - 20, R.Top + 4, 16, 16)
+
+  if UpButton.Visible then begin
+    UpButton.SetBounds(ClientWidth - w - margin, R.Top + margin, w, h);
+    if (UpButton.Glyph.Width = 0) then begin
+      png := TPortableNetworkGraphic.Create;
+      try
+        resName := 'jvcustomoutlookbaruparrow';
+        if Screen.SystemFont.PixelsPerInch > 130 then
+          resName := resName + '_200'
+        else
+        if Screen.SystemFont.PixelsPerInch > 105 then
+          resName := resName + '_150';
+        png.LoadFromResourceName(HInstance, resName);
+        UpButton.Glyph.Assign(png);
+      finally
+        png.Free;
+      end;
+  end
   else
   if csDesigning in ComponentState then
-    TopButton.Top := -1000;
-  if BtmButton.Visible then
-    BtmButton.SetBounds(ClientWidth - 20, R.Bottom - 20, 16, 16)
+    UpButton.Top := -1000;
+
+  end;
+  if DownButton.Visible then begin
+    DownButton.SetBounds(ClientWidth - w - margin, R.Bottom - margin - h, w, h);
+    png := TPortableNetworkGraphic.Create;
+    try
+      resName := 'jvcustomoutlookbardownarrow';
+      if Screen.SystemFont.PixelsPerInch > 130 then
+        resName := resName + '_200'
+      else if Screen.SystemFont.PixelsPerInch > 105 then
+        resName := resName + '_150';
+      png.LoadFromResourceName(HInstance, resName);
+      DownButton.Glyph.Assign(png);
+    finally
+      png.Free;
+    end;
+  end
   else
   if csDesigning in ComponentState then
-    BtmButton.Top := -1000;
-  TopButton.Enabled := TopButton.Visible and Pages[Index].Enabled;
-  BtmButton.Enabled := BtmButton.Visible and Pages[Index].Enabled;
+    DownButton.Top := -1000;
+  UpButton.Enabled := UpButton.Visible and Pages[Index].Enabled;
+  DownButton.Enabled := DownButton.Visible and Pages[Index].Enabled;
 end;
 
 function TJvCustomOutlookBar.DrawPicture(R: TRect; Picture: TPicture): Boolean;
@@ -1954,10 +2022,12 @@ var
   Details: TThemedElementDetails;
   ClipRect: TRect;
   ToolBar: TThemedToolBar;
+  pgBtnHeight: Integer;
 begin
   if csDestroying in ComponentState then
     Exit;
   R := GetPageButtonRect(Pages.Count - 1);
+  pgBtnHeight := R.Bottom - R.Top;
   for I := Pages.Count - 1 downto StartIndex do
   begin
     if DoDrawPageButton(R, I, FPressedPageBtn = I) then
@@ -1995,7 +2065,7 @@ begin
       end;
       DrawPageButton(R, I, FPressedPageBtn = I);
     end;
-    OffsetRect(R, 0, -PageButtonHeight);
+    OffsetRect(R, 0, -pgBtnHeight);
   end;
 end;
 
@@ -2016,15 +2086,18 @@ begin
 end;
 
 function TJvCustomOutlookBar.GetPageButtonRect(Index: Integer): TRect;
+var
+  pgBtnHeight: Integer;
 begin
   Result := Rect(0, 0, 0, 0);
   if (Index < 0) or (Index >= Pages.Count) then
     Exit;
-  Result := Rect(0, 0, ClientWidth, PageButtonHeight);
+  pgBtnHeight := CalcPageButtonHeight;
+  Result := Rect(0, 0, ClientWidth, pgBtnHeight);
   if Index <= ActivePageIndex then
-    OffsetRect(Result, 0, PageButtonHeight * Index)
+    OffsetRect(Result, 0, pgBtnHeight * Index)
   else
-    OffsetRect(Result, 0, (ClientHeight - PageButtonHeight * (Pages.Count - Index)));
+    OffsetRect(Result, 0, (ClientHeight - pgBtnHeight * (Pages.Count - Index)));
 end;
 
 function TJvCustomOutlookBar.GetPageTextRect(Index: Integer): TRect;
@@ -2033,7 +2106,8 @@ begin
   InflateRect(Result, -2, -2);
 end;
 
-function TJvCustomOutlookBar.GetTextSize(PageIndex, ButtonIndex: Integer): TSize;
+function TJvCustomOutlookBar.GetButtonTextSize(
+  PageIndex, ButtonIndex: Integer): TSize;
 var
   R: TRect;
   DC: HDC;
@@ -2041,32 +2115,38 @@ var
   OldFont: HFONT;
 begin
   DC := Canvas.Handle;
-  OldFont := SelectObject(DC, Pages[PageIndex].Font.Handle);
+  OldFont := SelectObject(DC, Canvas.Font.Handle);
   try
+    Canvas.Font.Assign(Pages[PageIndex].Font);
     S := Pages[PageIndex].Buttons[ButtonIndex].Caption;
     if (Pages[PageIndex].ButtonSize = olbsLarge) and FWordWrap then
     begin
       R := Rect(0, 0, Max(ClientWidth - (2 * cTextMargins), cMinTextWidth), 0);
       Result.cy := DrawText(DC, PChar(S), Length(S), R, DT_WORDBREAK or DT_CALCRECT or DT_CENTER or DT_VCENTER);
       Result.cx := R.Right;
-    end
-    else
-    begin
-      GetTextExtentPoint32(DC, PChar(S), Length(S), Result);
-      Result.cy := Abs(Pages[PageIndex].Font.Height);
-    end;
+    end else
+      Result := Canvas.TextExtent(S);
   finally
     SelectObject(DC, OldFont);
   end;
 end;
 
 function TJvCustomOutlookBar.GetPageRect(Index: Integer): TRect;
+var
+  pgBtnHeight: Integer;
 begin
   if (Index < 0) or (Index >= Pages.Count) then
     Result := Rect(0, 0, 0, 0)
   else
-    Result := Rect(0, PageButtonHeight * Index + PageButtonHeight, ClientWidth, ClientHeight - (Pages.Count - Index) *
-      PageButtonHeight + PageButtonHeight);
+  begin
+    pgBtnHeight := CalcPageButtonHeight;
+    Result := Rect(
+      0,
+      pgBtnHeight * Index + pgBtnHeight,
+      ClientWidth,
+      ClientHeight - (Pages.Count - Index) * PgBtnHeight + pgBtnHeight
+    );
+  end;
 end;
 
 function TJvCustomOutlookBar.GetButtonAtPos(P: TPoint): TJvOutlookBarButton;
@@ -2105,7 +2185,7 @@ begin
     olbsLarge:
       if LargeImages <> nil then
       begin
-        Result := Rect(0, 0, Max(LargeImages.Width, GetTextSize(PageIndex, ButtonIndex).cx) +
+        Result := Rect(0, 0, Max(LargeImages.Width, GetButtonTextSize(PageIndex, ButtonIndex).cx) +
           4, H);
         OffsetRect(Result, (ClientWidth - (Result.Right - Result.Left)) div 2, cButtonTopOffset);
       end
@@ -2114,7 +2194,7 @@ begin
     olbsSmall:
       if SmallImages <> nil then
       begin
-        Result := Rect(0, 0, SmallImages.Width + GetTextSize(PageIndex, ButtonIndex).cx + 8,
+        Result := Rect(0, 0, SmallImages.Width + GetButtonTextSize(PageIndex, ButtonIndex).cx + 8,
           H);
         OffsetRect(Result, cButtonLeftOffset, cButtonTopOffset);
       end
@@ -2173,13 +2253,13 @@ begin
     olbsLarge:
       if LargeImages <> nil then
       begin
-        Result.Top := Result.Bottom - GetTextSize(PageIndex, ButtonIndex).cy - 2;
+        Result.Top := Result.Bottom - GetButtonTextSize(PageIndex, ButtonIndex).cy - 2;
         OffsetRect(Result, 0, -4);
       end;
     olbsSmall:
       if SmallImages <> nil then
       begin
-        TextSize := GetTextSize(PageIndex, ButtonIndex);
+        TextSize := GetButtonTextSize(PageIndex, ButtonIndex);
         ButtonHeight := GetButtonHeight(PageIndex, ButtonIndex);
         Result.Left := SmallImages.Width + 10;
         Result.Top := Result.Top + (ButtonHeight - TextSize.cy) div 2;
@@ -2205,7 +2285,10 @@ var
 begin
   if csDestroying in ComponentState then
     Exit;
+
   Canvas.Font := Self.Font;
+  if Canvas.Font.IsDefault then
+    Canvas.Font := Screen.SystemFont;
   Canvas.Brush.Color := Self.Color;
   if Pages.Count = 0 then // we only need to draw the background when there are no pages
   begin
@@ -2222,7 +2305,9 @@ begin
       if DoDrawBackGround then
         Canvas.FillRect(ClientRect);
     end;
-  end;
+  end
+  else
+    I := 1;
 
   {
   if IsVista then   // Warren Vista paint bug workaround
@@ -2612,28 +2697,35 @@ const
 var
   TM: TTextMetric;
   TextSize: TSize;
+  OldFont: HFONT;
 begin
-  GetTextMetrics(Canvas.Handle, TM);
-  Result := TM.tmHeight + TM.tmExternalLeading;
-  if (PageIndex >= 0) and (PageIndex < Pages.Count) then
-  begin
-    TextSize := GetTextSize(PageIndex, ButtonIndex);
-    case Pages[PageIndex].ButtonSize of
-      olbsLarge:
-      begin
-        if LargeImages <> nil then
-          Result := Max(Result, LargeImages.Height + TextSize.cy + cLargeOffset)
-        else
-          Result := TextSize.cy + cLargeOffset;
+  OldFont := SelectObject(Canvas.Handle, Canvas.Font.Handle);
+  try
+    Canvas.Font.Assign(Font);
+    GetTextMetrics(Canvas.Handle, TM);
+    Result := TM.tmHeight + TM.tmExternalLeading;
+    if (PageIndex >= 0) and (PageIndex < Pages.Count) then
+    begin
+      TextSize := GetButtonTextSize(PageIndex, ButtonIndex);
+      case Pages[PageIndex].ButtonSize of
+        olbsLarge:
+        begin
+          if LargeImages <> nil then
+            Result := Max(Result, LargeImages.Height + TextSize.cy + cLargeOffset)
+          else
+            Result := TextSize.cy + cLargeOffset;
+        end;
+        olbsSmall:
+          if SmallImages <> nil then
+            Result := Max(SmallImages.Height, TextSize.cy) + cSmallOffset
+          else
+            Result := TextSize.cy + cSmallOffset;
       end;
-      olbsSmall:
-        if SmallImages <> nil then
-          Result := Max(SmallImages.Height, TextSize.cy) + cSmallOffset
-        else
-          Result := TextSize.cy + cSmallOffset;
     end;
+    Inc(Result, 4);
+  finally
+    SelectObject(Canvas.Handle, OldFont);
   end;
-  Inc(Result, 4);
 end;
 
 (*
@@ -2785,20 +2877,6 @@ begin
     end;
 end;
 
-procedure TJvCustomOutlookBar.CreateHandle;
-var
-  i: Integer;
-begin
-  inherited;
-  if Font.Size = 0 then Font.Size := 9;
-  for i:=0 to Pages.Count - 1 do begin
-    if Pages[i].Font.Size = 0 then
-      Pages[i].Font.Size := 9;
-    if Pages[i].DownFont.Size = 0 then
-      Pages[i].DownFont.Size := 9;
-  end;
-end;
-
 procedure TJvCustomOutlookBar.FontChanged;
 var
   I: Integer;
@@ -2811,6 +2889,12 @@ begin
       Pages[I].Font := Self.Font;
       Pages[I].ParentFont := True; // reset flag
     end;
+end;
+
+class function TJvCustomOutlookBar.GetControlClassDefaultSize: TSize;
+begin
+  Result.CX := 100;
+  Result.CY := 220;
 end;
 
 procedure TJvCustomOutlookBar.CMDialogChar(var Msg: TCMDialogChar);
@@ -2841,6 +2925,29 @@ begin
   end;
   inherited;
 end;
+
+{$IF LCL_FullVersion >= 1080000}
+procedure TJvCustomOutlookBar.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode = lapAutoAdjustForDPI then begin
+    if FPageButtonHeight <> 0 then
+      FPageButtonHeight := round(FPageButtonHeight * AYProportion);
+  end;
+end;
+
+procedure TJvCustomOutlookBar.FixDesignFontsPPI(const ADesignTimePPI: Integer);
+var
+  i: Integer;
+begin
+  inherited;
+  for i:=0 to Pages.Count-1 do begin
+    DoFixDesignFontPPI(Pages[i].Font, ADesignTimePPI);
+    DoFixDesignFontPPI(Pages[i].DownFont, ADesignTimePPI);
+  end;
+end;
+{$ENDIF}
 
 function TJvCustomOutlookBar.DoCustomDraw(ARect: TRect; Stage: TJvOutlookBarCustomDrawStage;
   Index: Integer; Down, Inside: Boolean): Boolean;
