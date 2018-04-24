@@ -92,10 +92,15 @@ procedure RxDefaultWriteLog( ALogType:TEventType; const ALogMessage:string);
 function RxDefaultLogFileName:string;
 procedure InitRxLogs;
 
+function RxGetKeyboardLayoutName:string;
+
 implementation
 uses
   {$IFDEF WINDOWS}
-  windirs,
+  Windows, windirs,
+  {$ENDIF}
+  {$IFDEF LINUX}
+  X, XKB, xkblib, xlib,
   {$ENDIF}
   Registry, Forms, FileUtil, LazUTF8, LazFileUtils, Dialogs;
 
@@ -193,6 +198,88 @@ end;
 procedure InitRxLogs;
 begin
   OnRxLoggerEvent:=@RxDefaultWriteLog;
+end;
+
+{$IFDEF LINUX}
+function getKeyboardLang(dpy:PDisplay; AGroup:Integer):string;
+var
+  baseEventCode, baseErrorCode, opcode:integer;
+  groupCount:integer;
+  major:integer;
+  minor:integer;
+  kbdDescPtr: PXkbDescPtr;
+  tmpGroupSource: TAtom;
+begin
+  major:=0;
+  minor:=0;
+  XkbQueryExtension(dpy, @opcode, @baseEventCode, @baseErrorCode, @major, @minor);
+
+  kbdDescPtr := XkbAllocKeyboard();
+
+  if not Assigned(kbdDescPtr) then
+  begin
+    Result:='Failed to get keyboard description.';
+    exit;
+  end;
+
+  kbdDescPtr^.dpy := dpy;
+  kbdDescPtr^.device_spec := XkbUseCoreKbd;
+
+  XkbGetControls(dpy, XkbAllControlsMask, kbdDescPtr);
+  XkbGetNames(dpy, XkbSymbolsNameMask, kbdDescPtr);
+  XkbGetNames(dpy, XkbGroupNamesMask, kbdDescPtr);
+
+  if (not Assigned(kbdDescPtr^.names)) then
+  begin
+    Result:='Failed to get keyboard description.';
+    exit;
+  end;
+
+  if AGroup in [0 .. XkbNumKbdGroups -1] then
+  begin
+    tmpGroupSource := kbdDescPtr^.names^.groups[AGroup];
+    Result:=XGetAtomName(dpy, tmpGroupSource);
+  end
+  else
+    Result:='';
+end;
+
+{$ENDIF}
+
+function RxGetKeyboardLayoutName: string;
+{$IFDEF WINDOWS}
+var
+  LayoutName:array [0..KL_NAMELENGTH + 1] of char;
+  LangName: array [0 .. 1024] of Char;
+{$ENDIF}
+{$IFDEF LINUX}
+var
+  Disp: PDisplay;
+  RtrnState: TXkbStateRec;
+{$ENDIF}
+begin
+  {$IFDEF WINDOWS}
+  GetKeyboardLayoutName(@LayoutName);
+  if GetLocaleInfo(StrToInt('$' + StrPas(LayoutName)), LOCALE_SABBREVLANGNAME, @LangName, SizeOf(LangName) - 1) <> 0  then
+    Result := StrPas(LangName);
+//  end;
+//  Result := AnsiUpperCase(Copy(Result, 1, 2));
+  {$ELSE}
+  {$IFDEF LINUX}
+  Disp := XOpenDisplay(nil);
+  if Assigned(Disp) then
+  begin
+    XkbGetState(Disp, XkbUseCoreKbd, @RtrnState);
+    Result:=getKeyboardLang(Disp, RtrnState.group);
+    XCloseDisplay(Disp);
+  end
+  else
+    Result:='';
+  {$ELSE}
+    //Other system - maybe in future?
+    Result:='';
+  {$ENDIF LINUX}
+  {$ENDIF WINDOWS}
 end;
 
 

@@ -48,7 +48,7 @@ type
 
   { TRxNotifierForm }
 
-  TRxNotifierForm = class(TForm)
+  TRxNotifierForm = class(THintWindow)
   private
     FCloseButton:TButton;
     FCaptionLabel:TLabel;
@@ -60,6 +60,8 @@ type
     procedure CreateMessage(AMessage:string);
     procedure CreateTimerLabel;
     procedure ButtonCloseClick(Sender: TObject);
+  protected
+    procedure DoShowWindow; override;
   public
     constructor CreateNotifierForm(AOwnerItem:TRxPopupNotifierItem);
   end;
@@ -152,14 +154,14 @@ type
   end;
 
 implementation
-uses rxconst;
+uses rxconst, LCLType;
 
 { TRxNotifierForm }
 
 procedure TRxNotifierForm.CreateCloseButton;
 begin
   begin
-    FCloseButton:=TButton.Create(Self);
+{    FCloseButton:=TButton.Create(Self);
     FCloseButton.Parent:=Self;
     FCloseButton.Caption:=sClose;
     FCloseButton.AutoSize:=true;
@@ -170,7 +172,7 @@ begin
     FCloseButton.AnchorSideRight.Side:=asrRight;
     FCloseButton.AnchorSideTop.Control:=Self;
 
-    FCloseButton.OnClick:=@ButtonCloseClick;
+    FCloseButton.OnClick:=@ButtonCloseClick; }
   end;
 end;
 
@@ -213,11 +215,24 @@ begin
   Close;
 end;
 
+procedure TRxNotifierForm.DoShowWindow;
+begin
+  if (ActiveControl = nil) and (not (csDesigning in ComponentState)) and (Parent=nil) then
+  begin
+    // automatically choose a control to focus
+    {$IFDEF VerboseFocus}
+    DebugLn('THintWindow.WMShowWindow ',DbgSName(Self),' Set ActiveControl := ',DbgSName(FindDefaultForActiveControl));
+    {$ENDIF}
+    ActiveControl := FindNextControl(nil, True, True, False); //FindDefaultForActiveControl;
+  end;
+end;
+
 constructor TRxNotifierForm.CreateNotifierForm(AOwnerItem: TRxPopupNotifierItem
   );
 begin
   inherited CreateNew(Application);
   FOwnerItem:=AOwnerItem;
+  fCompStyle := csHintWindow;
 end;
 
 { TNotifierCollection }
@@ -308,8 +323,11 @@ begin
 end;
 
 procedure TRxPopupNotifierItem.CreateNotifierForm;
+var
+  FSaveActiveForm: TForm;
 begin
   if Assigned(FNotifyForm) then exit;
+  FSaveActiveForm:=Screen.ActiveForm;
   FNotifyForm:=TRxNotifierForm.CreateNotifierForm(Self);
   FNotifyForm.Width:=TRxPopupNotifier(Collection.Owner).NotifierFormWidth;
   FNotifyForm.Height:=1;
@@ -355,6 +373,9 @@ begin
 
   FNotifyForm.OnClose:=@OnNotifyFormClose;
   FNotifyForm.Show;
+
+  if Assigned(FSaveActiveForm) then
+    FSaveActiveForm.BringToFront;
 end;
 
 procedure TRxPopupNotifierItem.UpdateFormSizes(var ATop: integer);
