@@ -16,7 +16,16 @@
       </element><element name="ConfirmDelete"><short>Функция выдаёт диалоговое окно подтверждения удаления данных</short>
       </element><element name="ConfirmDataSetCancel"><short>Функция завершает редактирование набора данных вопросом о сохранении</short><descr>Функция завершает редактирование набора данных вопросом о сохранении
 При подтверждении сохранения вызывается метод Post
-При отмене - метод Cancel</descr>
+При отмене - метод Cancel
+</descr>
+      </element>
+    <element name="CheckRequiredField"><short>Процедура производит проверку заполнения данными поля</short><descr>Процедура производит проверку заполнения данными поля
+В случае если данные не введены - то данное визуальный эелемент ввода получит фокус для ввода данных
+
+</descr>
+      </element><element name="CheckRequiredFields"><short>Процедура производит проверку заполнения данными полей</short>
+      </element><element name="AddSQLExpressionAnd"><short>Процедура добавляет в строку условия новый эелемент через предикат AND</short>
+      </element><element name="AddSQLExpressionOr"><short>Процедура добавляет в строку условия новый эелемент через предикат OR</short>
       </element>
     </module>
   </package>

@@ -39,11 +39,11 @@ msgstr "Вправо"
 
 #: rxconst.sclose
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #: rxconst.scloseaftersec
 msgid "Close after %d sec"
-msgstr ""
+msgstr "Будет закрыто через %d секунд"
 
 #: rxconst.scloseallexceptthis
 msgid "Close all except this"

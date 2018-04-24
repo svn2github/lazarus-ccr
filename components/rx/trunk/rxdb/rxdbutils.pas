@@ -127,6 +127,10 @@ procedure FillValueForField(const Field: TField; Value:Variant);
 procedure CloneRecord(DataSet: TDataSet; IgnoreFields: array of const);
 function FieldValueToStrings(const DataSet: TDataSet; const FieldName: string; List:TStrings = nil):TStrings;
 
+procedure AddSQLExpressionAnd(var MacroStr:string; const MacroWhere:string); overload;
+procedure AddSQLExpressionAnd(var MacroStr:string; const MacroWhere:string; Params:array of const); overload; inline;
+procedure AddSQLExpressionOr(var MacroStr:string; const MacroWhere:string);
+
 { SQL expressions }
 
 function DateToSQL(Value: TDateTime): string;
@@ -1078,6 +1082,30 @@ begin
     DataSet.FreeBookmark(P);
     Result.EndUpdate;
     DataSet.EnableControls;
+  end;
+end;
+
+procedure AddSQLExpressionAnd(var MacroStr: string; const MacroWhere: string);
+begin
+  if MacroWhere <> '' then
+  begin
+    if MacroStr<>'' then MacroStr:=MacroStr + ' and ';
+    MacroStr:=MacroStr + '('+MacroWhere+')';
+  end;
+end;
+
+procedure AddSQLExpressionAnd(var MacroStr: string; const MacroWhere: string;
+  Params: array of const);
+begin
+  AddSQLExpressionAnd(MacroStr, Format(MacroWhere, Params));
+end;
+
+procedure AddSQLExpressionOr(var MacroStr: string; const MacroWhere: string);
+begin
+  if MacroWhere<>'' then
+  begin
+    if MacroStr<>'' then MacroStr:=MacroStr + ' or ';
+    MacroStr:=MacroStr + '('+MacroWhere+')';
   end;
 end;
 

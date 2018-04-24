@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fpdoc-descriptions><package name="rxnew"><module name="rxapputils"><element name="InfoBox"><short>Процедура отображает на экран окно информационного сообщения</short><descr>Процедура отображает на экран окно информационного сообщения
+Также сообщение будет записано в протокол работы системы
+</descr>
+      </element><element name="WarningBox"><short>Процедура отображает на экран окно сообщения - предупреждения</short><descr>Процедура отображает на экран окно сообщения - предупреждения
+Также сообщение будет записано в протокол работы системы
+</descr>
+      </element><element name="ErrorBox"><short>Процедура отображает на экран окно сообщения - ошибки</short><descr>Процедура отображает на экран окно сообщения - предупреждения
+Также сообщение будет записано в протокол работы системы
+</descr>
+      </element><element name="InfoBox.S"><short>Текст информационного сообщения</short>
+      </element><element name="WarningBox.S"><short>Текст предупрежедения</short>
+      </element><element name="ErrorBox.S"><short>Текст сообщения об ошибке</short>
+      </element>
+    </module>
+  </package>
+</fpdoc-descriptions>

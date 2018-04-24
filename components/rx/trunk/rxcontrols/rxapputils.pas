@@ -29,7 +29,7 @@
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit rxapputils;
+unit rxAppUtils;
 
 {$I rx.inc}
 
@@ -57,9 +57,11 @@ function GetDefaultIniName: string;
 
 type
   TOnGetDefaultIniName = function: string;
+  TRxLoggerEvent = procedure( ALogType:TEventType; const ALogMessage:string);
 
 const
   OnGetDefaultIniName: TOnGetDefaultIniName = nil;
+  OnRxLoggerEvent:TRxLoggerEvent = nil;
 
 //Save to IniFile or TRegIniFile string value
 procedure IniWriteString(IniFile: TObject; const Section, Ident,
@@ -74,16 +76,31 @@ function IniReadInteger(IniFile: TObject; const Section, Ident:string;
   const Value: integer):integer;
 
 function GetDefaultIniRegKey: string;
-Function RxGetAppConfigDir(Global : Boolean) : String;
+function RxGetAppConfigDir(Global : Boolean) : String;
+
+
+procedure InfoBox(const S:string); overload;
+procedure InfoBox(const S:string; Params:array of const); overload;
+
+procedure WarningBox(const S:string); overload;
+procedure WarningBox(const S:string; Params:array of const); overload;
+
+procedure ErrorBox(const S:string);
+procedure ErrorBox(const S:string; Params:array of const);
+
+procedure RxDefaultWriteLog( ALogType:TEventType; const ALogMessage:string);
+function RxDefaultLogFileName:string;
+procedure InitRxLogs;
+
 implementation
 uses
   {$IFDEF WINDOWS}
   windirs,
   {$ENDIF}
-  Registry, Forms, FileUtil, LazUTF8, LazFileUtils;
+  Registry, Forms, FileUtil, LazUTF8, LazFileUtils, Dialogs;
 
-{$IFDEF WINDOWS}
 function RxGetAppConfigDir(Global: Boolean): String;
+{$IFDEF WINDOWS}
 begin
   If Global then
     Result:=GetWindowsSpecialDir(CSIDL_COMMON_APPDATA)
@@ -99,11 +116,85 @@ begin
     Result:=ExcludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))); //IncludeTrailingPathDelimiter(DGetAppConfigDir(Global));
 end;
 {$ELSE}
-function RxGetAppConfigDir(Global: Boolean): String;
 begin
   Result:=GetAppConfigDir(Global);
 end;
 {$ENDIF}
+
+procedure DoWriteLog(ALogType:TEventType; const ALogMessage:string);
+begin
+  if Assigned(OnRxLoggerEvent) then
+    OnRxLoggerEvent(ALogType, ALogMessage)
+end;
+
+procedure InfoBox(const S: string);
+begin
+  MessageDlg(S, mtInformation, [mbOK], 0);
+  DoWriteLog(etInfo, S);
+  Application.Log(etInfo, S);
+end;
+
+procedure InfoBox(const S: string; Params: array of const);
+begin
+  InfoBox(Format(S, Params));
+end;
+
+procedure WarningBox(const S: string);
+begin
+  MessageDlg(S, mtWarning, [mbOK], 0);
+  DoWriteLog(etWarning, S);
+  Application.Log(etWarning, S);
+end;
+
+procedure WarningBox(const S: string; Params: array of const);
+begin
+  WarningBox(Format(S, Params));
+end;
+
+procedure ErrorBox(const S: string);
+begin
+  MessageDlg(S, mtError, [mbOK], 0);
+  DoWriteLog(etError, S);
+  Application.Log(etError, S);
+end;
+
+procedure ErrorBox(const S: string; Params: array of const);
+begin
+  ErrorBox(Format(S, Params));
+end;
+
+procedure RxDefaultWriteLog(ALogType: TEventType; const ALogMessage: string);
+var
+  F: Text;
+  S: String;
+const
+  sEventNames : array [TEventType] of string =
+    ('CUSTOM','INFO','WARNING','ERROR','DEBUG');
+begin
+  S:=RxDefaultLogFileName;
+  if S<>'' then
+  begin
+    Assign(F, S);
+    if FileExists(S) then
+      Append(F)
+    else
+      Rewrite(F);
+
+    Writeln(F,Format( '|%s| %20s |%s', [sEventNames[ALogType], DateTimeToStr(Now), ALogMessage]));
+    CloseFile(F);
+  end;
+end;
+
+function RxDefaultLogFileName: string;
+begin
+  Result:=AppendPathDelim(GetTempDir) + ExtractFileNameOnly(ParamStr(0)) + '.log';
+end;
+
+procedure InitRxLogs;
+begin
+  OnRxLoggerEvent:=@RxDefaultWriteLog;
+end;
+
 
 function GetDefaultSection(Component: TComponent): string;
 var
