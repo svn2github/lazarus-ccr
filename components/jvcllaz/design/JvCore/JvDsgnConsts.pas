@@ -549,7 +549,7 @@ resourcestring
 
 //=== JvOutlookBarEditors.pas ================================================
 resourcestring
-  RsOLEditor = 'OutlookBar Editor...';
+  RsOLBditor = 'OutlookBar Editor...';
 
 //=== JvOutlookBarForm.pas ===================================================
 resourcestring

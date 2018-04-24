@@ -30,29 +30,31 @@ unit JvOutlookBarEditors;
 interface
 
 uses
-  SysUtils, Classes,
-  Controls, Forms, ToolWin,
-  Menus, ActnList, ComCtrls, ImgList,
+//  LazLogger,
+  SysUtils, Classes, Controls, Forms, ToolWin, Menus, ActnList, ComCtrls, ImgList,
   PropEdits, GraphPropEdits, ComponentEditors,
-//  DesignEditors, DesignIntf, DesignMenus, DesignWindows,
-  //JvDsgnEditors,
   JvOutlookBar;
 
 type
   TJvOutlookBarActivePageProperty = class(TIntegerProperty)
   private
-    function GetOL: TJvCustomOutlookBar;
-  protected
-    property OL: TJvCustomOutlookBar read GetOL;
+    function GetOutlookBar: TJvCustomOutlookBar;
   public
-    procedure Edit; override;
     function GetAttributes: TPropertyAttributes; override;
     function GetValue: string; override;
     procedure SetValue(const Value: string); override;
     procedure GetValues(Proc: TGetStrProc); override;
   end;
-                           (*
+
+  TJvOutlookBarCaptionProperty = class(TStringProperty)
+  public
+    procedure SetValue(const Value: string); override;
+  end;
+
   TJvOutlookBarEditor = class(TComponentEditor)
+  protected
+    function GetOutlookBar: TJvCustomOutlookBar;
+    procedure OpenEditor;
   public
     procedure ExecuteVerb(Index: Integer); override;
     function GetVerb(Index: Integer): string; override;
@@ -66,16 +68,18 @@ type
     procedure Edit; override;
     function GetAttributes: TPropertyAttributes; override;
     function GetValue: string; override;
-  end;         *)
+  end;
 
   TJvOutlookBarButtonImageIndexProperty = class(TImageIndexPropertyEditor) //TJvDefaultImageIndexProperty)
-  protected
+  private
     function GetPage: TJvOutlookBarPage;
     function GetBar: TJvCustomOutlookBar;
+  protected
     function GetImageList: TCustomImageList; override;
   end;
 
   TJvOutlookBarPageImageIndexProperty = class(TImageIndexPropertyEditor) //TJvDefaultImageIndexProperty)
+  protected
     function GetImageList: TCustomImageList; override;
   end;
 
@@ -83,13 +87,26 @@ type
 implementation
 
 uses
-  //JvOutlookBarForm,
-  JvDsgnConsts;
+  JvDsgnConsts, JvOutlookBarForm;
 
 type
   THackOutlookBar = class(TJvCustomOutlookBar);
   THackPages = class(TJvOutlookBarPages);
   THackButtons = class(TJvOutlookBarButtons);
+
+var
+  EditWindow: TFrmOLBEditor;
+
+procedure ShowEditor(ADesigner: TComponentEditorDesigner;
+  AOutlookBar: TJvCustomOutlookBar);
+begin
+  if AOutlookBar = nil then
+    exit;
+  if EditWindow = nil then
+    EditWindow := TFrmOLBEditor.Create(Application);
+  EditWindow.SetData(AOutlookBar, ADesigner);
+  EditWindow.Show;
+end;
 
 (*
 procedure ShowEditor(Designer: TIDesigner; OutlookBar: TJvCustomOutlookBar);
@@ -126,11 +143,13 @@ begin
   end;
 end;
       *)
+
 //=== { TJvOutlookBarPagesProperty } =========================================
-          (*
+
 procedure TJvOutlookBarPagesProperty.Edit;
 begin
-  ShowEditor(Designer, GetOutlookBar);
+  // !!!!!!!!!!!! HOW DO I GET THE DESIGNER HERE ???????????????
+  //ShowEditor(Designer, GetOutlookBar);
 end;
 
 function TJvOutlookBarPagesProperty.GetAttributes: TPropertyAttributes;
@@ -154,46 +173,55 @@ begin
   Result := Format('(%s)', [GetPropType^.Name]);
 end;
 
+
 //=== { TJvOutlookBarEditor } ================================================
 
 procedure TJvOutlookBarEditor.ExecuteVerb(Index: Integer);
 begin
   case Index of
-    0:
-      ShowEditor(Designer, Component as TJvCustomOutlookBar);
-  else
-    inherited ExecuteVerb(Index);
+    0: OpenEditor;
+  else inherited ExecuteVerb(Index);
   end;
+end;
+
+function TJvOutlookBarEditor.GetOutlookBar: TJvCustomOutlookBar;
+var
+  lComponent: TComponent;
+begin
+  lComponent := Self.GetComponent;
+  if (lComponent is TJvCustomOutlookBar) then
+    Result := TJvCustomOutlookBar(lComponent)
+  else
+    Result := nil;
 end;
 
 function TJvOutlookBarEditor.GetVerb(Index: Integer): string;
 begin
   case Index of
-    0:
-      Result := RsOLEditor;
-  else
-    Result := inherited GetVerb(Index);
+    0: Result := RsOLBditor;
+  else Result := inherited GetVerb(Index);
   end;
 end;
 
 function TJvOutlookBarEditor.GetVerbCount: Integer;
 begin
   Result := 1;
-end;       *)
+end;
+
+procedure TJvOutlookBarEditor.OpenEditor;
+begin
+  ShowEditor(Designer, GetOutlookBar);
+end;
+
 
 //=== { TJvOutlookBarActivePageProperty } ====================================
-
-procedure TJvOutlookBarActivePageProperty.Edit;
-begin
-  inherited Edit;
-end;
 
 function TJvOutlookBarActivePageProperty.GetAttributes: TPropertyAttributes;
 begin
   Result := [paValueList, paSortList, paRevertable];
 end;
 
-function TJvOutlookBarActivePageProperty.GetOL: TJvCustomOutlookBar;
+function TJvOutlookBarActivePageProperty.GetOutlookBar: TJvCustomOutlookBar;
 begin
   if GetComponent(0) is TJvCustomOutlookBar then
     Result := TJvCustomOutlookBar(GetComponent(0))
@@ -204,13 +232,15 @@ end;
 function TJvOutlookBarActivePageProperty.GetValue: string;
 var
   I: Integer;
+  olb: THackOutlookBar;
 begin
+  Result := '';
+  olb := THackOutlookBar(GetOutlookBar);
+  if olb = nil then
+    exit;
   I := GetOrdValue;
-  if I < 0 then
-    Result := ''
-  else
-  if I < THackOutlookBar(OL).Pages.Count then
-    Result := THackOutlookBar(OL).Pages[I].Caption
+  if (I >= 0) and (I < olb.Pages.Count) then
+    Result := olb.Pages[I].Caption
   else
     Result := inherited GetValue;
 end;
@@ -218,20 +248,24 @@ end;
 procedure TJvOutlookBarActivePageProperty.GetValues(Proc: TGetStrProc);
 var
   I: Integer;
+  olb: THackOutlookBar;
 begin
-  for I := 0 to THackOutlookBar(OL).Pages.Count - 1 do
-    Proc(THackOutlookBar(OL).Pages[I].Caption);
+  olb := THackOutlookBar(GetOutlookBar);
+  for I := 0 to olb.Pages.Count - 1 do
+    Proc(olb.Pages[I].Caption);
 end;
 
 procedure TJvOutlookBarActivePageProperty.SetValue(const Value: string);
 var
   I: Integer;
+  olb: THackOutlookBar;
 begin
   I := StrToIntDef(Value, -1);
   if I < 0 then
   begin
-    for I := 0 to THackOutlookBar(OL).Pages.Count - 1 do
-      if AnsiSameText(THackOutlookBar(OL).Pages[I].Caption, Value) then
+    olb := THackOutlookBar(GetOutlookBar);
+    for I := 0 to olb.Pages.Count - 1 do
+      if AnsiSameText(olb.Pages[I].Caption, Value) then
       begin
         SetOrdValue(I);
         Modified;
@@ -243,7 +277,17 @@ begin
 end;
 
 
-//=== { TJvOutlookBarButtonImageIndexProperty } ==============================
+//=== TJvOutlookBarCaptionEditor ===============================================
+
+procedure TJvOutlookBarCaptionProperty.SetValue(const Value: string);
+begin
+  inherited;
+  if EditWindow <> nil then
+    EditWindow.RefreshNames;
+end;
+
+
+//=== TJvOutlookBarButtonImageIndexProperty ====================================
 
 function TJvOutlookBarButtonImageIndexProperty.GetBar: TJvCustomOutlookBar;
 begin
@@ -264,11 +308,20 @@ begin
 end;
 
 
-//=== { TJvOutlookBarPageImageIndexProperty } ================================
+//=== TJvOutlookBarPageImageIndexProperty ======================================
 
 function TJvOutlookBarPageImageIndexProperty.GetImageList: TCustomImageList;
+var
+  page: TJvOutlookBarPage;
+  pages: TJvOutlookBarPages;
+  olb: TJvCustomOutlookBAr;
 begin
-  Result := THackOutlookBar(THackPages(TJvOutlookBarPage(GetComponent(0)).Collection).Owner).PageImages;
+  page := TJvOutlookBarPage(GetComponent(0));
+  pages := THackPages(page.Collection);
+  olb := TJvCustomOutlookBar(pages.Owner);
+  Result := THackOutlookBar(olb).PageImages;
+//  Result := THackOutlookBar(THackPages(TJvOutlookBarPage(GetComponent(0)).Collection).Owner).PageImages;
+//  Result := THackOutlookBar(GetOutlookBar).PageImages;
 end;
 
 end.

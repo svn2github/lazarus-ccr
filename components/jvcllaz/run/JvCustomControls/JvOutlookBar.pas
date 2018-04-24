@@ -138,6 +138,7 @@ type
     constructor Create(AOwner: TPersistent);
     function Add: TJvOutlookBarButton;
     procedure Assign(Source: TPersistent); override;
+    function IndexOf(AButton: TJvOutlookBarButton): Integer;
     function Insert(Index: Integer): TJvOutlookBarButton;
     property Items[Index: Integer]: TJvOutlookBarButton read GetItem write SetItem; default;
   end;
@@ -219,6 +220,7 @@ type
   public
     constructor Create(AOwner: TPersistent);
     function Add: TJvOutlookBarPage;
+    function IndexOf(APage: TJvOutlookBarPage): Integer;
     function Insert(Index: Integer): TJvOutlookBarPage;
     procedure Assign(Source: TPersistent); override;
     property Items[Index: Integer]: TJvOutlookBarPage read GetItem write SetItem; default;
@@ -1053,6 +1055,13 @@ begin
   Result := TJvOutlookBarButton(inherited Items[Index]);
 end;
 
+function TJvOutlookBarButtons.IndexOf(AButton: TJvOutlookBarButton): Integer;
+begin
+  for Result := 0 to Count-1 do
+    if AButton = GetItem(Result) then exit;
+  Result := -1;
+end;
+
 function TJvOutlookBarButtons.Insert(Index: Integer): TJvOutlookBarButton;
 begin
   Result := TJvOutlookBarButton(inherited Insert(Index));
@@ -1359,6 +1368,13 @@ end;
 function TJvOutlookBarPages.GetItem(Index: Integer): TJvOutlookBarPage;
 begin
   Result := TJvOutlookBarPage(inherited Items[Index]);
+end;
+
+function TJvOutlookBarPages.IndexOf(APage: TJvOutlookBarPage): Integer;
+begin
+  for Result := 0 to Count-1 do
+    if APage = GetItem(Result) then exit;
+  Result := -1;
 end;
 
 function TJvOutlookBarPages.Insert(Index: Integer): TJvOutlookBarPage;

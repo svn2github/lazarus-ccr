@@ -35,19 +35,20 @@ begin
   RegisterComponentEditor(TJvCustomTimeLine, TJvTimeLineEditor);
   RegisterPropertyEditor(TypeInfo(TDate), TJvTimeLine, 'FirstVisibledate', TDatePropertyEditor);
 
-  // Outlookbar
-    (*
-  RegisterPropertyEditor(TypeInfo(TJvOutlookBarPages), TJvCustomOutlookBar,
-    '', TJvOutlookBarPagesProperty);
-  RegisterPropertyEditor(TypeInfo(TJvOutlookBarButtons), TJvOutlookBarPage,
-    '', TJvOutlookBarPagesProperty);
-    *)
+  // OutlookBar
+  {RegisterPropertyEditor(TypeInfo(TJvOutlookBarPages), TJvCustomOutlookBar,
+    '', TJvOutlookBarPagesProperty);}
   RegisterPropertyEditor(TypeInfo(Integer), TJvCustomOutlookBar,
     'ActivePageIndex', TJvOutlookBarActivePageProperty);
   RegisterPropertyEditor(TypeInfo(TImageIndex), TJvOutlookBarButton,
     'ImageIndex', TJvOutlookBarButtonImageIndexProperty);
   RegisterPropertyEditor(TypeInfo(TImageIndex), TJvOutlookBarPage,
     'ImageIndex', TJvOutlookBarPageImageIndexProperty);
+  RegisterPropertyEditor(TypeInfo(TCaption), TJvOutlookBarPage,
+    'Caption', TJvOutlookBarCaptionProperty);
+  RegisterPropertyEditor(TypeInfo(TCaption), TJvOutlookBarButton,
+    'Caption', TJvOutlookBarCaptionProperty);
+  RegisterComponentEditor(TJvCustomOutlookBar, TJvOutlookBarEditor);
 
   // Thumbnails
   RegisterPropertyToSkip(TJvThumbnail, 'ClientWidth', 'Redundant', '');
