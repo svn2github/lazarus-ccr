@@ -385,8 +385,6 @@ type
     procedure Resize; override;
 
     property PopUpObject: TObject read FPopUpObject write FPopUpObject;
-//    property Width default 100;
-//    property Height default 220;
     property UpButton: TSpeedButton read FUpButton;
     property DownButton: TSpeedButton read FDownButton;
     property BorderStyle default bsSingle;
@@ -452,9 +450,11 @@ type
     property BorderSpacing;
     property BorderStyle;
     property ButtonSize;
+    property ChildSizing;
     property Color;
     property Constraints;
     property Cursor;
+    property DockSite;
     property DragCursor;
     property DragKind;
     property DragMode;
@@ -486,10 +486,27 @@ type
     property OnContextPopup;
     property OnCustomDraw;
     property OnDblClick;
+    property OnDockDrop;
+    property OnDockOver;
+    property OnDragDrop;
+    property OnDragOver;
     property OnEditButton;
     property OnEditPage;
+    property OnEndDock;
+    property OnEndDrag;
+    property OnMouseDown;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseMove;
+    property OnMouseUp;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
     property OnPageChange;
     property OnPageChanging;
+    property OnStartDock;
+    property OnStartDrag;
+    property OnUnDock;
 
    {$IF LCL_FullVersion >= 1090000}
     property LargeImagesWidth;
@@ -3174,7 +3191,7 @@ end;
 
 procedure TJvCustomOutlookBar.Resize;
 begin
-  Invalidate;
+  if HandleAllocated then Invalidate;
   inherited;
 end;
 
