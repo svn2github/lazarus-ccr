@@ -36,7 +36,7 @@ unit RxPopupNotifier;
 interface
 
 uses
-  Classes, SysUtils, ExtCtrls, Forms, Graphics, Controls, StdCtrls;
+  Classes, SysUtils, ExtCtrls, Forms, Graphics, Controls, StdCtrls, Buttons;
 
 type
   TRxPopupNotifierItem = class;
@@ -48,8 +48,9 @@ type
 
   { TRxNotifierForm }
 
-  TRxNotifierForm = class(THintWindow)
+  TRxNotifierForm = class(TCustomForm)
   private
+    //FCloseButton:TSpeedButton;
     FCloseButton:TButton;
     FCaptionLabel:TLabel;
     FMessageLabel:TLabel;
@@ -61,7 +62,7 @@ type
     procedure CreateTimerLabel;
     procedure ButtonCloseClick(Sender: TObject);
   protected
-    procedure DoShowWindow; override;
+    //procedure DoShowWindow; override;
   public
     constructor CreateNotifierForm(AOwnerItem:TRxPopupNotifierItem);
   end;
@@ -161,18 +162,23 @@ uses rxconst, LCLType;
 procedure TRxNotifierForm.CreateCloseButton;
 begin
   begin
-{    FCloseButton:=TButton.Create(Self);
+    //FCloseButton:=TSpeedButton.Create(Self);
+    FCloseButton:=TButton.Create(Self);
     FCloseButton.Parent:=Self;
-    FCloseButton.Caption:=sClose;
     FCloseButton.AutoSize:=true;
+    FCloseButton.Caption:=' X '; //sClose;
+    FCloseButton.Top:=6;
+    //FCloseButton.Flat:=true;
+    //FCloseButton.Left:=Width - Canvas.TextWidth(FCloseButton.Caption) - 6;
+    FCloseButton.Left:=Width - FCloseButton.Width - 6;
+{
     FCloseButton.BorderSpacing.Around:=6;
-    FCloseButton.Left:=Width - FCloseButton.Width;
     FCloseButton.AnchorSideLeft.Control:=nil;
     FCloseButton.AnchorSideRight.Control:=Self;
     FCloseButton.AnchorSideRight.Side:=asrRight;
-    FCloseButton.AnchorSideTop.Control:=Self;
+    FCloseButton.AnchorSideTop.Control:=Self;}
 
-    FCloseButton.OnClick:=@ButtonCloseClick; }
+    FCloseButton.OnClick:=@ButtonCloseClick;
   end;
 end;
 
@@ -214,7 +220,7 @@ procedure TRxNotifierForm.ButtonCloseClick(Sender: TObject);
 begin
   Close;
 end;
-
+(*
 procedure TRxNotifierForm.DoShowWindow;
 begin
   if (ActiveControl = nil) and (not (csDesigning in ComponentState)) and (Parent=nil) then
@@ -226,13 +232,13 @@ begin
     ActiveControl := FindNextControl(nil, True, True, False); //FindDefaultForActiveControl;
   end;
 end;
-
+*)
 constructor TRxNotifierForm.CreateNotifierForm(AOwnerItem: TRxPopupNotifierItem
   );
 begin
   inherited CreateNew(Application);
   FOwnerItem:=AOwnerItem;
-  fCompStyle := csHintWindow;
+  //fCompStyle := csHintWindow;
 end;
 
 { TNotifierCollection }
