@@ -33,7 +33,8 @@ begin
 
   // Timeline
   RegisterComponentEditor(TJvCustomTimeLine, TJvTimeLineEditor);
-  RegisterPropertyEditor(TypeInfo(TDate), TJvTimeLine, 'FirstVisibledate', TDatePropertyEditor);
+  RegisterPropertyEditor(TypeInfo(TDate), TJvTimeLine,
+    'FirstVisibledate', TDatePropertyEditor);
 
   // OutlookBar
   {RegisterPropertyEditor(TypeInfo(TJvOutlookBarPages), TJvCustomOutlookBar,

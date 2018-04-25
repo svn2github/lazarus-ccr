@@ -41,7 +41,7 @@ Known Issues:
 unit JvOutlookBar;
 
 {$mode objfpc}{$H+}
-{.$DEFINE JVCLThemesEnabled}
+
 
 interface
 
@@ -50,12 +50,6 @@ uses
   SysUtils, Classes, ActnList,
   Buttons, Controls, Graphics, ImgList, Forms, StdCtrls, ExtCtrls, Themes,
   JvJCLUtils, JvComponent;
-
-(*
-{$IF LCL_FullVersion >= 1090000}
- {$DEFINE HAS_SCALED_IMAGELIST}
-{$ENDIF}
-*)
 
 const
   CM_CAPTION_EDITING = CM_BASE + 756;
@@ -243,8 +237,7 @@ type
     FFace: TColor;
     FShadow: TColor;
     FDkShadow: TColor;
-    FBorderWidth : Integer;
-
+    FBorderWidth: Integer;
     procedure SetDkShadow(const Value: TColor);
     procedure SetFace(const Value: TColor);
     procedure SetHighlight(const Value: TColor);
@@ -257,13 +250,12 @@ type
     property Highlight:TColor   read FHighlight write SetHighlight  default clBtnHighlight;
     property DkShadow:TColor    read FDkShadow write SetDkShadow    default cl3DDkShadow;
     property Face:TColor        read FFace write SetFace            default clBtnFace;
-
-    property BorderWidth      : INteger read FBorderWidth write SetBorderWidth default 1;
+    property BorderWidth : Integer read FBorderWidth write SetBorderWidth default 1;
   end;
 
   TJvCustomOutlookBar = class(TJvCustomControl)
   private
-    FPageBtnProps:TJvPageBtnProps;
+    FPageBtnProps: TJvPageBtnProps;
     FUpButton: TSpeedButton;
     FDownButton: TSpeedButton;
     FPages: TJvOutlookBarPages;
@@ -298,7 +290,6 @@ type
     FDisabledFontColor1: TColor;
     FDisabledFontColor2: TColor;
     FWordWrap: Boolean;
-
     function GetActivePage: TJvOutlookBarPage;
     function GetActivePageIndex: Integer;
     function IsStoredPageButtonHeight: Boolean;
@@ -314,23 +305,19 @@ type
     procedure SetThemed(const Value: Boolean);
     procedure SetThemedBackground(const Value: Boolean);
     procedure SetWordWrap(const Value: Boolean);
-
-    procedure CMCaptionEditing(var Msg: TLMessage); message CM_CAPTION_EDITING;
     procedure CMCaptionEditAccept(var Msg: TLMessage); message CM_CAPTION_EDIT_ACCEPT;
     procedure CMCaptionEditCancel(var Msg: TLMessage); message CM_CAPTION_EDIT_CANCEL;
+    procedure CMCaptionEditing(var Msg: TLMessage); message CM_CAPTION_EDITING;
     procedure CMDialogChar(var Msg: TCMDialogChar); message CM_DIALOGCHAR;
-
   protected
     function CalcPageButtonHeight: Integer;
     procedure CalculatePreferredSize(var PreferredWidth,
       PreferredHeight: integer; WithThemeSpace: Boolean); override;
     procedure ColorChanged; override;
-    procedure CreateHandle; override;
    {$IF LCL_FullVersion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
    {$ENDIF}
-
     procedure DoButtonClick(Index: Integer); virtual;
     procedure DoButtonEdit(NewText: string; B: TJvOutlookBarButton);
     procedure DoChangeLinkChange(Sender: TObject);
@@ -383,12 +370,11 @@ type
     procedure Paint; override;
     procedure RedrawRect(R: TRect; Erase: Boolean = False);
     procedure Resize; override;
-
     property PopUpObject: TObject read FPopUpObject write FPopUpObject;
     property UpButton: TSpeedButton read FUpButton;
     property DownButton: TSpeedButton read FDownButton;
     property BorderStyle default bsSingle;
-    property Font;
+//    property Font;
     property Color default clBtnShadow;
     property Pages: TJvOutlookBarPages read FPages write SetPages;
     property LargeImages: TCustomImageList read FLargeImages write SetLargeImages;
@@ -399,17 +385,17 @@ type
     property ActivePageIndex: Integer read GetActivePageIndex write SetActivePageIndex default 0;
     property Themed: Boolean read FThemed write SetThemed stored IsThemedStored;
     property ThemedBackground: Boolean read FThemedBackGround write SetThemedBackground default True;
+    property PageBtnProps: TJvPageBtnProps read FPageBtnProps;
+    property DisabledFontColor1: TColor read FDisabledFontColor1 write SetDisabledFontColor1; //clWhite;
+    property DisabledFontColor2: TColor read FDisabledFontColor2 write SetDisabledFontColor2; //clGrayText;
     property OnPageChanging: TOutlookBarPageChanging read FOnPageChanging write FOnPageChanging;
     property OnPageChange: TOutlookBarPageChange read FOnPageChange write FOnPageChange;
     property OnButtonClick: TOutlookBarButtonClick read FOnButtonClick write FOnButtonClick;
     property OnEditButton: TOutlookBarEditCaption read FOnEditButton write FOnEditButton;
     property OnEditPage: TOutlookBarEditCaption read FOnEditPage write FOnEditPage;
     property OnCustomDraw: TJvOutlookBarCustomDrawEvent read FOnCustomDraw write FOnCustomDraw;
-    property PageBtnProps:TJvPageBtnProps read FPageBtnProps;
-    property DisabledFontColor1:TColor read FDisabledFontColor1 write SetDisabledFontColor1; //clWhite;
-    property DisabledFontColor2:TColor read FDisabledFontColor2 write SetDisabledFontColor2; //clGrayText;
 
- {$IF LCL_FullVersion >= 1090000}
+  {$IF LCL_FullVersion >= 1090000}
   private
     procedure SetLargeImagesWidth(const AValue: Integer);
     procedure SetPageImagesWidth(const AValue: Integer);
@@ -507,7 +493,6 @@ type
     property OnStartDock;
     property OnStartDrag;
     property OnUnDock;
-
    {$IF LCL_FullVersion >= 1090000}
     property LargeImagesWidth;
     property SmallImagesWidth;
@@ -867,7 +852,6 @@ begin
 
   // Mantis 3688
   FActionLink.Free;
-
   inherited Destroy;
 end;
 
@@ -1096,6 +1080,7 @@ begin
   if Owner <> nil then
     TJvOutlookBarPage(Owner).Changed(False);
 end;
+
 
 //=== { TJvOutlookBarPage } ==================================================
 
@@ -1351,6 +1336,7 @@ begin
     Buttons[Value].Down := True;
 end;
 
+
 //=== { TJvOutlookBarPages } =================================================
 
 constructor TJvOutlookBarPages.Create(AOwner: TPersistent);
@@ -1532,7 +1518,7 @@ end;
 
 destructor TJvCustomOutlookBar.Destroy;
 begin
-  FEdit.Free;
+//  FEdit.Free;
   FLargeChangeLink.Free;
   FSmallChangeLink.Free;
   FPageChangeLink.Free;
@@ -1568,11 +1554,6 @@ begin
   PreferredHeight := 220;
   if (FPageButtonHeight = 0) and HandleAllocated then
     FPageButtonHeight := Canvas.TextHeight('Tg') + 4;
-end;
-
-procedure TJvCustomOutlookBar.CreateHandle;
-begin
-  inherited;
 end;
 
 procedure TJvCustomOutlookBar.DoDwnClick(Sender: TObject);
@@ -1621,7 +1602,6 @@ begin
     end;
   end;
 end;
-
 
 { Warren modified this so you can have some weird page button colors that aren't standard windows colors }
 procedure TJvCustomOutlookBar.DrawPageButton(R: TRect; Index: Integer; Pressed: Boolean);
@@ -1811,7 +1791,6 @@ var
   R, R2, R3: TRect;
   C: TColor;
   SavedDC: Integer;
-  SavedColor: TColor;
   flags: Integer;
   Details: TThemedElementDetails;
   w: Integer;
@@ -1847,119 +1826,110 @@ begin
     begin
       if Pages[Index].Buttons[I].Down then
         DrawButtonFrame(Index, I, I);
+
       if DoDrawButton(R, I, Pages[Index].Buttons[I].Down, I = FLastButtonIndex) then
         case Pages[Index].ButtonSize of
           olbsLarge:
             begin
-              SavedColor := Canvas.Font.Color;
+              SavedDC := SaveDC(Canvas.Handle);
               try
-                SavedDC := SaveDC(Canvas.Handle);
-                try
-                  if LargeImages <> nil then begin
-                    dist := Scale96ToForm(4);
-                   {$IF LCL_FullVersion >= 1090000}
-                    largeImageRes.Draw(Canvas,
-                      R.Left + ((R.Right - R.Left) - largeImageRes.Width) div 2,
-                      R.Top + dist,
-                      Pages[Index].Buttons[I].ImageIndex,
-                      Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled
-                    );
-                   {$ELSE}
-                    LargeImages.Draw(Canvas,
-                      R.Left + ((R.Right - R.Left) - LargeImages.Width) div 2,
-                      R.Top + dist,
-                      Pages[Index].Buttons[I].ImageIndex,
-                      Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled
-                    );
-                   {$ENDIF}
-                  end;
-                finally
-                  RestoreDC(Canvas.Handle, SavedDC);
-                end;
-                R3 := GetButtonTextRect(ActivePageIndex, I);
-                SetBkMode(Canvas.Handle, TRANSPARENT);
-                if FWordWrap and (LargeImages <> nil) then
-                  Flags := DT_WORDBREAK or DT_CENTER or DT_VCENTER
-                else
-                  Flags := DT_EXPANDTABS or DT_SINGLELINE or DT_CENTER or DT_VCENTER or DT_END_ELLIPSIS;
-                if Themed and (Pages[Index].Color = clDefault) then begin
-                  if Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled then
-                    Details := StyleServices.GetElementDetails(ttbButtonNormal)
-                  else
-                    Details := StyleServices.GetElementDetails(ttbButtonDisabled);
-                  StyleServices.DrawText(Canvas, Details, Pages[Index].Buttons[I].Caption, R3, Flags, 0);
-                end else begin
-                  if Pages[Index].Buttons[I].Down then
-                    Canvas.Font.Assign(Pages[Index].DownFont)
-                  else
-                    Canvas.Font.Assign(Pages[Index].Font);
-                  if not Pages[Index].Enabled or not Pages[Index].Buttons[I].Enabled then
-                  begin
-                    if ColorToRGB(Pages[Index].Color) = ColorToRGB(clGrayText) then
-                      Canvas.Font.Color := PageBtnProps.Face //clBtnFace
-                    else
-                      Canvas.Font.Color := clGrayText;
-                  end;
-                  DrawText(Canvas.Handle, PChar(Pages[Index].Buttons[I].Caption), -1, R3, Flags);
+                if LargeImages <> nil then begin
+                  dist := Scale96ToForm(4);
+                 {$IF LCL_FullVersion >= 1090000}
+                  largeImageRes.Draw(Canvas,
+                    R.Left + ((R.Right - R.Left) - largeImageRes.Width) div 2,
+                    R.Top + dist,
+                    Pages[Index].Buttons[I].ImageIndex,
+                    Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled
+                  );
+                 {$ELSE}
+                  LargeImages.Draw(Canvas,
+                    R.Left + ((R.Right - R.Left) - LargeImages.Width) div 2,
+                    R.Top + dist,
+                    Pages[Index].Buttons[I].ImageIndex,
+                    Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled
+                  );
+                 {$ENDIF}
                 end;
               finally
-                Canvas.Font.Color := SavedColor;
+                RestoreDC(Canvas.Handle, SavedDC);
+              end;
+              R3 := GetButtonTextRect(ActivePageIndex, I);
+              SetBkMode(Canvas.Handle, TRANSPARENT);
+              if FWordWrap and (LargeImages <> nil) then
+                Flags := DT_WORDBREAK or DT_CENTER or DT_VCENTER
+              else
+                Flags := DT_EXPANDTABS or DT_SINGLELINE or DT_CENTER or DT_VCENTER or DT_END_ELLIPSIS;
+              if Pages[Index].Buttons[I].Down then
+                Canvas.Font.Assign(Pages[Index].DownFont)
+              else
+                Canvas.Font.Assign(Pages[Index].Font);
+              if Themed and (Pages[Index].Color = clDefault) then begin
+                if Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled then
+                  Details := StyleServices.GetElementDetails(ttbButtonNormal)
+                else
+                  Details := StyleServices.GetElementDetails(ttbButtonDisabled);
+                StyleServices.DrawText(Canvas, Details, Pages[Index].Buttons[I].Caption, R3, Flags, 0);
+              end else begin
+                if not Pages[Index].Enabled or not Pages[Index].Buttons[I].Enabled then
+                begin
+                  if ColorToRGB(Pages[Index].Color) = ColorToRGB(clGrayText) then
+                    Canvas.Font.Color := FPageBtnProps.Face //clBtnFace
+                  else
+                    Canvas.Font.Color := clGrayText;
+                end;
+                DrawText(Canvas.Handle, PChar(Pages[Index].Buttons[I].Caption), -1, R3, Flags);
               end;
             end;
 
           olbsSmall:
             begin
-              SavedColor := Canvas.Font.Color;
+              SavedDC := SaveDC(Canvas.Handle);
               try
-                SavedDC := SaveDC(Canvas.Handle);
-                try
-                  if SmallImages <> nil then begin
-                    dist := Scale96ToForm(2);
-                   {$IF LCL_FullVersion >= 1090000}
-                    smallImageRes.Draw(Canvas,
-                      R.Left + dist, R.Top + dist,
-                      Pages[Index].Buttons[I].ImageIndex,
-                      Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled
-                    );
-                   {$ELSE}
-                    SmallImages.Draw(Canvas,
-                      R.Left + dist, R.Top + dist,
-                      Pages[Index].Buttons[I].ImageIndex,
-                      Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled
-                    );
-                   {$ENDIF}
-                  end;
-                finally
-                  RestoreDC(Canvas.Handle, SavedDC);
-                end;
-                R3 := GetButtonTextRect(ActivePageIndex, I);
-  //              InflateRect(R3, -Scale96ToForm(4), 0);
-                SetBkMode(Canvas.Handle, TRANSPARENT);
-                Flags := DT_EXPANDTABS or DT_SINGLELINE or DT_LEFT or DT_VCENTER or DT_NOCLIP or DT_EDITCONTROL;
-                if Themed and (Pages[Index].Color = clDefault) then
-                begin
-                  if Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled then
-                    Details := StyleServices.GetElementDetails(ttbButtonNormal)
-                  else
-                    Details := StyleServices.GetElementDetails(ttbButtonDisabled);
-                  StyleServices.DrawText(Canvas, Details, Pages[Index].Buttons[I].Caption, R3, Flags, 0);
-                end else
-                begin
-                  if Pages[Index].Buttons[I].Down then
-                    Canvas.Font.Assign(Pages[Index].DownFont)
-                  else
-                    Canvas.Font.Assign(Pages[Index].Font);
-                  if not Pages[Index].Enabled or not Pages[Index].Buttons[I].Enabled then
-                  begin
-                    if ColorToRGB(Pages[Index].Color) = ColorToRGB(clGrayText) then
-                      Canvas.Font.Color := PageBtnProps.Face//clBtnFace
-                    else
-                      Canvas.Font.Color := clGrayText;
-                  end;
-                  DrawText(Canvas.Handle, PChar(Pages[Index].Buttons[I].Caption), -1, R3, Flags);
+                if SmallImages <> nil then begin
+                  dist := Scale96ToForm(2);
+                 {$IF LCL_FullVersion >= 1090000}
+                  smallImageRes.Draw(Canvas,
+                    R.Left + dist, R.Top + dist,
+                    Pages[Index].Buttons[I].ImageIndex,
+                    Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled
+                  );
+                 {$ELSE}
+                  SmallImages.Draw(Canvas,
+                    R.Left + dist, R.Top + dist,
+                    Pages[Index].Buttons[I].ImageIndex,
+                    Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled
+                  );
+                 {$ENDIF}
                 end;
               finally
-                Canvas.Font.Color := SavedColor;
+                RestoreDC(Canvas.Handle, SavedDC);
+              end;
+              R3 := GetButtonTextRect(ActivePageIndex, I);
+//              InflateRect(R3, -Scale96ToForm(4), 0);
+              SetBkMode(Canvas.Handle, TRANSPARENT);
+              Flags := DT_EXPANDTABS or DT_SINGLELINE or DT_LEFT or DT_VCENTER or DT_NOCLIP or DT_EDITCONTROL;
+              if Pages[Index].Buttons[I].Down then
+                Canvas.Font.Assign(Pages[Index].DownFont)
+              else
+                Canvas.Font.Assign(Pages[Index].Font);
+              if Themed and (Pages[Index].Color = clDefault) then
+              begin
+                if Pages[Index].Enabled and Pages[Index].Buttons[I].Enabled then
+                  Details := StyleServices.GetElementDetails(ttbButtonNormal)
+                else
+                  Details := StyleServices.GetElementDetails(ttbButtonDisabled);
+                StyleServices.DrawText(Canvas, Details, Pages[Index].Buttons[I].Caption, R3, Flags, 0);
+              end else
+              begin
+                if not Pages[Index].Enabled or not Pages[Index].Buttons[I].Enabled then
+                begin
+                  if ColorToRGB(Pages[Index].Color) = ColorToRGB(clGrayText) then
+                    Canvas.Font.Color := FPageBtnProps.Face//clBtnFace
+                  else
+                    Canvas.Font.Color := clGrayText;
+                end;
+                DrawText(Canvas.Handle, PChar(Pages[Index].Buttons[I].Caption), -1, R3, Flags);
               end;
             end;
         end;
@@ -2130,7 +2100,6 @@ begin
   begin
     if DoDrawPageButton(R, I, FPressedPageBtn = I) then
     begin
-    //  {$IFDEF JVCLThemesEnabled}
       if Themed then
       begin
         if (FPressedPageBtn = I) or (FHotPageBtn = I) then
@@ -2158,7 +2127,7 @@ begin
         Details := StyleServices.GetElementDetails(ToolBar);
       end else
       begin
-        Canvas.Brush.Color := PageBtnProps.Face;//clBtnFace;
+        Canvas.Brush.Color := FPageBtnProps.Face;//clBtnFace;
         Canvas.FillRect(R);
       end;
       DrawPageButton(R, I, FPressedPageBtn = I);
@@ -2411,7 +2380,8 @@ begin
         Result.Bottom := Result.Top + textSize.cy + dist2;
         Result.Right := Result.Left + textSize.cx + dist4;
         OffsetRect(Result, 0, -(ButtonHeight - (Result.Bottom - Result.Top)) div 4);
-      end;
+      end else
+        InflateRect(Result, -dist4, 0);
   end;
 end;
 
@@ -3008,8 +2978,8 @@ end;
 
 function TJvCustomOutlookBar.GetActivePage: TJvOutlookBarPage;
 begin
-  if (ActivePageIndex > -1) and (ActivePageIndex < Pages.Count) then
-    Result := Pages[ActivePageIndex]
+  if (FActivePageIndex > -1) and (FActivePageIndex < FPages.Count) then
+    Result := FPages[FActivePageIndex]
   else
     Result := nil;
 end;
@@ -3031,7 +3001,7 @@ begin
     {
     if ([csDesigning, csLoading] * ComponentState = []) and Themed then
       Repaint;
-      }
+     }
   end;
 end;
 
@@ -3053,12 +3023,12 @@ var
   I: Integer;
 begin
   inherited FontChanged;
-  for I := 0 to Pages.Count - 1 do
-    if Pages[I].ParentFont then
+  for I := 0 to FPages.Count - 1 do
+    if FPages[I].ParentFont then
     begin //set the font of the buttons as well
-      Pages[I].ParentFont := False;
-      Pages[I].Font := Self.Font;
-      Pages[I].ParentFont := True; // reset flag
+      FPages[I].ParentFont := False;
+      FPages[I].Font := Self.Font;
+      FPages[I].ParentFont := True; // reset flag
     end;
 end;
 
@@ -3109,6 +3079,7 @@ begin
       if IsStoredPageButtonHeight then
         FPageButtonHeight := round(FPageButtonHeight * AYProportion);
     finally
+      EnableAutoSizing;
     end;
   end;
 end;

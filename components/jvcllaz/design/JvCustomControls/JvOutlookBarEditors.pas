@@ -51,6 +51,7 @@ type
     procedure SetValue(const Value: string); override;
   end;
 
+    (*
   TJvOutlookBarPagesProperty = class(TPropertyEditor)
   private
     function GetOutlookBar: TJvCustomOutlookBar;
@@ -59,8 +60,9 @@ type
     function GetAttributes: TPropertyAttributes; override;
     function GetValue: string; override;
   end;
+  *)
 
-  TJvOutlookBarButtonImageIndexProperty = class(TImageIndexPropertyEditor) //TJvDefaultImageIndexProperty)
+  TJvOutlookBarButtonImageIndexProperty = class(TImageIndexPropertyEditor)
   private
     function GetPage: TJvOutlookBarPage;
     function GetBar: TJvCustomOutlookBar;
@@ -68,7 +70,7 @@ type
     function GetImageList: TCustomImageList; override;
   end;
 
-  TJvOutlookBarPageImageIndexProperty = class(TImageIndexPropertyEditor) //TJvDefaultImageIndexProperty)
+  TJvOutlookBarPageImageIndexProperty = class(TImageIndexPropertyEditor)
   protected
     function GetImageList: TCustomImageList; override;
   end;
@@ -145,7 +147,7 @@ end;
       *)
 
 //=== { TJvOutlookBarPagesProperty } =========================================
-
+  (*
 procedure TJvOutlookBarPagesProperty.Edit;
 begin
   // !!!!!!!!!!!! HOW DO I GET THE DESIGNER HERE ???????????????
@@ -172,7 +174,7 @@ function TJvOutlookBarPagesProperty.GetValue: string;
 begin
   Result := Format('(%s)', [GetPropType^.Name]);
 end;
-
+    *)
 
 //=== { TJvOutlookBarEditor } ================================================
 
@@ -214,7 +216,7 @@ begin
 end;
 
 
-//=== { TJvOutlookBarActivePageProperty } ====================================
+//=== TJvOutlookBarActivePageProperty ==========================================
 
 function TJvOutlookBarActivePageProperty.GetAttributes: TPropertyAttributes;
 begin

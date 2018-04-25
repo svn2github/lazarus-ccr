@@ -38,7 +38,11 @@ object OLBarMainForm: TOLBarMainForm
     Hint = 'Right-click the bar to see the options'
     Top = 0
     Width = 130
+    ActivePageIndex = 1
     Align = alLeft
+    BorderStyle = bsNone
+    Font.Color = clWindowText
+    LargeImages = LargeImages
     Pages = <    
       item
         Buttons = <        
@@ -152,21 +156,14 @@ object OLBarMainForm: TOLBarMainForm
         ParentColor = False
         TopButtonIndex = 0
       end>
-    LargeImages = LargeImages
-    SmallImages = SmallImages
-    ActivePageIndex = 1
-    OnButtonClick = JvOutlookBar1ButtonClick
-    OnPageChange = JvOutlookBar1PageChange
-    OnPageChanging = JvOutlookBar1PageChanging
-    BorderStyle = bsNone
-    Font.Color = clWindowText
     ParentFont = False
     PopupMenu = popOL
+    SmallImages = SmallImages
     TabOrder = 1
+    OnButtonClick = JvOutlookBar1ButtonClick
     OnContextPopup = JvOutlookBar1ContextPopup
-    LargeImagesWidth = 0
-    SmallImagesWidth = 0
-    PageImagesWidth = 0
+    OnPageChange = JvOutlookBar1PageChange
+    OnPageChanging = JvOutlookBar1PageChanging
   end
   object Panel1: TPanel
     Left = 134
@@ -4221,7 +4218,7 @@ object OLBarMainForm: TOLBarMainForm
   object popPage: TPopupMenu
     Images = SmallImages
     left = 320
-    top = 144
+    top = 136
     object Editpagecaption1: TMenuItem
       Action = acEditPageCaption
     end
