@@ -30,8 +30,8 @@ unit JvMovableBevel;
 interface
 
 uses
-  SysUtils, Classes, Controls, Forms, ExtCtrls,
-  JvExExtCtrls;
+  SysUtils, Classes, Controls, Forms, ExtCtrls;
+//  JvExExtCtrls;
 
 type
   TJvBevelScrollTextDirection = (tdNone, tdUpToDown, tdDownToUp, tdLeftToRight,
