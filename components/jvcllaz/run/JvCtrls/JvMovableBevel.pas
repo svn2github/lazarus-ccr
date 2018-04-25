@@ -31,7 +31,6 @@ interface
 
 uses
   SysUtils, Classes, Controls, Forms, ExtCtrls;
-//  JvExExtCtrls;
 
 type
   TJvBevelScrollTextDirection = (tdNone, tdUpToDown, tdDownToUp, tdLeftToRight,
@@ -73,8 +72,46 @@ type
     property OnSized: TNotifyEvent read FOnSized write FOnSized;
   end;
 
+  TJvMovablePanel = class(TPanel)
+  private
+    FStartX: Integer;
+    FStartY: Integer;
+    FStartPoint: TPoint;
+    FMinSize: Integer;
+    FMoving: Boolean; // If True then we are moving the object around.
+    FSizing: Boolean; // if True then we are sizing the object;
+    FDirection: TJvBevelScrollTextDirection;
+    FBorderSize: Byte;
+    FOnMoving: TNotifyEvent;
+    FOnMoved: TNotifyEvent;
+    FOnSizing: TNotifyEvent;
+    FOnSized: TNotifyEvent;
+  protected
+    procedure DoMove(Shift: TShiftState; DeltaX, DeltaY: Integer);
+    procedure DoSize(Shift: TShiftState; DeltaX, DeltaY: Integer);
+    procedure SelectCursor(X, Y: Integer);
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+      X, Y: Integer); override;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property BorderSize: Byte read FBorderSize write FBorderSize default 4;
+    property OnMoving: TNotifyEvent read FOnMoving write FOnMoving;
+    property OnSizing: TNotifyEvent read FOnSizing write FOnSizing;
+    property OnMoved: TNotifyEvent read FOnMoved write FOnMoved;
+    property OnSized: TNotifyEvent read FOnSized write FOnSized;
+  end;
+
 
 implementation
+
+
+//=== TJvMovableBevel ==========================================================
 
 constructor TJvMovableBevel.Create(AOwner: TComponent);
 begin
@@ -253,7 +290,6 @@ begin
   inherited MouseDown(Button, Shift, X, Y);
 end;
 
-
 procedure TJvMovableBevel.MouseUp(Button: TMouseButton; Shift: TShiftState;
 X, Y: Integer);
 begin
@@ -351,31 +387,6 @@ begin
   inherited MouseEnter;
 end;
 
-(*
-procedure TJvMovableBevel.MouseEnter(Control: TControl);
-var
-  Pos: TPoint;
-begin
-  if csDesigning in ComponentState then
-    Exit;
-  Pos := ScreenToClient(Mouse.CursorPos);
-  SelectCursor(Pos.X, Pos.Y);
-  inherited MouseEnter(Control);
-end;
-
-procedure TJvMovableBevel.MouseLeave(Control: TControl);
-begin
-  if csDesigning in ComponentState then
-    Exit;
-  if (not FMoving) and (not FSizing) then
-  begin
-    Screen.Cursor := crDefault;
-    FDirection := tdNone;
-  end;
-  inherited MouseLeave(Control);
-end;
-  *)
-
 procedure TJvMovableBevel.MouseLeave;
 begin
   if csDesigning in ComponentState then
@@ -388,12 +399,206 @@ begin
   inherited MouseLeave;
 end;
 
-{$IFDEF UNITVERSIONING}
-initialization
-  RegisterUnitVersion(HInstance, UnitVersioning);
 
-finalization
-  UnregisterUnitVersion(HInstance);
-{$ENDIF UNITVERSIONING}
+//=== TJvMovablePanel ==========================================================
+
+constructor TJvMovablePanel.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FBorderSize := 4;
+  FMinSize := 8;
+end;
+
+procedure TJvMovablePanel.DoMove(Shift: TShiftState; DeltaX, DeltaY: Integer);
+begin
+  Top := Top + DeltaY;
+  Left := Left + DeltaX;
+end;
+
+procedure TJvMovablePanel.DoSize(Shift: TShiftState; DeltaX, DeltaY: Integer);
+begin
+  case FDirection of
+    tdUpToDown:
+      begin
+        Height := Height + DeltaY;
+        Top := Top - DeltaY;
+      end;
+    tdDownToUp:
+        Height := FStartY - DeltaY;
+    tdLeftToRight:
+      begin
+        Width := Width + DeltaX;
+        Left := Left - DeltaX;
+      end;
+    tdRightToLeft:
+        Width := FStartX - DeltaX;
+    tdTopLeftToBottomRight:
+      begin
+        Top := Top - DeltaY;
+        Left := Left - DeltaX;
+        Height := Height + DeltaY;
+        Width := Width + DeltaX;
+      end;
+    tdTopRightToBottomLeft:
+      begin
+        Height := Height + DeltaY;
+        Width := FStartX - DeltaX;
+        Top := Top - DeltaY;
+      end;
+    tdBottomLeftToTopRight:
+      begin
+        Left := Left - DeltaX;
+        Height := FStartY - DeltaY;
+        Width := Width + DeltaX;
+      end;
+    tdBottomRightToTopLeft:
+      begin
+        Height := FStartY - DeltaY;
+        Width := FStartX - DeltaX;
+      end;
+  end;
+end;
+
+procedure TJvMovablePanel.SelectCursor(X, Y: longint);
+begin
+  if (Y > 0) and (Y <= FBorderSize) then
+  begin
+    if (X > 0) and (X <= FBorderSize) then
+    begin
+      Screen.Cursor := crSizeNWSE;
+      FDirection := tdTopLeftToBottomRight;
+    end
+    else
+    if (X >= Width - FBorderSize) and (X < Width) then
+    begin
+      Screen.Cursor := crSizeNESW;
+      FDirection := tdTopRightToBottomLeft;
+    end
+    else
+    begin
+      Screen.Cursor := crSizeNS;
+      FDirection := tdUpToDown;
+    end;
+  end
+  else
+  if (Y >= Height - FBorderSize) and (Y < Height) then
+  begin
+    if (X > 0) and (X <= FBorderSize) then
+    begin
+      Screen.Cursor := crSizeNESW;
+      FDirection := tdBottomLeftToTopRight;
+    end
+    else
+    if (X >= Width - FBorderSize) and (X < Width) then
+    begin
+      Screen.Cursor := crSizeNWSE;
+      FDirection := tdBottomRightToTopLeft;
+    end
+    else
+    begin
+      Screen.Cursor := crSizeNS;
+      FDirection := tdDownToUp;
+    end;
+  end
+  else
+  if (X >= 1) and (X <= FBorderSize) then
+  begin
+    Screen.Cursor := crSizeWE;
+    FDirection := tdLeftToRight;
+  end
+  else
+  if (X >= Width - FBorderSize) and (X < Width) then
+  begin
+    Screen.Cursor := crSizeWE;
+    FDirection := tdRightToLeft;
+  end
+  else
+  begin
+    Screen.Cursor := crDefault;
+    FDirection := tdNone;
+  end
+end;
+
+procedure TJvMovablePanel.MouseMove(Shift: TShiftState; X, Y: Integer);
+begin
+  if FMoving then
+    DoMove(Shift, X - FStartX, Y - FStartY)
+  else
+  if FSizing then
+    DoSize(Shift, FStartX - X, FStartY - Y)
+  else
+    SelectCursor(X, Y);
+  inherited MouseMove(Shift, X, Y);
+end;
+
+procedure TJvMovablePanel.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  if FDirection > tdNone then
+  begin
+    FSizing := True;
+    if Assigned(FOnSizing) then
+      FOnSizing(Self);
+  end
+  else
+  begin
+    FMoving := True;
+    if Assigned(FOnMoving) then
+      FOnMoving(Self);
+  end;
+  FStartPoint := Point(Left, Top);
+  FStartX := X;
+  FStartY := Y;
+  inherited MouseDown(Button, Shift, X, Y);
+end;
+
+
+procedure TJvMovablePanel.MouseUp(Button: TMouseButton; Shift: TShiftState;
+X, Y: Integer);
+begin
+  SelectCursor(X, Y);
+  FStartX := 0;
+  FStartY := 0;
+  if Height < 0 then
+  begin
+    Top := Top + Height;
+    Height := Abs(Height);
+  end;
+  if Width < 0 then
+  begin
+    Left := Left + Width;
+    Width := Abs(Width);
+  end;
+  inherited MouseUp(Button, Shift, X, Y);
+  if FMoving and Assigned(FOnMoved) then
+    FOnMoved(Self);
+  if FSizing and Assigned(FOnSized) then
+    FOnSized(Self);
+  FMoving := False;
+  FSizing := False;
+end;
+
+procedure TJvMovablePanel.MouseEnter;
+var
+  Pos: TPoint;
+begin
+  if csDesigning in ComponentState then
+    Exit;
+  Pos := ScreenToClient(Mouse.CursorPos);
+  SelectCursor(Pos.X, Pos.Y);
+  inherited MouseEnter;
+end;
+
+procedure TJvMovablePanel.MouseLeave;
+begin
+  if csDesigning in ComponentState then
+    Exit;
+  if (not FMoving) and (not FSizing) then
+  begin
+    Screen.Cursor := crDefault;
+    FDirection := tdNone;
+  end;
+  inherited MouseLeave;
+end;
 
 end.
