@@ -51,16 +51,6 @@ type
     procedure SetValue(const Value: string); override;
   end;
 
-  TJvOutlookBarEditor = class(TComponentEditor)
-  protected
-    function GetOutlookBar: TJvCustomOutlookBar;
-    procedure OpenEditor;
-  public
-    procedure ExecuteVerb(Index: Integer); override;
-    function GetVerb(Index: Integer): string; override;
-    function GetVerbCount: Integer; override;
-  end;
-
   TJvOutlookBarPagesProperty = class(TPropertyEditor)
   private
     function GetOutlookBar: TJvCustomOutlookBar;
@@ -81,6 +71,16 @@ type
   TJvOutlookBarPageImageIndexProperty = class(TImageIndexPropertyEditor) //TJvDefaultImageIndexProperty)
   protected
     function GetImageList: TCustomImageList; override;
+  end;
+
+  TJvOutlookBarEditor = class(TComponentEditor)
+  protected
+    function GetOutlookBar: TJvCustomOutlookBar;
+    procedure OpenEditor;
+  public
+    procedure ExecuteVerb(Index: Integer); override;
+    function GetVerb(Index: Integer): string; override;
+    function GetVerbCount: Integer; override;
   end;
 
 
