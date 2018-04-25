@@ -438,39 +438,25 @@ type
 
   TJvOutlookBar = class(TJvCustomOutlookBar)
   public
-    property PopUpObject;
     property DisabledFontColor1;
     property DisabledFontColor2;
     property PageBtnProps;
+    property PopUpObject;
 
   published
-    property Align;
-    property Pages;
-    property LargeImages;
-    property SmallImages;
-    property PageImages;
-    property ButtonSize;
-    property PageButtonHeight;
-    property ActivePageIndex;
-    property Themed;
-    property ThemedBackground;
-    property OnButtonClick;
-    property OnCustomDraw;
-    property OnEditButton;
-    property OnPageChange;
-    property OnPageChanging;
-    property OnEditPage;
     property Action;
+    property ActivePageIndex;
+    property Align;
     property Anchors;
     property BiDiMode;
     property BorderSpacing;
-    property ParentBiDiMode;
-    property DragCursor;
-    property DragKind;
     property BorderStyle;
+    property ButtonSize;
     property Color;
     property Constraints;
     property Cursor;
+    property DragCursor;
+    property DragKind;
     property DragMode;
     property Font;
     property Height;
@@ -478,18 +464,32 @@ type
     property HelpKeyword;
     property HelpType;
     property Hint;
+    property LargeImages;
+    property Pages;
+    property PageButtonHeight;
+    property PageImages;
+    property ParentBiDiMode;
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
     property ShowHint;
+    property SmallImages;
     property TabOrder;
     property TabStop;
+    property Themed;
+    property ThemedBackground;
     property Visible;
     property Width;
     property WordWrap;
+    property OnButtonClick;
     property OnClick;
-    property OnDblClick;
     property OnContextPopup;
+    property OnCustomDraw;
+    property OnDblClick;
+    property OnEditButton;
+    property OnEditPage;
+    property OnPageChange;
+    property OnPageChanging;
 
    {$IF LCL_FullVersion >= 1090000}
     property LargeImagesWidth;
