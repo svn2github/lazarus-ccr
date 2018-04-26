@@ -95,7 +95,6 @@ type
     procedure Change;
     procedure SetEnabled(const Value: Boolean);
     procedure SetAction(Value: TBasicAction);
-    function GetOutlookBar: TJvCustomOutlookBar;
   protected
     function GetDisplayName: string; override;
     function GetActionLinkClass: TJvOutlookBarButtonActionLinkClass; dynamic;
@@ -108,6 +107,7 @@ type
     procedure Assign(Source: TPersistent); override;
     procedure Click; dynamic;
     procedure EditCaption;
+    function GetOutlookBar: TJvCustomOutlookBar;
 
     // A property for user's usage, allowing to link an object to the button
     property LinkedObject: TObject read FLinkedObject write FLinkedObject;
@@ -177,15 +177,14 @@ type
   protected
     procedure DoPictureChange(Sender: TObject);
     function GetDisplayName: string; override;
-    function GetOutlookBar: TJvCustomOutlookBar;
   public
     constructor Create(ACollection: Classes.TCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
     procedure EditCaption;
+    function GetOutlookBar: TJvCustomOutlookBar;
     property DownButton: TJvOutlookBarButton read GetDownButton write SetDownButton;
     property DownIndex: Integer read GetDownIndex write SetDownIndex;
-
     // A property for user's usage, allowing to link an objet to the page.
     property LinkedObject: TObject read FLinkedObject write FLinkedObject;
   published
@@ -510,6 +509,9 @@ uses
 
 {$R ..\..\resource\JvOutlookBar.res}
 
+type
+  THackOutlookBar = class(TJvCustomOutlookBar);
+
 const
   cTextMargins = 3;
   cMinTextWidth = 32;
@@ -541,6 +543,74 @@ function MethodsEqual(const Method1, Method2: TMethod): Boolean;
 begin
   Result := (Method1.Code = Method2.Code) and (Method1.Data = Method2.Data);
 end;
+
+function GetUniquePageName(OLBar: TJvCustomOutlookBar): string;
+const
+  cPrefix = 'JvOutlookBarPage';
+  cTemplate = cPrefix + '%d';
+var
+  K: Integer;
+  Tmp: string;
+
+  function IsUnique(const S: string): Boolean;
+  var
+    I: Integer;
+  begin
+    Result := False;
+    for I := 0 to THackOutlookBar(OLBar).Pages.Count - 1 do
+      if AnsiSameText(THackOutlookBar(OLBar).Pages[I].Caption, S) then
+        Exit;
+    Result := True;
+  end;
+
+begin
+  Result := cPrefix;
+  if OLBar <> nil then
+    for K := 1 to MaxInt - 1 do
+    begin
+      Tmp := Format(cTemplate, [K]);
+      if IsUnique(Tmp) then
+      begin
+        Result := Tmp;
+        Exit;
+      end;
+    end;
+end;
+
+function GetUniqueButtonName(OLBar: TJvCustomOutlookBar): string;
+const
+  cPrefix = 'JvOutlookBarButton';
+  cTemplate = cPrefix + '%d';
+var
+  K: Integer;
+  Tmp: string;
+
+  function IsUnique(const S: string): Boolean;
+  var
+    I, J: Integer;
+  begin
+    Result := False;
+    for I := 0 to THackOutlookBar(OLBar).Pages.Count - 1 do
+      for J := 0 to THackOutlookBar(OLBar).Pages[I].Buttons.Count - 1 do
+        if AnsiSameText(THackOutlookBar(OLBar).Pages[I].Buttons[J].Caption, S) then
+          Exit;
+    Result := True;
+  end;
+
+begin
+  Result := cPrefix;
+  if OLBar <> nil then
+    for K := 1 to MaxInt - 1 do
+    begin
+      Tmp := Format(cTemplate, [K]);
+      if IsUnique(Tmp) then
+      begin
+        Result := Tmp;
+        Exit;
+      end;
+    end;
+end;
+
 
 //=== { TJvOutlookBarEdit } ==================================================
 
@@ -1030,6 +1100,7 @@ end;
 function TJvOutlookBarButtons.Add: TJvOutlookBarButton;
 begin
   Result := TJvOutlookBarButton(inherited Add);
+  Result.Caption := GetUniqueButtonName(Result.GetOutlookBar);
 end;
 
 procedure TJvOutlookBarButtons.Assign(Source: TPersistent);
@@ -1347,6 +1418,7 @@ end;
 function TJvOutlookBarPages.Add: TJvOutlookBarPage;
 begin
   Result := TJvOutlookBarPage(inherited Add);
+  Result.Caption := GetUniquePageName(Result.GetOutlookBar);
 end;
 
 procedure TJvOutlookBarPages.Assign(Source: TPersistent);

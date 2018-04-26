@@ -21,9 +21,8 @@ type
     AcMoveDown: TAction;
     AcToolbar: TAction;
     AcUpdate: TAction;
-    AcShowTextLabels: TAction;
+    AcShowToolbarCaptions: TAction;
     AlActions: TActionList;
-    ImgList16: TImageList;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
@@ -51,11 +50,13 @@ type
     procedure AcMoveUpExecute(Sender: TObject);
     procedure AcNewButtonExecute(Sender: TObject);
     procedure AcNewPageExecute(Sender: TObject);
-    procedure AcShowTextLabelsExecute(Sender: TObject);
+    procedure AcShowToolbarCaptionsExecute(Sender: TObject);
     procedure AcToolbarExecute(Sender: TObject);
     procedure AcUpdateExecute(Sender: TObject);
     procedure AlActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
     procedure FormActivate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure TvItemsChange(Sender: TObject; Node: TTreeNode);
@@ -64,11 +65,21 @@ type
     procedure TvItemsEdited(Sender: TObject; Node: TTreeNode; var S: string);
     procedure TvItemsKeyPress(Sender: TObject; var Key: char);
   private
+    FUpdateSelectionCount: Integer;
+    FLargeToolBtnSize: Integer;
+    FSmallToolBtnSize: Integer;
+    procedure BeginUpdateSelection;
+    procedure EndUpdateSelection;
     procedure BuildTreeData;
     procedure DeleteItem(Item: TPersistent);
     procedure ExchangeItems(Node1, Node2: TTreeNode);
-    class function GetButtonName(OLBar: TJvCustomOutlookBar): string;
-    class function GetPageName(OLBar: TJvCustomOutlookBar): string;
+//    class function GetButtonName(OLBar: TJvCustomOutlookBar): string;
+//    class function GetPageName(OLBar: TJvCustomOutlookBar): string;
+//    procedure OnComponentRenamed(AComponent: TComponent);
+    procedure OnGetSelection(const ASelection: TPersistentSelectionList);
+    procedure OnPersistentAdded(APersistent: TPersistent; Select: boolean);
+    procedure OnPersistentDeleting(APersistent: TPersistent);
+    procedure OnSetSelection(const ASelection: TPersistentSelectionList);
     procedure SelectButtonInObjectInspector(AButton: TJvOutlookBarButton; ForceUpdate: Boolean);
     procedure SelectPageInObjectInspector(APage: TJvOutlookBarPage; ForceUpdate: Boolean);
     function ValidateTreeData: boolean;
@@ -78,9 +89,12 @@ type
     FDesigner: TComponentEditorDesigner;
     function CheckValidButtonNode(Node: TTreeNode): boolean;
     function CheckValidPageNode(Node: TTreeNode): boolean;
+    function FindNode(ACandidate: TPersistent; out ANode: TTreeNode): Boolean;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure SelectionChanged(AOrderChanged: Boolean = false);
 
   public
+    constructor Create(AOwner: TComponent); override;
     procedure RefreshNames;
     procedure SetData(AOutlookBar: TJvCustomOutlookBar; ADesigner: TComponentEditorDesigner);
     property Outlookbar: TJvCustomOutlookBar read FOutlookBar;
@@ -95,7 +109,7 @@ implementation
 {$R *.lfm}
 
 uses
-  PropEditUtils,
+  PropEditUtils, IDEWindowIntf, IDEImagesIntf,
   JvConsts;
 
 type
@@ -107,6 +121,36 @@ const
 
 { TFrmOLBEditor }
 
+constructor TFrmOLBEditor.Create(AOwner: TComponent);
+begin
+  inherited;
+  FLargeToolBtnSize := 34;
+  FSmallToolBtnSize := 22;
+  TbTop.ButtonHeight := FLargeToolBtnSize;
+  TbTop.ButtonWidth := TbTop.ButtonHeight;
+
+  AlActions.Images := IDEImages.Images_16;
+  AcNewPage.ImageIndex := IDEImages.LoadImage('laz_add');
+  AcNewButton.ImageIndex := IDEImages.LoadImage('laz_add');
+  AcDelete.ImageIndex := IDEImages.LoadImage('laz_delete');
+  AcMoveDown.ImageIndex := IDEImages.LoadImage('arrow_down');
+  AcMoveUp.ImageIndex := IDEImages.LoadImage('arrow_up');
+
+  TbTop.Images := AlActions.Images;
+  popNew.Images := AlActions.Images;
+  popForm.Images := AlActions.Images;
+  popToolbar.Images := AlActions.Images;
+
+  if Assigned(GlobalDesignHook) then
+  begin
+//    GlobalDesignHook.AddHandlerComponentRenamed(@OnComponentRenamed);
+    GlobalDesignHook.AddHandlerPersistentDeleting(@OnPersistentDeleting);
+    GlobalDesignHook.AddHandlerGetSelection(@OnGetSelection);
+    GlobalDesignHook.AddHandlerSetSelection(@OnSetSelection);
+    GlobalDesignHook.AddHandlerPersistentAdded(@OnPersistentAdded);
+  end;
+end;
+
 procedure TFrmOLBEditor.AcDeleteExecute(Sender: TObject);
 var
   P: TPersistent;
@@ -115,6 +159,16 @@ var
 begin
   if (FOutlookBar = nil) or (FDesigner = nil) or (TvItems.Selected = nil) then
     exit;
+
+  BeginUpdateSelection;
+  FDesigner.DeleteSelection;
+  EndUpdateSelection;
+
+  exit;
+
+
+
+
 
   TvItems.Items.BeginUpdate;
   try
@@ -177,17 +231,18 @@ begin
     N := N.Parent;
   page := TJvOutlookBarPage(N.Data);
   btn := page.Buttons.Add;
-//  btn.Caption := FDesigner.CreateUniqueComponentName(btn.ClassName);
-  btn.Caption := GetButtonName(OutlookBar);
-  TvItems.Selected := TvItems.Items.AddChildObject(N, btn.Caption, btn);
-
   FDesigner.PropertyEditorHook.PersistentAdded(btn, True);
   FDesigner.Modified;
+
+  if FindNode(btn, N) then TvItems.Selected := N;
+  //TvItems.Selected := TvItems.Items.AddChildObject(N, btn.Caption, btn);
+  //SelectionChanged;
 end;
 
 procedure TFrmOLBEditor.AcNewPageExecute(Sender: TObject);
 var
   page: TJvOutlookBarPage;
+  node: TTreeNode;
 begin
   if (FOutlookBar = nil) or (FDesigner = nil) then
     exit;
@@ -195,25 +250,24 @@ begin
     exit;
 
   page := THackOutlookBar(FOutlookBar).Pages.Add;
-//  page.Caption := FDesigner.CreateUniqueComponentName(page.ClassName);
-  page.Caption := GetPageName(FOutlookBar);
-  TvItems.Selected := TvItems.Items.AddObject(nil, page.Caption, page);
-
   FDesigner.PropertyEditorHook.PersistentAdded(page,True);
   FDesigner.Modified;
+  if FindNode(page, node) then TvItems.Selected := node;
+  //TvItems.Selected := TvItems.Items.AddObject(nil, page.Caption, page);
+  //SelectionChanged;
 end;
 
-procedure TFrmOLBEditor.AcShowTextLabelsExecute(Sender: TObject);
+procedure TFrmOLBEditor.AcShowToolbarCaptionsExecute(Sender: TObject);
 begin
-  AcShowTextLabels.Checked := not AcShowTextLabels.Checked;
-  tbTop.ShowCaptions := AcShowTextLabels.Checked;
-  if AcShowTextLabels.Checked then begin
-    tbTop.ButtonHeight := 32;
-    tbTop.ButtonWidth := 32;
+  AcShowToolbarCaptions.Checked := not AcShowToolbarCaptions.Checked;
+  tbTop.ShowCaptions := AcShowToolbarCaptions.Checked;
+  if AcShowToolbarCaptions.Checked then begin
+    TbTop.ButtonHeight := FLargeToolBtnSize;
+    TbTop.ButtonWidth := FLargeToolBtnSize;
   end else
   begin
-    tbTop.ButtonHeight := 22;
-    tbTop.ButtonWidth := 22;
+    TbTop.ButtonHeight := FSmallToolBtnSize;
+    TbTop.ButtonWidth := FSmallToolBtnSize;
   end;
 end;
 
@@ -238,6 +292,11 @@ begin
   AcMoveUp.Enabled := Sel and (TvItems.Selected.getPrevSibling <> nil);
   AcMoveDown.Enabled := Sel and (TvItems.Selected.getNextSibling <> nil);
   AcUpdate.Enabled := Screen.ActiveForm = Self;
+end;
+
+procedure TFrmOLBEditor.BeginUpdateSelection;
+begin
+  Inc(FUpdateSelectionCount);
 end;
 
 procedure TFrmOLBEditor.BuildTreeData;
@@ -339,6 +398,13 @@ begin
   end;
 end;
 
+procedure TFrmOLBEditor.EndUpdateSelection;
+begin
+  dec(FUpdateSelectionCount);
+  if FUpdateSelectionCount=0 then
+    SelectionChanged;
+end;
+
 procedure TFrmOLBEditor.ExchangeItems(Node1, Node2: TTreeNode);
 var
   I: Integer;
@@ -348,6 +414,7 @@ begin
     I := TJvOutlookBarButton(Node1.Data).Index;
     TJvOutlookBarButton(Node1.Data).Index := TJvOutlookBarButton(Node2.Data).Index;
     TJvOutlookBarButton(Node2.Data).Index := I;
+    FDesigner.PropertyEditorHook.PersistentAdded(TJvOutlookBarButton(Node1.Data), True);
   end
   else
   if TObject(Node1.Data) is TJvOutlookBarPage then
@@ -355,7 +422,39 @@ begin
     I := TJvOutlookBarPage(Node1.Data).Index;
     TJvOutlookBarPage(Node1.Data).Index := TJvOutlookBarPage(Node2.Data).Index;
     TJvOutlookBarPage(Node2.Data).Index := I;
+    FDesigner.PropertyEditorHook.PersistentAdded(TJvOutlookBarPage(Node1.Data), True);
   end;
+  FDesigner.Modified;
+end;
+
+function TFrmOLBEditor.FindNode(ACandidate: TPersistent;
+  out ANode: TTreeNode): Boolean;
+var
+  pageNode, btnNode: TTreeNode;
+begin
+  pageNode := TvItems.Items.GetFirstNode;
+  while pageNode <> nil do begin
+    if (ACandidate is TJvOutlookBarPage) then begin
+      if TJvOutlookBarPage(pageNode.Data) = ACandidate then begin
+        ANode := pageNode;
+        Result := true;
+        exit;
+      end;
+    end else
+    if (ACandidate is TJvOutlookBarButton) then begin
+      btnNode := pageNode.GetFirstChild;
+      while btnnode <> nil do begin
+        if TJvOutlookBarButton(btnNode.Data) = ACandidate then begin
+          ANode := btnNode;
+          Result := true;
+          exit;
+        end;
+        btnNode := btnNode.GetNextSibling;
+      end;
+    end;
+    pageNode := pageNode.GetNextSibling;
+  end;
+  Result := false;
 end;
 
 procedure TFrmOLBEditor.FormActivate(Sender: TObject);
@@ -366,10 +465,31 @@ begin
     BuildTreeData;
 end;
 
+procedure TFrmOLBEditor.FormClose(Sender: TObject;
+  var CloseAction: TCloseAction);
+begin
+  IDEDialogLayoutList.SaveLayout(Self);
+end;
+
+procedure TFrmOLBEditor.FormCreate(Sender: TObject);
+begin
+  IDEDialogLayoutList.ApplyLayout(Self);
+end;
+
 procedure TFrmOLBEditor.FormDestroy(Sender: TObject);
 begin
   if FOutlookBar <> nil then
     FOutlookBar.RemoveFreeNotification(self);
+
+  if GlobalDesignHook = Nil then
+    Exit;
+  (*
+  if Assigned(FComponentEditor) and Assigned(LinkDataset)
+  and not (csDestroying in LinkDataset.ComponentState)
+  and (FieldsListBox.SelCount > 0) then
+    GlobalDesignHook.SelectOnlyThis(LinkDataset);
+    *)
+  GlobalDesignHook.RemoveAllHandlersForObject(Self);
 end;
 
 procedure TFrmOLBEditor.FormShow(Sender: TObject);
@@ -378,7 +498,7 @@ begin
     exit;
   BuildTreeData;
 end;
-
+                     (*
 class function TFrmOLBEditor.GetButtonName(OLBar: TJvCustomOutlookBar): string;
 const
   cPrefix = 'JvOutlookBarButton';
@@ -445,7 +565,7 @@ begin
       end;
     end;
 end;
-
+                       *)
 procedure TFrmOLBEditor.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
@@ -456,6 +576,102 @@ begin
     // editor window. Need to clean up the content - otherwise the window will
     // have references to the already removed toolbars, which will end in AVs ...
     SetData(nil, nil);
+  end;
+end;
+                                          (*
+procedure TFrmOLBEditor.OnComponentRenamed(AComponent: TComponent);
+var
+  page: TJvOutlookBarPage;
+  button: TJvOutlookBarButton;
+  i: integer;
+begin
+  if AComponent is TJvOutlookBarPage then begin
+    page := TJvOutlookBarPage(AComponent);
+  if AComponent is TField then begin
+    Field := TField(AComponent);
+    if not Assigned( Field ) then Exit;
+    i := FieldsListBox.Items.IndexOfObject(Field);
+    if i >= 0 then
+      FieldsListBox.Items[i] := Field.FieldName;
+  end else
+  if AComponent is TDataset And (AComponent = LinkDataset) then
+    Caption := fesFeTitle + ' - ' + LinkDataset.Name;
+end;                                        *)
+
+procedure TFrmOLBEditor.OnGetSelection(
+  const ASelection: TPersistentSelectionList);
+var
+  pagenode, btnnode: TTreeNode;
+begin
+  if not Assigned(ASelection) then
+    exit;
+  if ASelection.Count > 0 then
+    ASelection.Clear;
+  pageNode := TvItems.Items.GetFirstNode;
+  while pageNode <> nil do begin
+    if pageNode.Selected then
+      ASelection.Add(TPersistent(pageNode.Data));
+    btnNode := pageNode.GetFirstChild;
+    while btnNode <> nil do begin
+      if btnNode.selected then
+        ASelection.Add(TPersistent(btnNode.Data));
+      btnNode := btnNode.GetNextSibling;
+    end;
+    pageNode := pageNode.GetNextSibling;
+  end;
+end;
+
+procedure TFrmOLBEditor.OnPersistentAdded(APersistent: TPersistent; Select: boolean);
+var
+  olb: TJvCustomOutlookBar;
+  page: TJvOutlookBarPage;
+  button: TJvOutlookBarButton;
+  node: TTreeNode;
+begin
+  if not Assigned(APersistent) then exit;
+  if (APersistent is TJvOutlookBarPage) then begin
+    page := TJvOutlookBarPage(APersistent);
+    olb := THackOutlookbar((page.Collection).Owner);
+    if (olb = FOutlookBar) then begin
+      if not FindNode(page, node) then
+        node := TvItems.Items.AddObject(nil, page.Caption, page);
+      TvItems.Selected := node;
+    end;
+  end else
+  if (APersistent is TJvOutlookBarButton) then begin
+    button := TJvOutlookBarButton(APersistent);
+    page := TJvOutlookBarPage(button.Collection.Owner);
+    olb := THackOutlookBar(page.Collection.Owner);
+    if (olb = FOutlookBar) and FindNode(page, node) then begin
+      if not FindNode(button, node) then
+        node := TvItems.Items.AddChildObject(node, button.Caption, button);
+      TvItems.Selected := node;
+    end;
+  end;
+end;
+
+procedure TFrmOLBEditor.OnPersistentDeleting(APersistent: TPersistent);
+var
+  node: TTreeNode;
+begin
+  if FindNode(APersistent, node) then
+    TvItems.Items.Delete(node);
+end;
+
+procedure TFrmOLBEditor.OnSetSelection(
+  const ASelection: TPersistentSelectionList);
+var
+  i: Integer;
+  node: TTreeNode;
+begin
+  if Assigned(ASelection) then begin
+    //Unselect all
+    for i := 0 to TvItems.SelectionCount-1 do
+      TvItems.Items.GetSelections(I).Selected := false;
+    //select from list
+    for i := 0 to ASelection.Count - 1 do
+      if FindNode(ASelection.Items[i], node) then
+        node.Selected := true;
   end;
 end;
 
@@ -484,6 +700,29 @@ begin
     end;
     pageNode := pageNode.GetNextSibling;
   end;
+end;
+
+procedure TFrmOLBEditor.SelectionChanged(AOrderChanged: Boolean = false);
+var
+  SelList: TPersistentSelectionList;
+begin
+  if (FUpdateSelectionCount>0) or (GlobalDesignHook=nil) then
+    exit;
+
+  GlobalDesignHook.RemoveHandlerSetSelection(@OnSetSelection);
+  try
+    SelList := TPersistentSelectionList.Create;
+    SelList.ForceUpdate := AOrderChanged;
+    try
+      OnGetSelection(SelList);
+      FDesigner.PropertyEditorHook.SetSelection(SelList) ;
+    finally
+      SelList.Free;
+    end;
+  finally
+    GlobalDesignHook.AddHandlerSetSelection(@OnSetSelection);
+  end;
+  AlActions.UpdateAction(nil);
 end;
 
 procedure TFrmOLBEditor.SelectPageInObjectInspector(APage: TJvOutlookbarPage;
@@ -566,8 +805,6 @@ begin
         raise Exception.Create('TFrmOLBEditor.TvItemsChange: ' + SDamagedTreeStructure);
       page := TJvOutlookBarPage(Obj);
       SelectPageInObjectInspector(page, true);
-      (****************** FIX ME
-      FDesigner.SelectOnlyThisComponent(page);  *)
       index := olb.Pages.IndexOf(page);
       if index = -1 then
         raise Exception.Create('TFrmOLBEditor.TvItemsChange: ' + SDamagedTreeStructure);
@@ -577,9 +814,6 @@ begin
     begin
       btn := TJvOutlookBarButton(Obj);
       SelectButtonInObjectInspector(btn, true);
-      (******************* FIX ME
-      FDesigner.SelectOnlyThisComponent(btn);
-      **********)
       if not(CheckValidButtonNode(Node)) then
         raise Exception.Create('TFrmOLBEditor.TvItemsChange: ' + SDamagedTreeStructure);
       page := TJvOutlookBarPage(Node.Parent.Data);
@@ -591,6 +825,7 @@ begin
   end else
      FDesigner.SelectOnlyThisComponent(FOutlookBar);
 
+  FDesigner.Modified;
 //    CheckActionsAvailability;
 end;
 
