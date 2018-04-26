@@ -1101,6 +1101,7 @@ function TJvOutlookBarButtons.Add: TJvOutlookBarButton;
 begin
   Result := TJvOutlookBarButton(inherited Add);
   Result.Caption := GetUniqueButtonName(Result.GetOutlookBar);
+  Result.DisplayName := Result.Caption;
 end;
 
 procedure TJvOutlookBarButtons.Assign(Source: TPersistent);
@@ -1419,6 +1420,7 @@ function TJvOutlookBarPages.Add: TJvOutlookBarPage;
 begin
   Result := TJvOutlookBarPage(inherited Add);
   Result.Caption := GetUniquePageName(Result.GetOutlookBar);
+  Result.DisplayName := Result.Caption;
 end;
 
 procedure TJvOutlookBarPages.Assign(Source: TPersistent);
