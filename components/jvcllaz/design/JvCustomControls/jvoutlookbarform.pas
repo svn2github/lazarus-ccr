@@ -5,7 +5,8 @@ unit JvOutlookBarForm;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ActnList, Menus,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls,
+  ActnList, Menus, LclVersion,
   PropEdits, ComponentEditors,
   JvOutlookBar;
 
@@ -91,6 +92,10 @@ type
     procedure Modified;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure SelectionChanged(AOrderChanged: Boolean = false);
+   {$IF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+   {$ENDIF}
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -109,6 +114,9 @@ implementation
 
 uses
   PropEditUtils, IDEWindowIntf, IDEImagesIntf, ObjInspStrConsts,
+  {$IF LCL_FullVersion < 1080000}
+  JvJVCLUtils,
+  {$ENDIF}
   JvConsts;
 
 type
@@ -117,23 +125,30 @@ type
 const
   SDamagedTreeStructure = 'Dameged tree structure.';
 
+  LARGE_TOOLBUTTON_SIZE = 40;
+  SMALL_TOOLBUTTON_SIZE = 22;
+
 
 { TFrmOLBEditor }
 
 constructor TFrmOLBEditor.Create(AOwner: TComponent);
 begin
   inherited;
-  FLargeToolBtnSize := 34;
-  FSmallToolBtnSize := 22;
-  TbTop.ButtonHeight := FLargeToolBtnSize;
-  TbTop.ButtonWidth := TbTop.ButtonHeight;
 
   AlActions.Images := IDEImages.Images_16;
+  {$IF LCL_FullVersion >= 1080000}
   AcNewPage.ImageIndex := IDEImages.LoadImage('laz_add');
   AcNewButton.ImageIndex := IDEImages.LoadImage('laz_add');
   AcDelete.ImageIndex := IDEImages.LoadImage('laz_delete');
   AcMoveDown.ImageIndex := IDEImages.LoadImage('arrow_down');
   AcMoveUp.ImageIndex := IDEImages.LoadImage('arrow_up');
+  {$ELSE}
+  AcNewPage.ImageIndex := IDEImages.LoadImage(16, 'laz_add');
+  AcNewButton.ImageIndex := IDEImages.LoadImage(16, 'laz_add');
+  AcDelete.ImageIndex := IDEImages.LoadImage(16, 'laz_delete');
+  AcMoveDown.ImageIndex := IDEImages.LoadImage(16, 'arrow_down');
+  AcMoveUp.ImageIndex := IDEImages.LoadImage(16, 'arrow_up');
+  {$ENDIF}
 
   TbTop.Images := AlActions.Images;
   popNew.Images := AlActions.Images;
@@ -385,6 +400,24 @@ begin
   end;
 end;
 
+{$IF LCL_FullVersion >= 1080000}
+procedure TFrmOLBEditor.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    DisableAutoSizing;
+    try
+      FLargeToolBtnSize := round(LARGE_TOOLBUTTON_SIZE * AXProportion);
+      FSmallToolBtnSize := round(SMALL_TOOLBUTTON_SIZE * AXProportion);
+    finally
+      EnableAutoSizing;
+    end;
+  end;
+end;
+{$ENDIF}
+
 procedure TFrmOLBEditor.EndUpdateSelection;
 begin
   dec(FUpdateSelectionCount);
@@ -498,8 +531,17 @@ end;
 
 procedure TFrmOLBEditor.FormShow(Sender: TObject);
 begin
+  FLargeToolBtnSize := Scale96ToForm(LARGE_TOOLBUTTON_SIZE);
+  FSmallToolBtnSize := Scale96ToForm(SMALL_TOOLBUTTON_SIZE);
+  if AcShowToolbarCaptions.Checked then
+    TbTop.ButtonHeight := FLargeToolBtnSize
+  else
+    TbTop.ButtonHeight := FSmallToolBtnSize;
+  TbTop.ButtonWidth := TbTop.ButtonHeight;
+
   if (FOutlookBar = nil) or (FDesigner = nil) then
     exit;
+
   BuildTreeData;
 end;
 

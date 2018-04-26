@@ -7,7 +7,7 @@ uses
 {$R *.res}
 
 begin
-  Application.Scaled:=True;   // Please remove this if Lazarus is older than 1.8
+  Application.Scaled := True;   // Remove this line if Lazarus is older than 1.8
   Application.Initialize;
   Application.CreateForm(TOLBarMainForm, OLBarMainForm);
   Application.Run;

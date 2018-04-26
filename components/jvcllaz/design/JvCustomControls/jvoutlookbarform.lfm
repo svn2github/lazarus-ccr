@@ -1,12 +1,12 @@
 object FrmOLBEditor: TFrmOLBEditor
   Left = 311
-  Height = 462
+  Height = 461
   Top = 151
-  Width = 258
+  Width = 247
   BorderIcons = [biSystemMenu]
   Caption = 'OutlookBar Editor'
-  ClientHeight = 462
-  ClientWidth = 258
+  ClientHeight = 461
+  ClientWidth = 247
   Constraints.MinHeight = 200
   Constraints.MinWidth = 150
   OnActivate = FormActivate
@@ -21,11 +21,12 @@ object FrmOLBEditor: TFrmOLBEditor
     Left = 0
     Height = 36
     Top = 0
-    Width = 258
+    Width = 247
     AutoSize = True
     ButtonHeight = 34
     ButtonWidth = 30
     Caption = 'TbTop'
+    ParentFont = False
     ParentShowHint = False
     PopupMenu = popToolbar
     ShowCaptions = True
@@ -50,23 +51,24 @@ object FrmOLBEditor: TFrmOLBEditor
       Style = tbsDivider
     end
     object BtnUp: TToolButton
-      Left = 120
+      Left = 118
       Top = 2
       Action = AcMoveUp
     end
     object BtnDown: TToolButton
-      Left = 150
+      Left = 148
       Top = 2
       Action = AcMoveDown
     end
   end
   object TvItems: TTreeView
     Left = 0
-    Height = 403
+    Height = 402
     Top = 36
-    Width = 258
+    Width = 247
     Align = alClient
     HideSelection = False
+    ParentFont = False
     RightClickSelect = True
     ShowButtons = False
     TabOrder = 1
@@ -79,12 +81,13 @@ object FrmOLBEditor: TFrmOLBEditor
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23
-    Top = 439
-    Width = 258
+    Top = 438
+    Width = 247
     Panels = <    
       item
         Width = 50
       end>
+    ParentFont = False
     SimplePanel = False
   end
   object AlActions: TActionList

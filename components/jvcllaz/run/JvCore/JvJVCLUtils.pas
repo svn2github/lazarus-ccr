@@ -852,7 +852,7 @@ function ReplaceComponentReference(This, NewReference: TComponent; var VarRefere
 function ReplaceImageListReference(This: TComponent; NewReference: TCustomImageList;
   var VarReference: TCustomImageList; ChangeLink: TChangeLink): Boolean;
 
-{$IF LCL_FullVersion < 3000000}
+{$IF LCL_FullVersion < 1080000}
 function Scale96ToForm(ASize: Integer): Integer;
 {$ENDIF}
 
