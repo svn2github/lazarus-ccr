@@ -114,7 +114,9 @@ type
     procedure EditKeyDown(var Key: word; Shift: TShiftState); override;
     procedure EditKeyPress( var Key: char); override;
 
+    {$IF lcl_fullversion < 01090000}
     function GetDefaultGlyph: TBitmap; override;
+    {$ENDIF}
     function GetDefaultGlyphName: String; override;
     function CreatePopupForm:TPopupCalendar;
     procedure DoEnter; override;
@@ -849,17 +851,15 @@ begin
   end;
 end;
 
+{$IF lcl_fullversion < 01090000}
 function TCustomRxDateEdit.GetDefaultGlyph: TBitmap;
 var
   R: TRect;
   B: TCustomBitmap;
 begin
-  {$IF lcl_fullversion < 01090000}
-  Result := nil;
-  {$ELSE}
   Result := DateGlyph;
-  {$ENDIF}
 end;
+{$ENDIF}
 
 function TCustomRxDateEdit.GetDefaultGlyphName: String;
 begin
