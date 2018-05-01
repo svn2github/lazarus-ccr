@@ -148,6 +148,7 @@ type
   private
     FOnChangeList: TList;
   protected
+    procedure AutoSize; virtual;
     procedure Changed; virtual;
     procedure DrawBackground(Canvas: TCanvas; TabBar: TJvCustomTabBar; R: TRect); virtual; abstract;
     procedure DrawDivider(Canvas: TCanvas; LeftTab: TJvTabBarItem; R: TRect); virtual; abstract;
@@ -188,6 +189,7 @@ type
     FCloseColorSelected: TColor;
     FDividerColor: TColor;
     FMoveDividerColor: TColor;
+    FTabHeight: Integer;
     FTabWidth: Integer;
     procedure SetCloseRectColorDisabled(const Value: TColor);
     procedure SetCloseColor(const Value: TColor);
@@ -206,8 +208,10 @@ type
     procedure FontChanged(Sender: TObject);
     procedure SetDividerColor(const Value: TColor);
     procedure SetCloseCrossColorSelected(const Value: TColor);
+    procedure SetTabHeight(Value: Integer);
     procedure SetTabWidth(Value: Integer);
   protected
+    procedure AutoSize; override;
     procedure DrawBackground(Canvas: TCanvas; TabBar: TJvCustomTabBar; R: TRect); override;
     procedure DrawDivider(Canvas: TCanvas; LeftTab: TJvTabBarItem; R: TRect); override;
     procedure DrawMoveDivider(Canvas: TCanvas; Tab: TJvTabBarItem; MoveLeft: Boolean); override;
@@ -235,6 +239,7 @@ type
     property CloseRectColorDisabled: TColor read FCloseRectColorDisabled write SetCloseRectColorDisabled default $D6D6D6;
     property DividerColor: TColor read FDividerColor write SetDividerColor default $99A8AC;
     property MoveDividerColor: TColor read FMoveDividerColor write FMoveDividerColor default clBlack;
+    property TabHeight: Integer read FTabHeight write SetTabHeight default 0;
     property TabWidth: Integer read FTabWidth write SetTabWidth default 0;
     property Font: TFont read FFont write SetFont;
     property DisabledFont: TFont read FDisabledFont write SetDisabledFont;
@@ -1424,6 +1429,8 @@ var
   imgRes: TScaledImageListResolution;
  {$ENDIF}
 begin
+  CurrentPainter.AutoSize;
+
   // Text height
   Canvas.Font.Assign(Font);
   PreferredHeight := Canvas.TextHeight('Tg');
@@ -2161,6 +2168,10 @@ begin
   FOnChangeList.Free;
 end;
 
+procedure TJvTabBarPainter.AutoSize;
+begin
+end;
+
 procedure TJvTabBarPainter.Changed;
 var
   i: Integer;
@@ -2278,6 +2289,12 @@ begin
   FDisabledFont.Free;
   FSelectedFont.Free;
   inherited Destroy;
+end;
+
+procedure TJvModernTabBarPainter.AutoSize;
+begin
+  FTabHeight := 0;
+  FTabWidth := 0;
 end;
 
 procedure TJvModernTabBarPainter.DrawBackground(Canvas: TCanvas; TabBar: TJvCustomTabBar; R: TRect);
@@ -2557,9 +2574,11 @@ begin
   end;
   inc(Result.CY, Scale96(TOP_MARGIN) + Scale96(BOTTOM_MARGIN));
 
-  // Override width if TabWidth is fixed.
+  // Override width if TabWidth/TabHeight is fixed.
   if TabWidth > 0 then
-    Result.cx := TabWidth;
+    Result.CX := TabWidth;
+  if TabHeight > 0 then
+    Result.CY := TabHeight;
 end;
 
 function TJvModernTabBarPainter.Options: TJvTabBarPainterOptions;
@@ -2685,6 +2704,17 @@ begin
   if Value <> FDividerColor then
   begin
     FDividerColor := Value;
+    Changed;
+  end;
+end;
+
+procedure TJvModernTabBarPainter.SetTabHeight(Value: Integer);
+begin
+  if Value < 0 then
+    Value := 0;
+  if Value <> FTabHeight then
+  begin
+    FTabHeight := Value;
     Changed;
   end;
 end;
