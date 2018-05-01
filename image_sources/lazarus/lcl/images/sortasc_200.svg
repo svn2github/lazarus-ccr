@@ -15,9 +15,9 @@
    sodipodi:version="0.32"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
-   sodipodi:docname="sortasc_200.svg"
+   sodipodi:docname="sortdesc_200.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="sortasc_200.png"
+   inkscape:export-filename="sortdesc_200.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="25.564661"
-     inkscape:cx="15.874748"
-     inkscape:cy="15.8132"
+     inkscape:zoom="21.363696"
+     inkscape:cx="16.64496"
+     inkscape:cy="12.490874"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -87,11 +87,46 @@
        style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.48074067;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="text846"
        transform="matrix(2.0769215,0,0,2.0833307,-109.43252,-2170.0547)" />
-    <path
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#048202;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 25.000001,12 28.5,16.5 16,29 3.4999995,16.5 7.0000015,12 13,18.5 V 2.0000005 h 6 V 18.5 Z"
-       id="path830"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccccccc" />
+    <g
+       id="layer1-7"
+       inkscape:label="Ebene 1"
+       transform="matrix(1,0,0,-1,0,32)">
+      <g
+         transform="matrix(2.0769215,0,0,2.0833307,-109.43252,-2170.0547)"
+         id="text846-22"
+         style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.48074067;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         aria-label="7" />
+      <g
+         transform="rotate(90,16,16)"
+         inkscape:label="Ebene 1"
+         id="layer1-8">
+        <g
+           aria-label="7"
+           style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.48074067;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="text846-2"
+           transform="matrix(2.0769215,0,0,2.0833307,-109.43252,-2170.0547)" />
+        <g
+           aria-label="7"
+           style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.49507377px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="text846-6"
+           transform="matrix(2.04,0,0,2,-106.92269,-2082.1352)" />
+        <g
+           aria-label="7"
+           style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.48074067;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="text846-3"
+           transform="matrix(-2.0769215,0,0,2.0833307,91.185711,-2178.3611)" />
+        <g
+           aria-label="7"
+           style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.49507377px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="text846-6-6"
+           transform="matrix(-2.04,0,0,2,88.675881,-2090.4416)" />
+        <path
+           style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#048202;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+           d="M 5.5000309,5.5 26.500031,16 5.5000309,26.5 Z"
+           id="path830-0-2"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccc" />
+      </g>
+    </g>
   </g>
 </svg>

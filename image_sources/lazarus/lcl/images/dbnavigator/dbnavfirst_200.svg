@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="20.771262"
-     inkscape:cx="16.423012"
-     inkscape:cy="14.857828"
+     inkscape:zoom="14.6875"
+     inkscape:cx="7.191938"
+     inkscape:cy="13.901755"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -87,18 +87,23 @@
        style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.48074067;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="text846"
        transform="matrix(2.0769215,0,0,2.0833307,-109.43252,-2170.0547)" />
+    <g
+       aria-label="7"
+       style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.49507377px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="text846-6"
+       transform="matrix(2.04,0,0,2,-106.92269,-2082.1352)" />
     <path
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#048202;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 21.499979,6.4999999 16.999979,3 4.4999793,15.5 16.999979,28.000001 l 4.5,-3.500002 -6.5,-5.999999 h 16.5 v -6 h -16.5 z"
-       id="path830"
+       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#048202;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       d="M 28.5,5.5 7.5,16 28.5,26.5 Z"
+       id="path830-0"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccccccc" />
+       sodipodi:nodetypes="cccc" />
     <rect
        style="opacity:1;fill:#048202;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       id="rect815"
+       id="rect826"
        width="4"
-       height="32"
-       x="0"
-       y="0" />
+       height="26"
+       x="3"
+       y="3" />
   </g>
 </svg>

@@ -15,9 +15,9 @@
    sodipodi:version="0.32"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
-   sodipodi:docname="sortdesc.svg"
+   sodipodi:docname="sortasc.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="sortdesc.png"
+   inkscape:export-filename="sortasc.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -91,11 +91,21 @@
        style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="text846"
        transform="translate(-52.393475,-1041.0676)" />
-    <path
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#048202;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
-       d="m 12.5,9.4999793 1.5,-2 -6,-6 -6,6 1.5,2 3,-3 v 7.9999997 h 3 V 6.4999793 Z"
-       id="path830"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccccccc" />
+    <g
+       id="layer1-5"
+       inkscape:label="Ebene 1"
+       transform="rotate(90,8,8.0000001)">
+      <g
+         transform="translate(-52.393475,-1041.0676)"
+         id="text846-5"
+         style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         aria-label="7" />
+      <path
+         sodipodi:nodetypes="cccc"
+         inkscape:connector-curvature="0"
+         id="path830-4"
+         d="M 2.5000205,2.5 13.500041,8 2.5000205,13.5 Z"
+         style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#048202;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
+    </g>
   </g>
 </svg>

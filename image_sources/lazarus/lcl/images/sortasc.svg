@@ -15,9 +15,9 @@
    sodipodi:version="0.32"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
-   sodipodi:docname="sortasc.svg"
+   sodipodi:docname="sortdesc.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="sortasc.png"
+   inkscape:export-filename="sortdesc.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -30,8 +30,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="31.513563"
-     inkscape:cx="7.1869214"
-     inkscape:cy="6.2327666"
+     inkscape:cx="5.5685706"
+     inkscape:cy="7.2799348"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -91,11 +91,31 @@
        style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="text846"
        transform="translate(-52.393475,-1041.0676)" />
-    <path
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#048202;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
-       d="m 12.5,6.5 1.5,2 -6,6 -6,-6 1.5,-2 3,3 v -8 h 3 v 8 z"
-       id="path830"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccccccc" />
+    <g
+       id="layer1-7"
+       inkscape:label="Ebene 1"
+       transform="matrix(1,0,0,-1,-9.9999998e-8,16)">
+      <g
+         transform="translate(-52.393475,-1041.0676)"
+         id="text846-2"
+         style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         aria-label="7" />
+      <g
+         transform="rotate(90,8,8.0000001)"
+         inkscape:label="Ebene 1"
+         id="layer1-5">
+        <g
+           aria-label="7"
+           style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="text846-5"
+           transform="translate(-52.393475,-1041.0676)" />
+        <path
+           style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#048202;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+           d="M 2.5000205,2.5 13.500041,8 2.5000205,13.5 Z"
+           id="path830-4"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccc" />
+      </g>
+    </g>
   </g>
 </svg>

@@ -30,7 +30,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="23.498819"
-     inkscape:cx="11.569888"
+     inkscape:cx="2.2715484"
      inkscape:cy="9.7696415"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -89,19 +89,23 @@
     <g
        id="layer1-7"
        inkscape:label="Ebene 1"
-       transform="matrix(-1.5384607,0,0,1.5416653,24.807659,24.041682)"
-       style="stroke-width:0.64932442">
+       transform="matrix(-1,0,0,1,24,0)">
       <g
-         transform="translate(-52.393475,-1041.0676)"
-         id="text846"
-         style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.64932442px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         transform="matrix(1.52,0,0,1.5,-107.17809,-1541.6014)"
+         id="text846-2"
+         style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.66226619px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         aria-label="7" />
+      <g
+         transform="matrix(1.52,0,0,1.5,-140.57383,-1550.5376)"
+         id="text846-2-9"
+         style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.66226619px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          aria-label="7" />
       <path
-         sodipodi:nodetypes="cccccccccc"
+         sodipodi:nodetypes="cccc"
          inkscape:connector-curvature="0"
-         id="path830"
-         d="M 6.3749956,3.2162091 8.3249966,1.5945861 14.5,7.7567537 8.3249966,13.918921 6.3749956,12.297298 9.2999972,9.3783767 H 1.4999929 V 6.1351306 h 7.8000043 z"
-         style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#048202;stroke-width:0.64932442px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
+         id="path830-5-5"
+         d="M 3.5000309,27.5 20.500031,36 3.5000309,44.5 Z"
+         style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#048202;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
     </g>
   </g>
 </svg>
