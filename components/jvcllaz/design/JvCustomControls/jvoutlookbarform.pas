@@ -154,16 +154,6 @@ begin
   popNew.Images := AlActions.Images;
   popForm.Images := AlActions.Images;
   popToolbar.Images := AlActions.Images;
-  (*
-  if Assigned(GlobalDesignHook) then
-  begin
-//    GlobalDesignHook.AddHandlerComponentRenamed(@OnComponentRenamed);
-    GlobalDesignHook.AddHandlerPersistentDeleting(@OnPersistentDeleting);
-    GlobalDesignHook.AddHandlerGetSelection(@OnGetSelection);
-    GlobalDesignHook.AddHandlerSetSelection(@OnSetSelection);
-    GlobalDesignHook.AddHandlerPersistentAdded(@OnPersistentAdded);
-  end;
-  *)
 end;
 
 procedure TFrmOLBEditor.AcDeleteExecute(Sender: TObject);
@@ -281,7 +271,7 @@ end;
 
 procedure TFrmOLBEditor.AlActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
 var
- Sel: Boolean;
+  Sel: Boolean;
 begin
   Sel := TvItems.Selected <> nil;
   AcNewButton.Enabled := Sel;

@@ -51,12 +51,12 @@ object FrmOLBEditor: TFrmOLBEditor
       Style = tbsDivider
     end
     object BtnUp: TToolButton
-      Left = 118
+      Left = 120
       Top = 2
       Action = AcMoveUp
     end
     object BtnDown: TToolButton
-      Left = 148
+      Left = 150
       Top = 2
       Action = AcMoveDown
     end
