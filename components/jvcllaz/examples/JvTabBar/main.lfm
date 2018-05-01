@@ -67,6 +67,7 @@ object Form1: TForm1
     Top = 65
     Width = 614
     Align = alClient
+    BorderStyle = bsNone
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -11
