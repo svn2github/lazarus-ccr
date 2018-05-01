@@ -31,7 +31,7 @@ unit JvTabBar;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Types,
+  LCLIntf, LCLType, LMessages, LCLVersion, Types,
   Graphics, Controls, Forms, ImgList, Menus, Buttons,
   ExtCtrls, SysUtils, Classes, Contnrs, Themes;
 
@@ -79,7 +79,6 @@ type
     FAutoDeleteDatas: TObjectList;
     function GetEnabled: Boolean;
     function GetModified: Boolean;
-
     procedure SetPopupMenu(const Value: TPopupMenu);
     function GetClosing: Boolean;
     procedure SetModified(const Value: Boolean);
@@ -95,7 +94,6 @@ type
     function GetHot: Boolean;
   protected
     procedure Changed; virtual;
-
     procedure SetIndex(Value: Integer); override;
     procedure Notification(Component: TComponent; Operation: TOperation); virtual;
     property Name: string read FName write SetName;
@@ -109,7 +107,6 @@ type
     function GetPreviousVisible: TJvTabBarItem;
     procedure MakeVisible;
     function AutoDeleteData: TObjectList;
-
     property Data: TObject read FData write FData;
     property TabBar: TJvCustomTabBar read GetTabBar;
     property DisplayRect: TRect read GetDisplayRect;
@@ -126,7 +123,6 @@ type
     property Visible: Boolean read FVisible write SetVisible default True;
     property PopupMenu: TPopupMenu read FPopupMenu write SetPopupMenu;
     property ShowHint: Boolean read FShowHint write FShowHint default True;
-
     property OnGetModified: TJvGetModifiedEvent read FOnGetModified write FOnGetModified;
     property OnGetEnabled: TJvGetEnabledEvent read FOnGetEnabled write FOnGetEnabled;
   end;
@@ -143,7 +139,6 @@ type
     function IndexOf(Item: TJvTabBarItem): Integer;
     procedure EndUpdate; override;
     property Items[Index: Integer]: TJvTabBarItem read GetItem write SetItem; default;
-
     property TabBar: TJvCustomTabBar read GetTabBar;
   end;
 
@@ -155,7 +150,6 @@ type
     FOnChangeList: TList;
   protected
     procedure Changed; virtual;
-
     procedure DrawBackground(Canvas: TCanvas; TabBar: TJvCustomTabBar; R: TRect); virtual; abstract;
     procedure DrawTab(Canvas: TCanvas; Tab: TJvTabBarItem; R: TRect); virtual; abstract;
     procedure DrawDivider(Canvas: TCanvas; LeftTab: TJvTabBarItem; R: TRect); virtual; abstract;
@@ -164,7 +158,6 @@ type
     function GetTabSize(Canvas: TCanvas; Tab: TJvTabBarItem): TSize; virtual; abstract;
     function GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem; R: TRect): TRect; virtual; abstract;
     function Options: TJvTabBarPainterOptions; virtual; abstract;
-
     procedure DrawScrollButton(Canvas: TCanvas; TabBar: TJvCustomTabBar; Button: TJvTabBarScrollButtonKind;
       State: TJvTabBarScrollButtonState; R: TRect); virtual;
     procedure GetScrollButtons(TabBar: TJvCustomTabBar; var LeftButton, RightButton: TRect); {virtual; reserved for future use }
@@ -193,7 +186,6 @@ type
     FDividerColor: TColor;
     FMoveDividerColor: TColor;
     FTabWidth: Integer;
-
     procedure SetCloseRectColorDisabled(const Value: TColor);
     procedure SetCloseColor(const Value: TColor);
     procedure SetCloseColorSelected(const Value: TColor);
@@ -203,11 +195,9 @@ type
     procedure SetFont(const Value: TFont);
     procedure SetDisabledFont(const Value: TFont);
     procedure SetSelectedFont(const Value: TFont);
-
     procedure SetModifiedCrossColor(const Value: TColor);
     procedure SetBorderColor(const Value: TColor);
     procedure SetControlDivideColor(const Value: TColor);
-
     procedure SetTabColor(const Value: TColor);
     procedure SetColor(const Value: TColor);
     procedure FontChanged(Sender: TObject);
@@ -216,13 +206,14 @@ type
     procedure SetTabWidth(Value: Integer);
   protected
     procedure DrawBackground(Canvas: TCanvas; TabBar: TJvCustomTabBar; R: TRect); override;
-    procedure DrawTab(Canvas: TCanvas; Tab: TJvTabBarItem; ATabRect: TRect); override;
     procedure DrawDivider(Canvas: TCanvas; LeftTab: TJvTabBarItem; R: TRect); override;
     procedure DrawMoveDivider(Canvas: TCanvas; Tab: TJvTabBarItem; MoveLeft: Boolean); override;
+    procedure DrawTab(Canvas: TCanvas; Tab: TJvTabBarItem; ATabRect: TRect); override;
+    function GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem; ATabRect: TRect): TRect; override;
     function GetDividerWidth(Canvas: TCanvas; LeftTab: TJvTabBarItem): Integer; override;
     function GetTabSize(Canvas: TCanvas; Tab: TJvTabBarItem): TSize; override;
-    function GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem; ATabRect: TRect): TRect; override;
     function Options: TJvTabBarPainterOptions; override;
+    function Scale96(AValue: Integer): Integer;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -482,6 +473,17 @@ uses
 
 const
   WHEEL_DELTA = 120;
+
+  // Pixels at 96 ppi:
+  LEFT_MARGIN = 4;
+  RIGHT_MARGIN = 6;
+  TEXT_MARGIN_LEft = 2;
+  TEXT_MARGIN_RIGHT = 4;
+  TOP_MARGIN = 2;
+  BOTTOM_MARGIN = 2;
+  CLOSE_BUTTON_SIZE = 12;
+  CROSS_MARGIN = 3;
+
 
 function DrawButtonFace(ACanvas: TCanvas; const ARect: TRect; AFlat: Boolean;
 //  BevelWidth: Integer; Style: TButtonStyle; IsRounded,
@@ -1453,16 +1455,12 @@ end;
 
 function TJvCustomTabBar.GetTabHeight(Tab: TJvTabBarItem): Integer;
 begin
-  Result := Abs(CurrentPainter.GetTabSize(Canvas, Tab).cy);
-  if Result > High(Word) then
-    Result := High(Word);
+  Result := CurrentPainter.GetTabSize(Canvas, Tab).cy;
 end;
 
 function TJvCustomTabBar.GetTabWidth(Tab: TJvTabBarItem): Integer;
 begin
-  Result := Abs(CurrentPainter.GetTabSize(Canvas, Tab).cx);
-  if Result > High(Word) then
-    Result := High(Word);
+  Result := CurrentPainter.GetTabSize(Canvas, Tab).cx;
 end;
 
 function TJvCustomTabBar.TabAt(X, Y: Integer): TJvTabBarItem;
@@ -1790,19 +1788,27 @@ begin
 
     case TabBar.Orientation of
       toBottom:
-        Result := Rect(FLeft, 0,
-          FLeft + TabBar.GetTabWidth(Self), 0 + TabBar.GetTabHeight(Self));
+        Result := Rect(
+          FLeft,
+          0,
+          FLeft + TabBar.GetTabWidth(Self),
+          0 + TabBar.GetTabHeight(Self)
+        );
     else
       // toTop
-      Result := Rect(FLeft, TabBar.ClientHeight - TabBar.GetTabHeight(Self),
-          FLeft + TabBar.GetTabWidth(Self), TabBar.ClientHeight);
+      Result := Rect(
+        FLeft,
+        TabBar.ClientHeight - TabBar.GetTabHeight(Self),
+        FLeft + TabBar.GetTabWidth(Self),
+        TabBar.ClientHeight
+      );
     end;
   end;
 end;
 
 function TJvTabBarItem.GetHot: Boolean;
 begin
-  Result := TabBar.HotTab = Self;
+  Result := (TabBar.HotTab = Self);
 end;
 
 function TJvTabBarItem.GetImages: TCustomImageList;
@@ -1829,7 +1835,8 @@ begin
     FCaption := Value;
     if TabBar.PageListTabLink and (TabBar.PageList <> nil) and
        not (csLoading in TabBar.ComponentState) and
-       Supports(TabBar.PageList, IPageList, PageListIntf) then
+       Supports(TabBar.PageList, IPageList, PageListIntf)
+    then
       PageListIntf.PageCaptionChanged(Index, FCaption);
     Changed;
   end;
@@ -2232,6 +2239,7 @@ procedure TJvModernTabBarPainter.DrawTab(Canvas: TCanvas; Tab: TJvTabBarItem;
 var
   R, CloseR: TRect;
   ts: TTextStyle;
+  margin: Integer;
 begin
   R := ATabRect;
 
@@ -2274,15 +2282,18 @@ begin
       LineTo(R.Right - 1 - 1, R.Top);
     end;
 
+    inc(R.Left, Scale96(LEFT_MARGIN));
+    dec(R.Right, Scale96(RIGHT_MARGIN));
+
     if Tab.TabBar.CloseButton then
     begin
+      CloseR := GetCloseRect(Canvas, Tab, ATabRect);
+
       // close button color
       if Tab.Selected then
         Brush.Color := CloseColorSelected
       else
         Brush.Color := CloseColor;
-
-      CloseR := GetCloseRect(Canvas, Tab, ATabRect);
       Pen.Color := CloseRectColor;
       if not Tab.Enabled then
         Pen.Color := CloseRectColorDisabled;
@@ -2303,39 +2314,27 @@ begin
         Pen.Color := CloseCrossColor
       else
         Pen.Color := CloseCrossColorDisabled;
+      Pen.Width := 2;
 
       // Draw close cross
-      MoveTo(CloseR.Left + 3, CloseR.Top + 3);
-      MoveTo(CloseR.Left + 3, CloseR.Top + 3);
-      LineTo(CloseR.Right - 3, CloseR.Bottom - 3);
-      MoveTo(CloseR.Left + 4, CloseR.Top + 3);
-      LineTo(CloseR.Right - 4, CloseR.Bottom - 3);
-
-      MoveTo(CloseR.Right - 4, CloseR.Top + 3);
-      LineTo(CloseR.Left + 2, CloseR.Bottom - 3);
-      MoveTo(CloseR.Right - 5, CloseR.Top + 3);
-      LineTo(CloseR.Left + 3, CloseR.Bottom - 3);
-
+      margin := Scale96(CROSS_MARGIN);
+      Line(CloseR.Left + margin, CloseR.Top + margin, CloseR.Right - margin - 1, CloseR.Bottom - margin - 1);
+      Line(CloseR.Left + margin, CloseR.Bottom - margin - 1, CloseR.Right - margin - 1, CloseR.Top + margin);
+      {
       // remove intersection
       if Tab.Modified then
         FillRect(Rect(CloseR.Left + 5, CloseR.Top + 4, CloseR.Right - 5, CloseR.Bottom - 4));
-
-      R.Right := CloseR.Left;
-     // R.Left := CloseR.Right;
+      }
+      R.Right := CloseR.Left - Scale96(TEXT_MARGIN_RIGHT);
     end;
 
-    InflateRect(R, -1, -1);
-
-  //  if not Tab.TabBar.CloseButton then
-      Dec(R.Right, 2);
-//      Inc(R.Left, 2);
+    { Draw image from image list }
 
     if (Tab.ImageIndex <> -1) and (Tab.GetImages <> nil) then
     begin
-      inc(R.Left, 2);
       Tab.GetImages.Draw(Canvas, R.Left, (R.Top + R.Bottom - Tab.GetImages.Height) div 2,
         Tab.ImageIndex, Tab.Enabled);
-      Inc(R.Left, Tab.GetImages.Width + 2);
+      Inc(R.Left, Tab.GetImages.Width + Scale96(TEXT_MARGIN_LEFT));
     end;
 
     if Tab.Enabled then
@@ -2352,20 +2351,21 @@ begin
     ts := TextStyle;
     ts.EndEllipsis := true;
     ts.Clipping := true;
+
     TextRect(R, R.Left, (R.Top + R.Bottom - TextHeight('Tg')) div 2, Tab.Caption, ts);
   end;
 end;
 
 function TJvModernTabBarPainter.GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem;
   ATabRect: TRect): TRect;
-const
-  H = 12;
-  W = 12;
+var
+  btnSize: TSize;
 begin
-  Result.Right := ATabRect.Right - 5;
-  Result.Left := Result.Right - W;
-  Result.Top := (ATabRect.Top + ATabRect.Bottom - H) div 2;
-  Result.Bottom := Result.Top + W;
+  btnSize := Size(Scale96(CLOSE_BUTTON_SIZE), Scale96(CLOSE_BUTTON_SIZE));
+  Result.Right := ATabRect.Right - Scale96(RIGHT_MARGIN);
+  Result.Left := Result.Right - btnSize.CX;
+  Result.Top := (ATabRect.Top + ATabRect.Bottom - btnSize.CY) div 2;
+  Result.Bottom := Result.Top + btnSize.CY;
 end;
 
 function TJvModernTabBarPainter.GetDividerWidth(Canvas: TCanvas; LeftTab: TJvTabBarItem): Integer;
@@ -2374,6 +2374,9 @@ begin
 end;
 
 function TJvModernTabBarPainter.GetTabSize(Canvas: TCanvas; Tab: TJvTabBarItem): TSize;
+var
+  w: Integer;
+  h: Integer;
 begin
   if Tab.Enabled then
   begin
@@ -2385,13 +2388,43 @@ begin
   else
     Canvas.Font.Assign(DisabledFont);
 
+  // Measure text
+  if Tab.Caption = '' then
+    Result := Size(0, Canvas.TextHeight('Tg'))
+  else
+    Result := Canvas.TextExtent(Tab.Caption);
+  inc(Result.CX, Scale96(LEFT_MARGIN) + Scale96(RIGHT_MARGIN));
+
+  // Extend width by close button
+  if Tab.TabBar.CloseButton then begin
+    w := Scale96(CLOSE_BUTTON_SIZE);
+    inc(Result.CX, w + Scale96(TEXT_MARGIN_RIGHT));
+    h := w;
+    if Result.CY < h then
+      Result.CY := h;
+  end;
+
+  // Extend width and height by image
+  if (Tab.ImageIndex <> -1) and (Tab.GetImages <> nil) then begin
+    w := Tab.GetImages.Width;
+    h := Tab.GetImages.Height;
+    inc(Result.CX, w + Scale96(TEXT_MARGIN_LEFT));
+    if Result.CY < h then
+      Result.CY := h;
+  end;
+  inc(Result.CY, Scale96(TOP_MARGIN) + Scale96(BOTTOM_MARGIN));
+
+    (*
+
   Result.cx := Canvas.TextWidth(Tab.Caption) + 11;
   Result.cy := Canvas.TextHeight(Tab.Caption + 'Ag') + 7;
   if Tab.TabBar.CloseButton then
     Result.cx := Result.cx + 15;
   if (Tab.ImageIndex <> -1) and (Tab.GetImages <> nil) then
     Result.cx := Result.cx + Tab.GetImages.Width + 2;
+      *)
 
+  // Override width if TabWidth is fixed.
   if TabWidth > 0 then
     Result.cx := TabWidth;
 end;
@@ -2404,6 +2437,11 @@ end;
 procedure TJvModernTabBarPainter.FontChanged(Sender: TObject);
 begin
   Changed;
+end;
+
+function TJvModernTabBarPainter.Scale96(AValue: Integer): Integer;
+begin
+  Result := MulDiv(AValue, Font.PixelsPerInch, 96);
 end;
 
 procedure TJvModernTabBarPainter.SetBorderColor(const Value: TColor);

@@ -6,3 +6,4 @@ tjvnavpanelheader.bmp
 tjvnavpanestylemanager.bmp
 tjvnavpanetoolpanel.bmp
 tjvoutlooksplitter.bmp
+tjvnotebookpagelist.png

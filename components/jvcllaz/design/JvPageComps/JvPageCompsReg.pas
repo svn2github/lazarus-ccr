@@ -18,7 +18,9 @@ uses
   PropEdits, ComponentEditors,
   JvDsgnConsts,
   JvNavigationPane, JvNavPaneEditors,
-  JvPageList,JvPageListEditors, JvPageListTreeView;
+  JvPageList, JvNotebookPageList,
+  JvPageListEditors,
+  JvPageListTreeView;
 
 procedure Register;
 const
@@ -42,17 +44,21 @@ begin
     TJvNavIconButtonImageIndexProperty);
 
   // JvPageList
-  RegisterComponents(RsPaletteJvcl, [  // was: RsPaletteListComboTree
-    TJvPageList]);
+  RegisterComponents(RsPaletteJvcl, [        // was: RsPaletteListComboTree
+    //TJvPageList,
+    TJvNotebookPageList]);
+  {
   RegisterClasses([TJvPageList, TJvStandardPage]);
   RegisterComponentEditor(TJvCustomPageList, TJvCustomPageListEditor);  // was: TJvCustomPageEditor
   RegisterComponentEditor(TJvCustomPage, TJvCustomPageEditor);
   RegisterPropertyEditor(TypeInfo(TJvShowDesignCaption), nil, '',
-    TJvShowDesignCaptionProperty);
-{
+    TJvShowDesignCaptionProperty);#
+  }
+
+  {
   RegisterPropertyEditor(TypeInfo(TJvCustomPage),
     TJvCustomPageList, cActivePage, TJvActivePageProperty);
-}
+  }
 
   // JvPageTree
   RegisterComponents(RsPaletteJvcl, [  // was: TsPaletteListComboTree

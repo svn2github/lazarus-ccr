@@ -43,12 +43,14 @@ type
     procedure GetValues(Proc: TGetStrProc); override;
   end;
     *)
+
   TJvShowDesignCaptionProperty = class(TEnumProperty)
     function GetAttributes: TPropertyAttributes; override;
   end;
 
   { a component editor for the TJvPageList }
 
+  (********************************** NOT WORKING ***************
   // adapted from TUntabbedNotebookComponentEditor)
   TJvCustomPageListEditor = class(TDefaultComponentEditor)
   protected
@@ -71,7 +73,7 @@ type
     function Page: TJvCustomPage; virtual;
   end;
 
-     (*
+     {
   TJvCustomPageEditor = class(TComponentEditor)
   private
     procedure InsertPage;
@@ -84,7 +86,8 @@ type
     function GetVerbCount: Integer; override;
     procedure ExecuteVerb(Index: Integer); override;
     procedure Edit; override;
-  end;    *)
+  end;    }
+  ***********************************************)
 
   TJvSettingsTreeImagesProperty = class(TImageIndexPropertyEditor)
   protected
@@ -94,7 +97,6 @@ type
 implementation
 
 uses
-  LazLogger,
   TypInfo,
   JvDsgnConsts, JvPageListTreeView; //, JvPageListEditorForm;
 
@@ -119,6 +121,7 @@ const
 
 
 { TJvCustomPageListEditor }
+(****************************************** NOT WORKING
 { adapted from TUntabbedNotebookComponentEditor for LCL's Notebook
  originally named "TJvCustomPageEditor" }
 
@@ -260,7 +263,7 @@ begin
 end;
 
 
-(*
+{
 
 procedure TJvCustomPageEditor.Edit;
 begin
@@ -359,7 +362,8 @@ begin
     Designer.Modified;
   end;
 end;
-    *)
+    }
+*********************************************************)
 
 
 //=== { TJvActivePageProperty } ==============================================
@@ -384,6 +388,7 @@ begin
 end;
                    *)
 
+
 //=== { TJvSettingsTreeImagesProperty } ======================================
 
 function TJvSettingsTreeImagesProperty.GetImageList: TCustomImageList;
@@ -399,6 +404,7 @@ begin
   else
     Result := nil;
 end;
+
 
 //=== { TJvShowDesignCaptionProperty } =======================================
 
