@@ -3071,6 +3071,9 @@ var
   folder: TVpNavFolder;
   TR: TRect;
 begin
+  if FActiveFolder = -1 then
+    exit;
+
   {For container style folders...}
 
   {Hide the containers for all inactive folders}

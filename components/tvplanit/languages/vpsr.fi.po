@@ -452,9 +452,10 @@ msgid "Error: Failure while creating Task."
 msgstr ""
 
 #: vpsr.rsfalse
+#, fuzzy
 msgctxt "vpsr.rsfalse"
 msgid "F"
-msgstr ""
+msgstr "P"
 
 #: vpsr.rsfirstnamelbl
 msgid "First name:"
