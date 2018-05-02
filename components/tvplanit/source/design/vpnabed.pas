@@ -34,30 +34,17 @@ unit VpNabEd;
 interface
 
 uses
- {$IFDEF LCL}
-
- lazlogger,
+  lazlogger,
 
   LCLProc, LCLType, LCLIntf,
   PropEdits, LazarusPackageIntf, FieldsEditor, ComponentEditors,
- {$ELSE}
-  Windows, Messages,
-  {$IFDEF VERSION6}
-  DesignIntf, DesignEditors,
-  {$ELSE}
-  DsgnIntf,
-  {$ENDIF}
- {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Buttons,
   VpBase, VpNavBar;
 
 type
-{$IFNDEF LCL}
- {$IFDEF VERSION6}
-  TProtectedSelList = class(TDesignerSelections);
- {$ENDIF}
-{$ENDIF}
+
+  { TVpNavBarEditor }
 
   TVpNavBarEditor = class(TComponentEditor)
     procedure ExecuteVerb(Index : Integer); override;
@@ -105,13 +92,14 @@ type
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
 //    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
 
     procedure lbFoldersClick(Sender: TObject);
-    procedure lbItemsMeasureItem(Control: TWinControl; Index: Integer; var Height: Integer);
     procedure lbItemsClick(Sender: TObject);
     procedure lbItemsDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
+    procedure lbItemsMeasureItem(Control: TWinControl; Index: Integer; var Height: Integer);
 
     procedure pnlImageViewClick(Sender: TObject);
     procedure pnlImageViewPaint(Sender: TObject);
@@ -120,37 +108,30 @@ type
 
   private
     FBar: TVpNavBar;
-    FDesigner: TIDesigner;
+    FDesigner: TComponentEditorDesigner;
     RefreshTimer: TTimer;
     FSelImgIndex: Integer;
-  {$IFDEF LCL}
     function FindBtnIndex(APersistent: TPersistent): Integer;
     function FindFolderIndex(APersistent: TPersistent): Integer;
     procedure OnGetSelection(const ASelection: TPersistentSelectionList);
     procedure OnPersistentAdded(APersistent: TPersistent; Select: boolean);
     procedure OnPersistentDeleting(APersistent: TPersistent);
     procedure OnSetSelection(const ASelection: TPersistentSelectionList);
-    procedure SelectList(SelList: TPersistentSelectionList);
-  {$ELSE}
-   {$IFDEF VERSION5}
-    {$IFDEF VERSION6}
-    procedure SelectList(SelList: TDesignerSelections);
-    {$ELSE}
-    procedure SelectList(SelList: TDesignerSelectionList);
-    {$ENDIF}
-   {$ELSE}
-    procedure SelectList(SelList: TComponentList);
-   {$ENDIF}
-  {$ENDIF}
     procedure OnTimer(Sender: TObject);
+    procedure SelectionChanged(AOrderChanged: Boolean = false);
+    procedure SelectList(SelList: TPersistentSelectionList);
+    procedure UpdateBtnState;
 
   public
     { Public declarations }
+    constructor Create(AOwner: TComponent; ABar: TVpNavBar;
+      ADesigner: TComponentEditorDesigner); reintroduce;
+    destructor Destroy; override;
     procedure PopulateFolderList;
     procedure PopulateItemList;
-    procedure SetData(ADesigner: TIDesigner; ABar: TVpNavBar);
+    procedure SetData(ADesigner: TComponentEditorDesigner; ABar: TVpNavBar);
     property Bar: TVpNavBar read FBar;
-    property Designer: TIDesigner read FDesigner;
+    property Designer: TComponentEditorDesigner read FDesigner;
   end;
 
 var
@@ -158,11 +139,7 @@ var
 
 implementation
 
-{$IFDEF LCL}
- {$R *.lfm}
-{$ELSE}
- {$R *.DFM}
-{$ENDIF}
+{$R *.lfm}
 
 uses
   PropEditUtils,
@@ -172,21 +149,22 @@ const
   ITEMS_MARGIN = 2;
   IMG_MARGIN = 4;
 
-{$IFDEF LCL}
-procedure EditNavBar(Designer: TIDesigner; Bar: TVpNavBar);
-{$ELSE}
- {$IFDEF VERSION6}
-procedure EditNavBar(Designer: TIDesigner; Bar: TVpNavBar);
- {$ELSE}
-procedure EditNavBar(Designer: TIFormDesigner; Bar: TVpNavBar);
- {$ENDIF}
-{$ENDIF}
+procedure EditNavBar(ADesigner: TComponentEditorDesigner; ABar: TVpNavBar);
+var
+  editor: TObject;
 begin
-  if frmNavEd = nil then
-    frmNavEd := TfrmNavBarEd.Create(Application);
-  frmNavEd.SetData(Designer, Bar);
-  frmNavEd.Show;
+  editor := FindEditorForm(ABar);
+  if editor = nil then begin
+    editor := TfrmNavBarEd.Create(Application, ABar, ADesigner);
+    //RegisterEditorForm(editor, ABar);  -- wp
+  end;
+  if editor <> nil then
+    with TfrmNavBarEd(editor) do begin
+      //ComponentEditor := Self;
+      ShowOnTop;
+    end;
 end;
+
 
 {*** TVpNavBarEditor ***}
 
@@ -210,6 +188,53 @@ end;
 
 {*** TfrmNavBarEd ***}
 
+constructor TfrmNavBarEd.Create(AOwner: TComponent; ABar: TVpNavBar;
+  ADesigner: TComponentEditorDesigner);
+var
+  w: Integer;
+begin
+  inherited Create(AOwner);
+
+  FBar := ABar;
+  FDesigner := ADesigner;
+
+  PopulateFolderList;
+
+  if FBar.Images <> nil then begin
+    w := (FBar.Images.Width + 2*IMG_MARGIN) * FBar.Images.Count;
+    pnlImageView.ClientWidth := w;
+    pnlImageView.Constraints.MinHeight := FBar.Images.Height + 2 * IMG_MARGIN + GetScrollbarHeight;
+    if w > sbImages.ClientWidth then begin
+      sbImages.HorzScrollbar.Range := w - sbImages.ClientWidth;
+      sbImages.HorzScrollbar.Visible := true;
+    end else
+      sbImages.HorzScrollbar.Visible := false;
+  end;
+  FSelImgIndex := -1;
+
+  if Assigned(GlobalDesignHook) then
+  begin
+//    GlobalDesignHook.AddHandlerComponentRenamed(OnComponentRenamed);
+    GlobalDesignHook.AddHandlerPersistentDeleting(OnPersistentDeleting);
+    GlobalDesignHook.AddHandlerGetSelection(OnGetSelection);
+    GlobalDesignHook.AddHandlerSetSelection(OnSetSelection);
+    GlobalDesignHook.AddHandlerPersistentAdded(OnPersistentAdded);
+  end;
+  SelectionChanged;
+end;
+
+destructor TfrmNavBarEd.Destroy;
+begin
+  //UnregisterEditorForm(Self);   -- wp
+  inherited Destroy;
+end;
+
+procedure TfrmNavBarEd.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
 procedure TfrmNavBarEd.FormCreate(Sender: TObject);
 begin
   Top := (Screen.Height - Height) div 3;
@@ -220,18 +245,14 @@ begin
   RefreshTimer.Enabled := true;
 end;
 
-{=====}
-
-procedure TfrmNavBarEd.FormClose(Sender: TObject;
-  var Action: TCloseAction);
+procedure TfrmNavBarEd.FormDestroy(Sender: TObject);
 begin
-  (*
-  Unused(Action);
-  RefreshTimer.Free;
-  Release;
-  *)
+  if GlobalDesignHook = nil then
+    exit;
+  if Assigned(FBar) and ((lbFolders.SelCount > 0) or (lbItems.SelCount > 0)) then
+    GlobalDesignHook.SelectOnlyThis(FBar);
+  GlobalDesignHook.RemoveAllHandlersForObject(Self);
 end;
-{=====}
 
 { Changed}
 { Could not find a way to get notification from the IDE that a change had }
@@ -241,7 +262,7 @@ procedure TfrmNavBarEd.OnTimer(Sender: TObject);
 var
   S : string;
 begin
-  if Bar.ActiveFolder < 0 then
+  if (Bar = nil) or (Bar.ActiveFolder = -1) then
     exit;
 
   { update folder }
@@ -257,33 +278,15 @@ begin
       lbItems.ItemIndex := lbItems.Items.IndexOf(S);                     
   end;                                                                   
 end;
-{=====}
-        (*
-procedure TfrmNavBarEd.FormResize(Sender: TObject);
-begin
-  pnlFolders.Width := (pnlItems.Width + pnlFolders.Width) div 2;
-  if Bar.Images <> nil then begin
-    pnlImages.Height := 25 + (5 * (Bar.Images.Height div 3));
-    lbImages.Columns := lbImages.ClientWidth div Bar.Images.Width;
-    {Allow for scrollbar if excessive number of images}
-    if (lbImages.Width >= Bar.Images.Width) then
-      pnlImages.Height := pnlImages.Height + 20;
-  end;
-end;  *)
 
 procedure TfrmNavBarEd.FormShow(Sender: TObject);
 begin
-  if Bar.Images <> nil then begin
-//    sbImages.Constraints.MinHeight := Bar.Images.Height + GetScrollbarHeight + 2*IMG_MARGIN;
+  if (Bar <> nil) and (Bar.Images <> nil) then begin
     pnlImages.Height := Bar.Images.Height + GetScrollbarHeight + 2*IMG_MARGIN +
       Panel8.Height + pnlImages.BorderSpacing.Top + pnlImages.BorderSpacing.Bottom;
-    //lbImages.Columns := lbImages.ClientWidth div Bar.Images.Width;
   end;
 end;
 
-{=====}
-
-{$IFDEF LCL}
 function TfrmNavBarEd.FindFolderIndex(APersistent: TPersistent): Integer;
 begin
   for Result := 0 to lbFolders.Items.Count-1 do
@@ -299,9 +302,7 @@ begin
       exit;
   Result := -1;
 end;
-{$ENDIF}
 
-{$IFDEF LCL}
 procedure TfrmNavBarEd.OnGetSelection(const ASelection: TPersistentSelectionList);
 var
   i: Integer;
@@ -322,18 +323,20 @@ begin
         ASelection.Add(TPersistent(lbItems.Items.Objects[i]));
   end;
 end;
-{$ENDIF}
 
-{$IFDEF LCL}
 procedure TfrmNavBarEd.OnPersistentAdded(APersistent: TPersistent; Select: boolean);
 var
   i: Integer;
 begin
+  if APersistent = nil then
+    DebugLn('OnPersistentAdded: Persistent = nil');
+
   if not Assigned(APersistent) then
     exit;
 
   if (APersistent is TVpNavFolder) then
   begin
+    DebugLn('OnPersistentAdded: Persistent is folder');
     PopulateFolderList;
     if Select then begin
       i := FindFolderIndex(APersistent);
@@ -342,6 +345,7 @@ begin
   end else
   if (APersistent is TVpNavBtnItem) then
   begin
+    DebugLn('OnPersistentAdded: Persistent is item');
     PopulateItemList;
     if Select then begin
       i := FindBtnIndex(APersistent);
@@ -349,9 +353,7 @@ begin
     end;
   end;
 end;
-{$ENDIF}
 
-{$IFDEF LCL}
 procedure TfrmNavBarEd.OnPersistentDeleting(APersistent: TPersistent);
 var
   i: Integer;
@@ -367,9 +369,7 @@ begin
     if i <> -1 then lbItems.Items.Delete(i);
   end;
 end;
-{$ENDIF}
 
-{$IFDEF LCL}
 procedure TfrmNavBarEd.OnSetSelection(const ASelection: TPersistentSelectionList);
 var
   i, j: Integer;
@@ -399,7 +399,6 @@ begin
     end;
   end;
 end;
-{$ENDIF}
 
 procedure TfrmNavBarEd.PopulateFolderList;
 var
@@ -414,7 +413,6 @@ begin
     lbFolders.Items.AddObject(S, Bar.Folders[I]);
   end;
 end;
-{=====}
 
 procedure TfrmNavBarEd.PopulateItemList;
 var
@@ -431,9 +429,8 @@ begin
       lbItems.Items.AddObject(S,Items[i]);
     end;
 end;
-{=====}
 
-procedure TfrmNavBarEd.SetData(ADesigner: TIDesigner; ABar: TVpNavBar);
+procedure TfrmNavBarEd.SetData(ADesigner: TComponentEditorDesigner; ABar: TVpNavBar);
 var
   i: Integer;
   w: Integer;
@@ -458,11 +455,6 @@ begin
       sbImages.HorzScrollbar.Visible := true;
     end else
       sbImages.HorzScrollbar.Visible := false;
-    (*
-    lbImages.ItemHeight := Bar.Images.Height + 4;
-    for i := 0 to pred(FBar.Images.Count) do
-      lbImages.Items.Add(IntToStr(i));
-      *)
   end;
   FSelImgIndex := -1;
 
@@ -480,7 +472,6 @@ begin
 end;
 
 procedure TfrmNavBarEd.lbFoldersClick(Sender: TObject);
-{$IFDEF LCL}
 var
   SelList: TPersistentSelectionList;
   i: Integer;
@@ -492,73 +483,18 @@ begin
 
   SelList := TPersistentSelectionList.Create;
   SelList.ForceUpdate := true;
+
   for i := 0 to pred(lbFolders.Items.Count) do
     if lbFolders.Selected[i] then begin
       SelList.Add(TPersistent(lbFolders.Items.Objects[i]));
       Bar.FolderCollection.DoOnItemSelected(i);
     end;
-  if not Bar.FolderCollection.ReadOnly then
-  begin
-    btnFolderUp.Enabled := SelList.Count = 1;
-    btnFolderDown.Enabled := btnFolderUp.Enabled;
-    btnFolderDelete.Enabled := btnFolderUp.Enabled;
-  end;
-  if SelList.Count > 0 then
-    SelectList(SelList);
-end;
-{$ELSE}
-var
-{$IFDEF VERSION5}
- {$IFDEF VERSION6}
-  SelList : TDesignerSelections;
- {$ELSE}
-  SelList : TDesignerSelectionList;
- {$ENDIF}
-{$ELSE}
-  SelList : TComponentList;
-{$ENDIF}
-  {%H-}i : Integer;
-begin
-  PopulateItemList;
-  Bar.ActiveFolder := lbFolders.ItemIndex;
 
-{$IFDEF VERSION5}
-  {$IFDEF VERSION6}
-    SelList := TDesignerSelections.Create;
-  {$ELSE}
-    SelList := TDesignerSelectionList.Create;
-  {$ENDIF}
-{$ELSE}
-  SelList := TComponentList.Create;
-{$ENDIF}
-  for i := 0 to pred(lbFolders.Items.Count) do
-    if lbFolders.Selected[i] then begin
-      {$IFDEF VERSION6}
-        TProtectedSelList(SelList).Add(TComponent(lbFolders.Items.Objects[i]));
-      {$ELSE}
-        SelList.Add(TComponent(lbFolders.Items.Objects[i]));
-      {$ENDIF}
-      Bar.FolderCollection.DoOnItemSelected(I);
-    end;
-  if not Bar.FolderCollection.ReadOnly
-  then begin
-    {$IFDEF VERSION6}
-      btnFolderUp.Enabled := TProtectedSelList(SelList).Count = 1;
-    {$ELSE}
-      btnFolderUp.Enabled := SelList.Count = 1;
-    {$ENDIF}
-    btnFolderDown.Enabled := btnFolderUp.Enabled;
-    btnFolderDelete.Enabled := btnFolderUp.Enabled;
-  end;
-  {$IFDEF VERSION6}
-  if TProtectedSelList(SelList).Count > 0 then
-  {$ELSE}
   if SelList.Count > 0 then
-  {$ENDIF}
     SelectList(SelList);
+
+  UpdateBtnState;
 end;
-{$ENDIF}
-{=====}
 
 procedure TfrmNavBarEd.lbItemsMeasureItem(Control: TWinControl;
   Index: Integer; var Height: Integer);
@@ -567,7 +503,6 @@ begin
   if (Bar.Images <> nil) then
     Height := Bar.Images.Height + 2 * ITEMS_MARGIN;
 end;
-{=====}
 
 procedure TfrmNavBarEd.lbItemsDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
@@ -610,16 +545,14 @@ begin
   y := (Rect.Top + Rect.Bottom - lb.Canvas.TextHeight('Tg')) div 2;
   lb.Canvas.TextRect(Rect, x, y, lb.Items[Index]);
 end;
-{=====}
 
 procedure TfrmNavBarEd.lbItemsClick(Sender: TObject);
-{$IFDEF LCL}
 var
   SelList: TPersistentSelectionList;
   i: Integer;
   btn: TVpNavBtnItem;
 begin
-  if (lbItems.ItemIndex <> -1) and (Bar.ActiveFolder <> 1) then
+  if  (FBar <> nil) and (FBar.ActiveFolder <> -1) and (lbItems.ItemIndex <> -1) then
   begin
     btn := TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]);
     FSelImgIndex := btn.IconIndex;
@@ -632,86 +565,12 @@ begin
         SelList.Add(TPersistent(lbItems.Items.Objects[i]));
         Bar.Folders[Bar.ActiveFolder].ItemCollection.DoOnItemSelected(I);
       end;
-    if not Bar.Folders[Bar.ActiveFolder].ItemCollection.ReadOnly
-    then begin
-      btnItemUp.Enabled := SelList.Count = 1;
-      btnItemDown.Enabled := btnItemUp.Enabled;
-      btnItemDelete.Enabled := btnItemUp.Enabled;
-    end;
     if SelList.Count > 0 then
       SelectList(SelList);
   end;
+
+  UpdateBtnState;
 end;
-{$ELSE}
-var
-{$IFDEF VERSION5}
- {$IFDEF VERSION6}
-  SelList : TDesignerSelections;
- {$ELSE}
-  SelList : TDesignerSelectionList;
- {$ENDIF}
-{$ELSE}
-  SelList : TComponentList;
-{$ENDIF}
-  i : Integer;
-begin
-  if (lbItems.ItemIndex <> -1) then begin
-    lbImages.ItemIndex :=
-      TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]).IconIndex;
-
-   {$IFDEF VERSION5}
-    {$IFDEF VERSION6}
-    SelList := TDesignerSelections.Create;
-    {$ELSE}
-    SelList := TDesignerSelectionList.Create;
-    {$ENDIF}
-   {$ELSE}
-    SelList := TComponentList.Create;
-   {$ENDIF}
-
-    for i := 0 to pred(lbItems.Items.Count) do
-      if lbItems.Selected[i] then begin
-       {$IFDEF VERSION6}
-        TProtectedSelList(SelList).Add(TComponent(lbItems.Items.Objects[i]));
-       {$ELSE}
-        SelList.Add(TComponent(lbItems.Items.Objects[i]));
-       {$ENDIF}
-        Bar.Folders[Bar.ActiveFolder].ItemCollection.DoOnItemSelected(I);
-      end;
-    if not Bar.Folders[Bar.ActiveFolder].ItemCollection.ReadOnly
-    then begin
-     {$IFDEF VERSION6}
-      btnItemUp.Enabled := TProtectedSelList(SelList).Count = 1;
-     {$ELSE}
-      btnItemUp.Enabled := SelList.Count = 1;
-     {$ENDIF}
-      btnItemDown.Enabled := btnItemUp.Enabled;
-      btnItemDelete.Enabled := btnItemUp.Enabled;
-    end;
-   {$IFDEF VERSION6}
-    if TProtectedSelList(SelList).Count > 0 then
-      SelectList(SelList);
-   {$ELSE}
-    if SelList.Count > 0 then
-      SelectList(SelList);
-   {$ENDIF}
-  end;
-end;
-{$ENDIF}
-{=====}
-                                   (*
-procedure TfrmNavBarEd.lbImagesClick(Sender: TObject);
-begin
-  if (lbImages.ItemIndex <> -1) and (lbItems.ItemIndex <> -1) then begin
-    TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]).IconIndex :=
-      lbImages.ItemIndex;
-    lbItems.Invalidate;
-    if assigned(Designer) then
-      Designer.Modified;
-  end;
-end;                                 *)
-
-{=====}
 
 procedure TfrmNavBarEd.btnItemUpClick(Sender: TObject);
 var
@@ -724,18 +583,16 @@ begin
     if Item.Index > 0 then
       Item.Index := Item.Index - 1;
 
+    PopulateItemList;
+    UpdateBtnState;
+
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
       GlobalDesignHook.SelectOnlyThis(Item);
       Designer.Modified;
     end;
-
-    PopulateItemList;
-
-    lbItems.ItemIndex := SaveItemIndex - 1;
   end;
 end;
-{=====}
 
 procedure TfrmNavBarEd.btnItemDownClick(Sender: TObject);
 var
@@ -747,18 +604,16 @@ begin
     if Item.Index < Pred(lbItems.Items.Count) then
       Item.Index := Item.Index + 1;
 
+    PopulateItemList;
+    UpdateBtnState;
+
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
       GlobalDesignHook.SelectOnlyThis(Item);
       Designer.Modified;
     end;
-
-    PopulateItemList;
-
-    lbItems.ItemIndex := Item.Index;
   end;
 end;
-{=====}
 
 procedure TfrmNavBarEd.btnFolderUpClick(Sender: TObject);
 var
@@ -772,18 +627,17 @@ begin
     if Folder.Index > 0 then
       Folder.Index := Folder.Index - 1;
 
+    PopulateFolderList;
+    lbFolders.ItemIndex := SaveItemIndex - 1;
+    UpdateBtnState;
+
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
       GlobalDesignHook.SelectOnlyThis(folder);
       Designer.Modified;
     end;
-
-    PopulateFolderList;
-    
-    lbFolders.ItemIndex := SaveItemIndex - 1;
   end;
 end;
-{=====}
 
 procedure TfrmNavBarEd.btnFolderDownClick(Sender: TObject);
 var
@@ -795,18 +649,17 @@ begin
     if Folder.Index < pred(lbFolders.Items.Count) then
       Folder.Index := Folder.Index + 1;
 
+    PopulateFolderList;
+    lbFolders.ItemIndex := Folder.Index;
+    UpdateBtnState;
+
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
       GlobalDesignHook.SelectOnlyThis(folder);
       Designer.Modified;
     end;
-
-    PopulateFolderList;
-
-    lbFolders.ItemIndex := Folder.Index;
   end;
 end;
-{=====}
 
 procedure TfrmNavBarEd.btnItemDeleteClick(Sender: TObject);
 begin
@@ -815,11 +668,11 @@ begin
     lbItems.ItemIndex := -1;
     FSelImgIndex := -1;
     PopulateItemList;
-    if assigned(Designer) then
+    if Assigned(Designer) then
       Designer.Modified;
+    UpdateBtnState;
   end;
 end;
-{=====}
 
 procedure TfrmNavBarEd.btnFolderDeleteClick(Sender: TObject);
 begin
@@ -828,22 +681,23 @@ begin
     lbFolders.ItemIndex := -1;
     PopulateFolderList;
     PopulateItemList;
-    if assigned(Designer) then
+    if Assigned(Designer) then
       Designer.Modified;
+    UpdateBtnState;
   end;
 end;
-{=====}
 
 procedure TfrmNavBarEd.btnFolderAddClick(Sender: TObject);
 begin
   Bar.FolderCollection.Add;
   PopulateFolderList;
   lbFolders.ItemIndex := lbFolders.Items.Count - 1;
-  if assigned(Designer) then
+  SelectionChanged(true);
+  if Assigned(Designer) then
     Designer.Modified;
   lbFoldersClick(Self);
+  UpdateBtnState;
 end;
-{=====}
 
 procedure TfrmNavBarEd.btnItemAddClick(Sender: TObject);
 begin
@@ -852,11 +706,12 @@ begin
       lbFolders.Items.Objects[lbFolders.ItemIndex]).ItemCollection.Add;
     lbItems.ItemIndex := -1;
     PopulateItemList;
+    SelectionChanged(true);
     if assigned(Designer) then
       Designer.Modified;
   end;
+  UpdateBtnState;
 end;
-{=====}
 
 procedure TfrmNavBarEd.pnlImageViewPaint(Sender: TObject);
 var
@@ -866,32 +721,32 @@ var
   x, y: Integer;
   wimg, himg: Integer;
 begin
- R := Rect(0, 0, sbImages.Width, sbImages.Height);
- pnlImageView.Canvas.Brush.Color := clWindow;
- pnlImageView.Canvas.FillRect(R);
+  R := Rect(0, 0, sbImages.Width, sbImages.Height);
+  pnlImageView.Canvas.Brush.Color := clWindow;
+  pnlImageView.Canvas.FillRect(R);
 
- if (Bar.Images = nil) or (Bar.Images.Count = 0) then
-   exit;
+  if (Bar.Images = nil) or (Bar.Images.Count = 0) then
+    exit;
 
- wimg := Bar.Images.Width;
- himg := Bar.Images.Height;
+  wimg := Bar.Images.Width;
+  himg := Bar.Images.Height;
 
- x := 0;
- y := R.Top + IMG_MARGIN;
- if pnlImageView.Width <= sbImages.Width then // no scrollbar
-   inc(y, GetScrollbarHeight div 2);
+  x := 0;
+  y := R.Top + IMG_MARGIN;
+  if pnlImageView.Width <= sbImages.Width then // no scrollbar
+    inc(y, GetScrollbarHeight div 2);
 
- i := 0;
- while i < Bar.Images.Count do begin
-   if i = FSelImgIndex then begin
-     R := Rect(x, R.Top, x+wimg+2*IMG_MARGIN, R.Bottom);
-     pnlImageView.Canvas.Brush.Color := clHighlight;
-     pnlImageView.Canvas.FillRect(R);
-   end;
-   Bar.Images.Draw(pnlImageView.Canvas, x + IMG_MARGIN, y, i, true);
-   inc(i);
-   inc(x, wimg + 2*IMG_MARGIN);
- end;
+  i := 0;
+  while i < Bar.Images.Count do begin
+    if i = FSelImgIndex then begin
+      R := Rect(x, R.Top, x+wimg+2*IMG_MARGIN, R.Bottom);
+      pnlImageView.Canvas.Brush.Color := clHighlight;
+      pnlImageView.Canvas.FillRect(R);
+    end;
+    FBar.Images.Draw(pnlImageView.Canvas, x + IMG_MARGIN, y, i, true);
+    inc(i);
+    inc(x, wimg + 2*IMG_MARGIN);
+  end;
 end;
 
 procedure TfrmNavBarEd.pnlImageViewClick(Sender: TObject);
@@ -928,7 +783,29 @@ begin
   sbImages.HorzScrollbar.Visible := sbImages.ClientWidth < pnlImageView.ClientWidth;
 end;
 
-{$IFDEF LCL}
+procedure TfrmNavBarEd.SelectionChanged(AOrderChanged: Boolean = false);
+var
+  SelList: TPersistentSelectionList;
+begin
+  {
+  if (FUpdateSelectionCount>0) or (GlobalDesignHook=nil) then
+    exit;
+  }
+  GlobalDesignHook.RemoveHandlerSetSelection(OnSetSelection);
+  try
+    SelList := TPersistentSelectionList.Create;
+    SelList.ForceUpdate := AOrderChanged;
+    try
+      OnGetSelection(SelList);
+      FDesigner.PropertyEditorHook.SetSelection(SelList) ;
+    finally
+      SelList.Free;
+    end;
+  finally
+    GlobalDesignHook.AddHandlerSetSelection(OnSetSelection);
+  end;
+end;
+
 procedure TfrmNavBarEd.Selectlist(SelList: TPersistentSelectionList);
 begin
   if GlobalDesignHook <> nil then
@@ -938,36 +815,27 @@ begin
   end;
   SelList.Free;
 end;
-{$ELSE}
-{$IFDEF VERSION5}
- {$IFDEF VERSION6}
-  procedure TfrmNavBarEd.SelectList(SelList : TDesignerSelections);
- {$ELSE}
-  procedure TfrmNavBarEd.SelectList(SelList : TDesignerSelectionList);
- {$ENDIF}
-{$ELSE}
-procedure TfrmNavBarEd.SelectList(SelList : TComponentList);
-{$ENDIF}
+
+procedure TfrmNavBarEd.UpdateBtnState;
+var
+  canChangeFolders: Boolean;
+  canChangeItems: Boolean;
 begin
- {$IFNDEF Ver80}
-  {$IFDEF VERSION4}
-  if Designer <> nil then
-    {$IFDEF VERSION6}
-    (Designer as IDesigner).SetSelections(SelList);
-    {$ELSE}
-    (Designer as IFormDesigner).SetSelections(SelList);
-    {$ENDIF}
-  {$ELSE}
-  if Designer <> nil then
-    (Designer as TFormDesigner).SetSelections(SelList);
-  {$ENDIF}
-  SelList.Free;
- {$ELSE}
-  CompLib.SetSelection(Designer, Designer.Form, SelList);
- {$ENDIF}
+  canChangeFolders := (FBar <> nil);
+  canChangeItems := (FBar <> nil) and (FBar.ActiveFolder <> -1) and
+    not FBar.Folders[FBar.ActiveFolder].ItemCollection.ReadOnly;
+
+  btnFolderAdd.Enabled := canChangeFolders;
+  btnFolderDelete.Enabled := canChangeFolders and (lbFolders.ItemIndex > -1);
+  btnFolderUp.Enabled := canChangeFolders and (lbFolders.ItemIndex > 0);
+  btnFolderDown.Enabled := canChangeFolders and (lbFolders.ItemIndex < lbFolders.Items.Count-1);
+
+  btnItemAdd.Enabled := canChangeItems;
+  btnItemDelete.Enabled := canChangeItems and (lbItems.ItemIndex > -1);
+  btnItemUp.Enabled := canChangeItems and (lbItems.ItemIndex > 0);
+  btnItemDown.Enabled := canChangeItems and (lbItems.ItemIndex < lbItems.Items.Count-1);
 end;
-{$ENDIF}
-{=====}
+
 
 end.
   

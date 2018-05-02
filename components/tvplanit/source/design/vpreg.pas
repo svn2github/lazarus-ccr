@@ -38,7 +38,7 @@ interface
 uses
  {$IFDEF LCL}
   LCLProc, LCLType, LCLIntf, LazFileUtils,
-  PropEdits, LazarusPackageIntf, FieldsEditor,  ComponentEditors,
+  PropEdits, LazarusPackageIntf, FieldsEditor, ComponentEditors,
  {$ELSE}
   Windows,
   {$IFDEF VERSION6}
