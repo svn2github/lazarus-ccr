@@ -234,7 +234,7 @@ var
 begin
   RgIconSize.OnClick := nil;
   folder := VpNavBar1.Folders[VpNavBar1.ActiveFolder];
-  folder.IconSize := TVpIconSize(RgDrawingStyle.ItemIndex);
+  folder.IconSize := TVpIconSize(RgIconSize.ItemIndex);
   RgIconSize.OnClick := @RgIconSizeClick;
 end;
 
