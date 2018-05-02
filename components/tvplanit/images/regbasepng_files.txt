@@ -61,3 +61,11 @@ components/VpRevert32.png
 components/VpToday16.png
 components/VpToday24.png
 components/VpToday32.png
+
+components/VpUpArrow.png
+components/VpUpArrow_150.png
+components/VpUpArrow_200.png
+
+components/VpDownArrow.png
+components/VpDownArrow_150.png
+components/VpdownArrow_200.png

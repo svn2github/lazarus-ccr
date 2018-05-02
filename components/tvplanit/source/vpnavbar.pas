@@ -1031,6 +1031,7 @@ begin
     Parent := Self;
     OnClick := nabScrollUpBtnClick;
 //    Glyph.LoadFromResourceName(HINSTANCE, 'VPUPARROW');
+    LoadGlyphFromRCDATA(Glyph, 'VPUPARROW');
     NumGlyphs := 1;
     Left := -20;
     Height := 15;
@@ -1043,6 +1044,7 @@ begin
     Parent := Self;
     OnClick := nabScrollDownBtnClick;
 //    Glyph.LoadFromResourceName(HINSTANCE, 'VPDOWNARROW');
+    LoadGlyphFromRCDATA(Glyph, 'VPDOWNARROW');
     NumGlyphs := 1;
     Left := -20;
     Height := 15;
