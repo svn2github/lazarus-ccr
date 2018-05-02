@@ -214,7 +214,7 @@ var
   rowStart: Integer;
   lLeft, lHeight, lWidth: Integer;
 begin
-  if FBackgroundImage.Empty or (FBackgroundMethod = bmNone) then
+  if FBackgroundImage.Empty or (FBackgroundMethod = bmNone) or (FNavBar.FolderCount = 0) then
   begin
     Canvas.Brush.Color := FBackgroundColor;
     Canvas.FillRect(R.Left, R.Top, R.Right, R.Bottom);
@@ -861,6 +861,7 @@ begin
   try
     DrawBmp.Width := FClientWidth;
     DrawBmp.Height := FClientHeight;
+    DrawBmp.Transparent := false;
 
     DrawBmp.Canvas.Font := FNavBar.Font;
     DrawBmp.Canvas.Pen.Color := FBackgroundColor;
@@ -878,6 +879,8 @@ begin
     if FNavBar.FolderCount = 0 then begin
       nabScrollUpBtn.Visible := False;
       nabScrollDownBtn.Visible := False;
+      FNavBar.Canvas.CopyMode := cmSrcCopy;
+      FNavBar.Canvas.CopyRect(MyRect, DrawBmp.Canvas, Rect(0, 0, DrawBmp.Width,DrawBmp.Height));
       Exit;
     end;
 

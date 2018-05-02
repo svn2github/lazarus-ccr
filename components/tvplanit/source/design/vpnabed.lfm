@@ -1,347 +1,380 @@
 object frmNavBarEd: TfrmNavBarEd
   Left = 374
-  Height = 344
+  Height = 364
   Top = 236
-  Width = 426
+  Width = 543
   HorzScrollBar.Page = 425
   VertScrollBar.Page = 322
   Caption = 'Nav Bar Layout Tool'
-  ClientHeight = 344
-  ClientWidth = 426
+  ClientHeight = 364
+  ClientWidth = 543
   FormStyle = fsStayOnTop
   OnClose = FormClose
   OnCreate = FormCreate
-  OnResize = FormResize
+  OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.7'
-  object pnlItems: TPanel
-    Left = 217
-    Height = 226
-    Top = 0
-    Width = 209
-    Align = alClient
-    BevelOuter = bvNone
-    ClientHeight = 226
-    ClientWidth = 209
-    TabOrder = 1
-    object lbItems: TListBox
-      Left = 0
-      Height = 203
-      Top = 23
-      Width = 173
-      Align = alClient
-      ItemHeight = 13
-      OnClick = lbItemsClick
-      OnDrawItem = lbItemsDrawItem
-      Style = lbOwnerDrawVariable
-      TabOrder = 1
-    end
-    object Panel1: TPanel
-      Left = 173
-      Height = 203
-      Top = 23
-      Width = 32
-      Align = alRight
-      BorderSpacing.Right = 4
-      BevelOuter = bvNone
-      ClientHeight = 203
-      ClientWidth = 32
-      TabOrder = 2
-      object btnItemAdd: TSpeedButton
-        Left = 4
-        Height = 25
-        Hint = 'Add Item'
-        Top = 7
-        Width = 25
-        Glyph.Data = {
-          DE000000424DDE0000000000000076000000280000000D0000000D0000000100
-          0400000000006800000000000000000000001000000010000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
-          3000333300000333300033330AAA0333300033330AAA0333300030000AAA0000
-          300030AAAAAAAAA0300030AAAAAAAAA0300030AAAAAAAAA0300030000AAA0000
-          300033330AAA0333300033330AAA033330003333000003333000333333333333
-          3000
-        }
-        Layout = blGlyphTop
-        Spacing = 1
-        OnClick = btnItemAddClick
-        ShowHint = True
-        ParentShowHint = False
-      end
-      object btnItemDelete: TSpeedButton
-        Left = 4
-        Height = 25
-        Hint = 'Remove item'
-        Top = 39
-        Width = 25
-        Glyph.Data = {
-          DE000000424DDE0000000000000076000000280000000D0000000D0000000100
-          0400000000006800000000000000000000001000000010000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
-          3000333333333333300033333333333330003333333333333000300000000000
-          3000309999999990300030999999999030003099999999903000300000000000
-          3000333333333333300033333333333330003333333333333000333333333333
-          3000
-        }
-        Layout = blGlyphTop
-        Spacing = 1
-        OnClick = btnItemDeleteClick
-        ShowHint = True
-        ParentShowHint = False
-      end
-      object btnItemUp: TSpeedButton
-        Left = 4
-        Height = 25
-        Hint = 'Move item up'
-        Top = 72
-        Width = 25
-        Glyph.Data = {
-          DE000000424DDE0000000000000076000000280000000D0000000D0000000100
-          0400000000006800000000000000000000001000000010000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
-          3000333333333333300033330000033330003333066603333000333306660333
-          3000333306660333300030000666000030003306666666033000333066666033
-          3000333306660333300033333060333330003333330333333000333333333333
-          3000
-        }
-        Layout = blGlyphTop
-        Spacing = 1
-        OnClick = btnItemUpClick
-        ShowHint = True
-        ParentShowHint = False
-      end
-      object btnItemDown: TSpeedButton
-        Left = 4
-        Height = 25
-        Hint = 'Move item down'
-        Top = 104
-        Width = 25
-        Glyph.Data = {
-          DE000000424DDE0000000000000076000000280000000D0000000D0000000100
-          0400000000006800000000000000000000001000000010000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
-          3000333333333333300033333303333330003333306033333000333306660333
-          3000333066666033300033066666660330003000066600003000333306660333
-          3000333306660333300033330666033330003333000003333000333333333333
-          3000
-        }
-        Layout = blGlyphTop
-        Spacing = 1
-        OnClick = btnItemDownClick
-        ShowHint = True
-        ParentShowHint = False
-      end
-    end
-    object Panel4: TPanel
-      Left = 0
-      Height = 23
-      Top = 0
-      Width = 209
-      Align = alTop
-      BevelOuter = bvNone
-      ClientHeight = 23
-      ClientWidth = 209
-      TabOrder = 0
-      object Label2: TLabel
-        Left = 0
-        Height = 15
-        Top = 4
-        Width = 62
-        Caption = '&Items/Icons'
-        FocusControl = lbItems
-        ParentColor = False
-      end
-    end
-  end
-  object pnlFolders: TPanel
-    Left = 0
-    Height = 226
-    Top = 0
-    Width = 217
-    Align = alLeft
-    BevelOuter = bvNone
-    ClientHeight = 226
-    ClientWidth = 217
-    TabOrder = 0
-    object lbFolders: TListBox
-      Left = 4
-      Height = 203
-      Top = 23
-      Width = 181
-      Align = alClient
-      BorderSpacing.Left = 4
-      ItemHeight = 0
-      OnClick = lbFoldersClick
-      TabOrder = 1
-    end
-    object Panel6: TPanel
-      Left = 0
-      Height = 23
-      Top = 0
-      Width = 217
-      Align = alTop
-      BevelOuter = bvNone
-      ClientHeight = 23
-      ClientWidth = 217
-      TabOrder = 0
-      object Label1: TLabel
-        Left = 4
-        Height = 15
-        Top = 4
-        Width = 38
-        Caption = '&Folders'
-        FocusControl = lbFolders
-        ParentColor = False
-      end
-    end
-    object Panel5: TPanel
-      Left = 185
-      Height = 203
-      Top = 23
-      Width = 32
-      Align = alRight
-      BevelOuter = bvNone
-      ClientHeight = 203
-      ClientWidth = 32
-      TabOrder = 2
-      object btnFolderAdd: TSpeedButton
-        Left = 4
-        Height = 25
-        Hint = 'Add Item'
-        Top = 7
-        Width = 25
-        Glyph.Data = {
-          DE000000424DDE0000000000000076000000280000000D0000000D0000000100
-          0400000000006800000000000000000000001000000010000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
-          3000333300000333300033330AAA0333300033330AAA0333300030000AAA0000
-          300030AAAAAAAAA0300030AAAAAAAAA0300030AAAAAAAAA0300030000AAA0000
-          300033330AAA0333300033330AAA033330003333000003333000333333333333
-          3000
-        }
-        Layout = blGlyphTop
-        Spacing = 1
-        OnClick = btnFolderAddClick
-        ShowHint = True
-        ParentShowHint = False
-      end
-      object btnFolderDelete: TSpeedButton
-        Left = 4
-        Height = 25
-        Hint = 'Remove item'
-        Top = 39
-        Width = 25
-        Glyph.Data = {
-          DE000000424DDE0000000000000076000000280000000D0000000D0000000100
-          0400000000006800000000000000000000001000000010000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
-          3000333333333333300033333333333330003333333333333000300000000000
-          3000309999999990300030999999999030003099999999903000300000000000
-          3000333333333333300033333333333330003333333333333000333333333333
-          3000
-        }
-        Layout = blGlyphTop
-        Spacing = 1
-        OnClick = btnFolderDeleteClick
-        ShowHint = True
-        ParentShowHint = False
-      end
-      object btnFolderUp: TSpeedButton
-        Left = 4
-        Height = 25
-        Hint = 'Move item up'
-        Top = 72
-        Width = 25
-        Glyph.Data = {
-          DE000000424DDE0000000000000076000000280000000D0000000D0000000100
-          0400000000006800000000000000000000001000000010000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
-          3000333333333333300033330000033330003333066603333000333306660333
-          3000333306660333300030000666000030003306666666033000333066666033
-          3000333306660333300033333060333330003333330333333000333333333333
-          3000
-        }
-        Layout = blGlyphTop
-        Spacing = 1
-        OnClick = btnFolderUpClick
-        ShowHint = True
-        ParentShowHint = False
-      end
-      object btnFolderDown: TSpeedButton
-        Left = 4
-        Height = 25
-        Hint = 'Move item down'
-        Top = 104
-        Width = 25
-        Glyph.Data = {
-          DE000000424DDE0000000000000076000000280000000D0000000D0000000100
-          0400000000006800000000000000000000001000000010000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
-          3000333333333333300033333303333330003333306033333000333306660333
-          3000333066666033300033066666660330003000066600003000333306660333
-          3000333306660333300033330666033330003333000003333000333333333333
-          3000
-        }
-        Layout = blGlyphTop
-        Spacing = 1
-        OnClick = btnFolderDownClick
-        ShowHint = True
-        ParentShowHint = False
-      end
-    end
-  end
+  LCLVersion = '1.9.0.0'
   object pnlImages: TPanel
     Left = 0
-    Height = 118
-    Top = 226
-    Width = 426
+    Height = 85
+    Top = 279
+    Width = 543
     Align = alBottom
+    AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 118
-    ClientWidth = 426
-    TabOrder = 2
+    ClientHeight = 85
+    ClientWidth = 543
+    TabOrder = 0
     object Panel8: TPanel
       Left = 0
       Height = 27
       Top = 0
-      Width = 426
+      Width = 543
       Align = alTop
       BevelOuter = bvNone
       ClientHeight = 27
-      ClientWidth = 426
+      ClientWidth = 543
       TabOrder = 0
       object Label3: TLabel
+        AnchorSideLeft.Control = Panel8
+        AnchorSideTop.Control = Panel8
         Left = 4
         Height = 15
         Top = 8
         Width = 89
-        Caption = 'Available I&mages'
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 8
+        Caption = 'Available Images'
         ParentColor = False
       end
     end
-    object lbImages: TListBox
+    object sbImages: TScrollBox
       Left = 4
-      Height = 87
+      Height = 54
       Top = 27
-      Width = 418
+      Width = 535
+      HorzScrollBar.Page = 56
+      HorzScrollBar.Tracking = True
+      VertScrollBar.Page = 50
       Align = alClient
+      AutoSize = True
       BorderSpacing.Left = 4
       BorderSpacing.Right = 4
       BorderSpacing.Bottom = 4
-      Columns = 10
-      ItemHeight = 16
-      OnClick = lbImagesClick
-      OnDrawItem = lbImagesDrawItem
-      Style = lbOwnerDrawFixed
+      ClientHeight = 50
+      ClientWidth = 531
+      Color = clWindow
+      ParentColor = False
       TabOrder = 1
+      OnResize = sbImagesResize
+      object pnlImageView: TPanel
+        Left = 0
+        Height = 50
+        Top = 0
+        Width = 56
+        Constraints.MinHeight = 40
+        TabOrder = 0
+        OnClick = pnlImageViewClick
+        OnPaint = pnlImageViewPaint
+      end
+    end
+  end
+  object pnlFoldersAndItems: TPanel
+    Left = 0
+    Height = 279
+    Top = 0
+    Width = 543
+    Align = alClient
+    BevelOuter = bvNone
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 279
+    ClientWidth = 543
+    TabOrder = 1
+    object pnlFolders: TPanel
+      Left = 0
+      Height = 279
+      Top = 0
+      Width = 272
+      BevelOuter = bvNone
+      ClientHeight = 279
+      ClientWidth = 272
+      TabOrder = 0
+      object lbFolders: TListBox
+        Left = 4
+        Height = 256
+        Top = 23
+        Width = 236
+        Align = alClient
+        BorderSpacing.Left = 4
+        ItemHeight = 0
+        OnClick = lbFoldersClick
+        TabOrder = 1
+      end
+      object Panel6: TPanel
+        Left = 0
+        Height = 23
+        Top = 0
+        Width = 272
+        Align = alTop
+        BevelOuter = bvNone
+        ClientHeight = 23
+        ClientWidth = 272
+        TabOrder = 0
+        object Label1: TLabel
+          Left = 4
+          Height = 15
+          Top = 4
+          Width = 38
+          Caption = '&Folders'
+          FocusControl = lbFolders
+          ParentColor = False
+        end
+      end
+      object Panel5: TPanel
+        Left = 240
+        Height = 256
+        Top = 23
+        Width = 32
+        Align = alRight
+        BevelOuter = bvNone
+        ClientHeight = 256
+        ClientWidth = 32
+        TabOrder = 2
+        object btnFolderAdd: TSpeedButton
+          Left = 4
+          Height = 25
+          Hint = 'Add folder'
+          Top = 7
+          Width = 25
+          Glyph.Data = {
+            DE000000424DDE0000000000000076000000280000000D0000000D0000000100
+            0400000000006800000000000000000000001000000010000000000000000000
+            80000080000000808000800000008000800080800000C0C0C000808080000000
+            FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+            3000333300000333300033330AAA0333300033330AAA0333300030000AAA0000
+            300030AAAAAAAAA0300030AAAAAAAAA0300030AAAAAAAAA0300030000AAA0000
+            300033330AAA0333300033330AAA033330003333000003333000333333333333
+            3000
+          }
+          Layout = blGlyphTop
+          Spacing = 1
+          OnClick = btnFolderAddClick
+          ShowHint = True
+          ParentShowHint = False
+        end
+        object btnFolderDelete: TSpeedButton
+          Left = 4
+          Height = 25
+          Hint = 'Remove folder'
+          Top = 40
+          Width = 25
+          Glyph.Data = {
+            DE000000424DDE0000000000000076000000280000000D0000000D0000000100
+            0400000000006800000000000000000000001000000010000000000000000000
+            80000080000000808000800000008000800080800000C0C0C000808080000000
+            FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+            3000333333333333300033333333333330003333333333333000300000000000
+            3000309999999990300030999999999030003099999999903000300000000000
+            3000333333333333300033333333333330003333333333333000333333333333
+            3000
+          }
+          Layout = blGlyphTop
+          Spacing = 1
+          OnClick = btnFolderDeleteClick
+          ShowHint = True
+          ParentShowHint = False
+        end
+        object btnFolderUp: TSpeedButton
+          Left = 4
+          Height = 25
+          Hint = 'Move folder up'
+          Top = 72
+          Width = 25
+          Glyph.Data = {
+            DE000000424DDE0000000000000076000000280000000D0000000D0000000100
+            0400000000006800000000000000000000001000000010000000000000000000
+            80000080000000808000800000008000800080800000C0C0C000808080000000
+            FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+            3000333333333333300033330000033330003333066603333000333306660333
+            3000333306660333300030000666000030003306666666033000333066666033
+            3000333306660333300033333060333330003333330333333000333333333333
+            3000
+          }
+          Layout = blGlyphTop
+          Spacing = 1
+          OnClick = btnFolderUpClick
+          ShowHint = True
+          ParentShowHint = False
+        end
+        object btnFolderDown: TSpeedButton
+          Left = 4
+          Height = 25
+          Hint = 'Move folder down'
+          Top = 104
+          Width = 25
+          Glyph.Data = {
+            DE000000424DDE0000000000000076000000280000000D0000000D0000000100
+            0400000000006800000000000000000000001000000010000000000000000000
+            80000080000000808000800000008000800080800000C0C0C000808080000000
+            FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+            3000333333333333300033333303333330003333306033333000333306660333
+            3000333066666033300033066666660330003000066600003000333306660333
+            3000333306660333300033330666033330003333000003333000333333333333
+            3000
+          }
+          Layout = blGlyphTop
+          Spacing = 1
+          OnClick = btnFolderDownClick
+          ShowHint = True
+          ParentShowHint = False
+        end
+      end
+    end
+    object pnlItems: TPanel
+      Left = 272
+      Height = 279
+      Top = 0
+      Width = 271
+      BevelOuter = bvNone
+      ClientHeight = 279
+      ClientWidth = 271
+      TabOrder = 1
+      object lbItems: TListBox
+        Left = 0
+        Height = 256
+        Top = 23
+        Width = 235
+        Align = alClient
+        ItemHeight = 13
+        OnClick = lbItemsClick
+        OnDrawItem = lbItemsDrawItem
+        OnMeasureItem = lbItemsMeasureItem
+        Style = lbOwnerDrawVariable
+        TabOrder = 1
+      end
+      object Panel1: TPanel
+        Left = 235
+        Height = 256
+        Top = 23
+        Width = 32
+        Align = alRight
+        BorderSpacing.Right = 4
+        BevelOuter = bvNone
+        ClientHeight = 256
+        ClientWidth = 32
+        TabOrder = 2
+        object btnItemAdd: TSpeedButton
+          Left = 4
+          Height = 25
+          Hint = 'Add Item'
+          Top = 7
+          Width = 25
+          Glyph.Data = {
+            DE000000424DDE0000000000000076000000280000000D0000000D0000000100
+            0400000000006800000000000000000000001000000010000000000000000000
+            80000080000000808000800000008000800080800000C0C0C000808080000000
+            FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+            3000333300000333300033330AAA0333300033330AAA0333300030000AAA0000
+            300030AAAAAAAAA0300030AAAAAAAAA0300030AAAAAAAAA0300030000AAA0000
+            300033330AAA0333300033330AAA033330003333000003333000333333333333
+            3000
+          }
+          Layout = blGlyphTop
+          Spacing = 1
+          OnClick = btnItemAddClick
+          ShowHint = True
+          ParentShowHint = False
+        end
+        object btnItemDelete: TSpeedButton
+          Left = 4
+          Height = 25
+          Hint = 'Remove item'
+          Top = 39
+          Width = 25
+          Glyph.Data = {
+            DE000000424DDE0000000000000076000000280000000D0000000D0000000100
+            0400000000006800000000000000000000001000000010000000000000000000
+            80000080000000808000800000008000800080800000C0C0C000808080000000
+            FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+            3000333333333333300033333333333330003333333333333000300000000000
+            3000309999999990300030999999999030003099999999903000300000000000
+            3000333333333333300033333333333330003333333333333000333333333333
+            3000
+          }
+          Layout = blGlyphTop
+          Spacing = 1
+          OnClick = btnItemDeleteClick
+          ShowHint = True
+          ParentShowHint = False
+        end
+        object btnItemUp: TSpeedButton
+          Left = 4
+          Height = 25
+          Hint = 'Move item up'
+          Top = 72
+          Width = 25
+          Glyph.Data = {
+            DE000000424DDE0000000000000076000000280000000D0000000D0000000100
+            0400000000006800000000000000000000001000000010000000000000000000
+            80000080000000808000800000008000800080800000C0C0C000808080000000
+            FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+            3000333333333333300033330000033330003333066603333000333306660333
+            3000333306660333300030000666000030003306666666033000333066666033
+            3000333306660333300033333060333330003333330333333000333333333333
+            3000
+          }
+          Layout = blGlyphTop
+          Spacing = 1
+          OnClick = btnItemUpClick
+          ShowHint = True
+          ParentShowHint = False
+        end
+        object btnItemDown: TSpeedButton
+          Left = 4
+          Height = 25
+          Hint = 'Move item down'
+          Top = 104
+          Width = 25
+          Glyph.Data = {
+            DE000000424DDE0000000000000076000000280000000D0000000D0000000100
+            0400000000006800000000000000000000001000000010000000000000000000
+            80000080000000808000800000008000800080800000C0C0C000808080000000
+            FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+            3000333333333333300033333303333330003333306033333000333306660333
+            3000333066666033300033066666660330003000066600003000333306660333
+            3000333306660333300033330666033330003333000003333000333333333333
+            3000
+          }
+          Layout = blGlyphTop
+          Spacing = 1
+          OnClick = btnItemDownClick
+          ShowHint = True
+          ParentShowHint = False
+        end
+      end
+      object Panel4: TPanel
+        Left = 0
+        Height = 23
+        Top = 0
+        Width = 271
+        Align = alTop
+        BevelOuter = bvNone
+        ClientHeight = 23
+        ClientWidth = 271
+        TabOrder = 0
+        object Label2: TLabel
+          Left = 0
+          Height = 15
+          Top = 4
+          Width = 62
+          Caption = '&Items/Icons'
+          FocusControl = lbItems
+          ParentColor = False
+        end
+      end
     end
   end
 end

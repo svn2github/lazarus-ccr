@@ -36,21 +36,17 @@ unit VpReg;
 interface
 
 uses
-  {$IFDEF LCL}
+ {$IFDEF LCL}
   LCLProc, LCLType, LCLIntf, LazFileUtils,
-  {$ELSE}
-  Windows,
-  {$ENDIF}
-
-  {$IFDEF VERSION6}
-  {$IFNDEF LCL}
-  DesignIntf, DesignEditors, VCLEditors,
-  {$ELSE}
   PropEdits, LazarusPackageIntf, FieldsEditor,  ComponentEditors,
-  {$ENDIF}
+ {$ELSE}
+  Windows,
+  {$IFDEF VERSION6}
+  DesignIntf, DesignEditors, VCLEditors,
   {$ELSE}
   DsgnIntf,
   {$ENDIF}
+ {$ENDIF}
   Dialogs, Classes, Controls, TypInfo, Forms, SysUtils,
   VpDatePropEdit;
 
@@ -202,9 +198,7 @@ uses
   VpContactButtons,           { - New contact grid button bar component }    
   { Designtime Interfaces (Property and Component Editors)                   }
   VpAbout,                    { About form for the About property editor     }
- {$IFDEF DELPHI}
-  VpNabEd,                    { component editor for the VpNavBar            } // crashes in Lazarus
- {$ENDIF}
+  VpNabEd,                    { component editor for the VpNavBar            }
   VpFlxDSEd1;                 { Field mapper component editor for the FlexDS }
 
 
@@ -557,9 +551,7 @@ begin
   {----------------------------------------------------------------------------}
   {                   register component editors                               }
   {----------------------------------------------------------------------------}
- {$IFDEF DELPHI}
   RegisterComponentEditor(TVpNavBar, TVpNavBarEditor);
- {$ENDIF}
   RegisterComponentEditor(TVpControlLink, TVpPrtFmtPropertyEditor);
   RegisterComponentEditor(TVpFlexDataStore, TVpFlexDSEditor);
 

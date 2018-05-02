@@ -328,7 +328,7 @@ type
     property ActiveFolder: Integer read FActiveFolder write SetActiveFolder;
     property AllowInplaceEdit: Boolean read FAllowInplaceEdit write FAllowInplaceEdit default false;
     property AllowRearrange: Boolean read FAllowRearrange write FAllowRearrange;
-    property BackgroundColor: TColor read FBackgroundColor write SetBackgroundColor;
+    property BackgroundColor: TColor read FBackgroundColor write SetBackgroundColor default clWindow;
     property BackgroundImage: TBitmap read FBackgroundImage write SetBackgroundImage;
     property BackgroundMethod: TVpBackgroundMethod read FBackgroundMethod write SetBackgroundMethod;
     property ButtonHeight: Integer read FButtonHeight write SetButtonHeight;
@@ -1005,7 +1005,7 @@ begin
   FItemFont := TFont.Create;
   FItemFont.Name := Font.Name;
   FItemFont.OnChange := nabFontChanged;
-  FItemFont.Color := clWhite;
+  FItemFont.Color := clWindowText;
   FItemSpacing := abs(FItemFont.Height) + 3;
 
   FSelectedItemFont := TFont.Create;
@@ -1061,7 +1061,7 @@ begin
   ParentColor := False;
 
   FAllowRearrange := True;
-  FBackgroundColor := clInactiveCaption;
+  FBackgroundColor := clWindow;
   FBackgroundImage := TBitmap.Create;
   FBackgroundMethod := bmNormal;
 //  FBorderStyle := bsSingle;

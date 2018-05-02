@@ -182,6 +182,9 @@ procedure LoadGlyphFromRCDATA(AGlyph: TBitmap; ABaseResName: String;
 procedure LoadImageFromRCDATA(AImage: TImage; ABaseResName: String;
   ALowRes, AMedRes, AHighRes: Integer; AdjustSize: Boolean = true);
 
+function GetScrollbarHeight: Integer;
+function GetScrollbarWidth: Integer;
+
 procedure Unused(const A1); overload;
 procedure Unused(const A1, A2); overload;
 procedure Unused(const A1, A2, A3); overload;
@@ -1022,6 +1025,17 @@ begin
     stream.Free;
   end;
 end;
+
+function GetScrollbarHeight: Integer;
+begin
+  Result := GetSystemMetrics(SM_CYHSCROLL);
+end;
+
+function GetScrollbarWidth: Integer;
+begin
+  Result := GetSystemMetrics(SM_CXVSCROLL);
+end;
+
 
 {$PUSH}{$HINTS OFF}
 procedure Unused(const A1);
