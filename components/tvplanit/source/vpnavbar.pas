@@ -2747,7 +2747,9 @@ begin
       {animated scroll}
       if FActiveFolder > -1 then begin
         {play sound}
-        if FPlaySounds and (FSoundAlias <> '') and FileExists(FSoundAlias) then
+        if not (csDesigning in ComponentState) and FPlaySounds and
+           (FSoundAlias <> '') and FileExists(FSoundAlias)
+        then
           PlaySound(FSoundAlias, psmAsync);
         (*
         if FPlaySounds and (FSoundAlias > '') then begin
