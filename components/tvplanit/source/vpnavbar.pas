@@ -756,7 +756,7 @@ begin
   inherited Create(Collection);
   FFolder := TVpNavFolder((TVpCollection(Collection)).GetOwner);
   FIconIndex := -1;
-  Name := Format('Item%d-%d', [FFolder.Index, Index]);
+  Name := Format('Item%d_%d', [FFolder.Index, Index]);
   FFolder.FNavBar.Invalidate;
 end;
 {=====}

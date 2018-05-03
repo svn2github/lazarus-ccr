@@ -154,25 +154,11 @@ uses
 const
   ITEMS_MARGIN = 2;
   IMG_MARGIN = 4;
-  (*
-procedure EditNavBar(ADesigner: TComponentEditorDesigner; ABar: TVpNavBar);
-var
-  editor: TObject;
-begin
-  editor := FindEditorForm(ABar);
-  if editor = nil then begin
-    DebugLn('EditorForm not found');
-    editor := TfrmNavBarEd.Create(Application, ABar, ADesigner);
-    RegisterEditorForm(editor, ABar);
-  end;
-  if editor <> nil then
-    with TfrmNavBarEd(editor) do begin
-      ShowOnTop;
-    end;
-end;
-*)
 
-{*** TVpNavBarEditor ***}
+
+{-------------------------------------------------------------------------------
+                            TVpNavBarEditor
+-------------------------------------------------------------------------------}
 
 procedure TVpNavBarEditor.ExecuteVerb(Index : Integer);
 var
@@ -205,7 +191,9 @@ begin
 end;
 
 
-{*** TfrmNavBarEd ***}
+{-------------------------------------------------------------------------------
+                               TfrmNavBarEd
+-------------------------------------------------------------------------------}
 
 constructor TfrmNavBarEd.Create(AOwner: TComponent; ABar: TVpNavBar;
   ADesigner: TComponentEditorDesigner);
@@ -316,6 +304,7 @@ begin
     pnlImages.Height := Bar.Images.Height + GetScrollbarHeight + 2*IMG_MARGIN +
       Panel8.Height + pnlImages.BorderSpacing.Top + pnlImages.BorderSpacing.Bottom;
   end;
+  lbFolders.SetFocus;
 end;
 
 function TfrmNavBarEd.FindFolderIndex(APersistent: TPersistent): Integer;
@@ -740,20 +729,36 @@ begin
 end;
 
 procedure TfrmNavBarEd.btnFolderAddClick(Sender: TObject);
+var
+  folder: TVpNavFolder;
 begin
-  Bar.FolderCollection.Add;
+  folder := TVpNavFolder(FBar.FolderCollection.Add);
+//  folder.Name := Designer.CreateUniqueComponentName('TVpNavFolder');
+  GlobalDesignHook.PersistentAdded(folder, true);
+  (*
   PopulateFolderList;
   lbFolders.ItemIndex := lbFolders.Items.Count - 1;
   SelectionChanged(true);
   if Assigned(Designer) then
     Designer.Modified;
   lbFoldersClick(Self);
-  UpdateBtnStates;
+  *)
+  lbFoldersClick(self);
+ // UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.btnItemAddClick(Sender: TObject);
+var
+  folder: TVpNavFolder;
+  item: TVpNavBtnItem;
 begin
   if (lbFolders.ItemIndex <> -1) then begin
+    folder := TVpNavFolder(lbFolders.Items.Objects[lbFolders.ItemIndex]);
+    item := TVpNavBtnItem(folder.ItemCollection.Add);
+//    item.Name := Designer.CreateUniqueComponentName('TVpNavBtnItem');
+    GlobalDesignHook.PersistentAdded(item, true);
+    (*
+
     TVpNavFolder(
       lbFolders.Items.Objects[lbFolders.ItemIndex]).ItemCollection.Add;
     lbItems.ItemIndex := -1;
@@ -762,6 +767,7 @@ begin
     SelectionChanged(true);
     if assigned(Designer) then
       Designer.Modified;
+      *)
   end;
   UpdateBtnStates;
 end;

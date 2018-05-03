@@ -1036,7 +1036,6 @@ begin
   Result := GetSystemMetrics(SM_CXVSCROLL);
 end;
 
-
 {$PUSH}{$HINTS OFF}
 procedure Unused(const A1);
 begin
