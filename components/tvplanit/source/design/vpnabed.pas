@@ -108,19 +108,25 @@ type
 
   private
     FBar: TVpNavBar;
-    FDesigner: TComponentEditorDesigner;
     RefreshTimer: TTimer;
     FSelImgIndex: Integer;
     function FindBtnIndex(APersistent: TPersistent): Integer;
     function FindFolderIndex(APersistent: TPersistent): Integer;
-    procedure OnGetSelection(const ASelection: TPersistentSelectionList);
-    procedure OnPersistentAdded(APersistent: TPersistent; Select: boolean);
-    procedure OnPersistentDeleting(APersistent: TPersistent);
-    procedure OnSetSelection(const ASelection: TPersistentSelectionList);
+    function GetFolderDisplayName(AFolder: TVpNavFolder): String;
+    function GetItemDisplayName(AItem: TVpNavBtnItem): String;
     procedure OnTimer(Sender: TObject);
     procedure SelectionChanged(AOrderChanged: Boolean = false);
     procedure SelectList(SelList: TPersistentSelectionList);
     procedure UpdateBtnState;
+
+  private
+    FDesigner: TComponentEditorDesigner;
+    procedure AddDesignHookHandlers;
+    procedure OnGetSelection(const ASelection: TPersistentSelectionList);
+    procedure OnObjectPropertyChanged(Sender: TObject; ANewObject: TPersistent);
+    procedure OnPersistentAdded(APersistent: TPersistent; Select: boolean);
+    procedure OnPersistentDeleting(APersistent: TPersistent);
+    procedure OnSetSelection(const ASelection: TPersistentSelectionList);
 
   public
     { Public declarations }
@@ -142,36 +148,49 @@ implementation
 {$R *.lfm}
 
 uses
-  PropEditUtils,
+  PropEditUtils, StrUtils,
   VpMisc;
 
 const
   ITEMS_MARGIN = 2;
   IMG_MARGIN = 4;
-
+  (*
 procedure EditNavBar(ADesigner: TComponentEditorDesigner; ABar: TVpNavBar);
 var
   editor: TObject;
 begin
   editor := FindEditorForm(ABar);
   if editor = nil then begin
+    DebugLn('EditorForm not found');
     editor := TfrmNavBarEd.Create(Application, ABar, ADesigner);
-    //RegisterEditorForm(editor, ABar);  -- wp
+    RegisterEditorForm(editor, ABar);
   end;
   if editor <> nil then
     with TfrmNavBarEd(editor) do begin
-      //ComponentEditor := Self;
       ShowOnTop;
     end;
 end;
-
+*)
 
 {*** TVpNavBarEditor ***}
 
 procedure TVpNavBarEditor.ExecuteVerb(Index : Integer);
+var
+  bar: TVpNavBar;
+  editor: TObject;
 begin
-  if Index = 0 then
-    EditNavBar(Designer, (Component as TVpNavBar));
+  if Index = 0 then begin
+    bar := Component as TVpNavBar;
+    editor := FindEditorForm(bar);
+    if editor = nil then begin
+      DebugLn('EditorForm not found.');
+      editor := TfrmNavBarEd.Create(Application, bar, Designer);
+      RegisterEditorForm(editor, bar);
+    end else
+      TfrmNavBarEd(editor).SetData(Designer, bar);
+    if editor <> nil then
+      TfrmNavBarEd(editor).ShowOnTop;
+  end;
 end;
 
 function TVpNavBarEditor.GetVerb(Index : Integer) : string;
@@ -212,26 +231,36 @@ begin
   end;
   FSelImgIndex := -1;
 
-  if Assigned(GlobalDesignHook) then
-  begin
-//    GlobalDesignHook.AddHandlerComponentRenamed(OnComponentRenamed);
-    GlobalDesignHook.AddHandlerPersistentDeleting(OnPersistentDeleting);
-    GlobalDesignHook.AddHandlerGetSelection(OnGetSelection);
-    GlobalDesignHook.AddHandlerSetSelection(OnSetSelection);
-    GlobalDesignHook.AddHandlerPersistentAdded(OnPersistentAdded);
-  end;
+  AddDesignHookHandlers;
   SelectionChanged;
 end;
 
 destructor TfrmNavBarEd.Destroy;
 begin
-  //UnregisterEditorForm(Self);   -- wp
+  UnregisterEditorForm(Self);
   inherited Destroy;
+end;
+
+procedure TfrmNavBarEd.AddDesignHookHandlers;
+begin
+  if GlobalDesignHook <> nil then
+  begin
+    GlobalDesignHook.RemoveAllHandlersForObject(Self);
+    if FBar <> nil then
+    begin
+      GlobalDesignHook.AddHandlerObjectPropertyChanged(OnObjectPropertyChanged);
+      GlobalDesignHook.AddHandlerPersistentAdded(OnPersistentAdded);
+      GlobalDesignHook.AddHandlerPersistentDeleting(OnPersistentDeleting);
+      GlobalDesignHook.AddHandlerGetSelection(OnGetSelection);
+      GlobalDesignHook.AddHandlerSetSelection(OnSetSelection);
+    end;
+  end;
 end;
 
 procedure TfrmNavBarEd.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+  UnregisterEditorForm(Self);
   Action := caFree;
 end;
 
@@ -303,6 +332,16 @@ begin
   Result := -1;
 end;
 
+function TfrmNavBarEd.GetFolderDisplayName(AFolder: TVpNavFolder): String;
+begin
+  Result := IfThen(AFolder.Caption <> '', AFolder.Caption, AFolder.Name);
+end;
+
+function TfrmNavBarEd.GetItemDisplayName(AItem: TVpNavBtnItem): String;
+begin
+  Result := IfThen(AItem.Caption <> '', AItem.Caption, AItem.Name);
+end;
+
 procedure TfrmNavBarEd.OnGetSelection(const ASelection: TPersistentSelectionList);
 var
   i: Integer;
@@ -321,6 +360,26 @@ begin
     for i:=0 to lbItems.Items.Count-1 do
       if lbItems.Selected[i] then
         ASelection.Add(TPersistent(lbItems.Items.Objects[i]));
+  end;
+end;
+
+procedure TfrmNavBarEd.OnObjectPropertyChanged(Sender: TObject; ANewObject: TPersistent);
+var
+  i: integer;
+  item: TVpNavBtnItem;
+  folder: TVpNavFolder;
+begin
+  if ANewObject is TVpNavBtnItem then begin
+    item := TVpNavBtnItem(ANewObject);
+    i := FindBtnIndex(item);
+    if i > -1 then
+      lbItems.Items[i] := GetItemDisplayName(item);
+  end else
+  if ANewObject is TVpNavFolder then begin
+    folder := TVpNavFolder(ANewObject);
+    i := FindFolderIndex(folder);
+    if i > -1 then
+      lbFolders.Items[i] := GetFolderDisplayName(folder);
   end;
 end;
 
@@ -407,9 +466,7 @@ var
 begin
   lbFolders.Clear;
   for I := 0 to Pred(Bar.FolderCount) do begin
-    S := Bar.Folders[I].Caption;
-    if S = '' then
-      S := Bar.Folders[I].Name;
+    S := GetFolderDisplayName(Bar.Folders[I]);
     lbFolders.Items.AddObject(S, Bar.Folders[I]);
   end;
 end;
@@ -423,9 +480,7 @@ begin
   if lbFolders.ItemIndex = -1 then exit;
   with Bar.Folders[lbFolders.ItemIndex] do
     for I := 0 to pred(ItemCount) do begin
-      S := Items[I].Caption;
-      if S = '' then
-        S := Items[I].Name;
+      S := GetItemDisplayName(Items[I]);
       lbItems.Items.AddObject(S,Items[i]);
     end;
 end;
@@ -458,17 +513,7 @@ begin
   end;
   FSelImgIndex := -1;
 
-  if GlobalDesignHook <> nil then
-  begin
-    GlobalDesignHook.RemoveAllHandlersForObject(Self);
-    if FBar <> nil then
-    begin
-      GlobalDesignHook.AddHandlerPersistentAdded(OnPersistentAdded);
-      GlobalDesignHook.AddHandlerPersistentDeleting(OnPersistentDeleting);
-      GlobalDesignHook.AddHandlerGetSelection(OnGetSelection);
-      GlobalDesignHook.AddHandlerSetSelection(OnSetSelection);
-    end;
-  end;
+  AddDesignHookHandlers;
 end;
 
 procedure TfrmNavBarEd.lbFoldersClick(Sender: TObject);
