@@ -117,7 +117,7 @@ type
     procedure OnTimer(Sender: TObject);
     procedure SelectionChanged(AOrderChanged: Boolean = false);
     procedure SelectList(SelList: TPersistentSelectionList);
-    procedure UpdateBtnState;
+    procedure UpdateBtnStates;
 
   private
     FDesigner: TComponentEditorDesigner;
@@ -233,6 +233,7 @@ begin
 
   AddDesignHookHandlers;
   SelectionChanged;
+  UpdateBtnStates;
 end;
 
 destructor TfrmNavBarEd.Destroy;
@@ -301,10 +302,11 @@ begin
   lbFolders.Items[Bar.ActiveFolder] := S;
 
   if (lbItems.ItemIndex > -1) then begin                                 
-    S := lbItems.Items.Strings[lbItems.ItemIndex];
+    S := lbItems.Items[lbItems.ItemIndex];
     PopulateItemList;
     if S <> '' then
-      lbItems.ItemIndex := lbItems.Items.IndexOf(S);                     
+      lbItems.ItemIndex := lbItems.Items.IndexOf(S);
+    UpdateBtnStates;
   end;                                                                   
 end;
 
@@ -411,6 +413,7 @@ begin
       lbItems.ItemIndex := i;
     end;
   end;
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.OnPersistentDeleting(APersistent: TPersistent);
@@ -427,6 +430,7 @@ begin
     i := FindBtnIndex(APersistent);
     if i <> -1 then lbItems.Items.Delete(i);
   end;
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.OnSetSelection(const ASelection: TPersistentSelectionList);
@@ -514,6 +518,7 @@ begin
   FSelImgIndex := -1;
 
   AddDesignHookHandlers;
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.lbFoldersClick(Sender: TObject);
@@ -538,7 +543,7 @@ begin
   if SelList.Count > 0 then
     SelectList(SelList);
 
-  UpdateBtnState;
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.lbItemsMeasureItem(Control: TWinControl;
@@ -614,7 +619,7 @@ begin
       SelectList(SelList);
   end;
 
-  UpdateBtnState;
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.btnItemUpClick(Sender: TObject);
@@ -629,7 +634,7 @@ begin
       Item.Index := Item.Index - 1;
 
     PopulateItemList;
-    UpdateBtnState;
+    UpdateBtnStates;
 
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
@@ -650,7 +655,7 @@ begin
       Item.Index := Item.Index + 1;
 
     PopulateItemList;
-    UpdateBtnState;
+    UpdateBtnStates;
 
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
@@ -674,7 +679,7 @@ begin
 
     PopulateFolderList;
     lbFolders.ItemIndex := SaveItemIndex - 1;
-    UpdateBtnState;
+    UpdateBtnStates;
 
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
@@ -696,7 +701,7 @@ begin
 
     PopulateFolderList;
     lbFolders.ItemIndex := Folder.Index;
-    UpdateBtnState;
+    UpdateBtnStates;
 
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
@@ -715,7 +720,7 @@ begin
     PopulateItemList;
     if Assigned(Designer) then
       Designer.Modified;
-    UpdateBtnState;
+    UpdateBtnStates;
   end;
 end;
 
@@ -724,11 +729,13 @@ begin
   if (lbFolders.ItemIndex <> -1) then begin
     TVpNavFolder(lbFolders.Items.Objects[lbFolders.ItemIndex]).Free;
     lbFolders.ItemIndex := -1;
+    FBar.Activefolder := -1;
+    FSelImgIndex := -1;
     PopulateFolderList;
     PopulateItemList;
     if Assigned(Designer) then
       Designer.Modified;
-    UpdateBtnState;
+    UpdateBtnStates;
   end;
 end;
 
@@ -741,7 +748,7 @@ begin
   if Assigned(Designer) then
     Designer.Modified;
   lbFoldersClick(Self);
-  UpdateBtnState;
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.btnItemAddClick(Sender: TObject);
@@ -750,12 +757,13 @@ begin
     TVpNavFolder(
       lbFolders.Items.Objects[lbFolders.ItemIndex]).ItemCollection.Add;
     lbItems.ItemIndex := -1;
+    FSelImgIndex := -1;
     PopulateItemList;
     SelectionChanged(true);
     if assigned(Designer) then
       Designer.Modified;
   end;
-  UpdateBtnState;
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.pnlImageViewPaint(Sender: TObject);
@@ -861,7 +869,7 @@ begin
   SelList.Free;
 end;
 
-procedure TfrmNavBarEd.UpdateBtnState;
+procedure TfrmNavBarEd.UpdateBtnStates;
 var
   canChangeFolders: Boolean;
   canChangeItems: Boolean;
