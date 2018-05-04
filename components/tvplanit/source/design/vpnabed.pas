@@ -624,7 +624,6 @@ begin
       Item.Index := Item.Index - 1;
 
     PopulateItemList;
-    UpdateBtnStates;
 
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
@@ -632,6 +631,8 @@ begin
       Designer.Modified;
     end;
   end;
+
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.btnItemDownClick(Sender: TObject);
@@ -645,7 +646,6 @@ begin
       Item.Index := Item.Index + 1;
 
     PopulateItemList;
-    UpdateBtnStates;
 
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
@@ -653,6 +653,8 @@ begin
       Designer.Modified;
     end;
   end;
+
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.btnFolderUpClick(Sender: TObject);
@@ -669,7 +671,6 @@ begin
 
     PopulateFolderList;
     lbFolders.ItemIndex := SaveItemIndex - 1;
-    UpdateBtnStates;
 
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
@@ -677,6 +678,8 @@ begin
       Designer.Modified;
     end;
   end;
+
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.btnFolderDownClick(Sender: TObject);
@@ -691,7 +694,6 @@ begin
 
     PopulateFolderList;
     lbFolders.ItemIndex := Folder.Index;
-    UpdateBtnStates;
 
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
@@ -699,6 +701,8 @@ begin
       Designer.Modified;
     end;
   end;
+
+  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.btnItemDeleteClick(Sender: TObject);
