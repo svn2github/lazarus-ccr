@@ -15,81 +15,16 @@ object frmNavBarEd: TfrmNavBarEd
   OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '1.9.0.0'
-  object pnlImages: TPanel
-    Left = 0
-    Height = 85
-    Top = 279
-    Width = 543
-    Align = alBottom
-    AutoSize = True
-    BevelOuter = bvNone
-    ClientHeight = 85
-    ClientWidth = 543
-    TabOrder = 0
-    object Panel8: TPanel
-      Left = 0
-      Height = 27
-      Top = 0
-      Width = 543
-      Align = alTop
-      BevelOuter = bvNone
-      ClientHeight = 27
-      ClientWidth = 543
-      TabOrder = 0
-      object Label3: TLabel
-        AnchorSideLeft.Control = Panel8
-        AnchorSideTop.Control = Panel8
-        Left = 4
-        Height = 15
-        Top = 8
-        Width = 89
-        BorderSpacing.Left = 4
-        BorderSpacing.Top = 8
-        Caption = 'Available Images'
-        ParentColor = False
-      end
-    end
-    object sbImages: TScrollBox
-      Left = 4
-      Height = 54
-      Top = 27
-      Width = 535
-      HorzScrollBar.Page = 56
-      HorzScrollBar.Tracking = True
-      VertScrollBar.Page = 50
-      Align = alClient
-      AutoSize = True
-      BorderSpacing.Left = 4
-      BorderSpacing.Right = 4
-      BorderSpacing.Bottom = 4
-      ClientHeight = 50
-      ClientWidth = 531
-      Color = clWindow
-      ParentColor = False
-      TabOrder = 1
-      OnResize = sbImagesResize
-      object pnlImageView: TPanel
-        Left = 0
-        Height = 50
-        Top = 0
-        Width = 56
-        Constraints.MinHeight = 40
-        TabOrder = 0
-        OnClick = pnlImageViewClick
-        OnPaint = pnlImageViewPaint
-      end
-    end
-  end
   object pnlFoldersAndItems: TPanel
     Left = 0
-    Height = 279
+    Height = 364
     Top = 0
     Width = 543
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 279
+    ClientHeight = 364
     ClientWidth = 543
-    TabOrder = 1
+    TabOrder = 0
     object pnlFolders: TPanel
       AnchorSideLeft.Control = pnlFoldersAndItems
       AnchorSideTop.Control = pnlFoldersAndItems
@@ -97,20 +32,27 @@ object frmNavBarEd: TfrmNavBarEd
       AnchorSideBottom.Control = pnlFoldersAndItems
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 279
+      Height = 364
       Top = 0
-      Width = 269
+      Width = 235
       Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Right = 4
       BevelOuter = bvNone
-      ClientHeight = 279
-      ClientWidth = 269
+      ClientHeight = 364
+      ClientWidth = 235
       TabOrder = 0
       object lbFolders: TListBox
+        AnchorSideLeft.Control = pnlFolders
+        AnchorSideTop.Control = Panel6
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = pnlFolders
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel5
         Left = 4
-        Height = 227
+        Height = 308
         Top = 23
-        Width = 265
-        Align = alClient
+        Width = 231
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Left = 4
         ItemHeight = 0
         OnClick = lbFoldersClick
@@ -120,11 +62,11 @@ object frmNavBarEd: TfrmNavBarEd
         Left = 0
         Height = 23
         Top = 0
-        Width = 269
+        Width = 235
         Align = alTop
         BevelOuter = bvNone
         ClientHeight = 23
-        ClientWidth = 269
+        ClientWidth = 235
         TabOrder = 0
         object Label1: TLabel
           Left = 4
@@ -139,15 +81,16 @@ object frmNavBarEd: TfrmNavBarEd
       object Panel5: TPanel
         Left = 4
         Height = 25
-        Top = 254
-        Width = 265
+        Top = 335
+        Width = 231
         Align = alBottom
         AutoSize = True
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
+        BorderSpacing.Bottom = 4
         BevelOuter = bvNone
         ClientHeight = 25
-        ClientWidth = 265
+        ClientWidth = 231
         TabOrder = 2
         object btnFolderAdd: TSpeedButton
           AnchorSideLeft.Control = Panel5
@@ -253,28 +196,34 @@ object frmNavBarEd: TfrmNavBarEd
       end
     end
     object pnlItems: TPanel
-      AnchorSideLeft.Control = Bevel1
+      AnchorSideLeft.Control = pnlFolders
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = pnlFoldersAndItems
       AnchorSideRight.Control = pnlFoldersAndItems
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = pnlFoldersAndItems
       AnchorSideBottom.Side = asrBottom
-      Left = 273
-      Height = 279
+      Left = 239
+      Height = 364
       Top = 0
-      Width = 270
+      Width = 300
       Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Right = 4
       BevelOuter = bvNone
-      ClientHeight = 279
-      ClientWidth = 270
+      ClientHeight = 364
+      ClientWidth = 300
       TabOrder = 1
       object lbItems: TListBox
+        AnchorSideLeft.Control = pnlItems
+        AnchorSideTop.Control = Panel4
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = lbImages
+        AnchorSideBottom.Control = Panel1
         Left = 0
-        Height = 227
-        Top = 23
-        Width = 266
-        Align = alClient
+        Height = 307
+        Top = 24
+        Width = 248
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Right = 4
         ItemHeight = 13
         OnClick = lbItemsClick
@@ -286,15 +235,16 @@ object frmNavBarEd: TfrmNavBarEd
       object Panel1: TPanel
         Left = 0
         Height = 25
-        Top = 254
-        Width = 266
+        Top = 335
+        Width = 296
         Align = alBottom
         AutoSize = True
         BorderSpacing.Top = 4
         BorderSpacing.Right = 4
+        BorderSpacing.Bottom = 4
         BevelOuter = bvNone
         ClientHeight = 25
-        ClientWidth = 266
+        ClientWidth = 296
         TabOrder = 2
         object btnItemAdd: TSpeedButton
           AnchorSideLeft.Control = Panel1
@@ -401,13 +351,13 @@ object frmNavBarEd: TfrmNavBarEd
       end
       object Panel4: TPanel
         Left = 0
-        Height = 23
+        Height = 24
         Top = 0
-        Width = 270
+        Width = 300
         Align = alTop
         BevelOuter = bvNone
-        ClientHeight = 23
-        ClientWidth = 270
+        ClientHeight = 24
+        ClientWidth = 300
         TabOrder = 0
         object Label2: TLabel
           Left = 0
@@ -418,15 +368,44 @@ object frmNavBarEd: TfrmNavBarEd
           FocusControl = lbItems
           ParentColor = False
         end
+        object Label4: TLabel
+          AnchorSideTop.Control = Label2
+          AnchorSideRight.Control = Panel4
+          AnchorSideRight.Side = asrBottom
+          Left = 211
+          Height = 15
+          Top = 4
+          Width = 89
+          Anchors = [akTop, akRight]
+          Caption = 'Available i&mages'
+          ParentColor = False
+        end
+      end
+      object lbImages: TListBox
+        AnchorSideTop.Control = lbItems
+        AnchorSideRight.Control = pnlItems
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = lbItems
+        AnchorSideBottom.Side = asrBottom
+        Left = 252
+        Height = 307
+        Top = 24
+        Width = 48
+        Anchors = [akTop, akRight, akBottom]
+        ItemHeight = 0
+        OnClick = lbImagesClick
+        OnDrawItem = lbImagesDrawItem
+        Style = lbOwnerDrawFixed
+        TabOrder = 3
       end
     end
     object Bevel1: TBevel
       AnchorSideLeft.Control = pnlFoldersAndItems
       AnchorSideLeft.Side = asrCenter
-      Left = 269
+      Left = 239
       Height = 50
       Top = 0
-      Width = 4
+      Width = 64
       Shape = bsSpacer
     end
   end

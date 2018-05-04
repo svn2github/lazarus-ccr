@@ -40,7 +40,7 @@ uses
   PropEdits, LazarusPackageIntf, FieldsEditor, ComponentEditors,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Buttons,
-  VpBase, VpNavBar;
+  VpBase, VpNavBar, Types;
 
 type
 
@@ -56,7 +56,8 @@ type
 
   TfrmNavBarEd = class(TForm)
     Bevel1: TBevel;
-    pnlImageView: TPanel;
+    Label4: TLabel;
+    lbImages: TListBox;
     pnlFoldersAndItems: TPanel;
     pnlItems: TPanel;
     pnlFolders: TPanel;
@@ -76,10 +77,6 @@ type
     btnFolderDown: TSpeedButton;
     Panel6: TPanel;
     Label1: TLabel;
-    pnlImages: TPanel;
-    Panel8: TPanel;
-    Label3: TLabel;
-    sbImages: TScrollBox;
 
     procedure btnFolderAddClick(Sender: TObject);
     procedure btnFolderDeleteClick(Sender: TObject);
@@ -98,18 +95,15 @@ type
     procedure FormShow(Sender: TObject);
 
     procedure lbFoldersClick(Sender: TObject);
+    procedure lbImagesClick(Sender: TObject);
+    procedure lbImagesDrawItem(Control: TWinControl; Index: Integer;
+      ARect: TRect; State: TOwnerDrawState);
     procedure lbItemsClick(Sender: TObject);
     procedure lbItemsDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
     procedure lbItemsMeasureItem(Control: TWinControl; Index: Integer; var Height: Integer);
 
-    procedure pnlImageViewClick(Sender: TObject);
-    procedure pnlImageViewPaint(Sender: TObject);
-
-    procedure sbImagesResize(Sender: TObject);
-
   private
     FBar: TVpNavBar;
-    FSelImgIndex: Integer;
     function FindBtnIndex(APersistent: TPersistent): Integer;
     function FindFolderIndex(APersistent: TPersistent): Integer;
     function GetFolderDisplayName(AFolder: TVpNavFolder): String;
@@ -134,6 +128,7 @@ type
       ADesigner: TComponentEditorDesigner); reintroduce;
     destructor Destroy; override;
     procedure PopulateFolderList;
+    procedure PopulateImagesList;
     procedure PopulateItemList;
     procedure SetData(ADesigner: TComponentEditorDesigner; ABar: TVpNavBar);
     property Bar: TVpNavBar read FBar;
@@ -146,12 +141,14 @@ implementation
 {$R *.lfm}
 
 uses
-  PropEditUtils, StrUtils,
+  PropEditUtils, StrUtils, ImgList,
   VpMisc;
 
 const
   ITEMS_MARGIN = 2;
   IMG_MARGIN = 4;
+  IMG_MARGIN_HOR = 8;
+  IMG_MARGIN_VERT = 4;
 
 
 {-------------------------------------------------------------------------------
@@ -195,8 +192,6 @@ end;
 
 constructor TfrmNavBarEd.Create(AOwner: TComponent; ABar: TVpNavBar;
   ADesigner: TComponentEditorDesigner);
-var
-  w: Integer;
 begin
   inherited Create(AOwner);
 
@@ -204,19 +199,6 @@ begin
   FDesigner := ADesigner;
 
   PopulateFolderList;
-
-  if FBar.Images <> nil then begin
-    w := (FBar.Images.Width + 2*IMG_MARGIN) * FBar.Images.Count;
-    pnlImageView.ClientWidth := w;
-    pnlImageView.Constraints.MinHeight := FBar.Images.Height + 2 * IMG_MARGIN + GetScrollbarHeight;
-    if w > sbImages.ClientWidth then begin
-      sbImages.HorzScrollbar.Range := w - sbImages.ClientWidth;
-      sbImages.HorzScrollbar.Visible := true;
-    end else
-      sbImages.HorzScrollbar.Visible := false;
-  end;
-  FSelImgIndex := -1;
-
   AddDesignHookHandlers;
   SelectionChanged;
   UpdateBtnStates;
@@ -269,10 +251,7 @@ end;
 
 procedure TfrmNavBarEd.FormShow(Sender: TObject);
 begin
-  if (Bar <> nil) and (Bar.Images <> nil) then begin
-    pnlImages.Height := Bar.Images.Height + GetScrollbarHeight + 2*IMG_MARGIN +
-      Panel8.Height + pnlImages.BorderSpacing.Top + pnlImages.BorderSpacing.Bottom;
-  end;
+  PopulateImagesList;
   lbFolders.SetFocus;
 end;
 
@@ -417,7 +396,9 @@ begin
       if selections[i] is TVpNavFolder then
         lbFolders.Items[i] := GetFolderDisplayName(TVpNavFolder(selections[i]))
       else if selections[i] is TVpNavBtnItem then
-        lbItems.Items[i] := GetItemDisplayName(TVpNavBtnItem(selections[i]));
+        lbItems.Items[i] := GetItemDisplayName(TVpNavBtnItem(selections[i]))
+      else if (selections[i] is TCustomImageList) and (TCustomImageList(selections[i]) = FBar.Images) then
+        PopulateImagesList;
     end;
   finally
     selections.Free;
@@ -471,6 +452,21 @@ begin
   end;
 end;
 
+procedure TfrmNavbarEd.PopulateImagesList;
+var
+  i: Integer;
+begin
+  lbImages.Clear;
+  if (FBar = nil) or (FBar.Images = nil) then
+    exit;
+
+  for i:=0 to Bar.Images.Count-1 do
+    lbImages.Items.Add('');
+
+  lbImages.ItemHeight := FBar.Images.Width + 2*IMG_MARGIN_HOR;
+  lbImages.ClientWidth := FBar.Images.Width + 2*IMG_MARGIN_VERT + GetScrollbarWidth;
+end;
+
 procedure TfrmNavBarEd.PopulateItemList;
 var
   I : Integer;
@@ -488,7 +484,6 @@ end;
 procedure TfrmNavBarEd.SetData(ADesigner: TComponentEditorDesigner; ABar: TVpNavBar);
 var
   i: Integer;
-  w: Integer;
 begin
   if FBar <> nil then
     FBar.RemoveFreeNotification(self);
@@ -500,18 +495,7 @@ begin
     FBar.FreeNotification(self);
 
   PopulateFolderList;
-
-  if FBar.Images <> nil then begin
-    w := (Bar.Images.Width + 2*IMG_MARGIN) * Bar.Images.Count;
-    pnlImageView.ClientWidth := w;
-    pnlImageView.Constraints.MinHeight := Bar.Images.Height + 2 * IMG_MARGIN + GetScrollbarHeight;
-    if w > sbImages.ClientWidth then begin
-      sbImages.HorzScrollbar.Range := w - sbImages.ClientWidth;
-      sbImages.HorzScrollbar.Visible := true;
-    end else
-      sbImages.HorzScrollbar.Visible := false;
-  end;
-  FSelImgIndex := -1;
+  PopulateImagesList;
 
   AddDesignHookHandlers;
   UpdateBtnStates;
@@ -524,8 +508,7 @@ var
 begin
   PopulateItemList;
   Bar.ActiveFolder := lbFolders.ItemIndex;
-  FSelImgIndex := -1;
-  pnlImageView.Invalidate;
+  lbImages.ItemIndex := -1;
 
   SelList := TPersistentSelectionList.Create;
   SelList.ForceUpdate := true;
@@ -540,6 +523,41 @@ begin
     SelectList(SelList);
 
   UpdateBtnStates;
+end;
+
+procedure TfrmNavBarEd.lbImagesClick(Sender: TObject);
+var
+  btn: TVpNavBtnItem;
+  res: Integer;
+begin
+  if (lbImages.ItemIndex <> -1) and (lbItems.ItemIndex <> -1) then begin
+    btn := TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]);
+    if btn.IconIndex <> -1 then begin
+      res := MessageDlg('Do you want to replace the button icon by this one?',
+        mtConfirmation, [mbYes, mbNo, mbCancel], 0);
+      if res <> mrYes then
+        exit;
+    end;
+    btn.IconIndex := lbImages.ItemIndex;
+    lbItems.Invalidate;
+    if Assigned(Designer) then
+      Designer.Modified;
+  end;
+end;
+
+procedure TfrmNavBarEd.lbImagesDrawItem(Control: TWinControl; Index: Integer;
+  ARect: TRect; State: TOwnerDrawState);
+var
+  x, y: Integer;
+begin
+  if [odSelected, odFocused] * State <> [] then
+    lbImages.Canvas.Brush.Color := clHighlight
+  else
+    lbImages.Canvas.Brush.Color := clWindow;
+  lbImages.Canvas.FillRect(ARect);
+  x := (ARect.Left + ARect.Right - Bar.Images.Width) div 2;
+  y := (ARect.Top + ARect.Bottom - Bar.Images.Height) div 2;
+  FBar.Images.Draw(lbImages.Canvas, x, y, Index);
 end;
 
 procedure TfrmNavBarEd.lbItemsMeasureItem(Control: TWinControl;
@@ -601,8 +619,8 @@ begin
   if  (FBar <> nil) and (FBar.ActiveFolder <> -1) and (lbItems.ItemIndex <> -1) then
   begin
     btn := TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]);
-    FSelImgIndex := btn.IconIndex;
-    pnlImageView.Invalidate;
+    lbImages.ItemIndex := btn.IconIndex;
+
     SelList := TPersistentSelectionList.Create;
     SelList.ForceUpdate := true;
     for i:=0 to lbItems.Items.Count-1 do
@@ -712,7 +730,7 @@ begin
   if (lbItems.ItemIndex <> -1) then begin
     TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]).Free;
     lbItems.ItemIndex := -1;
-    FSelImgIndex := -1;
+    lbImages.ItemIndex := -1;
     PopulateItemList;
     if Assigned(Designer) then
       Designer.Modified;
@@ -726,7 +744,7 @@ begin
     TVpNavFolder(lbFolders.Items.Objects[lbFolders.ItemIndex]).Free;
     lbFolders.ItemIndex := -1;
     FBar.Activefolder := -1;
-    FSelImgIndex := -1;
+    lbImages.ItemIndex := -1;
     PopulateFolderList;
     PopulateItemList;
     if Assigned(Designer) then
@@ -762,91 +780,9 @@ begin
   if (lbFolders.ItemIndex <> -1) then begin
     folder := TVpNavFolder(lbFolders.Items.Objects[lbFolders.ItemIndex]);
     item := TVpNavBtnItem(folder.ItemCollection.Add);
-//    item.Name := Designer.CreateUniqueComponentName('TVpNavBtnItem');
     GlobalDesignHook.PersistentAdded(item, true);
-    (*
-
-    TVpNavFolder(
-      lbFolders.Items.Objects[lbFolders.ItemIndex]).ItemCollection.Add;
-    lbItems.ItemIndex := -1;
-    FSelImgIndex := -1;
-    PopulateItemList;
-    SelectionChanged(true);
-    if assigned(Designer) then
-      Designer.Modified;
-      *)
   end;
   UpdateBtnStates;
-end;
-
-procedure TfrmNavBarEd.pnlImageViewPaint(Sender: TObject);
-var
-  R: TRect;
-  Rimg: TRect;
-  i: Integer;
-  x, y: Integer;
-  wimg, himg: Integer;
-begin
-  R := Rect(0, 0, sbImages.Width, sbImages.Height);
-  pnlImageView.Canvas.Brush.Color := clWindow;
-  pnlImageView.Canvas.FillRect(R);
-
-  if (Bar.Images = nil) or (Bar.Images.Count = 0) then
-    exit;
-
-  wimg := Bar.Images.Width;
-  himg := Bar.Images.Height;
-
-  x := 0;
-  y := R.Top + IMG_MARGIN;
-  if pnlImageView.Width <= sbImages.Width then // no scrollbar
-    inc(y, GetScrollbarHeight div 2);
-
-  i := 0;
-  while i < Bar.Images.Count do begin
-    if i = FSelImgIndex then begin
-      R := Rect(x, R.Top, x+wimg+2*IMG_MARGIN, R.Bottom);
-      pnlImageView.Canvas.Brush.Color := clHighlight;
-      pnlImageView.Canvas.FillRect(R);
-    end;
-    FBar.Images.Draw(pnlImageView.Canvas, x + IMG_MARGIN, y, i, true);
-    inc(i);
-    inc(x, wimg + 2*IMG_MARGIN);
-  end;
-end;
-
-procedure TfrmNavBarEd.pnlImageViewClick(Sender: TObject);
-var
-  P: TPoint;
-  btn: TVpNavBtnItem;
-  res: Integer;
-begin
-  if (Bar.Images = nil) or (Bar.Images.Count = 0) then
-    exit;
-
-  P := pnlImageView.ScreenToClient(Mouse.CursorPos);
-  FSelImgIndex := P.X div (Bar.Images.Width + 2*IMG_MARGIN);
-  if FSelImgIndex >= Bar.Images.Count then FSelImgIndex := Bar.Images.Count - 1;
-  pnlImageView.Invalidate;
-
-  if (FSelImgIndex <> -1) and (lbItems.ItemIndex <> -1) then begin
-    btn := TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]);
-    if btn.IconIndex <> -1 then begin
-      res := MessageDlg('Do you want to replace the button icon by this one?',
-        mtConfirmation, [mbYes, mbNo, mbCancel], 0);
-      if res <> mrYes then
-        exit;
-    end;
-    btn.IconIndex := FSelImgIndex;
-    lbItems.Invalidate;
-    if Assigned(Designer) then
-      Designer.Modified;
-  end;
-end;
-
-procedure TfrmNavBarEd.sbImagesResize(Sender: TObject);
-begin
-  sbImages.HorzScrollbar.Visible := sbImages.ClientWidth < pnlImageView.ClientWidth;
 end;
 
 procedure TfrmNavBarEd.SelectionChanged(AOrderChanged: Boolean = false);
