@@ -982,6 +982,11 @@ begin
   end;
 end;
 
+function ResToStr(AValue: Integer): String;
+begin
+  if AValue > 0 then Result := IntToStr(AVAlue) else Result := '';
+end;
+
 procedure LoadGlyphFromRCDATA(AGlyph: TBitmap; ABaseResName: String;
   ALowRes, AMedRes, AHighRes: Integer);
 var
@@ -990,11 +995,11 @@ var
 begin
   ppiFactor := MulDiv(Screen.PixelsPerInch, 100, 96);
   if ppiFactor >= 145 then
-    resName := ABaseResName + IntToStr(AHighRes)
+    resName := ABaseResName + ResToStr(AHighRes)
   else if ppiFactor >= 115 then
-    resName := ABaseResName + IntToStr(AMedRes)
+    resName := ABaseResName + ResToStr(AMedRes)
   else
-    resName := ABaseResName + IntToStr(ALowRes);
+    resName := ABaseResName + ResToStr(ALowRes);
 
   LoadGlyphFromRCDATA(AGlyph, resName);
 end;
@@ -1008,11 +1013,11 @@ var
 begin
   ppiFactor := MulDiv(Screen.PixelsPerInch, 100, 96);
   if ppiFactor >= 145 then
-    resName := ABaseResName + IntToStr(AHighRes)
+    resName := ABaseResName + ResToStr(AHighRes)
   else if ppiFactor >= 115 then
-    resName := ABaseResName + IntToStr(AMedRes)
+    resName := ABaseResName + ResToStr(AMedRes)
   else
-    resName := ABaseResName + IntToStr(ALowRes);
+    resName := ABaseResName + ResToStr(ALowRes);
 
   stream := TResourceStream.Create(HINSTANCE, resName, RT_RCDATA);
   try

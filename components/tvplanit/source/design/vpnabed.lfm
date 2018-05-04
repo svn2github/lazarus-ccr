@@ -13,7 +13,8 @@ object frmNavBarEd: TfrmNavBarEd
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  Position = poScreenCenter
+  Position = poDefaultPosOnly
+  ShowHint = True
   LCLVersion = '1.9.0.0'
   object pnlFoldersAndItems: TPanel
     Left = 0
@@ -217,12 +218,12 @@ object frmNavBarEd: TfrmNavBarEd
         AnchorSideLeft.Control = pnlItems
         AnchorSideTop.Control = Panel4
         AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Control = lbImages
+        AnchorSideRight.Control = btnUseImage
         AnchorSideBottom.Control = Panel1
         Left = 0
         Height = 307
         Top = 24
-        Width = 248
+        Width = 221
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Right = 4
         ItemHeight = 13
@@ -393,10 +394,22 @@ object frmNavBarEd: TfrmNavBarEd
         Width = 48
         Anchors = [akTop, akRight, akBottom]
         ItemHeight = 0
-        OnClick = lbImagesClick
         OnDrawItem = lbImagesDrawItem
         Style = lbOwnerDrawFixed
         TabOrder = 3
+      end
+      object btnUseImage: TSpeedButton
+        AnchorSideTop.Control = lbImages
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lbImages
+        Left = 225
+        Height = 22
+        Hint = 'Use image in navigation bar'
+        Top = 166
+        Width = 23
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 4
+        OnClick = btnUseImageClick
       end
     end
     object Bevel1: TBevel

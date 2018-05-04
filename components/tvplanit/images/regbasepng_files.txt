@@ -63,9 +63,9 @@ components/VpToday24.png
 components/VpToday32.png
 
 components/VpUpArrow.png
-components/VpUpArrow_150.png
-components/VpUpArrow_200.png
+components/VpUpArrow150.png
+components/VpUpArrow200.png
 
 components/VpDownArrow.png
-components/VpDownArrow_150.png
-components/VpdownArrow_200.png
+components/VpDownArrow150.png
+components/VpdownArrow200.png

@@ -1030,8 +1030,11 @@ begin
     Visible := False;
     Parent := Self;
     OnClick := nabScrollUpBtnClick;
-//    Glyph.LoadFromResourceName(HINSTANCE, 'VPUPARROW');
-    LoadGlyphFromRCDATA(Glyph, 'VPUPARROW');
+   {$IFDEF NEW_ICONS}
+    LoadGlyphFromRCDATA(Glyph, 'VPUPARROW', -1, 150, 200);
+   {$ELSE}
+    Glyph.LoadFromResourceName(HINSTANCE, 'VPUPARROW');
+   {$ENDIF}
     NumGlyphs := 1;
     Left := -20;
     Height := 15;
@@ -1043,8 +1046,11 @@ begin
     Visible := False;
     Parent := Self;
     OnClick := nabScrollDownBtnClick;
-//    Glyph.LoadFromResourceName(HINSTANCE, 'VPDOWNARROW');
-    LoadGlyphFromRCDATA(Glyph, 'VPDOWNARROW');
+   {$IFDEF NEW_ICONS}
+    LoadGlyphFromRCDATA(Glyph, 'VPDOWNARROW', -1, 150, 200);
+   {$ELSE}
+    Glyph.LoadFromResourceName(HINSTANCE, 'VPDOWNARROW');
+   {$ENDIF}
     NumGlyphs := 1;
     Left := -20;
     Height := 15;

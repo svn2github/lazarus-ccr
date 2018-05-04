@@ -34,9 +34,7 @@ unit VpNabEd;
 interface
 
 uses
-  lazlogger,
-
-  LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf, LCLVersion,
   PropEdits, LazarusPackageIntf, FieldsEditor, ComponentEditors,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Buttons,
@@ -77,25 +75,24 @@ type
     btnFolderDown: TSpeedButton;
     Panel6: TPanel;
     Label1: TLabel;
+    btnUseImage: TSpeedButton;
 
     procedure btnFolderAddClick(Sender: TObject);
     procedure btnFolderDeleteClick(Sender: TObject);
     procedure btnFolderDownClick(Sender: TObject);
     procedure btnFolderUpClick(Sender: TObject);
-
     procedure btnItemAddClick(Sender: TObject);
     procedure btnItemDeleteClick(Sender: TObject);
     procedure btnItemDownClick(Sender: TObject);
     procedure btnItemUpClick(Sender: TObject);
+    procedure btnUseImageClick(Sender: TObject);
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-//    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
 
     procedure lbFoldersClick(Sender: TObject);
-    procedure lbImagesClick(Sender: TObject);
     procedure lbImagesDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure lbItemsClick(Sender: TObject);
@@ -122,6 +119,10 @@ type
     procedure OnSetSelection(const ASelection: TPersistentSelectionList);
 
   protected
+    {$IF LCL_FullVersion >= 1080000}
+     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+       const AXProportion, AYProportion: Double); override;
+    {$ENDIF}
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
 
   public
@@ -144,12 +145,17 @@ implementation
 
 uses
   PropEditUtils, IDEWindowIntf, StrUtils, ImgList,
-  VpMisc;
+  VpConst, VpMisc;
 
 const
   ITEMS_MARGIN = 2;
   IMG_MARGIN_HOR = 8;
   IMG_MARGIN_VERT = 4;
+
+var
+  vITEMS_MARGIN: Integer = ITEMS_MARGIN;
+  vIMG_MARGIN_HOR: Integer = IMG_MARGIN_HOR;
+  vIMG_MARGIN_VERT: Integer = IMG_MARGIN_VERT;
 
 var
   EditorForms : TList = nil;
@@ -268,6 +274,26 @@ begin
   end;
 end;
 
+{$IF LCL_FullVersion >= 1080000}
+ procedure TFrmNavBarEd.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+   const AXProportion, AYProportion: Double);
+ begin
+   inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
+   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+   begin
+     DisableAutoSizing;
+     try
+       vITEMS_MARGIN := round(ITEMS_MARGIN * AXProportion);
+       vIMG_MARGIN_HOR := round(IMG_MARGIN_HOR * AXProportion);
+       vIMG_MARGIN_VERT := round(IMG_MARGIN_VERT * AYProportion);
+     finally
+       EnableAutoSizing;
+     end;
+   end;
+ end;
+
+{$ENDIF}
+
 procedure TfrmNavBarEd.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
@@ -278,6 +304,17 @@ end;
 procedure TfrmNavBarEd.FormCreate(Sender: TObject);
 begin
   IDEDialogLayoutList.ApplyLayout(Self);
+
+ {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCDATA(btnUseImage.Glyph, 'VpLArrow', 16, 24, 32);
+ {$ELSE}
+  vtnUseImage.Glyph.LoadFromResourceName(HINSTANCE, 'VPLEFTARROW');
+ {$ENDIF}
+
+ {$IF VP_LCL_SCALING = 0}
+  btnUseImage.Width := ScaleX(btnUseImage.Width, DesignTimeDPI);
+  btnUseImage.Height := ScaleY(btnUseImage.Width, DesignTimeDPI);
+ {$ENDIF}
 end;
 
 procedure TfrmNavBarEd.FormDestroy(Sender: TObject);
@@ -346,11 +383,6 @@ procedure TfrmNavBarEd.OnPersistentAdded(APersistent: TPersistent; Select: boole
 var
   i: Integer;
 begin
-  if APersistent = nil then
-    DebugLn('OnPersistentAdded: Persistent = nil')
-  else
-    DebugLn('OnPersistentAdded: Persistent = ' + APersistent.ClassName);
-
   if not Assigned(APersistent) then
     exit;
 
@@ -469,8 +501,8 @@ begin
   for i:=0 to FBar.Images.Count-1 do
     lbImages.Items.Add('');
 
-  lbImages.ItemHeight := FBar.Images.Width + 2*IMG_MARGIN_HOR;
-  lbImages.ClientWidth := FBar.Images.Width + 2*IMG_MARGIN_VERT + GetScrollbarWidth;
+  lbImages.ItemHeight := FBar.Images.Width + 2*vIMG_MARGIN_HOR;
+  lbImages.ClientWidth := FBar.Images.Width + 2*vIMG_MARGIN_VERT + GetScrollbarWidth;
 end;
 
 procedure TfrmNavBarEd.PopulateItemList;
@@ -536,26 +568,6 @@ begin
   UpdateBtnStates;
 end;
 
-procedure TfrmNavBarEd.lbImagesClick(Sender: TObject);
-var
-  btn: TVpNavBtnItem;
-  res: Integer;
-begin
-  if (lbImages.ItemIndex <> -1) and (lbItems.ItemIndex <> -1) then begin
-    btn := TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]);
-    if btn.IconIndex <> -1 then begin
-      res := MessageDlg('Do you want to replace the button icon by this one?',
-        mtConfirmation, [mbYes, mbNo, mbCancel], 0);
-      if res <> mrYes then
-        exit;
-    end;
-    btn.IconIndex := lbImages.ItemIndex;
-    lbItems.Invalidate;
-    if Assigned(Designer) then
-      Designer.Modified;
-  end;
-end;
-
 procedure TfrmNavBarEd.lbImagesDrawItem(Control: TWinControl; Index: Integer;
   ARect: TRect; State: TOwnerDrawState);
 var
@@ -580,7 +592,7 @@ procedure TfrmNavBarEd.lbItemsMeasureItem(Control: TWinControl;
 begin
   Unused(Control, Index);
   if (FBar <> nil) and (Bar.Images <> nil) then
-    Height := Bar.Images.Height + 2 * ITEMS_MARGIN;
+    Height := Bar.Images.Height + 2 * vITEMS_MARGIN;
 end;
 
 procedure TfrmNavBarEd.lbItemsDrawItem(Control: TWinControl;
@@ -600,7 +612,7 @@ begin
     exit;
 
   // Draw button image
-  delta := ITEMS_MARGIN;
+  delta := vITEMS_MARGIN;
   btn := TVpNavBtnItem(lbItems.Items.Objects[Index]);
   if (FBar.Images <> nil) and (btn <> nil) and
      (btn.IconIndex > -1) and (btn.IconIndex < Bar.Images.Count) then
@@ -796,14 +808,32 @@ begin
   UpdateBtnStates;
 end;
 
+procedure TfrmNavBarEd.btnUseImageClick(Sender: TObject);
+var
+  btn: TVpNavBtnItem;
+  res: Integer;
+begin
+  if (lbImages.ItemIndex <> -1) and (lbItems.ItemIndex <> -1) then begin
+    btn := TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]);
+    if btn.IconIndex = lbImages.itemIndex then
+      exit;
+    if btn.IconIndex <> -1 then begin
+      res := MessageDlg('Do you want to replace the button icon by this one?',
+        mtConfirmation, [mbYes, mbNo, mbCancel], 0);
+      if res <> mrYes then
+        exit;
+    end;
+    btn.IconIndex := lbImages.ItemIndex;
+    lbItems.Invalidate;
+    if Assigned(Designer) then
+      Designer.Modified;
+  end;
+end;
+
 procedure TfrmNavBarEd.SelectionChanged(AOrderChanged: Boolean = false);
 var
   SelList: TPersistentSelectionList;
 begin
-  {
-  if (FUpdateSelectionCount>0) or (GlobalDesignHook=nil) then
-    exit;
-  }
   GlobalDesignHook.RemoveHandlerSetSelection(OnSetSelection);
   try
     SelList := TPersistentSelectionList.Create;
@@ -856,6 +886,7 @@ begin
     if AComponent = FBar then FBar := nil;
   end;
 end;
+
 
 initialization
   InitFormsList;
