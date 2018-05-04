@@ -270,6 +270,8 @@ const
   { Hint support }
   MAX_HINT_WIDTH = 400;
 
+  DesignTimeDPI = 96;
+
 {$IFDEF LCL}
  {$IF LCL_FULLVERSION >= 1080100}
   VP_LCL_SCALING = 2;

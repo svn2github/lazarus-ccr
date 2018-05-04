@@ -36,7 +36,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf,
+  LMessages, LCLProc, LCLType, LCLIntf, LCLVersion,
   {$ELSE}
   Windows, Messages, MMSystem,
   {$ENDIF}
@@ -196,7 +196,7 @@ type
     FHotFolder: Integer;
     FImages: TImageList;
     FItemFont: TFont;
-    FItemSpacing: Word;
+    FItemSpacing: Integer;
     FPreviousFolder: Integer;
     FPreviousItem: Integer;
     FPlaySounds: Boolean;
@@ -248,6 +248,7 @@ type
     function GetFolder(Index: Integer): TVpNavFolder;
     function GetFolderCount: Integer;
     function GetContainer(Index: Integer): TVpFolderContainer;
+    function IsStoredItemSpacing: boolean;
     procedure SetActiveFolder(Value: Integer);
     procedure SetBackgroundColor(Value: TColor);
     procedure SetBackgroundImage(Value: TBitmap);
@@ -257,7 +258,7 @@ type
     procedure SetButtonHeight(Value: Integer);
     procedure SetImages(Value: TImageList);
     procedure SetItemFont(Value: TFont);
-    procedure SetItemSpacing(Value: Word);
+    procedure SetItemSpacing(Value: Integer);
     procedure SetSelectedItemFont(Value: TFont);
     procedure SetScrollDelta(Value: Integer);
 
@@ -299,6 +300,15 @@ type
     procedure WMEraseBkGnd(var Msg: TLMEraseBkGnd); message LM_ERASEBKGND;
     procedure WMNCHitTest(var Msg: TLMNCHitTest);  message LM_NCHITTEST;
     procedure WMSetCursor(var Msg: TLMSetCursor); message LM_SETCURSOR;
+    {$IF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double);
+    {$ENDIF}
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double);
+    {$ELSEIF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double);
+    {$ENDIF}
     {$ENDIF}
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
@@ -331,12 +341,12 @@ type
     property BackgroundColor: TColor read FBackgroundColor write SetBackgroundColor default clWindow;
     property BackgroundImage: TBitmap read FBackgroundImage write SetBackgroundImage;
     property BackgroundMethod: TVpBackgroundMethod read FBackgroundMethod write SetBackgroundMethod;
-    property ButtonHeight: Integer read FButtonHeight write SetButtonHeight;
+    property ButtonHeight: Integer read FButtonHeight write SetButtonHeight default 0;
     property DrawingStyle: TVpFolderDrawingStyle read FDrawingStyle write SetDrawingStyle;
     property FolderCollection: TVpCollection read FFolders write FFolders;
     property Images: TImageList read FImages write SetImages;
     property ItemFont: TFont read FItemFont write SetItemFont;
-    property ItemSpacing: Word read FItemSpacing write SetItemSpacing;
+    property ItemSpacing: Integer read FItemSpacing write SetItemSpacing stored IsStoredItemSpacing;
     property PlaySounds: Boolean read FPlaySounds write FPlaySounds;
     property ScrollDelta: Integer read FScrollDelta write SetScrollDelta default 2;
     property SelectedItem: Integer read FSelectedItem write FSelectedItem;
@@ -375,6 +385,7 @@ type
     function GetFolderAt(X, Y: Integer): Integer;
     function GetItemAt(X, Y: Integer): Integer;
     function Container: TVpFolderContainer;
+    function GetRealButtonHeight: Integer;
     procedure InsertFolder(const ACaption: string; AFolderIndex: Integer);
     procedure AddFolder(const ACaption: string);
     procedure RemoveFolder(AFolderIndex: Integer);
@@ -472,6 +483,9 @@ uses
  {$ENDIF}
   Themes,
   VpNavBarPainter;
+
+const
+  DEFAULT_ITEMSPACING = 8;
 
 {$IFNDEF PAINTER}
 {DrawNavTab - returns the usable text area inside the tab rect.}
@@ -981,8 +995,6 @@ end;
 {===== TVpNavBar ================================================}
 
 constructor TVpCustomNavBar.Create(AOwner: TComponent);
-{var
-  HSnd: THandle; }
 begin
   inherited Create(AOwner);
   BorderStyle := bsNone;
@@ -1006,7 +1018,11 @@ begin
   FItemFont.Name := Font.Name;
   FItemFont.OnChange := nabFontChanged;
   FItemFont.Color := clWindowText;
-  FItemSpacing := abs(FItemFont.Height) + 3;
+
+  FItemSpacing := DEFAULT_ITEMSPACING;
+  {$IF VP_LCL_SCALING = 0}
+  FItemSpacing := ScaleY(FItemSpacing, DesignTimeDPI)}
+  {$ENDIF}
 
   FSelectedItemFont := TFont.Create;
   FSelectedItemFont.Name := Font.Name;
@@ -1037,8 +1053,8 @@ begin
    {$ENDIF}
     NumGlyphs := 1;
     Left := -20;
-    Height := 15;
-    Width := 17;
+    Height := ScaleY(15, DesignTimeDPI);
+    Width := ScaleX(17, DesignTimeDPI);
   end;
 
   nabScrollDownBtn := TSpeedButton.Create(Self);
@@ -1053,8 +1069,8 @@ begin
    {$ENDIF}
     NumGlyphs := 1;
     Left := -20;
-    Height := 15;
-    Width := 17;
+    Height := ScaleY(15, DesignTimeDPI);
+    Width := ScaleX(17, DesignTimeDPI);
   end;
 
   {create edit control}
@@ -1064,8 +1080,8 @@ begin
     nabEdit.OnExit := nabCommitEdit;
   end;
 
-  Height := 240;
-  Width := 120;
+  Height := ScaleY(240, DesignTimeDPI);
+  Width := ScaleY(120, DesignTimeDPI);
   ParentColor := False;
 
   FAllowRearrange := True;
@@ -1073,7 +1089,7 @@ begin
   FBackgroundImage := TBitmap.Create;
   FBackgroundMethod := bmNormal;
 //  FBorderStyle := bsSingle;
-  FButtonHeight := 20;
+  FButtonHeight := 0;
   FActiveFolder := -1;
   FActiveItem := -1;
   FSelectedItem := -1;
@@ -1313,6 +1329,23 @@ begin
   nabGetHitTest(X, Y, Dummy, Result);
 end;
 {=====}
+
+function TVpCustomNavBar.GetRealButtonHeight: Integer;
+begin
+  if FButtonHeight = 0 then begin
+    if Font.IsDefault then
+      Canvas.Font.Assign(Screen.SystemFont)
+    else
+      Canvas.Font.Assign(Font);
+    Result := Canvas.TextHeight('Tg') + ScaleY(4, DesignTimeDPI) + 1;
+  end else
+    Result := ScaleY(FButtonHeight, DesignTimeDPI);
+end;
+
+function TVpCustomNavBar.IsStoredItemSpacing: Boolean;
+begin
+  Result := FItemSpacing <> DEFAULT_ITEMSPACING;
+end;
 
 function TVpCustomNavBar.Container: TVpFolderContainer;
 begin
@@ -1689,14 +1722,16 @@ end;
 function TVpCustomNavBar.nabGetFolderArea(Index: Integer): TRect;
 var
   I : Integer;
+  btnHeight: Integer;
 begin
   Unused(Index);
 
   Result := ClientRect;
+  btnHeight := GetRealButtonHeight;
   for I := 0 to ActiveFolder do
-    Inc(Result.Top, FButtonHeight);
+    Inc(Result.Top, btnHeight);
   for I := FolderCount-1 downto ActiveFolder+1 do
-    Dec(Result.Bottom, FButtonHeight);
+    Dec(Result.Bottom, btnHeight);
 end;
 {=====}
 
@@ -2733,6 +2768,7 @@ var
   R: TRect;
   R2: TRect;
   AllowChange: Boolean;
+  btnHeight: Integer;
 begin
   if Value <> FActiveFolder then begin
 
@@ -2740,6 +2776,7 @@ begin
       FActiveFolder := -1
     else
     if (Value > -1) and (Value < FolderCount) then begin
+       btnHeight := GetRealButtonHeight;
       { Fire DoFolderChange only if not dragging. }
       if nabDragFromItem = -1 then begin
         { Default for AllowChange is True. }
@@ -2774,14 +2811,14 @@ begin
           if Value > FActiveFolder then begin
             {up}
             YDelta := -FScrollDelta;
-            Inc(R.Bottom, Abs(Value-FActiveFolder)*FButtonHeight);
-            R2.Top := R2.Bottom+Abs(Value-FActiveFolder)*FButtonHeight;
+            Inc(R.Bottom, Abs(Value-FActiveFolder)*btnHeight);
+            R2.Top := R2.Bottom+Abs(Value-FActiveFolder)*btnHeight;
             R2.Bottom := R2.Top;
           end else begin
             {down}
             YDelta := +FScrollDelta;
-            Dec(R.Top, Abs(Value-FActiveFolder)*FButtonHeight);
-            R2.Bottom := R2.Top-Abs(Value-FActiveFolder)*FButtonHeight;
+            Dec(R.Top, Abs(Value-FActiveFolder)*btnHeight);
+            R2.Bottom := R2.Top-Abs(Value-FActiveFolder)*btnHeight;
             R2.Top := R2.Bottom;
           end;
           Y := RectHeight(R)-FScrollDelta;
@@ -2856,7 +2893,7 @@ begin
   if Value <> FButtonHeight then begin
     {Minimum ButtonHeight for CoolTabs is 17}
     if FDrawingStyle = dsCoolTab then begin
-      if Value < 17
+      if (Value < 17) and (FButtonHeight <> 0)
         then FButtonHeight := 17
         else FButtonHeight := Value;
     end else
@@ -2911,12 +2948,12 @@ begin
 end;
 {=====}
 
-procedure TVpCustomNavBar.SetItemSpacing(Value: Word);
+procedure TVpCustomNavBar.SetItemSpacing(Value: Integer);
 begin
-  if (Value > 0) then begin
-    FItemSpacing := Value;
-    Invalidate;
-  end;
+  if (FItemSpacing = Value) then
+    exit;
+  FItemSpacing := Value;
+  Invalidate;
 end;
 {=====}
 
@@ -3115,6 +3152,42 @@ begin
         Controls[i].Invalidate;
     end;
 end;
+
+{$IF LCL_FullVersion >= 1080000}
+procedure TVpCustomNavBar.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    DisableAutoSizing;
+    try
+//      FButtonHeight := round(FButtonHeight * AYProportion);
+      if not IsStoredItemSpacing then
+        FItemSpacing := round(FItemSpacing * AYProportion);
+    finally
+      EnableAutoSizing;
+    end;
+  end;
+end;
+
+{$IF VP_LCL_SCALING = 2}
+procedure TVpCustomNavBar.ScaleFontsPPI(const AToPPI: Integer;
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(FItemFont, AToPPI, AProportion);
+  DoScaleFontPPI(FSelectedItemFont, AToPPI, AProportion);
+end;
+{$ELSEIF VP_LCL_SCALING = 1}
+procedure TVpCustomNavBar.ScaleFontsPPI(const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(FItemFont.Font, AProportion);
+  DoScaleFontPPI(FScaledItem.Font, AProportion);
+end;
+{$ENDIF}
+{$ENDIF}
 
 initialization
   RegisterClass(TVpFolderContainer);

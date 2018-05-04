@@ -180,6 +180,9 @@ type
 
 implementation
 
+uses
+  VpConst;
+
 { TVpContactButtonBar }
 
 constructor TVpContactButtonBar.Create(AOwner: TComponent);

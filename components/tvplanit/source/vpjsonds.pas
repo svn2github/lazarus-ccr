@@ -66,7 +66,7 @@ implementation
 
 uses
   LazFileUtils,
-  jsonparser,
+  jsonscanner, jsonparser,
   VpSR, VpMisc;
 
 constructor TVpJSONDatastore.Create(AOwner: TComponent);
@@ -486,7 +486,7 @@ begin
   stream := TFileStream.Create(FFilename, fmOpenRead + fmShareDenyWrite);
   try
     Resources.ClearResources;
-    p := TJSONParser.Create(stream);
+    p := TJSONParser.Create(stream, [joUTF8]);
     try
       json := p.Parse as TJSONObject;
       resObjArray := json.Find('Resources', jtArray) as TJSONArray;

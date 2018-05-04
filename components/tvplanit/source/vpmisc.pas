@@ -59,8 +59,6 @@ const
 
   GranularityMinutes: Array[TVpGranularity] of Integer = (5, 6, 10, 15, 20, 30, 60);
 
-  DesignTimeDPI = 96;
-
 
 function DefaultEpoch : Integer;
   {-return the current century}

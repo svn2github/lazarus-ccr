@@ -163,7 +163,7 @@ implementation
 {$ENDIF}
 
 uses
-  VpPrtFmt;
+  VpConst, VpPrtFmt;
 
 { TfrmPrintPreview }
 

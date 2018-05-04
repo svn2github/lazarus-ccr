@@ -37,6 +37,8 @@ type
     FSelectedItem: Integer;
     FSelectedItemFont: TFont;
     FShowButtons: Boolean;
+    FSmallImagesSize: Integer;
+    FLargeImagesSize: Integer;
 
     nabItemsRect: PRect;
     nabLastMouseOverItem: Integer;
@@ -49,12 +51,14 @@ type
 
     procedure DrawBackground(Canvas: TCanvas; R: TRect);
 
-    function DrawCoolTab(Canvas: TCanvas; R: TRect; ATabIndex: Integer;
-      ATabColor: TColor): TRect;
-    function DrawDefButton(Canvas: TCanvas; R: TRect; ATabIndex: Integer): TRect;
-    function DrawEtchedButton(Canvas: TCanvas; R: TRect; ATabIndex: Integer): TRect;
-    function DrawStandardTab(Canvas: TCanvas; R: TRect; ATabIndex: Integer;
-      ATabColor: TColor): TRect;
+    function DrawCoolTab(Canvas: TCanvas; R: TRect;
+      ATabIndex: Integer; ATabColor: TColor): TRect;
+    function DrawDefButton(Canvas: TCanvas; R: TRect;
+      ATabIndex: Integer): TRect;
+    function DrawEtchedButton(Canvas: TCanvas; R: TRect;
+      ATabIndex: Integer): TRect;
+    function DrawStandardTab(Canvas: TCanvas; R: TRect;
+      ATabIndex: Integer; ATabColor: TColor): TRect;
 
     procedure DrawItemHighlight(Canvas: TCanvas; R: TRect; Enable: Boolean);
     function DrawItemText(Canvas: TCanvas; AItem: TVpNavBtnItem; CurPos: Integer;
@@ -89,7 +93,7 @@ implementation
 
 uses
   Math, Themes,
-  VpMisc;
+  VpConst, VpMisc;
 
 type
   TVpNavBarOpener = class(TVpCustomNavBar);
@@ -104,7 +108,7 @@ begin
   FBackgroundColor := TVpNavBarOpener(FNavBar).BackgroundColor;
   FBackgroundImage := TVpNavBarOpener(FNavBar).BackgroundImage;
   FBackgroundMethod := TVpNavBarOpener(FNavBar).BackgroundMethod;
-  FButtonHeight := TVpNavBarOpener(FNavBar).ButtonHeight;
+  FButtonHeight := TVpNavBarOpener(FNavBar).GetRealButtonHeight;
   FClientWidth := TVpNavBarOpener(FNavBar).ClientWidth;
   FClientHeight := TVpNavBarOpener(FNavBar).ClientHeight;
   FDrawingStyle := TVpNavBarOpener(FNavBar).DrawingStyle;
@@ -131,6 +135,10 @@ end;
 
 { Draw the items for the active folder }
 procedure TVpNavBarPainter.DrawActiveFolderItems(Canvas: TCanvas; var CurPos: Integer);
+const
+  BUTTON_DISTANCE = 8;
+  LARGE_ICON_OFFSET = 4;
+  SMALL_ICON_OFFSET = 3;
 var
   folder: TVpNavFolder;
   item: TVpNavBtnItem;
@@ -138,15 +146,27 @@ var
   text: String;
   X: Integer;
   R: TRect;
+  largeIconOffs: Integer;
+  smallIconOffs: Integer;
 begin
   folder := FNavBar.Folders[FActiveFolder];
+  largeIconOffs := ScaleY(LARGE_ICON_OFFSET, DesignTimeDPI);
+  smallIconOffs := ScaleX(SMALL_ICON_OFFSET, DesignTimeDPI);
+
+  if FImages <> nil then begin
+    FLargeImagesSize := FImages.Width;
+    FSmallImagesSize := FImages.Width div 2;
+  end else begin
+    FLargeImagesSize := 32;
+    FSmallImagesSize := 16;
+  end;
 
   if folder.FolderType = ftDefault then begin
     if folder.ItemCount = 0 then
       exit;
 
     // Distance of top-most icon to the last upper button
-    Inc(CurPos, 8);
+    Inc(CurPos, ScaleY(BUTTON_DISTANCE, DesignTimeDPI));
 
     with nabItemsRect^ do begin
       Top := CurPos;
@@ -181,7 +201,7 @@ begin
 
         {make the icon's bottom blend into the label's top}
         R := item.IconRect;
-        inc(R.Bottom, 4);
+        inc(R.Bottom, largeIconOffs);
         item.IconRect := R;
         CurPos := item.IconRect.Bottom;
 
@@ -197,7 +217,7 @@ begin
 
         {make the icon's right blend into the label's left}
         R := item.IconRect;
-        inc(R.Right, 3);
+        inc(R.Right, smallIconOffs);
         item.IconRect := R;
 
         {now, draw the text}
@@ -329,15 +349,15 @@ begin
     Points[2] := Point(R.Left + 14, R.Top + 6);  {Control point}
     Points[3] := Point(R.Left + 15, R.Top + 1);  {Control point}
     Points[4] := Point(R.Left + 21, R.Top + 0);  {End point}
-    {$IFNDEF VERSION4}
+   {$IFNDEF VERSION4}
     {$IFDEF CBuilder}
     PolyBezier(Points);
     {$ELSE}
     Polyline(Points);
     {$ENDIF}
-   {$ELSE}
+  {$ELSE}
     PolyBezier([Points[1], Points[2], Points[3], Points[4]]);
-   {$ENDIF}
+  {$ENDIF}
 
     {Draw the top of the tab}
     MoveTo(R.Left + 21,  R.Top);
@@ -503,25 +523,30 @@ end;
 
 function TVpNavBarPainter.DrawItemText(Canvas: TCanvas; AItem: TVpNavBtnItem;
   CurPos: Integer; AText: String; AtLargeIcon: Boolean; out AWidth: Integer): Boolean;
+const
+  HOR_MARGIN = 5;
 var
   R: TRect;
   s: String;
   txtWidth: Integer;
   bkMode: Integer;
+  horDist: Integer;
 begin
   Result := false;
 
   if AtLargeIcon then
   begin
+    horDist := ScaleX(HOR_MARGIN, DesignTimeDPI);
+
     R.Top := CurPos;
-    R.Bottom := CurPos + FButtonHeight div 2 - 7;
+    R.Bottom := CurPos + FButtonHeight div 2 - 7;   // what is -7 good for?
     R.Left := 0;
     R.Right := FNavBar.ClientWidth - 1;
     AItem.LabelRect := R;
     AItem.DisplayName := GetLargeIconDisplayName(Canvas, R, AText);
     AWidth := Canvas.TextWidth(AItem.DisplayName);
-    R.Left := Max(5, (FNavBar.ClientWidth - AWidth) div 2);
-    R.Right := Min(R.Left + AWidth, FNavBar.ClientWidth - 5);
+    R.Left := Max(horDist, (FNavBar.ClientWidth - AWidth) div 2);
+    R.Right := Min(R.Left + AWidth, FNavBar.ClientWidth - hordist);
     AItem.LabelRect := R;
     if R.Top > nabItemsRect^.Bottom then
       Exit;
@@ -542,7 +567,7 @@ begin
     R.Top := CurPos;
     R.Bottom := CurPos + FButtonHeight div 2 - 7;
     R.Left := AItem.IconRect.Right;
-    R.Right := R.Left + FNavBar.ClientWidth - R.Left - 7;
+    R.Right := R.Left + FNavBar.ClientWidth - R.Left - ScaleX(7, DesignTimeDPI);
     AItem.LabelRect := R;
     if R.Top > nabItemsRect^.Bottom then
       Exit;
@@ -564,23 +589,28 @@ begin
   Result := true;
 end;
 
-{ Draw a large icon: centered horizontally, text to be drawn underneath icon. }
+{ Draw a large icon: centered horizontally, text to be drawn underneath icon.
+  CurPos is upper edge of the icon. }
 function TVpNavBarPainter.DrawLargeIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
   CurPos: Integer): Boolean;
+const
+  MARGIN = 2;
 var
   W, H: Integer;
   R: TRect;
+  dist: Integer;
 begin
   Result := false;
 
   { If an image list is assigned then use the image size.
     If no image list is assinged then assume a 32 x 32 image size. }
+  dist := ScaleX(MARGIN, DesignTimeDPI);
   if Assigned(FImages) then begin
-    W := FImages.Width + 2;
-    H := FImages.Height + 2;
+    W := FImages.Width + 2*dist;
+    H := FImages.Height + 2*dist;
   end else begin
-    W := 32;
-    H := 32;
+    W := ScaleX(32, DesignTimeDPI);
+    H := ScaleY(32, DesignTimeDPI);
   end;
 
   R.Top := CurPos;
@@ -595,7 +625,7 @@ begin
   if FShowButtons then begin
     DrawItemHighlight(Canvas, R, FActiveItem = AItem.Index);
     if Assigned(FImages) and (AItem.IconIndex >= 0) and (AItem.IconIndex < FImages.Count) then
-      FImages.Draw(Canvas, R.Left + 2, R.Top + 2, AItem.IconIndex);
+      FImages.Draw(Canvas, R.Left + dist, R.Top + dist, AItem.IconIndex);
   end;
 
   Result := true;
@@ -605,23 +635,24 @@ end;
 function TVpNavBarPainter.DrawSmallIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
   CurPos: Integer): Boolean;
 const
-  W = 16;
-  H = 16;
+  DELTA = 8;
 var
   lOffset: Integer;
   bmp: TBitmap;
   R: TRect;
+  del: Integer;
 begin
   Result := false;
 
   {glyph is at the left}
   R.Top := CurPos;
+  del := ScaleY(DELTA, DesignTimeDPI);
   lOffset := abs(Canvas.Font.Height) div 2;
-  if lOffset > 8 then
-    R.Top := R.Top + lOffset - 8;
-  R.Bottom := R.Top + H;
-  R.Left := 8;
-  R.Right := R.Left + W;
+  if lOffset > del then
+    R.Top := R.Top + lOffset - del;
+  R.Bottom := R.Top + FSmallImagesSize;
+  R.Left := del;
+  R.Right := R.Left + FSmallImagesSize;
   AItem.IconRect := R;
   if R.Top > nabItemsRect^.Bottom then
     Exit;  // Returns false
@@ -647,8 +678,20 @@ end;
   Returns the usable text area inside the tab rect.}
 function TVpNavBarPainter.DrawStandardTab(Canvas: TCanvas; R: TRect;
   ATabIndex: Integer; ATabColor: TColor): TRect;
+const
+  _LEFT_DISTANCE = 10;
+  _RIGHT_DISTANCE = 2;
+  _RADIUS = 2;
+var
+  leftDist: Integer;
+  rightDist: Integer;
+  radius: Integer;
 begin
   Result := R;
+
+  leftDist := ScaleX(_LEFT_DISTANCE, DesignTimeDPI);
+  rightDist := ScaleX(_RIGHT_DISTANCE, DesignTimeDPI);
+  radius := ScaleX(_RADIUS, DesignTimeDPI);
 
   {fill the tab area}
   Canvas.Brush.Style := bsSolid;
@@ -673,16 +716,25 @@ begin
   Canvas.Brush.Style := bsSolid;
   Canvas.Pen.Color := ATabColor;
   Canvas.Polygon([
+    Point(R.Left + leftDist,            R.Bottom - 1),                 // 10  -1
+    Point(R.Left + leftDist,            R.Top + radius + 1),           // 10   3
+    Point(R.Left + leftDist + radius,   R.Top + 1),                    // 12   1
+    Point(R.Right - rightDist - radius, R.Top + 1),                    // -4   1
+    Point(R.Right - rightDist,          R.Top + radius + 1),           // -2   3
+    Point(R.Right - rightDist,          R.Bottom - 1)                  // -2  -1
+  ]);
+  {
     Point(R.Left + 10, R.Bottom - 1),
     Point(R.Left + 10, R.Top + 3),
     Point(R.Left + 12, R.Top + 1),
     Point(R.Right - 4, R.Top + 1),
     Point(R.Right - 2, R.Top + 3),
     Point(R.Right - 2, R.Bottom - 1)
-  ]);
+  ]); }
 
   {highlight tab}
   Canvas.Pen.Color := clBtnHighlight;
+  {
   Canvas.PolyLine([
     Point(R.Left, R.Bottom - 2),
     Point(R.Left + 8, R.Bottom - 2),
@@ -690,13 +742,23 @@ begin
     Point(R.Left + 9, R.Top + 3),
     Point(R.Left + 11, R.Top + 1),
     Point(R.Right - 1, R.Top + 1)
+  ]);}
+  Canvas.PolyLine([
+    Point(R.Left,                     R.Bottom - radius),             //  0   -2
+    Point(R.Left + leftDist - radius, R.Bottom - radius),             //  8   -2
+    Point(R.Left + leftdist - 1,      R.Bottom - radius - 1),         //  9   -3
+    Point(R.Left + leftDist - 1,      R.Top + radius + 1),            //  9    3
+    Point(R.Left + leftDist + 1,      R.Top + 1),                     // 11    1
+    Point(R.Right - 1,                R.Top + 1)                      // -1    1
   ]);
+
 
   {draw border}
   Canvas.Pen.Color := clBlack;
+  {
   Canvas.PolyLine([
-    Point(R.Left, R.Bottom - 1),
-    Point(R.Left + 9, R.Bottom - 1),
+    Point(R.Left,      R.Bottom - 1),
+    Point(R.Left + 9,  R.Bottom - 1),
     Point(R.Left + 10, R.Bottom - 2),
     Point(R.Left + 10, R.Top + 4),
     Point(R.Left + 11, R.Top + 3),
@@ -704,6 +766,17 @@ begin
     Point(R.Right - 2, R.Top + 2),
     Point(R.Right - 1, R.Top + 3),
     Point(R.Right - 1, R.Bottom - 1)
+  ]);}
+  Canvas.PolyLine([
+    Point(R.Left,                R.Bottom - 1),                     //  0    -1
+    Point(R.Left + leftDist - 1, R.Bottom - 1),                     //  9    -1
+    Point(R.Left + leftDist,     R.Bottom - radius),                // 10    -2
+    Point(R.Left + leftdist,     R.Top + radius + 2),               // 10    +4
+    Point(R.Left + leftdist + 1, R.Top + radius + 1),               // 11    +3
+    Point(R.Left + leftdist + 2, R.Top + radius),                   // 12    +2
+    Point(R.Right - radius,      R.Top + radius),                   // -2    +2
+    Point(R.Right - radius + 1,  R.Top + radius + 1),               // -1    +3
+    Point(R.Right -1,            R.Bottom - 1)                      // -1    -1
   ]);
 
   Result := Rect(R.Left + 1, R.Top + 2, R.Right - 2, R.Bottom);
@@ -873,9 +946,9 @@ begin
     else
       TR := FNavBar.ClientRect;
 
-    { Draw background }
     DrawBackground(DrawBmp.Canvas, TR);
 
+    { Draw background }
     if FNavBar.FolderCount = 0 then begin
       nabScrollUpBtn.Visible := False;
       nabScrollDownBtn.Visible := False;
@@ -895,7 +968,7 @@ begin
 
     { Copy the buffer bitmap to the control }
     FNavBar.Canvas.CopyMode := cmSrcCopy;
-    FNavBar.Canvas.CopyRect(MyRect, DrawBmp.Canvas, Rect(0, 0, DrawBmp.Width,DrawBmp.Height));
+    FNavBar.Canvas.CopyRect(MyRect, DrawBmp.Canvas, Rect(0, 0, DrawBmp.Width, DrawBmp.Height));
 
     { Show/hide scroll buttons }
     ProcessScrollButtons;
@@ -906,24 +979,34 @@ begin
 end;
 
 procedure TVpNavBarPainter.ProcessScrollButtons;
+const
+  DISTANCE = 5;
+var
+  dist: Integer;
+  w, h: Integer;
 begin
   if not (csDesigning in FNavBar.ComponentState) then begin
+    dist := ScaleY(DISTANCE, DesignTimeDPI);
+
     {show the top scroll button}
     if TVpNavBarOpener(FNavBar).nabShowScrollUp() then begin
-      nabScrollUpBtn.Top := FNavBar.Folders[FActiveFolder].Rect.Bottom + 5;
-      nabScrollUpBtn.Left := FNavBar.ClientWidth - 20;
+      w := nabScrollUpBtn.Width;
+      nabScrollUpBtn.Top := FNavBar.Folders[FActiveFolder].Rect.Bottom + dist;
+      nabScrollUpBtn.Left := FNavBar.ClientWidth - w - dist;
       nabScrollUpBtn.Visible := True;
     end else
       nabScrollUpBtn.Visible := False;
 
     {show the bottom scroll button}
     if TVpNavBarOpener(FnavBar).nabShowScrollDown() then begin
+      w := nabScrollDownBtn.Width;
+      h := nabScrollDownBtn.Height;
       if FActiveFolder = FNavBar.FolderCount-1 then
         {there are no folders beyond the active one}
-        nabScrollDownBtn.Top := FNavBar.ClientHeight -20
+        nabScrollDownBtn.Top := FNavBar.ClientHeight - h - dist
       else
-        nabScrollDownBtn.Top := FNavBar.Folders[FActiveFolder+1].Rect.Top - 20;
-      nabScrollDownBtn.Left := FNavBar.ClientWidth - 20;
+        nabScrollDownBtn.Top := FNavBar.Folders[FActiveFolder+1].Rect.Top - h - dist;
+      nabScrollDownBtn.Left := FNavBar.ClientWidth - w - dist;
       nabScrollDownBtn.Visible := True;
     end else
       nabScrollDownBtn.Visible := False;

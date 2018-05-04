@@ -121,7 +121,7 @@ implementation
 
 uses
   Math, TypInfo,
-  VpMisc, VpSr;
+  VpConst, VpMisc, VpSr;
 
 
 { TfrmEditShape }
