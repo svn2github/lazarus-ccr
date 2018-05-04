@@ -148,9 +148,48 @@ uses
 
 const
   ITEMS_MARGIN = 2;
-  IMG_MARGIN = 4;
   IMG_MARGIN_HOR = 8;
   IMG_MARGIN_VERT = 4;
+
+var
+  EditorForms : TList = nil;
+
+procedure InitFormsList;
+begin
+  EditorForms := TList.Create;
+end;
+
+procedure ReleaseFormsList;
+begin
+  FreeAndNil(EditorForms);
+end;
+
+procedure AddNavBarEditor(Editor: TfrmNavBarEd);
+begin
+  if Assigned(EditorForms) and (EditorForms.IndexOf(Editor) < 0) then
+    EditorForms.Add(Editor);
+end;
+
+function FindNavBarEditor(ABar: TVpNavBar): TfrmNavBarEd;
+var
+  i : Integer;
+begin
+  if ABar <> nil then
+    for i:=0 to EditorForms.Count-1 do begin
+      if TfrmNavBarEd(EditorForms[i]).Bar = ABar then
+        Exit(TfrmNavBarEd(EditorForms[i]));
+    end;
+  Result := nil
+end;
+
+procedure ReleaseNavBarEditor(Editor: TfrmNavBarEd);
+var
+  i : Integer;
+begin
+  if not Assigned(EditorForms) then Exit;
+  i := EditorForms.IndexOf(Editor);
+  if i >= 0 then EditorForms.Delete(i);
+end;
 
 
 {-------------------------------------------------------------------------------
@@ -164,11 +203,10 @@ var
 begin
   if Index = 0 then begin
     bar := Component as TVpNavBar;
-    editor := FindEditorForm(bar);
+    editor := FindNavBarEditor(bar);
     if editor = nil then begin
       DebugLn('EditorForm not found.');
       editor := TfrmNavBarEd.Create(Application, bar, Designer);
-      RegisterEditorForm(editor, bar);
     end else
       TfrmNavBarEd(editor).SetData(Designer, bar);
     if editor <> nil then
@@ -196,6 +234,7 @@ constructor TfrmNavBarEd.Create(AOwner: TComponent; ABar: TVpNavBar;
   ADesigner: TComponentEditorDesigner);
 begin
   inherited Create(AOwner);
+  Position := poScreenCenter;
 
   FBar := ABar;
   FDesigner := ADesigner;
@@ -204,11 +243,13 @@ begin
   AddDesignHookHandlers;
   SelectionChanged;
   UpdateBtnStates;
+
+  AddNavBarEditor(self);
 end;
 
 destructor TfrmNavBarEd.Destroy;
 begin
-  UnregisterEditorForm(Self);
+  ReleaseNavBarEditor(Self);
   inherited Destroy;
 end;
 
@@ -231,14 +272,13 @@ end;
 procedure TfrmNavBarEd.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-  UnregisterEditorForm(Self);
   Action := caFree;
 end;
 
 procedure TfrmNavBarEd.FormCreate(Sender: TObject);
 begin
-  Top := (Screen.Height - Height) div 3;
-  Left := (Screen.Width - Width) div 2;
+//  Top := (Screen.Height - Height) div 3;
+//  Left := (Screen.Width - Width) div 2;
 end;
 
 procedure TfrmNavBarEd.FormDestroy(Sender: TObject);
@@ -817,6 +857,12 @@ begin
     if AComponent = FBar then FBar := nil;
   end;
 end;
+
+initialization
+  InitFormsList;
+
+finalization
+  ReleaseFormsList;
 
 end.
   
