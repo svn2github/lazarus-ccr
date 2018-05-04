@@ -108,13 +108,11 @@ type
 
   private
     FBar: TVpNavBar;
-    RefreshTimer: TTimer;
     FSelImgIndex: Integer;
     function FindBtnIndex(APersistent: TPersistent): Integer;
     function FindFolderIndex(APersistent: TPersistent): Integer;
     function GetFolderDisplayName(AFolder: TVpNavFolder): String;
     function GetItemDisplayName(AItem: TVpNavBtnItem): String;
-    procedure OnTimer(Sender: TObject);
     procedure SelectionChanged(AOrderChanged: Boolean = false);
     procedure SelectList(SelList: TPersistentSelectionList);
     procedure UpdateBtnStates;
@@ -126,6 +124,7 @@ type
     procedure OnObjectPropertyChanged(Sender: TObject; ANewObject: TPersistent);
     procedure OnPersistentAdded(APersistent: TPersistent; Select: boolean);
     procedure OnPersistentDeleting(APersistent: TPersistent);
+    procedure OnRefreshPropertyValues;
     procedure OnSetSelection(const ASelection: TPersistentSelectionList);
 
   public
@@ -140,8 +139,6 @@ type
     property Designer: TComponentEditorDesigner read FDesigner;
   end;
 
-var
-  frmNavEd: TfrmNavBarEd;
 
 implementation
 
@@ -237,10 +234,11 @@ begin
     GlobalDesignHook.RemoveAllHandlersForObject(Self);
     if FBar <> nil then
     begin
+      GlobalDesignHook.AddHandlerGetSelection(OnGetSelection);
       GlobalDesignHook.AddHandlerObjectPropertyChanged(OnObjectPropertyChanged);
       GlobalDesignHook.AddHandlerPersistentAdded(OnPersistentAdded);
       GlobalDesignHook.AddHandlerPersistentDeleting(OnPersistentDeleting);
-      GlobalDesignHook.AddHandlerGetSelection(OnGetSelection);
+      GlobalDesignHook.AddHandlerRefreshPropertyValues(OnRefreshPropertyValues);
       GlobalDesignHook.AddHandlerSetSelection(OnSetSelection);
     end;
   end;
@@ -257,10 +255,6 @@ procedure TfrmNavBarEd.FormCreate(Sender: TObject);
 begin
   Top := (Screen.Height - Height) div 3;
   Left := (Screen.Width - Width) div 2;
-  RefreshTimer := TTimer.Create(Self);
-  RefreshTimer.Interval := 1000;
-  RefreshTimer.OnTimer := OnTimer;
-  RefreshTimer.Enabled := true;
 end;
 
 procedure TfrmNavBarEd.FormDestroy(Sender: TObject);
@@ -270,32 +264,6 @@ begin
   if Assigned(FBar) and ((lbFolders.SelCount > 0) or (lbItems.SelCount > 0)) then
     GlobalDesignHook.SelectOnlyThis(FBar);
   GlobalDesignHook.RemoveAllHandlersForObject(Self);
-end;
-
-{ Changed}
-{ Could not find a way to get notification from the IDE that a change had }
-{ been made to the component outside of the component editor, so I used a }
-{ timer }
-procedure TfrmNavBarEd.OnTimer(Sender: TObject);
-var
-  S : string;
-begin
-  if (Bar = nil) or (Bar.ActiveFolder = -1) then
-    exit;
-
-  { update folder }
-  S := Bar.Folders[Bar.ActiveFolder].Caption;
-  if S = '' then
-    S := Bar.Folders[Bar.ActiveFolder].Name;
-  lbFolders.Items[Bar.ActiveFolder] := S;
-
-  if (lbItems.ItemIndex > -1) then begin                                 
-    S := lbItems.Items[lbItems.ItemIndex];
-    PopulateItemList;
-    if S <> '' then
-      lbItems.ItemIndex := lbItems.Items.IndexOf(S);
-    UpdateBtnStates;
-  end;                                                                   
 end;
 
 procedure TfrmNavBarEd.FormShow(Sender: TObject);
@@ -337,6 +305,8 @@ procedure TfrmNavBarEd.OnGetSelection(const ASelection: TPersistentSelectionList
 var
   i: Integer;
 begin
+  DebugLn('OnGetSelection: ENTERING...');
+
   if not Assigned(ASelection) then
     exit;
   if ASelection.Count > 0 then
@@ -352,6 +322,9 @@ begin
       if lbItems.Selected[i] then
         ASelection.Add(TPersistent(lbItems.Items.Objects[i]));
   end;
+
+  if ASelection.Count > 0 then
+  DebugLn('OnGetSelection EXITING: ASelection[0] = ' + ASelection[0].ClassName + ', ASelection.Count = ' + IntToStr(ASelection.Count));
 end;
 
 procedure TfrmNavBarEd.OnObjectPropertyChanged(Sender: TObject; ANewObject: TPersistent);
@@ -360,17 +333,25 @@ var
   item: TVpNavBtnItem;
   folder: TVpNavFolder;
 begin
+  DebugLn('OnObjectPropertyChanged: Sender = ' + Sender.ClassName + ', NewObject = ' + ANewObject.ClassName);
+
   if ANewObject is TVpNavBtnItem then begin
     item := TVpNavBtnItem(ANewObject);
     i := FindBtnIndex(item);
     if i > -1 then
-      lbItems.Items[i] := GetItemDisplayName(item);
+      with lbItems.Items do begin
+        Strings[i] := GetItemDisplayName(item);
+        Objects[i] := item;
+      end;
   end else
   if ANewObject is TVpNavFolder then begin
     folder := TVpNavFolder(ANewObject);
     i := FindFolderIndex(folder);
     if i > -1 then
-      lbFolders.Items[i] := GetFolderDisplayName(folder);
+      with lbFolders.Items do begin
+        Strings[i] := GetFolderDisplayName(folder);
+        Objects[i] := folder;
+      end;
   end;
 end;
 
@@ -379,14 +360,15 @@ var
   i: Integer;
 begin
   if APersistent = nil then
-    DebugLn('OnPersistentAdded: Persistent = nil');
+    DebugLn('OnPersistentAdded: Persistent = nil')
+  else
+    DebugLn('OnPersistentAdded: Persistent = ' + APersistent.ClassName);
 
   if not Assigned(APersistent) then
     exit;
 
   if (APersistent is TVpNavFolder) then
   begin
-    DebugLn('OnPersistentAdded: Persistent is folder');
     PopulateFolderList;
     if Select then begin
       i := FindFolderIndex(APersistent);
@@ -395,7 +377,6 @@ begin
   end else
   if (APersistent is TVpNavBtnItem) then
   begin
-    DebugLn('OnPersistentAdded: Persistent is item');
     PopulateItemList;
     if Select then begin
       i := FindBtnIndex(APersistent);
@@ -422,10 +403,35 @@ begin
   UpdateBtnStates;
 end;
 
+procedure TfrmNavBarEd.OnRefreshPropertyValues;
+var
+  selections: TPersistentSelectionList;
+  i: Integer;
+begin
+  selections := TPersistentSelectionList.Create;
+  try
+    Assert(Assigned(GlobalDesignHook));
+    GlobalDesignHook.GetSelection(selections);
+    for i:=0 to selections.Count-1 do begin
+      if selections[i] is TVpNavFolder then
+        lbFolders.Items[i] := GetFolderDisplayName(TVpNavFolder(selections[i]))
+      else if selections[i] is TVpNavBtnItem then
+        lbItems.Items[i] := GetItemDisplayName(TVpNavBtnItem(selections[i]));
+    end;
+  finally
+    selections.Free;
+  end;
+end;
+
 procedure TfrmNavBarEd.OnSetSelection(const ASelection: TPersistentSelectionList);
 var
   i, j: Integer;
 begin
+  if ASelection = nil then
+    DebugLn('OnSetSelection: ASelection = nil')
+  else
+    DebugLn('OnSetSelection: ASelection[0] = ' + ASelection[0].ClassName + ', ASelection.Count = ' + IntToStr(ASelection.Count));
+
   if Assigned(ASelection) and (ASelection.Count > 0) then
   begin
     if TPersistent(ASelection[0]) is TVpNavFolder then begin
