@@ -87,27 +87,29 @@ object frmNavBarEd: TfrmNavBarEd
     Width = 543
     Align = alClient
     BevelOuter = bvNone
-    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-    ChildSizing.EnlargeVertical = crsHomogenousChildResize
-    ChildSizing.Layout = cclLeftToRightThenTopToBottom
-    ChildSizing.ControlsPerLine = 2
     ClientHeight = 279
     ClientWidth = 543
     TabOrder = 1
     object pnlFolders: TPanel
+      AnchorSideLeft.Control = pnlFoldersAndItems
+      AnchorSideTop.Control = pnlFoldersAndItems
+      AnchorSideRight.Control = Bevel1
+      AnchorSideBottom.Control = pnlFoldersAndItems
+      AnchorSideBottom.Side = asrBottom
       Left = 0
       Height = 279
       Top = 0
-      Width = 272
+      Width = 269
+      Anchors = [akTop, akLeft, akRight, akBottom]
       BevelOuter = bvNone
       ClientHeight = 279
-      ClientWidth = 272
+      ClientWidth = 269
       TabOrder = 0
       object lbFolders: TListBox
         Left = 4
-        Height = 256
+        Height = 227
         Top = 23
-        Width = 236
+        Width = 265
         Align = alClient
         BorderSpacing.Left = 4
         ItemHeight = 0
@@ -118,11 +120,11 @@ object frmNavBarEd: TfrmNavBarEd
         Left = 0
         Height = 23
         Top = 0
-        Width = 272
+        Width = 269
         Align = alTop
         BevelOuter = bvNone
         ClientHeight = 23
-        ClientWidth = 272
+        ClientWidth = 269
         TabOrder = 0
         object Label1: TLabel
           Left = 4
@@ -135,20 +137,25 @@ object frmNavBarEd: TfrmNavBarEd
         end
       end
       object Panel5: TPanel
-        Left = 240
-        Height = 256
-        Top = 23
-        Width = 32
-        Align = alRight
+        Left = 4
+        Height = 25
+        Top = 254
+        Width = 265
+        Align = alBottom
+        AutoSize = True
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
         BevelOuter = bvNone
-        ClientHeight = 256
-        ClientWidth = 32
+        ClientHeight = 25
+        ClientWidth = 265
         TabOrder = 2
         object btnFolderAdd: TSpeedButton
-          Left = 4
+          AnchorSideLeft.Control = Panel5
+          AnchorSideTop.Control = Panel5
+          Left = 0
           Height = 25
           Hint = 'Add folder'
-          Top = 7
+          Top = 0
           Width = 25
           Glyph.Data = {
             DE000000424DDE0000000000000076000000280000000D0000000D0000000100
@@ -167,11 +174,15 @@ object frmNavBarEd: TfrmNavBarEd
           ParentShowHint = False
         end
         object btnFolderDelete: TSpeedButton
-          Left = 4
+          AnchorSideLeft.Control = btnFolderAdd
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel5
+          Left = 29
           Height = 25
           Hint = 'Remove folder'
-          Top = 40
+          Top = 0
           Width = 25
+          BorderSpacing.Left = 4
           Glyph.Data = {
             DE000000424DDE0000000000000076000000280000000D0000000D0000000100
             0400000000006800000000000000000000001000000010000000000000000000
@@ -189,11 +200,15 @@ object frmNavBarEd: TfrmNavBarEd
           ParentShowHint = False
         end
         object btnFolderUp: TSpeedButton
-          Left = 4
+          AnchorSideLeft.Control = btnFolderDelete
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel5
+          Left = 58
           Height = 25
           Hint = 'Move folder up'
-          Top = 72
+          Top = 0
           Width = 25
+          BorderSpacing.Left = 4
           Glyph.Data = {
             DE000000424DDE0000000000000076000000280000000D0000000D0000000100
             0400000000006800000000000000000000001000000010000000000000000000
@@ -211,10 +226,13 @@ object frmNavBarEd: TfrmNavBarEd
           ParentShowHint = False
         end
         object btnFolderDown: TSpeedButton
-          Left = 4
+          AnchorSideLeft.Control = btnFolderUp
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel5
+          Left = 83
           Height = 25
           Hint = 'Move folder down'
-          Top = 104
+          Top = 0
           Width = 25
           Glyph.Data = {
             DE000000424DDE0000000000000076000000280000000D0000000D0000000100
@@ -235,20 +253,29 @@ object frmNavBarEd: TfrmNavBarEd
       end
     end
     object pnlItems: TPanel
-      Left = 272
+      AnchorSideLeft.Control = Bevel1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlFoldersAndItems
+      AnchorSideRight.Control = pnlFoldersAndItems
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = pnlFoldersAndItems
+      AnchorSideBottom.Side = asrBottom
+      Left = 273
       Height = 279
       Top = 0
-      Width = 271
+      Width = 270
+      Anchors = [akTop, akLeft, akRight, akBottom]
       BevelOuter = bvNone
       ClientHeight = 279
-      ClientWidth = 271
+      ClientWidth = 270
       TabOrder = 1
       object lbItems: TListBox
         Left = 0
-        Height = 256
+        Height = 227
         Top = 23
-        Width = 235
+        Width = 266
         Align = alClient
+        BorderSpacing.Right = 4
         ItemHeight = 13
         OnClick = lbItemsClick
         OnDrawItem = lbItemsDrawItem
@@ -257,21 +284,25 @@ object frmNavBarEd: TfrmNavBarEd
         TabOrder = 1
       end
       object Panel1: TPanel
-        Left = 235
-        Height = 256
-        Top = 23
-        Width = 32
-        Align = alRight
+        Left = 0
+        Height = 25
+        Top = 254
+        Width = 266
+        Align = alBottom
+        AutoSize = True
+        BorderSpacing.Top = 4
         BorderSpacing.Right = 4
         BevelOuter = bvNone
-        ClientHeight = 256
-        ClientWidth = 32
+        ClientHeight = 25
+        ClientWidth = 266
         TabOrder = 2
         object btnItemAdd: TSpeedButton
-          Left = 4
+          AnchorSideLeft.Control = Panel1
+          AnchorSideTop.Control = Panel1
+          Left = 0
           Height = 25
           Hint = 'Add Item'
-          Top = 7
+          Top = 0
           Width = 25
           Glyph.Data = {
             DE000000424DDE0000000000000076000000280000000D0000000D0000000100
@@ -290,11 +321,15 @@ object frmNavBarEd: TfrmNavBarEd
           ParentShowHint = False
         end
         object btnItemDelete: TSpeedButton
-          Left = 4
+          AnchorSideLeft.Control = btnItemAdd
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel1
+          Left = 29
           Height = 25
           Hint = 'Remove item'
-          Top = 39
+          Top = 0
           Width = 25
+          BorderSpacing.Left = 4
           Glyph.Data = {
             DE000000424DDE0000000000000076000000280000000D0000000D0000000100
             0400000000006800000000000000000000001000000010000000000000000000
@@ -312,11 +347,15 @@ object frmNavBarEd: TfrmNavBarEd
           ParentShowHint = False
         end
         object btnItemUp: TSpeedButton
-          Left = 4
+          AnchorSideLeft.Control = btnItemDelete
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel1
+          Left = 58
           Height = 25
           Hint = 'Move item up'
-          Top = 72
+          Top = 0
           Width = 25
+          BorderSpacing.Left = 4
           Glyph.Data = {
             DE000000424DDE0000000000000076000000280000000D0000000D0000000100
             0400000000006800000000000000000000001000000010000000000000000000
@@ -334,11 +373,15 @@ object frmNavBarEd: TfrmNavBarEd
           ParentShowHint = False
         end
         object btnItemDown: TSpeedButton
-          Left = 4
+          AnchorSideLeft.Control = btnItemUp
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel1
+          Left = 87
           Height = 25
           Hint = 'Move item down'
-          Top = 104
+          Top = 0
           Width = 25
+          BorderSpacing.Left = 4
           Glyph.Data = {
             DE000000424DDE0000000000000076000000280000000D0000000D0000000100
             0400000000006800000000000000000000001000000010000000000000000000
@@ -360,11 +403,11 @@ object frmNavBarEd: TfrmNavBarEd
         Left = 0
         Height = 23
         Top = 0
-        Width = 271
+        Width = 270
         Align = alTop
         BevelOuter = bvNone
         ClientHeight = 23
-        ClientWidth = 271
+        ClientWidth = 270
         TabOrder = 0
         object Label2: TLabel
           Left = 0
@@ -376,6 +419,15 @@ object frmNavBarEd: TfrmNavBarEd
           ParentColor = False
         end
       end
+    end
+    object Bevel1: TBevel
+      AnchorSideLeft.Control = pnlFoldersAndItems
+      AnchorSideLeft.Side = asrCenter
+      Left = 269
+      Height = 50
+      Top = 0
+      Width = 4
+      Shape = bsSpacer
     end
   end
 end

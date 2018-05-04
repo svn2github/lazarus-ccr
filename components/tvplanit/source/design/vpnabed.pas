@@ -55,6 +55,7 @@ type
   { TfrmNavBarEd }
 
   TfrmNavBarEd = class(TForm)
+    Bevel1: TBevel;
     pnlImageView: TPanel;
     pnlFoldersAndItems: TPanel;
     pnlItems: TPanel;
