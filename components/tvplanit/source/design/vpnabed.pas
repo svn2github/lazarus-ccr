@@ -126,8 +126,8 @@ type
 
   public
     { Public declarations }
-    constructor Create(AOwner: TComponent; ABar: TVpNavBar;
-      ADesigner: TComponentEditorDesigner); reintroduce;
+    constructor Create(AOwner: TComponent; ADesigner: TComponentEditorDesigner;
+      ABar: TVpNavBar); reintroduce;
     destructor Destroy; override;
     procedure PopulateFolderList;
     procedure PopulateImagesList;
@@ -143,7 +143,7 @@ implementation
 {$R *.lfm}
 
 uses
-  PropEditUtils, StrUtils, ImgList,
+  PropEditUtils, IDEWindowIntf, StrUtils, ImgList,
   VpMisc;
 
 const
@@ -205,8 +205,7 @@ begin
     bar := Component as TVpNavBar;
     editor := FindNavBarEditor(bar);
     if editor = nil then begin
-      DebugLn('EditorForm not found.');
-      editor := TfrmNavBarEd.Create(Application, bar, Designer);
+      editor := TfrmNavBarEd.Create(Application, Designer, bar);
     end else
       TfrmNavBarEd(editor).SetData(Designer, bar);
     if editor <> nil then
@@ -230,8 +229,8 @@ end;
                                TfrmNavBarEd
 -------------------------------------------------------------------------------}
 
-constructor TfrmNavBarEd.Create(AOwner: TComponent; ABar: TVpNavBar;
-  ADesigner: TComponentEditorDesigner);
+constructor TfrmNavBarEd.Create(AOwner: TComponent;
+  ADesigner: TComponentEditorDesigner; ABar: TVpNavBar);
 begin
   inherited Create(AOwner);
   Position := poScreenCenter;
@@ -272,13 +271,13 @@ end;
 procedure TfrmNavBarEd.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+  IDEDialogLayoutList.SaveLayout(Self);
   Action := caFree;
 end;
 
 procedure TfrmNavBarEd.FormCreate(Sender: TObject);
 begin
-//  Top := (Screen.Height - Height) div 3;
-//  Left := (Screen.Width - Width) div 2;
+  IDEDialogLayoutList.ApplyLayout(Self);
 end;
 
 procedure TfrmNavBarEd.FormDestroy(Sender: TObject);
