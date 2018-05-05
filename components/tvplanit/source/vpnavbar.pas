@@ -52,6 +52,7 @@ type
   TVpBackgroundMethod = (bmNone, bmNormal, bmStretch, bmTile);
   TVpFolderDrawingStyle = (dsDefButton, dsEtchedButton, dsCoolTab, dsStandardTab);
   TVpFolderType = (ftDefault, ftContainer);
+  TVpItemTheme = (itNoTheme, itPushButton, itToolbar);
 
   TVpFolderContainer = class(TPanel)
   protected{Private}
@@ -210,6 +211,7 @@ type
     FLoadingFolder: Integer;
     FMouseDownPt: TPoint;
     FAllowInplaceEdit: Boolean;
+    FItemTheme: TVpItemTheme;
 
     {event variables}
     FOnArrange: TNotifyEvent;
@@ -351,6 +353,7 @@ type
     property ImagesWidth: Integer read FImagesWidth write SetImagesWidth;
     property ItemFont: TFont read FItemFont write SetItemFont;
     property ItemSpacing: Integer read FItemSpacing write SetItemSpacing stored IsStoredItemSpacing;
+    property ItemTheme: TVpItemTheme read FItemTheme write FItemTheme default itNoTheme;
     property PlaySounds: Boolean read FPlaySounds write FPlaySounds default false;
     property ScrollDelta: Integer read FScrollDelta write SetScrollDelta default 2;
     property SelectedItem: Integer read FSelectedItem write FSelectedItem;
@@ -429,6 +432,7 @@ type
     {$ENDIF}{$ENDIF}
     property ItemFont;
     property ItemSpacing;
+    property ItemTheme;
     property PlaySounds;
     property ScrollDelta;
     property SelectedItem;

@@ -53,29 +53,27 @@ type
   { TfrmNavBarEd }
 
   TfrmNavBarEd = class(TForm)
-    Bevel1: TBevel;
-    Label4: TLabel;
+    lblImages: TLabel;
     lbImages: TListBox;
     pnlFoldersAndItems: TPanel;
     pnlItems: TPanel;
     pnlFolders: TPanel;
     lbItems: TListBox;
     lbFolders: TListBox;
-    Panel1: TPanel;
+    pnlItemBtns: TPanel;
     btnItemAdd: TSpeedButton;
     btnItemDelete: TSpeedButton;
     btnItemUp: TSpeedButton;
     btnItemDown: TSpeedButton;
-    Panel4: TPanel;
-    Label2: TLabel;
-    Panel5: TPanel;
+    lblItems: TLabel;
+    pnlFolderBtns: TPanel;
     btnFolderAdd: TSpeedButton;
     btnFolderDelete: TSpeedButton;
     btnFolderUp: TSpeedButton;
     btnFolderDown: TSpeedButton;
-    Panel6: TPanel;
-    Label1: TLabel;
+    lblFolders: TLabel;
     btnUseImage: TSpeedButton;
+    Splitter1: TSplitter;
 
     procedure btnFolderAddClick(Sender: TObject);
     procedure btnFolderDeleteClick(Sender: TObject);

@@ -515,28 +515,42 @@ end;
 
 procedure TVpNavBarPainter.DrawItemHighlight(Canvas: TCanvas; R: TRect;
   Enable: Boolean);
+const
+  PUSHBUTTON_DETAILS: array[boolean] of TThemedButton = (tbPushButtonHot, tbPushButtonPressed);
+  TOOLBAR_DETAILS: array[boolean] of TThemedToolbar = (ttbButtonHot, ttbButtonPressed);
+var
+  details: TThemedElementDetails;
+  margin: integer;
 begin
   if Enable then begin
-    if nabMouseDown then
-      Canvas.Pen.Color := clBlack
-    else
-      Canvas.Pen.Color := clWhite;
-    Canvas.MoveTo(R.Left-1, R.Bottom+1);
-    Canvas.LineTo(R.Left-1, R.Top-1);
-    Canvas.LineTo(R.Right+1, R.Top-1);
-    if nabMouseDown then
-      Canvas.Pen.Color := clWhite
-    else
-      Canvas.Pen.Color := clBlack;
-    Canvas.LineTo(R.Right+1, R.Bottom+1);
-    Canvas.LineTo(R.Left-1, R.Bottom+1);
-    Canvas.Brush.Color := FBackgroundColor;
-    (*
-  end else begin
-    Canvas.Pen.Color := FBackgroundColor;
-    Canvas.Brush.Color := FBackgroundColor;
-    Canvas.Rectangle(R.Left - 1, R.Top - 1, R.Right + 1, R.Bottom + 1);
-    *)
+    if ThemeServices.ThemesEnabled and (TVpNavBarOpener(FNavBar).ItemTheme <> itNoTheme) then
+    begin
+      margin := ScaleX(2, DesigntimeDPI);
+      InflateRect(R, margin, margin);
+      case TVpNavBarOpener(FNavBar).ItemTheme of
+        itPushButton:
+          details := ThemeServices.GetElementDetails(PUSHBUTTON_DETAILS[nabMousedown]);
+        itToolbar:
+          details := ThemeServices.GetElementDetails(TOOLBAR_DETAILS[nabMouseDown]);
+      end;
+      ThemeServices.DrawElement(Canvas.Handle, details, R);
+    end else
+    begin
+      if nabMouseDown then
+        Canvas.Pen.Color := clBlack
+      else
+        Canvas.Pen.Color := clWhite;
+      Canvas.MoveTo(R.Left-1, R.Bottom+1);
+      Canvas.LineTo(R.Left-1, R.Top-1);
+      Canvas.LineTo(R.Right+1, R.Top-1);
+      if nabMouseDown then
+        Canvas.Pen.Color := clWhite
+      else
+        Canvas.Pen.Color := clBlack;
+      Canvas.LineTo(R.Right+1, R.Bottom+1);
+      Canvas.LineTo(R.Left-1, R.Bottom+1);
+      Canvas.Brush.Color := FBackgroundColor;
+    end;
   end;
 end;
 

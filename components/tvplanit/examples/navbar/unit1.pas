@@ -14,17 +14,26 @@ type
 
   TForm1 = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     BtnAddFolder: TButton;
     BtnAddItem: TButton;
     BkColor: TColorBox;
     BtnLoadBkImage: TButton;
+    cbItemTextColorSelected: TColorBox;
     CbPlaySounds: TCheckBox;
+    cmbItemTheme: TComboBox;
+    cmbIconSize: TComboBox;
+    cbItemTextColorNormal: TColorBox;
     EdBkImage: TFileNameEdit;
     EdSoundFile: TFileNameEdit;
     GbBackgroud: TGroupBox;
+    GbIcon: TGroupBox;
     GbSounds: TGroupBox;
+    GbItemTextColor: TGroupBox;
     IconsLbl: TLabel;
     IconsLink: TLabel;
+    lblItemTextColorNormal: TLabel;
+    lblItemTextColorSelected: TLabel;
     Panel2: TPanel;
     RgBorderStyle: TRadioGroup;
     RbBkColor: TRadioButton;
@@ -32,7 +41,6 @@ type
     RbBkImageTile: TRadioButton;
     RbBkImageStretch: TRadioButton;
     RbBkImageNormal: TRadioButton;
-    RgIconSize: TRadioGroup;
     Label1: TLabel;
     Images: TImageList;
     Panel1: TPanel;
@@ -42,7 +50,12 @@ type
     procedure BtnAddFolderClick(Sender: TObject);
     procedure BtnAddItemClick(Sender: TObject);
     procedure BtnLoadBkImageClick(Sender: TObject);
+    procedure cbItemTextColorNormalChange(Sender: TObject);
+    procedure cbItemTextColorSelectedChange(Sender: TObject);
     procedure CbPlaySoundsChange(Sender: TObject);
+    procedure cbThemedItemsChange(Sender: TObject);
+    procedure cmbIconSizeSelect(Sender: TObject);
+    procedure cmbItemThemeSelect(Sender: TObject);
     procedure EdSoundFileAcceptFileName(Sender: TObject; var Value: String);
     procedure EdSoundFileEditingDone(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -51,7 +64,7 @@ type
     procedure IconsLinkMouseLeave(Sender: TObject);
     procedure RgBorderStyleClick(Sender: TObject);
     procedure RgDrawingStyleClick(Sender: TObject);
-    procedure RgIconSizeClick(Sender: TObject);
+    procedure GbIconClick(Sender: TObject);
     procedure RbBkColorChange(Sender: TObject);
     procedure VpNavBar1FolderChanged(Sender: TObject; Index: Integer);
     procedure VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
@@ -157,9 +170,39 @@ begin
   }
 end;
 
+procedure TForm1.cbItemTextColorNormalChange(Sender: TObject);
+begin
+  VpNavBar1.ItemFont.Color := CbItemTextColorNormal.Selected;
+end;
+
+procedure TForm1.cbItemTextColorSelectedChange(Sender: TObject);
+begin
+  VpNavBar1.SelectedItemFont.Color := CbItemTextColorSelected.Selected;
+end;
+
 procedure TForm1.CbPlaySoundsChange(Sender: TObject);
 begin
   VpNavBar1.PlaySounds := CbPlaySounds.Checked;
+end;
+
+procedure TForm1.cbThemedItemsChange(Sender: TObject);
+begin
+  VpNavBar1.ItemTheme := TVpItemTheme(cmbItemTheme.ItemIndex);
+end;
+
+procedure TForm1.cmbIconSizeSelect(Sender: TObject);
+var
+  folder: TVpNavFolder;
+begin
+//  GbIcon.OnClick := nil;
+  folder := VpNavBar1.Folders[VpNavBar1.ActiveFolder];
+  folder.IconSize := TVpIconSize(cmbIconSize.ItemIndex);
+//  GbIcon.OnClick := @RgIconSizeClick;
+end;
+
+procedure TForm1.cmbItemThemeSelect(Sender: TObject);
+begin
+  VpNavBar1.ItemTheme := TVpItemTheme(cmbItemTheme.ItemIndex);
 end;
 
 procedure TForm1.EdSoundFileAcceptFileName(Sender: TObject; var Value: String);
@@ -179,6 +222,8 @@ begin
   RgDrawingStyle.ItemIndex := ord(VpNavBar1.DrawingStyle);
   RgBorderStyle.ItemIndex := ord(VpNavBar1.BorderStyle);
   BkColor.Selected := VpNavBar1.BackgroundColor;
+  cbItemTextColorNormal.Selected := VpNavBar1.ItemFont.Color;
+  cbItemTextColorSelected.Selected := VpNavBar1.SelectedItemFont.Color;
   case VpNavBar1.BackgroundMethod of
     bmNone:
       RbBkColor.Checked := true;
@@ -228,14 +273,14 @@ begin
   VpNavBar1.DrawingStyle := TVpFolderDrawingStyle(RgDrawingStyle.ItemIndex);
 end;
 
-procedure TForm1.RgIconSizeClick(Sender: TObject);
+procedure TForm1.GbIconClick(Sender: TObject);
 var
   folder: TVpNavFolder;
 begin
-  RgIconSize.OnClick := nil;
+//  GbIcon.OnClick := nil;
   folder := VpNavBar1.Folders[VpNavBar1.ActiveFolder];
-  folder.IconSize := TVpIconSize(RgIconSize.ItemIndex);
-  RgIconSize.OnClick := @RgIconSizeClick;
+  folder.IconSize := TVpIconSize(cmbIconSize.ItemIndex);
+//  GbIcon.OnClick := @RgIconSizeClick;
 end;
 
 procedure TForm1.RbBkColorChange(Sender: TObject);
@@ -265,10 +310,10 @@ procedure TForm1.VpNavBar1FolderChanged(Sender: TObject; Index: Integer);
 var
   folder: TVpNavFolder;
 begin
-  RgIconSize.OnClick := nil;
+//  GbIcon.OnClick := nil;
   folder := VpNavBar1.Folders[Index];
-  RgIconSize.ItemIndex := ord(folder.IconSize);
-  RgIconSize.OnClick := @RgIconSizeClick;
+  cmbIconSize.ItemIndex := ord(folder.IconSize);
+//  GbIcon.OnClick := @RgIconSizeClick;
 end;
 
 procedure TForm1.VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;

@@ -1,13 +1,13 @@
 object frmNavBarEd: TfrmNavBarEd
   Left = 374
-  Height = 364
+  Height = 370
   Top = 236
-  Width = 543
+  Width = 548
   HorzScrollBar.Page = 425
   VertScrollBar.Page = 322
-  Caption = 'Nav Bar Layout Tool'
-  ClientHeight = 364
-  ClientWidth = 543
+  Caption = 'NavBar Layout Tool'
+  ClientHeight = 370
+  ClientWidth = 548
   FormStyle = fsStayOnTop
   OnClose = FormClose
   OnCreate = FormCreate
@@ -18,72 +18,48 @@ object frmNavBarEd: TfrmNavBarEd
   LCLVersion = '1.9.0.0'
   object pnlFoldersAndItems: TPanel
     Left = 0
-    Height = 364
+    Height = 370
     Top = 0
-    Width = 543
+    Width = 548
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 364
-    ClientWidth = 543
+    ClientHeight = 370
+    ClientWidth = 548
     TabOrder = 0
     object pnlFolders: TPanel
-      AnchorSideLeft.Control = pnlFoldersAndItems
-      AnchorSideTop.Control = pnlFoldersAndItems
-      AnchorSideRight.Control = Bevel1
-      AnchorSideBottom.Control = pnlFoldersAndItems
-      AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 364
+      Height = 370
       Top = 0
-      Width = 235
+      Width = 232
+      Align = alLeft
       Anchors = [akTop, akLeft, akRight, akBottom]
-      BorderSpacing.Right = 4
       BevelOuter = bvNone
-      ClientHeight = 364
-      ClientWidth = 235
+      ClientHeight = 370
+      ClientWidth = 232
       TabOrder = 0
       object lbFolders: TListBox
         AnchorSideLeft.Control = pnlFolders
-        AnchorSideTop.Control = Panel6
+        AnchorSideTop.Control = lblFolders
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pnlFolders
         AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = Panel5
+        AnchorSideBottom.Control = pnlFolderBtns
         Left = 4
-        Height = 308
+        Height = 314
         Top = 23
-        Width = 231
+        Width = 228
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
         ItemHeight = 0
         OnClick = lbFoldersClick
-        TabOrder = 1
-      end
-      object Panel6: TPanel
-        Left = 0
-        Height = 23
-        Top = 0
-        Width = 235
-        Align = alTop
-        BevelOuter = bvNone
-        ClientHeight = 23
-        ClientWidth = 235
         TabOrder = 0
-        object Label1: TLabel
-          Left = 4
-          Height = 15
-          Top = 4
-          Width = 38
-          Caption = '&Folders'
-          FocusControl = lbFolders
-          ParentColor = False
-        end
       end
-      object Panel5: TPanel
+      object pnlFolderBtns: TPanel
         Left = 4
         Height = 25
-        Top = 335
-        Width = 231
+        Top = 341
+        Width = 228
         Align = alBottom
         AutoSize = True
         BorderSpacing.Left = 4
@@ -91,11 +67,11 @@ object frmNavBarEd: TfrmNavBarEd
         BorderSpacing.Bottom = 4
         BevelOuter = bvNone
         ClientHeight = 25
-        ClientWidth = 231
-        TabOrder = 2
+        ClientWidth = 228
+        TabOrder = 1
         object btnFolderAdd: TSpeedButton
-          AnchorSideLeft.Control = Panel5
-          AnchorSideTop.Control = Panel5
+          AnchorSideLeft.Control = pnlFolderBtns
+          AnchorSideTop.Control = pnlFolderBtns
           Left = 0
           Height = 25
           Hint = 'Add folder'
@@ -120,7 +96,7 @@ object frmNavBarEd: TfrmNavBarEd
         object btnFolderDelete: TSpeedButton
           AnchorSideLeft.Control = btnFolderAdd
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = Panel5
+          AnchorSideTop.Control = pnlFolderBtns
           Left = 29
           Height = 25
           Hint = 'Remove folder'
@@ -146,7 +122,7 @@ object frmNavBarEd: TfrmNavBarEd
         object btnFolderUp: TSpeedButton
           AnchorSideLeft.Control = btnFolderDelete
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = Panel5
+          AnchorSideTop.Control = pnlFolderBtns
           Left = 58
           Height = 25
           Hint = 'Move folder up'
@@ -172,7 +148,7 @@ object frmNavBarEd: TfrmNavBarEd
         object btnFolderDown: TSpeedButton
           AnchorSideLeft.Control = btnFolderUp
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = Panel5
+          AnchorSideTop.Control = pnlFolderBtns
           Left = 83
           Height = 25
           Hint = 'Move folder down'
@@ -195,49 +171,55 @@ object frmNavBarEd: TfrmNavBarEd
           ParentShowHint = False
         end
       end
+      object lblFolders: TLabel
+        AnchorSideLeft.Control = pnlFolders
+        AnchorSideTop.Control = pnlFolders
+        Left = 4
+        Height = 15
+        Top = 4
+        Width = 38
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
+        Caption = 'Folders'
+        FocusControl = lbFolders
+        ParentColor = False
+      end
     end
     object pnlItems: TPanel
-      AnchorSideLeft.Control = pnlFolders
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = pnlFoldersAndItems
-      AnchorSideRight.Control = pnlFoldersAndItems
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = pnlFoldersAndItems
-      AnchorSideBottom.Side = asrBottom
-      Left = 239
-      Height = 364
+      Left = 237
+      Height = 370
       Top = 0
-      Width = 300
-      Anchors = [akTop, akLeft, akRight, akBottom]
-      BorderSpacing.Right = 4
+      Width = 311
+      Align = alClient
       BevelOuter = bvNone
-      ClientHeight = 364
-      ClientWidth = 300
+      ClientHeight = 370
+      ClientWidth = 311
       TabOrder = 1
       object lbItems: TListBox
         AnchorSideLeft.Control = pnlItems
-        AnchorSideTop.Control = Panel4
+        AnchorSideTop.Control = lblImages
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = btnUseImage
-        AnchorSideBottom.Control = Panel1
+        AnchorSideBottom.Control = pnlItemBtns
         Left = 0
-        Height = 307
-        Top = 24
-        Width = 221
+        Height = 314
+        Top = 23
+        Width = 228
         Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 4
         BorderSpacing.Right = 4
         ItemHeight = 13
         OnClick = lbItemsClick
         OnDrawItem = lbItemsDrawItem
         OnMeasureItem = lbItemsMeasureItem
         Style = lbOwnerDrawVariable
-        TabOrder = 1
+        TabOrder = 0
       end
-      object Panel1: TPanel
+      object pnlItemBtns: TPanel
         Left = 0
         Height = 25
-        Top = 335
-        Width = 296
+        Top = 341
+        Width = 307
         Align = alBottom
         AutoSize = True
         BorderSpacing.Top = 4
@@ -245,11 +227,11 @@ object frmNavBarEd: TfrmNavBarEd
         BorderSpacing.Bottom = 4
         BevelOuter = bvNone
         ClientHeight = 25
-        ClientWidth = 296
-        TabOrder = 2
+        ClientWidth = 307
+        TabOrder = 1
         object btnItemAdd: TSpeedButton
-          AnchorSideLeft.Control = Panel1
-          AnchorSideTop.Control = Panel1
+          AnchorSideLeft.Control = pnlItemBtns
+          AnchorSideTop.Control = pnlItemBtns
           Left = 0
           Height = 25
           Hint = 'Add Item'
@@ -274,7 +256,7 @@ object frmNavBarEd: TfrmNavBarEd
         object btnItemDelete: TSpeedButton
           AnchorSideLeft.Control = btnItemAdd
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = Panel1
+          AnchorSideTop.Control = pnlItemBtns
           Left = 29
           Height = 25
           Hint = 'Remove item'
@@ -300,7 +282,7 @@ object frmNavBarEd: TfrmNavBarEd
         object btnItemUp: TSpeedButton
           AnchorSideLeft.Control = btnItemDelete
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = Panel1
+          AnchorSideTop.Control = pnlItemBtns
           Left = 58
           Height = 25
           Hint = 'Move item up'
@@ -326,7 +308,7 @@ object frmNavBarEd: TfrmNavBarEd
         object btnItemDown: TSpeedButton
           AnchorSideLeft.Control = btnItemUp
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = Panel1
+          AnchorSideTop.Control = pnlItemBtns
           Left = 87
           Height = 25
           Hint = 'Move item down'
@@ -350,76 +332,67 @@ object frmNavBarEd: TfrmNavBarEd
           ParentShowHint = False
         end
       end
-      object Panel4: TPanel
-        Left = 0
-        Height = 24
-        Top = 0
-        Width = 300
-        Align = alTop
-        BevelOuter = bvNone
-        ClientHeight = 24
-        ClientWidth = 300
-        TabOrder = 0
-        object Label2: TLabel
-          Left = 0
-          Height = 15
-          Top = 4
-          Width = 62
-          Caption = '&Items/Icons'
-          FocusControl = lbItems
-          ParentColor = False
-        end
-        object Label4: TLabel
-          AnchorSideTop.Control = Label2
-          AnchorSideRight.Control = Panel4
-          AnchorSideRight.Side = asrBottom
-          Left = 211
-          Height = 15
-          Top = 4
-          Width = 89
-          Anchors = [akTop, akRight]
-          Caption = 'Available i&mages'
-          ParentColor = False
-        end
-      end
       object lbImages: TListBox
         AnchorSideTop.Control = lbItems
         AnchorSideRight.Control = pnlItems
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = lbItems
         AnchorSideBottom.Side = asrBottom
-        Left = 252
-        Height = 307
-        Top = 24
+        Left = 259
+        Height = 314
+        Top = 23
         Width = 48
         Anchors = [akTop, akRight, akBottom]
+        BorderSpacing.Right = 4
         ItemHeight = 0
         OnDrawItem = lbImagesDrawItem
         Style = lbOwnerDrawFixed
-        TabOrder = 3
+        TabOrder = 2
       end
       object btnUseImage: TSpeedButton
         AnchorSideTop.Control = lbImages
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lbImages
-        Left = 225
+        Left = 232
         Height = 22
         Hint = 'Use image in navigation bar'
-        Top = 166
+        Top = 169
         Width = 23
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 4
         OnClick = btnUseImageClick
       end
+      object lblItems: TLabel
+        AnchorSideLeft.Control = pnlItems
+        AnchorSideTop.Control = pnlItems
+        Left = 0
+        Height = 15
+        Top = 4
+        Width = 62
+        BorderSpacing.Top = 4
+        Caption = 'Items/Icons'
+        FocusControl = lbItems
+        ParentColor = False
+      end
+      object lblImages: TLabel
+        AnchorSideTop.Control = lblItems
+        AnchorSideRight.Control = pnlItems
+        AnchorSideRight.Side = asrBottom
+        Left = 218
+        Height = 15
+        Top = 4
+        Width = 89
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 4
+        Caption = 'Available images'
+        ParentColor = False
+      end
     end
-    object Bevel1: TBevel
-      AnchorSideLeft.Control = pnlFoldersAndItems
-      AnchorSideLeft.Side = asrCenter
-      Left = 239
-      Height = 50
+    object Splitter1: TSplitter
+      Left = 232
+      Height = 370
       Top = 0
-      Width = 64
-      Shape = bsSpacer
+      Width = 5
     end
   end
 end

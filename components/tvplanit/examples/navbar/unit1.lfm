@@ -1,17 +1,17 @@
 object Form1: TForm1
   Left = 274
-  Height = 422
+  Height = 532
   Top = 168
-  Width = 567
+  Width = 611
   AutoSize = True
   Caption = 'Form1'
-  ClientHeight = 422
-  ClientWidth = 567
+  ClientHeight = 532
+  ClientWidth = 611
   OnCreate = FormCreate
   LCLVersion = '1.9.0.0'
   object VpNavBar1: TVpNavBar
     Left = 0
-    Height = 397
+    Height = 507
     Top = 0
     Width = 128
     BorderSpacing.Right = 24
@@ -131,7 +131,6 @@ object Form1: TForm1
     ImagesWidth = 0
     ItemFont.Color = clWhite
     ItemSpacing = 5
-    PlaySounds = False
     SelectedItem = -1
     SelectedItemFont.Color = clYellow
     SelectedItemFont.Style = [fsBold]
@@ -158,22 +157,23 @@ object Form1: TForm1
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Label1
     AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
     Left = 152
-    Height = 96
-    Top = 39
+    Height = 116
+    Top = 31
     Width = 120
-    AutoFill = True
+    AutoFill = False
     AutoSize = True
-    BorderSpacing.Top = 16
+    BorderSpacing.Top = 8
     Caption = 'DrawingStyle'
     ChildSizing.LeftRightSpacing = 6
-    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.TopBottomSpacing = 4
+    ChildSizing.VerticalSpacing = 4
     ChildSizing.ShrinkHorizontal = crsScaleChilds
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 76
+    ClientHeight = 96
     ClientWidth = 116
     ItemIndex = 0
     Items.Strings = (
@@ -200,18 +200,18 @@ object Form1: TForm1
   object Panel1: TPanel
     Left = 0
     Height = 25
-    Top = 397
-    Width = 567
+    Top = 507
+    Width = 611
     Align = alBottom
     AutoSize = True
     ClientHeight = 25
-    ClientWidth = 567
+    ClientWidth = 611
     TabOrder = 2
     object Bevel1: TBevel
       Left = 1
       Height = 3
       Top = 1
-      Width = 565
+      Width = 609
       Align = alTop
       Shape = bsTopLine
     end
@@ -248,15 +248,17 @@ object Form1: TForm1
     end
   end
   object BtnAddFolder: TButton
-    AnchorSideLeft.Control = RgIconSize
-    AnchorSideBottom.Control = RgDrawingStyle
+    AnchorSideLeft.Control = GbIcon
+    AnchorSideTop.Control = GbIcon
+    AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
-    Left = 296
+    Left = 307
     Height = 25
-    Top = 110
+    Top = 125
     Width = 91
-    Anchors = [akLeft, akBottom]
     AutoSize = True
+    BorderSpacing.Left = 11
+    BorderSpacing.Top = 8
     Caption = 'Add folder...'
     OnClick = BtnAddFolderClick
     TabOrder = 3
@@ -265,9 +267,9 @@ object Form1: TForm1
     AnchorSideLeft.Control = BtnAddFolder
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = BtnAddFolder
-    Left = 395
+    Left = 406
     Height = 25
-    Top = 110
+    Top = 125
     Width = 84
     AutoSize = True
     BorderSpacing.Left = 8
@@ -276,45 +278,15 @@ object Form1: TForm1
     OnClick = BtnAddItemClick
     TabOrder = 4
   end
-  object RgIconSize: TRadioGroup
-    AnchorSideLeft.Control = RgDrawingStyle
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = RgDrawingStyle
-    Left = 296
-    Height = 39
-    Top = 39
-    Width = 110
-    AutoFill = True
-    AutoSize = True
-    BorderSpacing.Left = 24
-    Caption = 'Icons'
-    ChildSizing.LeftRightSpacing = 6
-    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-    ChildSizing.EnlargeVertical = crsHomogenousChildResize
-    ChildSizing.ShrinkHorizontal = crsScaleChilds
-    ChildSizing.ShrinkVertical = crsScaleChilds
-    ChildSizing.Layout = cclLeftToRightThenTopToBottom
-    ChildSizing.ControlsPerLine = 2
-    ClientHeight = 19
-    ClientWidth = 106
-    Columns = 2
-    ItemIndex = 0
-    Items.Strings = (
-      'large'
-      'small'
-    )
-    OnClick = RgIconSizeClick
-    TabOrder = 5
-  end
   object GbBackgroud: TGroupBox
     AnchorSideLeft.Control = VpNavBar1
     AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = RgDrawingStyle
+    AnchorSideTop.Control = BtnAddFolder
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Side = asrBottom
     Left = 152
     Height = 114
-    Top = 151
+    Top = 166
     Width = 367
     AutoSize = True
     BorderSpacing.Top = 16
@@ -322,7 +294,7 @@ object Form1: TForm1
     Caption = 'Background'
     ClientHeight = 94
     ClientWidth = 363
-    TabOrder = 6
+    TabOrder = 5
     object BkColor: TColorBox
       AnchorSideLeft.Control = RbBkColor
       AnchorSideLeft.Side = asrBottom
@@ -470,15 +442,15 @@ object Form1: TForm1
     AnchorSideBottom.Side = asrBottom
     Left = 152
     Height = 78
-    Top = 281
+    Top = 394
     Width = 81
     Anchors = [akTop, akLeft, akBottom]
-    AutoFill = True
+    AutoFill = False
     AutoSize = True
     Caption = 'Border style'
     ChildSizing.LeftRightSpacing = 6
-    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.TopBottomSpacing = 4
+    ChildSizing.VerticalSpacing = 4
     ChildSizing.ShrinkHorizontal = crsScaleChilds
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
@@ -491,18 +463,18 @@ object Form1: TForm1
       'bsSingle'
     )
     OnClick = RgBorderStyleClick
-    TabOrder = 7
+    TabOrder = 6
   end
   object GbSounds: TGroupBox
     AnchorSideLeft.Control = RgBorderStyle
     AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = GbBackgroud
+    AnchorSideTop.Control = GbItemTextColor
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = GbBackgroud
     AnchorSideRight.Side = asrBottom
     Left = 249
     Height = 78
-    Top = 281
+    Top = 394
     Width = 270
     Anchors = [akTop, akLeft, akRight]
     AutoSize = True
@@ -512,15 +484,16 @@ object Form1: TForm1
     Caption = 'Sounds'
     ClientHeight = 58
     ClientWidth = 266
-    TabOrder = 8
+    TabOrder = 7
     object CbPlaySounds: TCheckBox
       AnchorSideLeft.Control = GbSounds
       AnchorSideTop.Control = GbSounds
       Left = 12
       Height = 19
-      Top = 0
+      Top = 4
       Width = 83
       BorderSpacing.Left = 12
+      BorderSpacing.Top = 4
       Caption = 'Play sounds'
       OnChange = CbPlaySoundsChange
       TabOrder = 0
@@ -533,7 +506,7 @@ object Form1: TForm1
       AnchorSideRight.Side = asrBottom
       Left = 12
       Height = 23
-      Top = 23
+      Top = 27
       Width = 246
       OnAcceptFileName = EdSoundFileAcceptFileName
       FilterIndex = 0
@@ -543,17 +516,170 @@ object Form1: TForm1
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       BorderSpacing.Right = 8
-      BorderSpacing.Bottom = 12
+      BorderSpacing.Bottom = 8
       MaxLength = 0
       TabOrder = 1
       OnEditingDone = EdSoundFileEditingDone
     end
   end
+  object GbIcon: TGroupBox
+    AnchorSideLeft.Control = RgDrawingStyle
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = RgDrawingStyle
+    AnchorSideRight.Control = GbBackgroud
+    AnchorSideRight.Side = asrBottom
+    Left = 296
+    Height = 86
+    Top = 31
+    Width = 223
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 24
+    BorderSpacing.InnerBorder = 2
+    Caption = 'Icons'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.TopBottomSpacing = 4
+    ChildSizing.HorizontalSpacing = 8
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 66
+    ClientWidth = 219
+    TabOrder = 8
+    OnClick = GbIconClick
+    object cmbIconSize: TComboBox
+      AnchorSideLeft.Control = GbIcon
+      AnchorSideTop.Control = GbIcon
+      AnchorSideRight.Control = GbIcon
+      AnchorSideRight.Side = asrBottom
+      Left = 8
+      Height = 23
+      Top = 4
+      Width = 203
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      ItemHeight = 15
+      ItemIndex = 0
+      Items.Strings = (
+        'large'
+        'small'
+      )
+      OnSelect = cmbIconSizeSelect
+      Style = csDropDownList
+      TabOrder = 0
+      Text = 'large'
+    end
+    object cmbItemTheme: TComboBox
+      AnchorSideLeft.Control = cmbIconSize
+      AnchorSideTop.Control = cmbIconSize
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = cmbIconSize
+      AnchorSideRight.Side = asrBottom
+      Left = 8
+      Height = 23
+      Top = 35
+      Width = 203
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 8
+      BorderSpacing.Bottom = 4
+      ItemHeight = 15
+      ItemIndex = 0
+      Items.Strings = (
+        'no theme'
+        'like push button'
+        'like toolbar'
+      )
+      OnSelect = cmbItemThemeSelect
+      Style = csDropDownList
+      TabOrder = 1
+      Text = 'no theme'
+    end
+  end
+  object GbItemTextColor: TGroupBox
+    AnchorSideLeft.Control = GbBackgroud
+    AnchorSideTop.Control = GbBackgroud
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GbBackgroud
+    AnchorSideRight.Side = asrBottom
+    Left = 152
+    Height = 82
+    Top = 296
+    Width = 367
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 16
+    Caption = 'Item text color'
+    ClientHeight = 62
+    ClientWidth = 363
+    TabOrder = 9
+    object cbItemTextColorNormal: TColorBox
+      AnchorSideLeft.Control = lblItemTextColorNormal
+      AnchorSideRight.Control = Bevel2
+      Left = 16
+      Height = 22
+      Top = 24
+      Width = 158
+      Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbPrettyNames]
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Bottom = 8
+      ItemHeight = 16
+      OnChange = cbItemTextColorNormalChange
+      TabOrder = 0
+    end
+    object lblItemTextColorNormal: TLabel
+      AnchorSideLeft.Control = GbItemTextColor
+      AnchorSideTop.Control = GbItemTextColor
+      Left = 16
+      Height = 15
+      Top = 4
+      Width = 40
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 4
+      Caption = 'Normal'
+      ParentColor = False
+    end
+    object Bevel2: TBevel
+      AnchorSideLeft.Control = GbItemTextColor
+      AnchorSideLeft.Side = asrCenter
+      Left = 174
+      Height = 50
+      Top = 12
+      Width = 14
+      Shape = bsSpacer
+    end
+    object cbItemTextColorSelected: TColorBox
+      AnchorSideLeft.Control = Bevel2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = cbItemTextColorNormal
+      AnchorSideRight.Control = GbItemTextColor
+      AnchorSideRight.Side = asrBottom
+      Left = 188
+      Height = 22
+      Top = 24
+      Width = 167
+      Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbPrettyNames]
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Right = 8
+      ItemHeight = 16
+      OnChange = cbItemTextColorSelectedChange
+      TabOrder = 1
+    end
+    object lblItemTextColorSelected: TLabel
+      AnchorSideLeft.Control = cbItemTextColorSelected
+      AnchorSideTop.Control = lblItemTextColorNormal
+      Left = 188
+      Height = 15
+      Top = 4
+      Width = 44
+      Caption = 'Selected'
+      ParentColor = False
+    end
+  end
   object Images: TImageList
     Height = 32
     Width = 32
-    left = 480
-    top = 16
+    left = 400
+    top = 32
     Bitmap = {
       4C690A0000002000000020000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
