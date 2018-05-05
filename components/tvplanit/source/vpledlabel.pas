@@ -543,7 +543,7 @@ begin
   if FSize <> Value then begin
     if Value < 2 then
       Value := 2;
-    if Value > 10 then
+    if Integer(Value) > 10 then
       Value := 10;
     ResizeControl(FRows, FColumns, Value);
   end;

@@ -144,50 +144,17 @@ msgstr "Среда"
 msgid "XML files (*.xml)"
 msgstr ""
 
-#: tfrmreportsetup.btncancel.caption
-#, fuzzy
-msgctxt "tfrmreportsetup.btncancel.caption"
-msgid "Cancel"
-msgstr "Отмена"
-
-#: tfrmreportsetup.btnok.caption
-msgctxt "tfrmreportsetup.btnok.caption"
-msgid "OK"
-msgstr ""
-
-#: tfrmreportsetup.caption
-msgid "Report Setup"
-msgstr "Параметры отчёта"
-
-#: tfrmreportsetup.lblenddate.caption
-#, fuzzy
-msgctxt "tfrmreportsetup.lblenddate.caption"
-msgid "End Date:"
-msgstr "Дата окончания:"
-
-#: tfrmreportsetup.lblformat.caption
-#, fuzzy
-msgctxt "tfrmreportsetup.lblformat.caption"
-msgid "Format:"
-msgstr "Формат:"
-
-#: tfrmreportsetup.lblstartdate.caption
-#, fuzzy
-msgctxt "tfrmreportsetup.lblstartdate.caption"
-msgid "Start Date:"
-msgstr "Дата начала:"
-
 #: tmainform.btndeleteres.caption
 msgid "Delete"
-msgstr "Удалить"
+msgstr ""
 
 #: tmainform.btneditres.caption
 msgid "Edit"
-msgstr "Изменить"
+msgstr ""
 
 #: tmainform.btnnewres.caption
 msgid "New"
-msgstr "Новый"
+msgstr ""
 
 #: tmainform.caption
 msgid "Turbo Power VisualPlanIt Demo"
@@ -195,7 +162,7 @@ msgstr ""
 
 #: tmainform.cbaddressbuilder.text
 msgid "(default)"
-msgstr "(по умолчанию)"
+msgstr ""
 
 #: tmainform.cballowdraganddrop.caption
 msgid "Allow drag and drop of events"
@@ -203,7 +170,7 @@ msgstr ""
 
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
-msgstr "Разрешить редактор по месту"
+msgstr ""
 
 #: tmainform.cbdragdroptransparent.caption
 msgid "Transparent drag and drop"
@@ -211,7 +178,7 @@ msgstr ""
 
 #: tmainform.cbgranularity.text
 msgid "30 Min"
-msgstr "30 минут"
+msgstr ""
 
 #: tmainform.cbshoweventhints.caption
 msgid "Show event and contact hints"
@@ -219,99 +186,90 @@ msgstr ""
 
 #: tmainform.lbladdressbuilder.caption
 msgid "Address builder"
-msgstr "Конструктор адреса"
+msgstr ""
 
 #: tmainform.lbldrawingstyle.caption
 msgid "Drawing style:"
-msgstr "Стиль отрисовки:"
+msgstr ""
 
 #: tmainform.lblfirstdayofweek.caption
 msgid "First day of week"
-msgstr "Первый день недели"
+msgstr ""
 
 #: tmainform.lblgranularity.caption
 msgid "Granularity"
-msgstr "Точность"
+msgstr ""
 
 #: tmainform.lbllanguage.caption
-msgctxt "TMAINFORM.LBLLANGUAGE.CAPTION"
 msgid "Language"
-msgstr "Язык"
+msgstr ""
 
 #: tmainform.lbltimeformat.caption
 msgid "Time format"
-msgstr "Формат времени"
+msgstr ""
 
 #: tmainform.lblvisibledays.caption
 msgid "Visible days"
-msgstr "Отображаемые дни"
+msgstr ""
 
 #: tmainform.menuitem1.caption
 msgid "File"
-msgstr "Файл"
+msgstr ""
 
 #: tmainform.menuitem2.caption
 msgid "Help"
-msgstr "Справка"
-
-#: tmainform.menuitem3.caption
-msgctxt "tmainform.menuitem3.caption"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem4.caption
-msgctxt "tmainform.menuitem4.caption"
-msgid "-"
 msgstr ""
 
 #: tmainform.mnuabout.caption
 msgid "About Visual PlanIt"
-msgstr "О Visual PlanIt"
+msgstr ""
 
 #: tmainform.mnueditprintformats.caption
 msgid "Edit print formats..."
-msgstr "Редактор формата печати..."
+msgstr ""
 
 #: tmainform.mnuloadprintformats.caption
 msgid "Load print formats..."
 msgstr ""
 
 #: tmainform.mnumaintenance.caption
-msgctxt "TMAINFORM.MNUMAINTENANCE.CAPTION"
+#, fuzzy
+msgctxt "tmainform.mnumaintenance.caption"
 msgid "Maintenance"
 msgstr "Обслуживание"
 
 #: tmainform.mnuprint.caption
 msgid "Print..."
-msgstr "Печать..."
+msgstr ""
 
 #: tmainform.mnuprintpreview.caption
 msgid "Print preview..."
-msgstr "Предварительный просмотр печати..."
+msgstr ""
 
 #: tmainform.mnuquit.caption
 msgid "Quit"
-msgstr "Выход"
+msgstr ""
 
 #: tmainform.mnuresources.caption
-msgctxt "TMAINFORM.MNURESOURCES.CAPTION"
+#, fuzzy
+msgctxt "tmainform.mnuresources.caption"
 msgid "Resources"
 msgstr "Ресурсы"
 
 #: tmainform.mnusettings.caption
-msgctxt "TMAINFORM.MNUSETTINGS.CAPTION"
+#, fuzzy
+msgctxt "tmainform.mnusettings.caption"
 msgid "Settings"
 msgstr "Настройки"
 
 #: tmainform.rballtasks.caption
 msgid "All tasks"
-msgstr "Все задачи"
+msgstr ""
 
 #: tmainform.rbhidecompletedtasks.caption
 msgid "Hide completed tasks"
-msgstr "Скрыть исполненные задачи"
+msgstr ""
 
-# No need to translate
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""

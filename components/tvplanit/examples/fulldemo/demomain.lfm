@@ -9,7 +9,7 @@ object MainForm: TMainForm
   Menu = MainMenu1
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.9.0.0'
   object Panel1: TPanel
     Left = 125
     Height = 576
@@ -85,7 +85,6 @@ object MainForm: TMainForm
             Align = alBottom
             TabStop = True
             TabOrder = 0
-            KBNavigation = True
             DateLabelFormat = 'mmmm yyyy'
             DayHeadAttributes.Color = clBtnFace
             DayNameStyle = dsShort
@@ -95,6 +94,7 @@ object MainForm: TMainForm
             HeadAttributes.Font.Style = [fsItalic]
             HeadAttributes.Color = clBtnFace
             HolidayAttributes.Font.Color = clBlack
+            KBNavigation = True
             SelectedDayColor = clRed
             ShowEvents = True
             ShowEventTime = False
@@ -695,41 +695,41 @@ object MainForm: TMainForm
     DrawingStyle = dsCoolTab
     FolderCollection = <    
       item
-        Version = 'v1.05'
+        Version = 'v1.10'
         Caption = 'Planner'
         Enabled = True
         FolderType = ftDefault
         ItemCollection = <        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             Caption = 'Events'
             IconIndex = 0
             Name = 'NIEvents'
             Tag = 0
           end        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             Caption = 'Month view'
             IconIndex = 5
             Name = 'NIEventsByMonth'
             Tag = 0
           end        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             Caption = 'Week view'
             IconIndex = 4
             Name = 'NIEventsByWeek'
             Tag = 0
           end        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             Caption = 'Day view'
             IconIndex = 3
             Name = 'NIEventsByDay'
             Tag = 0
           end        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             Caption = 'Tasks'
             Description = 'Show tasks'
             IconIndex = 1
@@ -737,7 +737,7 @@ object MainForm: TMainForm
             Tag = 0
           end        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             Caption = 'Contacts'
             Description = 'Show address book'
             IconIndex = 2
@@ -749,20 +749,20 @@ object MainForm: TMainForm
         Tag = 0
       end    
       item
-        Version = 'v1.05'
+        Version = 'v1.10'
         Caption = 'Maintenance'
         Enabled = True
         FolderType = ftDefault
         ItemCollection = <        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             Caption = 'Resources'
             IconIndex = 7
             Name = 'NIResources'
             Tag = 0
           end        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             Caption = 'Settings'
             IconIndex = 8
             Name = 'NISettings'
@@ -773,8 +773,8 @@ object MainForm: TMainForm
         Tag = 0
       end>
     Images = ImageList1
+    ImagesWidth = 0
     ItemFont.Color = clWhite
-    ItemSpacing = 3
     PlaySounds = False
     SelectedItem = -1
     SelectedItemFont.Color = clWhite
@@ -801,12 +801,12 @@ object MainForm: TMainForm
     Printer.MarginUnits = imPercent
     Printer.PrintFormats = <    
       item
-        Version = 'v1.05'
+        Version = 'v1.10'
         DayInc = 0
         DayIncUnits = duDay
         Elements = <        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             Caption.Caption = 'Current week'
             Caption.Font.Style = [fsItalic]
             DayOffset = 0
@@ -821,12 +821,12 @@ object MainForm: TMainForm
         FormatName = 'Events of current week (dayview)'
       end    
       item
-        Version = 'v1.05'
+        Version = 'v1.10'
         DayInc = 0
         DayIncUnits = duWeek
         Elements = <        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             DayOffset = 0
             DayOffsetUnits = duDay
             ElementName = 'WeekView'
@@ -840,12 +840,12 @@ object MainForm: TMainForm
         FormatName = 'Events of current week (Week view)'
       end    
       item
-        Version = 'v1.05'
+        Version = 'v1.10'
         DayInc = 0
         DayIncUnits = duDay
         Elements = <        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             DayOffset = 0
             DayOffsetUnits = duWeek
             ElementName = 'TaskList'
@@ -859,12 +859,12 @@ object MainForm: TMainForm
         FormatName = 'Tasks of current week'
       end    
       item
-        Version = 'v1.05'
+        Version = 'v1.10'
         DayInc = 0
         DayIncUnits = duDay
         Elements = <        
           item
-            Version = 'v1.05'
+            Version = 'v1.10'
             DayOffset = 0
             DayOffsetUnits = duDay
             ElementName = 'TaskList'
@@ -884,7 +884,7 @@ object MainForm: TMainForm
     top = 200
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.05'
+    Version = 'v1.10'
     Options = []
     Placement.Position = mpCenter
     Placement.Top = 10
@@ -2111,7 +2111,7 @@ object MainForm: TMainForm
     top = 368
   end
   object VpPrintPreviewDialog1: TVpPrintPreviewDialog
-    Version = 'v1.05'
+    Version = 'v1.10'
     BottomMargin = 0
     ControlLink = VpControlLink1
     EndDate = 42561.5151169907
@@ -2130,7 +2130,7 @@ object MainForm: TMainForm
     top = 432
   end
   object VpPrintFormatEditDialog1: TVpPrintFormatEditDialog
-    Version = 'v1.05'
+    Version = 'v1.10'
     ControlLink = VpControlLink1
     Options = []
     Placement.Position = mpCenter

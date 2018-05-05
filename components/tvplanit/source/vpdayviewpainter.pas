@@ -1023,6 +1023,7 @@ var
       bmp := TBitmap.Create;
       try
         bmp.Assign(ABitmap);
+        bmp.Transparent := true;
        {$IFDEF FPC}
         RotateBitmap(Bmp, Angle);
        {$ENDIF}

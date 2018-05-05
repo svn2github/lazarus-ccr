@@ -137,7 +137,7 @@ end;
 procedure TVpNavBarPainter.DrawActiveFolderItems(Canvas: TCanvas; var CurPos: Integer);
 const
   BUTTON_DISTANCE = 8;
-  LARGE_ICON_OFFSET = 4;
+  LARGE_ICON_TEXT_DISTANCE = 2;
   SMALL_ICON_TEXT_DISTANCE = 6;
 var
   folder: TVpNavFolder;
@@ -146,8 +146,7 @@ var
   text: String;
   h: Integer;
   R: TRect;
-  largeIconOffs: Integer;
-  smallIconOffs: Integer;
+  dx, dy: Integer;
  {$IFDEF LCL}
   {$IF LCL_FullVersion >= 1090000}
   imgres: TScaledImageListResolution;
@@ -157,9 +156,15 @@ var
  {$ENDIF}
 begin
   folder := FNavBar.Folders[FActiveFolder];
-  largeIconOffs := ScaleY(LARGE_ICON_OFFSET, DesignTimeDPI);
-  smallIconOffs := ScaleX(SMALL_ICON_TEXT_DISTANCE, DesignTimeDPI);
 
+  // Distance between icon and text, for large icons vertically, for small icons
+  // horizontally
+  dy := ScaleY(LARGE_ICON_TEXT_DISTANCE, DesignTimeDPI);
+  dx := ScaleX(SMALL_ICON_TEXT_DISTANCE, DesignTimeDPI);
+
+  { If an image list is assigned then use the image size.
+    If no image list is assinged then assume a 32 x 32 image size.
+    The size of the small images is always half size of the large images. }
   if FImages <> nil then begin
    {$IFDEF LCL}{$IF LCL_FullVersion >= 1090000}
     with  TVpNavBarOpener(FNavBar) do begin
@@ -202,7 +207,7 @@ begin
         Canvas.Font := FItemFont;
 
       item := Folder.Items[J];
-      { If the caption is empty at designtime then display the item's name instead }
+      { If the caption is empty at design time display the item's name instead }
       if (csDesigning in FNavBar.ComponentState) and (item.Caption = '') then
         text := item.Name
       else
@@ -215,11 +220,11 @@ begin
 
         {make the icon's bottom blend into the label's top}
         R := item.IconRect;
-        inc(R.Bottom, largeIconOffs);
+        inc(R.Bottom, dy);
         item.IconRect := R;
         CurPos := item.IconRect.Bottom;
 
-        {now, draw the text}
+        {now draw the text}
         if not DrawItemText(Canvas, item, CurPos, text, true, h) then
           Continue;
         Inc(CurPos, FItemSpacing + h);
@@ -231,10 +236,10 @@ begin
 
         {make the icon's right blend into the label's left}
         R := item.IconRect;
-        inc(R.Right, smallIconOffs);
+        inc(R.Right, dx);
         item.IconRect := R;
 
-        {now, draw the text}
+        {now draw the text}
         if not DrawItemText(Canvas, item, CurPos, text, false, h) then
           Continue;
         Inc(CurPos, FItemSpacing + h);
@@ -628,19 +633,9 @@ var
 begin
   Result := false;
 
-  { If an image list is assigned then use the image size.
-    If no image list is assinged then assume a 32 x 32 image size. }
   dist := ScaleX(MARGIN, DesignTimeDPI);
   W := FLargeImagesSize + 2*dist;
   H := FLargeImagesSize + 2*dist;
-  {
-  if Assigned(FImages) then begin
-    W := FImages.Width + 2*dist;
-    H := FImages.Height + 2*dist;
-  end else begin
-    W := ScaleX(32, DesignTimeDPI);
-    H := ScaleY(32, DesignTimeDPI);
-  end;}
 
   R.Top := CurPos;
   R.Bottom := CurPos + H;
@@ -676,12 +671,10 @@ function TVpNavBarPainter.DrawSmallIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
   CurPos: Integer): Boolean;
 const
   DELTA = 8;
-  MARGIN = 2;
 var
   lOffset: Integer;
   R: TRect;
   del: Integer;
-  m: Integer;
  {$IFDEF LCL}{$IF LCL_FullVersion >= 1090000}
   imgres: TScaledImageListResolution;
   f: Double;
@@ -695,7 +688,6 @@ begin
   {glyph is at the left}
   R.Top := CurPos;
   del := ScaleY(DELTA, DesignTimeDPI);
-  m := ScaleX(MARGIN, DesignTimeDPI);
   lOffset := abs(Canvas.Font.Height) div 2;
   if lOffset > del then
     R.Top := R.Top + lOffset - del;

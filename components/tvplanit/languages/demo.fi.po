@@ -46,6 +46,7 @@ msgid "no border"
 msgstr ""
 
 #: demomain.rsconfirmdeleteres
+#, fuzzy,badformat
 msgid "Do you really want to delete resource %s?"
 msgstr "Haluatko varmasti poistaa resurssin% s?"
 
@@ -92,9 +93,10 @@ msgid "Planner"
 msgstr ""
 
 #: demomain.rsresources
+#, fuzzy
 msgctxt "demomain.rsresources"
 msgid "Resources"
-msgstr ""
+msgstr "Resurssit"
 
 #: demomain.rssaturday
 msgid "Saturday"
@@ -134,46 +136,17 @@ msgstr "Keskiviikko"
 msgid "XML files (*.xml)"
 msgstr "XML tiedostot (*xml)"
 
-#: tfrmreportsetup.btncancel.caption
-msgctxt "tfrmreportsetup.btncancel.caption"
-msgid "Cancel"
-msgstr "Peru"
-
-#: tfrmreportsetup.btnok.caption
-msgctxt "tfrmreportsetup.btnok.caption"
-msgid "OK"
-msgstr ""
-
-#: tfrmreportsetup.caption
-msgid "Report Setup"
-msgstr ""
-
-#: tfrmreportsetup.lblenddate.caption
-msgctxt "tfrmreportsetup.lblenddate.caption"
-msgid "End Date:"
-msgstr "Loppumispäivä:"
-
-#: tfrmreportsetup.lblformat.caption
-msgctxt "tfrmreportsetup.lblformat.caption"
-msgid "Format:"
-msgstr ""
-
-#: tfrmreportsetup.lblstartdate.caption
-msgctxt "tfrmreportsetup.lblstartdate.caption"
-msgid "Start Date:"
-msgstr "Alkamispäivä:"
-
 #: tmainform.btndeleteres.caption
 msgid "Delete"
-msgstr "Poista"
+msgstr ""
 
 #: tmainform.btneditres.caption
 msgid "Edit"
-msgstr "Muokkaa"
+msgstr ""
 
 #: tmainform.btnnewres.caption
 msgid "New"
-msgstr "Uusi"
+msgstr ""
 
 #: tmainform.caption
 msgid "Turbo Power VisualPlanIt Demo"
@@ -181,11 +154,11 @@ msgstr ""
 
 #: tmainform.cbaddressbuilder.text
 msgid "(default)"
-msgstr "(oletus)"
+msgstr ""
 
 #: tmainform.cballowdraganddrop.caption
 msgid "Allow drag and drop of events"
-msgstr "Salli tapahtumien vedä ja pudota toiminta"
+msgstr ""
 
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
@@ -213,16 +186,15 @@ msgstr ""
 
 #: tmainform.lblfirstdayofweek.caption
 msgid "First day of week"
-msgstr "Viikon ensimmäinen päivä"
+msgstr ""
 
 #: tmainform.lblgranularity.caption
 msgid "Granularity"
 msgstr ""
 
 #: tmainform.lbllanguage.caption
-msgctxt "TMAINFORM.LBLLANGUAGE.CAPTION"
 msgid "Language"
-msgstr "Kieli"
+msgstr ""
 
 #: tmainform.lbltimeformat.caption
 msgid "Time format"
@@ -234,25 +206,15 @@ msgstr ""
 
 #: tmainform.menuitem1.caption
 msgid "File"
-msgstr "Tiedosto"
+msgstr ""
 
 #: tmainform.menuitem2.caption
 msgid "Help"
-msgstr "Ohje"
-
-#: tmainform.menuitem3.caption
-msgctxt "tmainform.menuitem3.caption"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem4.caption
-msgctxt "tmainform.menuitem4.caption"
-msgid "-"
 msgstr ""
 
 #: tmainform.mnuabout.caption
 msgid "About Visual PlanIt"
-msgstr "Tietoja Visual PlanIt:stä"
+msgstr ""
 
 #: tmainform.mnueditprintformats.caption
 msgid "Edit print formats..."
@@ -263,39 +225,40 @@ msgid "Load print formats..."
 msgstr ""
 
 #: tmainform.mnumaintenance.caption
-msgctxt "TMAINFORM.MNUMAINTENANCE.CAPTION"
+msgctxt "tmainform.mnumaintenance.caption"
 msgid "Maintenance"
 msgstr ""
 
 #: tmainform.mnuprint.caption
 msgid "Print..."
-msgstr "Tulosta..."
+msgstr ""
 
 #: tmainform.mnuprintpreview.caption
 msgid "Print preview..."
-msgstr "Tulostuksen esilatselu..."
+msgstr ""
 
 #: tmainform.mnuquit.caption
 msgid "Quit"
-msgstr "Lopeta"
+msgstr ""
 
 #: tmainform.mnuresources.caption
-msgctxt "TMAINFORM.MNURESOURCES.CAPTION"
+msgctxt "tmainform.mnuresources.caption"
 msgid "Resources"
-msgstr "Resurssit"
+msgstr ""
 
 #: tmainform.mnusettings.caption
-msgctxt "TMAINFORM.MNUSETTINGS.CAPTION"
+#, fuzzy
+msgctxt "tmainform.mnusettings.caption"
 msgid "Settings"
 msgstr "Asetukset"
 
 #: tmainform.rballtasks.caption
 msgid "All tasks"
-msgstr "Kaikki tehtävät"
+msgstr ""
 
 #: tmainform.rbhidecompletedtasks.caption
 msgid "Hide completed tasks"
-msgstr "Piilota suoritetut tehtävät"
+msgstr ""
 
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"

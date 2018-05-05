@@ -24,34 +24,34 @@ object Form1: TForm1
     DrawingStyle = dsEtchedButton
     FolderCollection = <    
       item
-        Version = 'v1.08'
+        Version = 'v1.10'
         Caption = 'Folder 1'
         Enabled = True
         FolderType = ftDefault
         ItemCollection = <        
           item
-            Version = 'v1.08'
+            Version = 'v1.10'
             Caption = 'Item 1 (Folder 1)'
             IconIndex = 0
             Name = 'Item0-0'
             Tag = 0
           end        
           item
-            Version = 'v1.08'
+            Version = 'v1.10'
             Caption = 'Item 2 (Folder 1)'
             IconIndex = 1
             Name = 'Item0-1'
             Tag = 0
           end        
           item
-            Version = 'v1.08'
+            Version = 'v1.10'
             Caption = 'Item 3 (Folder 1)'
             IconIndex = 2
             Name = 'Item0-2'
             Tag = 0
           end        
           item
-            Version = 'v1.08'
+            Version = 'v1.10'
             Caption = 'Item 4 (Folder 1)'
             IconIndex = 3
             Name = 'Item0-3'
@@ -62,20 +62,20 @@ object Form1: TForm1
         Tag = 0
       end    
       item
-        Version = 'v1.08'
+        Version = 'v1.10'
         Caption = 'Folder 2'
         Enabled = True
         FolderType = ftDefault
         ItemCollection = <        
           item
-            Version = 'v1.08'
+            Version = 'v1.10'
             Caption = 'Item 1 (Folder 2)'
             IconIndex = 4
             Name = 'Item1-0'
             Tag = 0
           end        
           item
-            Version = 'v1.08'
+            Version = 'v1.10'
             Caption = 'Item 2 (Folder 2)'
             IconIndex = 5
             Name = 'Item1-1'
@@ -86,27 +86,27 @@ object Form1: TForm1
         Tag = 0
       end    
       item
-        Version = 'v1.08'
+        Version = 'v1.10'
         Caption = 'Folder 3'
         Enabled = True
         FolderType = ftDefault
         ItemCollection = <        
           item
-            Version = 'v1.08'
+            Version = 'v1.10'
             Caption = 'Item 1 (Folder 3)'
             IconIndex = 6
             Name = 'Item2-0'
             Tag = 0
           end        
           item
-            Version = 'v1.08'
+            Version = 'v1.10'
             Caption = 'Item 2 (Folder 3)'
             IconIndex = 7
             Name = 'Item2-1'
             Tag = 0
           end        
           item
-            Version = 'v1.08'
+            Version = 'v1.10'
             Caption = 'Item 3 (Folder 3)'
             IconIndex = 8
             Name = 'Item2-2'
@@ -117,7 +117,7 @@ object Form1: TForm1
         Tag = 0
       end    
       item
-        Version = 'v1.08'
+        Version = 'v1.10'
         Caption = 'Container'
         Enabled = True
         FolderType = ftContainer
@@ -128,9 +128,10 @@ object Form1: TForm1
         ContainerIndex = 0
       end>
     Images = Images
+    ImagesWidth = 0
     ItemFont.Color = clWhite
     ItemSpacing = 5
-    PlaySounds = True
+    PlaySounds = False
     SelectedItem = -1
     SelectedItemFont.Color = clYellow
     SelectedItemFont.Style = [fsBold]

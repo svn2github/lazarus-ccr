@@ -522,8 +522,6 @@ begin
 end;
 
 procedure TfrmNavBarEd.SetData(ADesigner: TComponentEditorDesigner; ABar: TVpNavBar);
-var
-  i: Integer;
 begin
   if FBar <> nil then
     FBar.RemoveFreeNotification(self);
@@ -573,6 +571,8 @@ procedure TfrmNavBarEd.lbImagesDrawItem(Control: TWinControl; Index: Integer;
 var
   x, y: Integer;
 begin
+  Unused(Control);
+
   if [odSelected, odFocused] * State <> [] then
     lbImages.Canvas.Brush.Color := clHighlight
   else
@@ -634,7 +634,7 @@ begin
   ts.Wordbreak := false;
   x := Rect.Left + 2;
   y := (Rect.Top + Rect.Bottom - lb.Canvas.TextHeight('Tg')) div 2;
-  lb.Canvas.TextRect(Rect, x, y, lb.Items[Index]);
+  lb.Canvas.TextRect(Rect, x, y, lb.Items[Index], ts);
 end;
 
 procedure TfrmNavBarEd.lbItemsClick(Sender: TObject);
@@ -665,11 +665,11 @@ end;
 
 procedure TfrmNavBarEd.btnItemUpClick(Sender: TObject);
 var
-  SaveItemIndex : Integer;
+  //SaveItemIndex : Integer;
   Item: TVpNavBtnItem;
 begin
   if (lbItems.ItemIndex > 0) then begin
-    SaveItemIndex := lbItems.ItemIndex;
+    //SaveItemIndex := lbItems.ItemIndex;
     Item := TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]);
     if Item.Index > 0 then
       Item.Index := Item.Index - 1;

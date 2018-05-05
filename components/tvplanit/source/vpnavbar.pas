@@ -305,12 +305,12 @@ type
     procedure WMSetCursor(var Msg: TLMSetCursor); message LM_SETCURSOR;
     {$IF LCL_FullVersion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
-      const AXProportion, AYProportion: Double);
+      const AXProportion, AYProportion: Double); override;
     {$ENDIF}
     {$IF VP_LCL_SCALING = 2}
-    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double);
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
     {$ELSEIF VP_LCL_SCALING = 1}
-    procedure ScaleFontsPPI(const AProportion: Double);
+    procedure ScaleFontsPPI(const AProportion: Double); override;
     {$ENDIF}
     {$ENDIF}
     procedure CreateParams(var Params: TCreateParams); override;
@@ -351,7 +351,7 @@ type
     property ImagesWidth: Integer read FImagesWidth write SetImagesWidth;
     property ItemFont: TFont read FItemFont write SetItemFont;
     property ItemSpacing: Integer read FItemSpacing write SetItemSpacing stored IsStoredItemSpacing;
-    property PlaySounds: Boolean read FPlaySounds write FPlaySounds;
+    property PlaySounds: Boolean read FPlaySounds write FPlaySounds default false;
     property ScrollDelta: Integer read FScrollDelta write SetScrollDelta default 2;
     property SelectedItem: Integer read FSelectedItem write FSelectedItem;
     property SelectedItemFont: TFont read FSelectedItemFont write SetSelectedItemFont;

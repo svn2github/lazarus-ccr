@@ -134,59 +134,25 @@ msgstr "Woensdag"
 msgid "XML files (*.xml)"
 msgstr ""
 
-#: tfrmreportsetup.btncancel.caption
-#, fuzzy
-msgctxt "tfrmreportsetup.btncancel.caption"
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: tfrmreportsetup.btnok.caption
-#, fuzzy
-msgctxt "tfrmreportsetup.btnok.caption"
-msgid "OK"
-msgstr "OK"
-
-#: tfrmreportsetup.caption
-msgid "Report Setup"
-msgstr "Overzicht Instellingen"
-
-#: tfrmreportsetup.lblenddate.caption
-#, fuzzy
-msgctxt "tfrmreportsetup.lblenddate.caption"
-msgid "End Date:"
-msgstr "Eind Datum:"
-
-#: tfrmreportsetup.lblformat.caption
-#, fuzzy
-msgctxt "tfrmreportsetup.lblformat.caption"
-msgid "Format:"
-msgstr "Formaat:"
-
-#: tfrmreportsetup.lblstartdate.caption
-#, fuzzy
-msgctxt "tfrmreportsetup.lblstartdate.caption"
-msgid "Start Date:"
-msgstr "Start Datum:"
-
 #: tmainform.btndeleteres.caption
 msgid "Delete"
-msgstr "Wissen"
+msgstr ""
 
 #: tmainform.btneditres.caption
 msgid "Edit"
-msgstr "Bewerken"
+msgstr ""
 
 #: tmainform.btnnewres.caption
 msgid "New"
-msgstr "Nieuw"
+msgstr ""
 
 #: tmainform.caption
 msgid "Turbo Power VisualPlanIt Demo"
-msgstr "Turbo Power VisualPlanIt Demo"
+msgstr ""
 
 #: tmainform.cbaddressbuilder.text
 msgid "(default)"
-msgstr "(standaard)"
+msgstr ""
 
 #: tmainform.cballowdraganddrop.caption
 msgid "Allow drag and drop of events"
@@ -194,7 +160,7 @@ msgstr ""
 
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
-msgstr "Direct bewerken toestaan"
+msgstr ""
 
 #: tmainform.cbdragdroptransparent.caption
 msgid "Transparent drag and drop"
@@ -202,7 +168,7 @@ msgstr ""
 
 #: tmainform.cbgranularity.text
 msgid "30 Min"
-msgstr "30 Min"
+msgstr ""
 
 #: tmainform.cbshoweventhints.caption
 msgid "Show event and contact hints"
@@ -210,7 +176,7 @@ msgstr ""
 
 #: tmainform.lbladdressbuilder.caption
 msgid "Address builder"
-msgstr "Adres bouwer"
+msgstr ""
 
 #: tmainform.lbldrawingstyle.caption
 msgid "Drawing style:"
@@ -218,46 +184,35 @@ msgstr ""
 
 #: tmainform.lblfirstdayofweek.caption
 msgid "First day of week"
-msgstr "Eerste dag van de week"
+msgstr ""
 
 #: tmainform.lblgranularity.caption
 msgid "Granularity"
-msgstr "Granulariteit"
+msgstr ""
 
 #: tmainform.lbllanguage.caption
-msgctxt "TMAINFORM.LBLLANGUAGE.CAPTION"
 msgid "Language"
-msgstr "Taal"
+msgstr ""
 
 #: tmainform.lbltimeformat.caption
 msgid "Time format"
-msgstr "Tijd formaat"
+msgstr ""
 
 #: tmainform.lblvisibledays.caption
 msgid "Visible days"
-msgstr "Zichtbare dagen"
+msgstr ""
 
 #: tmainform.menuitem1.caption
 msgid "File"
-msgstr "Bestand"
+msgstr ""
 
 #: tmainform.menuitem2.caption
 msgid "Help"
-msgstr "Help"
-
-#: tmainform.menuitem3.caption
-msgctxt "tmainform.menuitem3.caption"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem4.caption
-msgctxt "tmainform.menuitem4.caption"
-msgid "-"
 msgstr ""
 
 #: tmainform.mnuabout.caption
 msgid "About Visual PlanIt"
-msgstr "Over Visual PlanIt"
+msgstr ""
 
 #: tmainform.mnueditprintformats.caption
 msgid "Edit print formats..."
@@ -268,7 +223,8 @@ msgid "Load print formats..."
 msgstr ""
 
 #: tmainform.mnumaintenance.caption
-msgctxt "TMAINFORM.MNUMAINTENANCE.CAPTION"
+#, fuzzy
+msgctxt "tmainform.mnumaintenance.caption"
 msgid "Maintenance"
 msgstr "Onderhoud"
 
@@ -282,27 +238,29 @@ msgstr ""
 
 #: tmainform.mnuquit.caption
 msgid "Quit"
-msgstr "Afsluiten"
+msgstr ""
 
 #: tmainform.mnuresources.caption
-msgctxt "TMAINFORM.MNURESOURCES.CAPTION"
+#, fuzzy
+msgctxt "tmainform.mnuresources.caption"
 msgid "Resources"
 msgstr "Hulpmiddelen"
 
 #: tmainform.mnusettings.caption
-msgctxt "TMAINFORM.MNUSETTINGS.CAPTION"
+#, fuzzy
+msgctxt "tmainform.mnusettings.caption"
 msgid "Settings"
 msgstr "Instellingen"
 
 #: tmainform.rballtasks.caption
 msgid "All tasks"
-msgstr "Alle taken"
+msgstr ""
 
 #: tmainform.rbhidecompletedtasks.caption
 msgid "Hide completed tasks"
-msgstr "Verberg afgewerkte taken"
+msgstr ""
 
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
-msgstr "TitleLbl"
+msgstr ""
 

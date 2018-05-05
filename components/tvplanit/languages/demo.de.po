@@ -145,170 +145,132 @@ msgstr "Mittwoch"
 msgid "XML files (*.xml)"
 msgstr "XML-Dateien (*.XML)"
 
-#: tfrmreportsetup.btncancel.caption
-msgctxt "tfrmreportsetup.btncancel.caption"
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: tfrmreportsetup.btnok.caption
-msgctxt "tfrmreportsetup.btnok.caption"
-msgid "OK"
-msgstr "OK"
-
-#: tfrmreportsetup.caption
-msgid "Report Setup"
-msgstr "Ausdruck einrichten"
-
-#: tfrmreportsetup.lblenddate.caption
-msgctxt "tfrmreportsetup.lblenddate.caption"
-msgid "End Date:"
-msgstr "Enddatum:"
-
-#: tfrmreportsetup.lblformat.caption
-msgctxt "tfrmreportsetup.lblformat.caption"
-msgid "Format:"
-msgstr "Format:"
-
-#: tfrmreportsetup.lblstartdate.caption
-msgctxt "tfrmreportsetup.lblstartdate.caption"
-msgid "Start Date:"
-msgstr "Startdatum:"
-
 #: tmainform.btndeleteres.caption
 msgid "Delete"
-msgstr "Löschen"
+msgstr ""
 
 #: tmainform.btneditres.caption
 msgid "Edit"
-msgstr "Bearbeiten"
+msgstr ""
 
 #: tmainform.btnnewres.caption
 msgid "New"
-msgstr "Neu"
+msgstr ""
 
 #: tmainform.caption
 msgid "Turbo Power VisualPlanIt Demo"
-msgstr "Turbo Power VisualPlanIt Demo"
+msgstr ""
 
 #: tmainform.cbaddressbuilder.text
 msgid "(default)"
-msgstr "(Standard)"
+msgstr ""
 
 #: tmainform.cballowdraganddrop.caption
 msgid "Allow drag and drop of events"
-msgstr "\"Ziehen und Fallenlassen\" (Drag&&Drop) von Ereignissen erlauben"
+msgstr ""
 
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
-msgstr "Editieren an Ort und Stelle erlauben"
+msgstr ""
 
 #: tmainform.cbdragdroptransparent.caption
 msgid "Transparent drag and drop"
-msgstr "\"Ziehen und Fallenlassen\" (Drag&&Drop)  mit transparentem Hintergrund"
+msgstr ""
 
 #: tmainform.cbgranularity.text
 msgid "30 Min"
-msgstr "30 Min"
+msgstr ""
 
 #: tmainform.cbshoweventhints.caption
 msgid "Show event and contact hints"
-msgstr "Ereignis- und Kontakt-Hinweise anzeigen"
+msgstr ""
 
 #: tmainform.lbladdressbuilder.caption
 msgid "Address builder"
-msgstr "Aufbau der Adresse:"
+msgstr ""
 
 #: tmainform.lbldrawingstyle.caption
 msgid "Drawing style:"
-msgstr "Darstellungs-Stil:"
+msgstr ""
 
 #: tmainform.lblfirstdayofweek.caption
 msgid "First day of week"
-msgstr "Die Woche beginnt am"
+msgstr ""
 
 #: tmainform.lblgranularity.caption
 msgid "Granularity"
-msgstr "Raster"
+msgstr ""
 
 #: tmainform.lbllanguage.caption
-msgctxt "tmainform.lbllanguage.caption"
 msgid "Language"
-msgstr "Sprache"
+msgstr ""
 
 #: tmainform.lbltimeformat.caption
 msgid "Time format"
-msgstr "Zeitformat"
+msgstr ""
 
 #: tmainform.lblvisibledays.caption
 msgid "Visible days"
-msgstr "Sichtbare Tage"
+msgstr ""
 
 #: tmainform.menuitem1.caption
 msgid "File"
-msgstr "Datei"
+msgstr ""
 
 #: tmainform.menuitem2.caption
 msgid "Help"
-msgstr "Hilfe"
-
-#: tmainform.menuitem3.caption
-msgctxt "tmainform.menuitem3.caption"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem4.caption
-msgctxt "tmainform.menuitem4.caption"
-msgid "-"
 msgstr ""
 
 #: tmainform.mnuabout.caption
 msgid "About Visual PlanIt"
-msgstr "Über Visual PlanIt"
+msgstr ""
 
 #: tmainform.mnueditprintformats.caption
 msgid "Edit print formats..."
-msgstr "Druckformate bearbeiten..."
+msgstr ""
 
 #: tmainform.mnuloadprintformats.caption
 msgid "Load print formats..."
-msgstr "Druckformate laden..."
+msgstr ""
 
 #: tmainform.mnumaintenance.caption
+#, fuzzy
 msgctxt "tmainform.mnumaintenance.caption"
 msgid "Maintenance"
 msgstr "Wartung"
 
 #: tmainform.mnuprint.caption
 msgid "Print..."
-msgstr "Drucken..."
+msgstr ""
 
 #: tmainform.mnuprintpreview.caption
 msgid "Print preview..."
-msgstr "Druckvorschau..."
+msgstr ""
 
 #: tmainform.mnuquit.caption
 msgid "Quit"
-msgstr "Beenden"
+msgstr ""
 
 #: tmainform.mnuresources.caption
+#, fuzzy
 msgctxt "tmainform.mnuresources.caption"
 msgid "Resources"
 msgstr "Ressourcen"
 
 #: tmainform.mnusettings.caption
+#, fuzzy
 msgctxt "tmainform.mnusettings.caption"
 msgid "Settings"
 msgstr "Einstellungen"
 
 #: tmainform.rballtasks.caption
 msgid "All tasks"
-msgstr "Alle Aufgaben"
+msgstr ""
 
 #: tmainform.rbhidecompletedtasks.caption
 msgid "Hide completed tasks"
-msgstr "Fertiggestellte Aufgaben ausblenden"
+msgstr ""
 
-# No need to translate
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""

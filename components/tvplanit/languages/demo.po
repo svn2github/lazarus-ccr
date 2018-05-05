@@ -134,35 +134,6 @@ msgstr ""
 msgid "XML files (*.xml)"
 msgstr ""
 
-#: tfrmreportsetup.btncancel.caption
-msgctxt "tfrmreportsetup.btncancel.caption"
-msgid "Cancel"
-msgstr ""
-
-#: tfrmreportsetup.btnok.caption
-msgctxt "tfrmreportsetup.btnok.caption"
-msgid "OK"
-msgstr ""
-
-#: tfrmreportsetup.caption
-msgid "Report Setup"
-msgstr ""
-
-#: tfrmreportsetup.lblenddate.caption
-msgctxt "tfrmreportsetup.lblenddate.caption"
-msgid "End Date:"
-msgstr ""
-
-#: tfrmreportsetup.lblformat.caption
-msgctxt "tfrmreportsetup.lblformat.caption"
-msgid "Format:"
-msgstr ""
-
-#: tfrmreportsetup.lblstartdate.caption
-msgctxt "tfrmreportsetup.lblstartdate.caption"
-msgid "Start Date:"
-msgstr ""
-
 #: tmainform.btndeleteres.caption
 msgid "Delete"
 msgstr ""
@@ -220,7 +191,6 @@ msgid "Granularity"
 msgstr ""
 
 #: tmainform.lbllanguage.caption
-msgctxt "TMAINFORM.LBLLANGUAGE.CAPTION"
 msgid "Language"
 msgstr ""
 
@@ -240,16 +210,6 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: tmainform.menuitem3.caption
-msgctxt "TMAINFORM.MENUITEM3.CAPTION"
-msgid "-"
-msgstr ""
-
-#: tmainform.menuitem4.caption
-msgctxt "tmainform.menuitem4.caption"
-msgid "-"
-msgstr ""
-
 #: tmainform.mnuabout.caption
 msgid "About Visual PlanIt"
 msgstr ""
@@ -263,7 +223,7 @@ msgid "Load print formats..."
 msgstr ""
 
 #: tmainform.mnumaintenance.caption
-msgctxt "TMAINFORM.MNUMAINTENANCE.CAPTION"
+msgctxt "tmainform.mnumaintenance.caption"
 msgid "Maintenance"
 msgstr ""
 
@@ -280,12 +240,12 @@ msgid "Quit"
 msgstr ""
 
 #: tmainform.mnuresources.caption
-msgctxt "TMAINFORM.MNURESOURCES.CAPTION"
+msgctxt "tmainform.mnuresources.caption"
 msgid "Resources"
 msgstr ""
 
 #: tmainform.mnusettings.caption
-msgctxt "TMAINFORM.MNUSETTINGS.CAPTION"
+msgctxt "tmainform.mnusettings.caption"
 msgid "Settings"
 msgstr ""
 
