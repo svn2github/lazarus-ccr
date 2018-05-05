@@ -755,12 +755,14 @@ begin
       Invalidate;
 end;
 
+{$IF LCL_FullVersion >= 1090000}
 procedure TJvCustomTabBar.SetImagesWidth(const AValue: Integer);
 begin
   if AValue = FImagesWidth then exit;
   FImagesWidth := AValue;
   Invalidate;
 end;
+{$ENDIF}
 
 procedure TJvCustomTabBar.SetCloseButton(Value: Boolean);
 begin
