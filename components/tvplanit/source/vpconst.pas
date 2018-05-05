@@ -275,12 +275,11 @@ const
 {$IFDEF LCL}
  {$IF LCL_FULLVERSION >= 1080100}
   VP_LCL_SCALING = 2;
- {$ELSE}
- {$IF LCL_FULLVERSION >= 1080000}
+ {$ELSEIF LCL_FULLVERSION >= 1080000}
   VP_LCL_SCALING = 1;
  {$ELSE}
   VP_LCL_SCALING = 0;
- {$ENDIF}{$ENDIF}
+ {$ENDIF}
 {$ELSE}
   VL_LCL_SCALING := 0;
 {$ENDIF}
@@ -289,7 +288,10 @@ const
 implementation
 
 initialization
-{$IFNDEF LCL}
+
+{$IFDEF LCL}
+  //
+{$ELSE}
   ClickDelay :=  GetDoubleClickTime;                                     
 {$ENDIF}
 

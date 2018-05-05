@@ -6,7 +6,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf, LCLVersion,
   {$ELSE}
   Windows, Messages, MMSystem,
   {$ENDIF}
@@ -62,7 +62,7 @@ type
 
     procedure DrawItemHighlight(Canvas: TCanvas; R: TRect; Enable: Boolean);
     function DrawItemText(Canvas: TCanvas; AItem: TVpNavBtnItem; CurPos: Integer;
-      AText: String; AtLargeIcon: Boolean; out AWidth: Integer): Boolean;
+      AText: String; AtLargeIcon: Boolean; out AHeight: Integer): Boolean;
     function DrawLargeIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
       CurPos: Integer): Boolean;
     function DrawSmallIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
@@ -92,7 +92,7 @@ function GetLargeIconDisplayName(Canvas: TCanvas; Rect: TRect; const Name: strin
 implementation
 
 uses
-  Math, Themes,
+  Math, Themes, imglist,
   VpConst, VpMisc;
 
 type
@@ -138,28 +138,42 @@ procedure TVpNavBarPainter.DrawActiveFolderItems(Canvas: TCanvas; var CurPos: In
 const
   BUTTON_DISTANCE = 8;
   LARGE_ICON_OFFSET = 4;
-  SMALL_ICON_OFFSET = 3;
+  SMALL_ICON_TEXT_DISTANCE = 6;
 var
   folder: TVpNavFolder;
   item: TVpNavBtnItem;
   J: Integer;
   text: String;
-  X: Integer;
+  h: Integer;
   R: TRect;
   largeIconOffs: Integer;
   smallIconOffs: Integer;
+ {$IFDEF LCL}
+  {$IF LCL_FullVersion >= 1090000}
+  imgres: TScaledImageListResolution;
+  f: Double;
+  ppi: Integer;
+  {$IFEND}
+ {$ENDIF}
 begin
   folder := FNavBar.Folders[FActiveFolder];
   largeIconOffs := ScaleY(LARGE_ICON_OFFSET, DesignTimeDPI);
-  smallIconOffs := ScaleX(SMALL_ICON_OFFSET, DesignTimeDPI);
+  smallIconOffs := ScaleX(SMALL_ICON_TEXT_DISTANCE, DesignTimeDPI);
 
   if FImages <> nil then begin
+   {$IFDEF LCL}{$IF LCL_FullVersion >= 1090000}
+    with  TVpNavBarOpener(FNavBar) do begin
+      f := FCanvasScaleFactor;
+      ppi := Font.PixelsPerInch;
+      imgRes := FImages.ResolutionForPPI[FImagesWidth, ppi, f];
+    end;
+    FLargeImagesSize := imgRes.Width;
+   {$ELSE}
     FLargeImagesSize := FImages.Width;
-    FSmallImagesSize := FImages.Width div 2;
-  end else begin
+   {$ENDIF}{$ENDIF}
+  end else
     FLargeImagesSize := 32;
-    FSmallImagesSize := 16;
-  end;
+  FSmallImagesSize := FLargeImagesSize div 2;
 
   if folder.FolderType = ftDefault then begin
     if folder.ItemCount = 0 then
@@ -206,9 +220,9 @@ begin
         CurPos := item.IconRect.Bottom;
 
         {now, draw the text}
-        if not DrawItemText(Canvas, item, CurPos, text, true, X) then
+        if not DrawItemText(Canvas, item, CurPos, text, true, h) then
           Continue;
-        Inc(CurPos, FItemSpacing + X);
+        Inc(CurPos, FItemSpacing + h);
       end else
       begin
         { Small Icons }
@@ -221,9 +235,9 @@ begin
         item.IconRect := R;
 
         {now, draw the text}
-        if not DrawItemText(Canvas, item, CurPos, text, false, X) then
+        if not DrawItemText(Canvas, item, CurPos, text, false, h) then
           Continue;
-        Inc(CurPos, FItemSpacing + X);
+        Inc(CurPos, FItemSpacing + h);
       end;  { if folder.IconSize ... }
     end;  { for J }
   end;  { if folder.FolderType = ftDefault ... }
@@ -522,7 +536,7 @@ begin
 end;
 
 function TVpNavBarPainter.DrawItemText(Canvas: TCanvas; AItem: TVpNavBtnItem;
-  CurPos: Integer; AText: String; AtLargeIcon: Boolean; out AWidth: Integer): Boolean;
+  CurPos: Integer; AText: String; AtLargeIcon: Boolean; out AHeight: Integer): Boolean;
 const
   HOR_MARGIN = 5;
 var
@@ -533,20 +547,19 @@ var
   horDist: Integer;
 begin
   Result := false;
+  horDist := ScaleX(HOR_MARGIN, DesignTimeDPI);
 
   if AtLargeIcon then
   begin
-    horDist := ScaleX(HOR_MARGIN, DesignTimeDPI);
-
     R.Top := CurPos;
     R.Bottom := CurPos + FButtonHeight div 2 - 7;   // what is -7 good for?
     R.Left := 0;
     R.Right := FNavBar.ClientWidth - 1;
     AItem.LabelRect := R;
     AItem.DisplayName := GetLargeIconDisplayName(Canvas, R, AText);
-    AWidth := Canvas.TextWidth(AItem.DisplayName);
-    R.Left := Max(horDist, (FNavBar.ClientWidth - AWidth) div 2);
-    R.Right := Min(R.Left + AWidth, FNavBar.ClientWidth - hordist);
+    txtWidth := Canvas.TextWidth(AItem.DisplayName);
+    R.Left := Max(horDist, (FNavBar.ClientWidth - txtWidth) div 2);
+    R.Right := Min(R.Left + txtWidth, FNavBar.ClientWidth - hordist);
     AItem.LabelRect := R;
     if R.Top > nabItemsRect^.Bottom then
       Exit;
@@ -559,32 +572,40 @@ begin
     AItem.LabelRect := R;
 
     bkMode := SetBkMode(Canvas.Handle, TRANSPARENT);
-    AWidth := DrawText(Canvas.Handle, PChar(s), Length(s), R, DT_CENTER or DT_VCENTER or DT_WORDBREAK);
+    AHeight:= DrawText(Canvas.Handle, PChar(s), Length(s), R, DT_CENTER or DT_VCENTER or DT_WORDBREAK);
     SetBkMode(Canvas.Handle, bkMode);
-
   end else
   begin
     R.Top := CurPos;
-    R.Bottom := CurPos + FButtonHeight div 2 - 7;
+    R.Bottom := CurPos + Canvas.TextHeight('Tg');
+//    R.Bottom := CurPos + FButtonHeight div 2 - 7;
     R.Left := AItem.IconRect.Right;
-    R.Right := R.Left + FNavBar.ClientWidth - R.Left - ScaleX(7, DesignTimeDPI);
+    R.Right := FNavBar.ClientWidth - 2*AItem.IconRect.Left; // - 2*horDist;
+//    R.Right := R.Left + FNavBar.ClientWidth - R.Left - ScaleX(7, DesignTimeDPI);
     AItem.LabelRect := R;
     if R.Top > nabItemsRect^.Bottom then
       Exit;
 
+    // Measure size of display string
     R := AItem.LabelRect;
     s := GetDisplayString(Canvas, AText, 1, WidthOf(R));
     AItem.DisplayName := s;
-    DrawText(Canvas.Handle, PChar(s), Length(s), R, DT_LEFT or DT_VCENTER or DT_CALCRECT);
+    DrawText(Canvas.Handle, PChar(s), Length(s), R, DT_LEFT or DT_CALCRECT);
     txtWidth := WidthOf(R);
+    AHeight := HeightOf(R);
     R.Right := R.Left + txtWidth + 1;
+    {$IFDEF MSWINDOWS}
+    OffsetRect(R, 0, -1);   // Better centering of text
+    {$ENDIF}
     AItem.LabelRect := R;
 
     bkMode := SetBkMode(Canvas.Handle, TRANSPARENT);
-    AWidth := DrawText(Canvas.Handle, PChar(s), Length(s), R, DT_LEFT or DT_VCENTER);
+    Canvas.TextOut(R.Left, (R.Top + R.Bottom - AHeight) div 2, s);
+//    AHeight := DrawText(Canvas.Handle, PChar(s), Length(s), R, DT_LEFT or DT_VCENTER);
     SetBkMode(Canvas.Handle, bkMode);
 
-    if AWidth < 16 then AWidth := 16;  // This it the width of the small icons
+    if AHeight < FSmallImagesSize then
+      AHeight := FSmallImagesSize;
   end;
   Result := true;
 end;
@@ -599,19 +620,27 @@ var
   W, H: Integer;
   R: TRect;
   dist: Integer;
+ {$IFDEF LCL}{$IF LCL_FullVersion >= 1090000}
+  imgres: TScaledImageListResolution;
+  f: Double;
+  ppi: Integer;
+ {$ENDIF}{$ENDIF}
 begin
   Result := false;
 
   { If an image list is assigned then use the image size.
     If no image list is assinged then assume a 32 x 32 image size. }
   dist := ScaleX(MARGIN, DesignTimeDPI);
+  W := FLargeImagesSize + 2*dist;
+  H := FLargeImagesSize + 2*dist;
+  {
   if Assigned(FImages) then begin
     W := FImages.Width + 2*dist;
     H := FImages.Height + 2*dist;
   end else begin
     W := ScaleX(32, DesignTimeDPI);
     H := ScaleY(32, DesignTimeDPI);
-  end;
+  end;}
 
   R.Top := CurPos;
   R.Bottom := CurPos + H;
@@ -625,7 +654,18 @@ begin
   if FShowButtons then begin
     DrawItemHighlight(Canvas, R, FActiveItem = AItem.Index);
     if Assigned(FImages) and (AItem.IconIndex >= 0) and (AItem.IconIndex < FImages.Count) then
+    begin
+     {$IFDEF LCL}{$IF LCL_FullVersion >= 1090000}
+      with TVpNavBarOpener(FNavBar) do begin
+        f := FCanvasScalefactor;
+        ppi := Font.PixelsPerInch;
+      end;
+      imgRes := FImages.ResolutionForPPI[FImages.Width, ppi, f];
+      imgRes.Draw(Canvas, R.Left + dist, R.Top + dist, AItem.IconIndex);
+     {$ELSE}
       FImages.Draw(Canvas, R.Left + dist, R.Top + dist, AItem.IconIndex);
+     {$ENDIF}{$ENDIF}
+    end;
   end;
 
   Result := true;
@@ -636,17 +676,26 @@ function TVpNavBarPainter.DrawSmallIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
   CurPos: Integer): Boolean;
 const
   DELTA = 8;
+  MARGIN = 2;
 var
   lOffset: Integer;
-  bmp: TBitmap;
   R: TRect;
   del: Integer;
+  m: Integer;
+ {$IFDEF LCL}{$IF LCL_FullVersion >= 1090000}
+  imgres: TScaledImageListResolution;
+  f: Double;
+  ppi: Integer;
+ {$ELSE}
+  bmp: TBitmap;
+ {$ENDIF}{$ENDIF}
 begin
   Result := false;
 
   {glyph is at the left}
   R.Top := CurPos;
   del := ScaleY(DELTA, DesignTimeDPI);
+  m := ScaleX(MARGIN, DesignTimeDPI);
   lOffset := abs(Canvas.Font.Height) div 2;
   if lOffset > del then
     R.Top := R.Top + lOffset - del;
@@ -660,6 +709,14 @@ begin
   if FShowButtons then begin
     DrawItemHighlight(Canvas, R, FActiveItem = AItem.Index);
     if Assigned(FImages) then begin
+     {$IFDEF LCL}{$IF LCL_FullVersion >= 1090000}
+      with TVpNavBarOpener(FNavBar) do begin
+        f := FCanvasScalefactor;
+        ppi := Font.PixelsPerInch;
+      end;
+      imgRes := FImages.ResolutionForPPI[FImages.Width div 2, ppi, f];
+      imgRes.Draw(Canvas, R.Left, R.Top, AItem.IconIndex);
+     {$ELSE}
       bmp := TBitmap.Create;
       try
         FImages.GetBitmap(AItem.IconIndex, bmp);
@@ -668,6 +725,7 @@ begin
       finally
         bmp.Free;
       end;
+      {$ENDIF}{$ENDIF}
     end;
   end;
 

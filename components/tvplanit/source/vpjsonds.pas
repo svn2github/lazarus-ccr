@@ -486,7 +486,11 @@ begin
   stream := TFileStream.Create(FFilename, fmOpenRead + fmShareDenyWrite);
   try
     Resources.ClearResources;
+    {$IF FPC_FullVersion >= 30000}
     p := TJSONParser.Create(stream, [joUTF8]);
+    {$ELSE}
+    p := TJSONParser.Create(stream, true);
+    {$ENDIF}
     try
       json := p.Parse as TJSONObject;
       resObjArray := json.Find('Resources', jtArray) as TJSONArray;
@@ -647,6 +651,9 @@ var
   task: TvpTask;
   i, j: Integer;
   stream: TStream;
+ {$IF FPC_FullVersion < 30000}
+  s: TJSONStringType;
+ {$ENDIF}
 begin
   if FFilename = '' then
     raise Exception.Create(RSNoFilenameSpecified);

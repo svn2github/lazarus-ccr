@@ -190,11 +190,13 @@ type
     FBackgroundMethod: TVpBackgroundMethod;
 //    FBorderStyle: TBorderStyle;
     FButtonHeight: Integer;
+    FCanvasScaleFactor: Double;
     FContainers: TVpContainerList;
     FDrawingStyle: TVpFolderDrawingStyle;
     FFolders: TVpCollection;
     FHotFolder: Integer;
     FImages: TImageList;
+    FImagesWidth: Integer;
     FItemFont: TFont;
     FItemSpacing: Integer;
     FPreviousFolder: Integer;
@@ -257,6 +259,7 @@ type
 //    procedure SetBorderStyle(const Value: TBorderStyle);
     procedure SetButtonHeight(Value: Integer);
     procedure SetImages(Value: TImageList);
+    procedure SetImagesWidth(const AValue: Integer);
     procedure SetItemFont(Value: TFont);
     procedure SetItemSpacing(Value: Integer);
     procedure SetSelectedItemFont(Value: TFont);
@@ -345,6 +348,7 @@ type
     property DrawingStyle: TVpFolderDrawingStyle read FDrawingStyle write SetDrawingStyle;
     property FolderCollection: TVpCollection read FFolders write FFolders;
     property Images: TImageList read FImages write SetImages;
+    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth;
     property ItemFont: TFont read FItemFont write SetItemFont;
     property ItemSpacing: Integer read FItemSpacing write SetItemSpacing stored IsStoredItemSpacing;
     property PlaySounds: Boolean read FPlaySounds write FPlaySounds;
@@ -420,6 +424,9 @@ type
     property DrawingStyle;
     property FolderCollection;
     property Images;
+    {$IFDEF LCL}{$IF LCL_FullVersion >= 1090000}
+    property ImagesWidth;
+    {$ENDIF}{$ENDIF}
     property ItemFont;
     property ItemSpacing;
     property PlaySounds;
@@ -1021,7 +1028,7 @@ begin
 
   FItemSpacing := DEFAULT_ITEMSPACING;
   {$IF VP_LCL_SCALING = 0}
-  FItemSpacing := ScaleY(FItemSpacing, DesignTimeDPI)}
+  FItemSpacing := ScaleY(FItemSpacing, DesignTimeDPI);
   {$ENDIF}
 
   FSelectedItemFont := TFont.Create;
@@ -2070,6 +2077,10 @@ procedure TVpCustomNavBar.Paint;
 var
   painter: TVpNavBarPainter;
 begin
+  {$IFDEF LCL}{$IF LCL_FullVersion >= 1090000}
+  FCanvasScaleFactor := GetCanvasScaleFactor;
+  {$IFEND}{$ENDIF}
+
   painter := TVpNavBarPainter.Create(Self);
   try
     painter.Paint;
@@ -2940,6 +2951,13 @@ begin
   end;
 end;
 {=====}
+
+procedure TVpCustomNavBar.SetImagesWidth(const AValue: Integer);
+begin
+  if AValue = FImagesWidth then exit;
+  FImagesWidth := AValue;
+  Invalidate;
+end;
 
 procedure TVpCustomNavBar.SetItemFont(Value: TFont);
 begin
