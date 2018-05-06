@@ -325,8 +325,17 @@ begin
 end;
 
 procedure TfrmNavBarEd.FormShow(Sender: TObject);
+var
+  delta: Integer;
+  h: Integer;
 begin
   PopulateImagesList;
+  delta := lbFolders.Left;
+  pnlFolders.Constraints.MinWidth := btnFolderDown.Left + btnFolderDown.Width + delta;
+  pnlItems.Constraints.MinWidth := btnItemDown.Left + btnItemDown.Width + lbImages.Width + btnUseImage.Width + delta;
+  Constraints.MinWidth := pnlFolders.Constraints.MinWidth + pnlItems.Constraints.MinWidth;
+  lbItemsMeasureItem(nil, 0, h);
+  Constraints.MinHeight := lbItems.Top + h + pnlItemBtns.Height + 3*delta;
   lbFolders.SetFocus;
 end;
 
@@ -622,6 +631,7 @@ begin
       btn.IconIndex
     );
   end;
+  dec(Rect.Right, Bar.Images.Width + 2*delta);
 
   // Draw text
   ts := lb.Canvas.TextStyle;

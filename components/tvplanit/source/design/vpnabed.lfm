@@ -149,11 +149,12 @@ object frmNavBarEd: TfrmNavBarEd
           AnchorSideLeft.Control = btnFolderUp
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = pnlFolderBtns
-          Left = 83
+          Left = 87
           Height = 25
           Hint = 'Move folder down'
           Top = 0
           Width = 25
+          BorderSpacing.Left = 4
           Glyph.Data = {
             DE000000424DDE0000000000000076000000280000000D0000000D0000000100
             0400000000006800000000000000000000001000000010000000000000000000
