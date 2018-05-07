@@ -15,7 +15,7 @@
     <Description Value="Page style components of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code)"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
-    <Files Count="4">
+    <Files Count="6">
       <Item1>
         <Filename Value="..\run\JvPageComps\JvNavigationPane.pas"/>
         <UnitName Value="JvNavigationPane"/>
@@ -32,6 +32,14 @@
         <Filename Value="..\run\JvPageComps\jvnotebookpagelist.pas"/>
         <UnitName Value="jvnotebookpagelist"/>
       </Item4>
+      <Item5>
+        <Filename Value="..\run\JvPageComps\JvTabBar.pas"/>
+        <UnitName Value="JvTabBar"/>
+      </Item5>
+      <Item6>
+        <Filename Value="..\run\JvPageComps\JvTabBarXPPainter.pas"/>
+        <UnitName Value="JvTabBarXPPainter"/>
+      </Item6>
     </Files>
     <RequiredPkgs Count="3">
       <Item1>

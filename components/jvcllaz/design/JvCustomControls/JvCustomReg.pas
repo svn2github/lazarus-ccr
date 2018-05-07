@@ -17,14 +17,14 @@ uses
   Classes, ImgList, Controls, LResources, PropEdits, GraphPropEdits, ComponentEditors,
   JvDsgnConsts,
   JvOutlookBar, JvOutlookBarEditors,
-  JvTabBar, JvTabBarXPPainter,
+//  JvTabBar, JvTabBarXPPainter,
   JvThumbImage, JvThumbnails, JvThumbViews,
   JvTimeLine, JvTMTimeLine, JvTimeLineEditor;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
-    TJvTabBar, TJvModernTabBarPainter, TJvTabBarXPPainter,
+//    TJvTabBar, TJvModernTabBarPainter, TJvTabBarXPPainter,    // moved to PageComps
     TJvOutlookBar,
     TJvThumbView, TJvThumbnail, TJvThumbImage,
     TJvTimeLine,

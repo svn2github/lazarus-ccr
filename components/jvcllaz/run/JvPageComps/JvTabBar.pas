@@ -33,7 +33,8 @@ interface
 uses
   LCLIntf, LCLType, LMessages, LCLVersion, Types,
   Graphics, Controls, Forms, ImgList, Menus, Buttons,
-  ExtCtrls, SysUtils, Classes, Contnrs, Themes;
+  ExtCtrls, SysUtils, Classes, Contnrs, Themes,
+  JvPageList;
 
 type
   TJvCustomTabBar = class;
@@ -46,6 +47,7 @@ type
   TJvGetModifiedEvent = procedure(Sender: TJvTabBarItem; var Modified: Boolean) of object;
   TJvGetEnabledEvent = procedure(Sender: TJvTabBarItem; var Enabled: Boolean) of object;
 
+  (*
   IPageList = interface
     ['{6BB90183-CFB1-4431-9CFD-E9A032E0C94C}']
     function CanChange(AIndex: Integer): Boolean;
@@ -57,6 +59,7 @@ type
     procedure MovePage(CurIndex, NewIndex: Integer);
     procedure PageCaptionChanged(Index: Integer; const NewCaption: string);
   end;
+  *)
 
   TJvTabBarItem = class(TCollectionItem)
   private

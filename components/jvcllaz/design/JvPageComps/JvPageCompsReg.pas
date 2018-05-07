@@ -18,6 +18,7 @@ uses
   PropEdits, ComponentEditors,
   JvDsgnConsts,
   JvNavigationPane, JvNavPaneEditors,
+  JvTabBar, JvTabBarXPPainter,
   JvPageList, JvNotebookPageList,
   JvPageListEditors,
   JvPageListTreeView;
@@ -31,6 +32,7 @@ begin
     TJvNavigationPane,
     TJvNavIconButton,
     TJvNavPanelButton, TJvNavPanelHeader, TJvNavPanelDivider,
+    TJvTabBar, TJvModernTabBarPainter, TJvTabBarXPPainter,
     TJvOutlookSplitter,
     TJvNavPaneStyleManager, TJvNavPaneToolPanel
   ]);
