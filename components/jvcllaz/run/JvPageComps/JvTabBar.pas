@@ -504,14 +504,14 @@ const
   WHEEL_DELTA = 120;
 
   // Pixels at 96 ppi:
-  LEFT_MARGIN = 4;
-  RIGHT_MARGIN = 6;
-  TEXT_MARGIN_LEft = 2;
-  TEXT_MARGIN_RIGHT = 4;
-  TOP_MARGIN = 4;
-  BOTTOM_MARGIN = 4;
-  CLOSE_BUTTON_SIZE = 12;
-  CROSS_MARGIN = 3;
+  LEFT_MARGIN = 8;        // Distance left edge to image or text
+  RIGHT_MARGIN = 8;       // Distance right edge to close button or text
+  TEXT_MARGIN_LEFT = 8;   // Distance image to text
+  TEXT_MARGIN_RIGHT = 8;  // Distance text to close btn
+  TOP_MARGIN = 4;         // Distance top edge to text/image/close btn (whichever is highest)
+  BOTTOM_MARGIN = 4;      // Distance bottom edge to text/image/close btn (whichever is lowest)
+  CLOSE_BUTTON_SIZE = 12; // size of the close button box
+  CROSS_MARGIN = 8;       // Margin of the "x" inside the close button
 
 
 function DrawButtonFace(ACanvas: TCanvas; const ARect: TRect; AFlat: Boolean;
