@@ -40,8 +40,9 @@ type
     procedure ShowBottomMargin;
     procedure ShowCalcCount;
     procedure ShowCalcMode;
-    procedure ShowCellAddress;
+    procedure ShowCellAddress(ForceRelativeAddress: Boolean = false);
     procedure ShowCellAddressRange(AFormat: TsSpreadsheetFormat);
+    procedure ShowCellAddress3D;
     procedure ShowClrtClient;
     procedure ShowCodePage;
     procedure ShowColInfo;
@@ -970,7 +971,7 @@ begin
 end;
 
 
-procedure TBIFFGrid.ShowCellAddress;
+procedure TBIFFGrid.ShowCellAddress(ForceRelativeAddress: Boolean = false);
 { Note: The bitmask assignment to relative column/row is reversed in relation
   to OpenOffice documentation in order to match with Excel files. }
 var
@@ -1031,6 +1032,54 @@ begin
     s := Format('%d ($%.4x)', [c, c]);
     ShowInRow(FCurrRow, FBufferIndex, numBytes, s, 'Column index');
   end;
+end;
+
+
+procedure TBIFFGrid.ShowCellAddress3D;
+var
+  numBytes: Word;
+  b: Byte;
+  w: Word;
+  i: Int16;
+  r,c: Integer;
+begin
+  if FFormat = sfExcel5 then begin
+    { Excel 5 }
+    numBytes := 2;
+    Move(FBuffer[FBufferIndex], i, numBytes);
+    ShowInRow(FCurrRow, FBufferIndex, numbytes, IntToStr(i),
+      '1-based index to EXTERNSHEET record (> 0: external ref, < 0: 3D reference)');
+
+    if i < 0 then begin
+      { 3D reference }
+      numbytes := 8;
+      ShowInRow(FCurrRow, FBufferIndex, numbytes, '', '(not used)', true);
+
+      numbytes := 2;
+      Move(FBuffer[FBufferIndex], w, numbytes);
+      ShowInRow(FCurrRow, FBufferIndex, numbytes, IntToStr(w),
+        '0-based index to first referenced sheet ($FFFF = deleted sheet)');
+
+      numbytes := 2;
+      Move(FBuffer[FBufferIndex], w, numbytes);
+      ShowInRow(FCurrRow, FBufferIndex, numbytes, IntToStr(w),
+        '0-based index to last referenced sheet ($FFFF = deleted sheet)');
+    end else
+    if i > 0 then begin
+      { external reference }
+      numbytes := 12;
+      ShowInRow(FCurrRow, FBufferIndex, numbytes, '', '(not used)', true);
+    end;
+  end
+  else
+  { Excel 8 }
+  if FFormat = sfExcel8 then begin
+    numbytes := 2;
+    Move(FBuffer[FBufferIndex], w, numbytes);
+    ShowInRow(FCurrRow, FBufferIndex, numbytes, IntToStr(w),
+      '0-based index to REF entry in EXTERNSHEET record');
+  end;
+  ShowCellAddress(true);
 end;
 
 
@@ -2987,6 +3036,18 @@ begin
                 'Encoded column index');
             end;
           end;
+
+      $3A, $5A, $7A:
+        begin
+          case token of
+            $3A: s := 'reference';
+            $5A: s := 'value';
+            $7A: s := 'array';
+          end;
+          ShowInRow(FCurrRow, FBufferIndex, numBytes, Format('$%.2x', [token]),
+            Format('Token tREF3D (Cell %s)', [s]));
+          ShowCellAddress3D;
+        end;
 
     else
           ShowInRow(FCurrRow, FBufferIndex, numBytes, Format('$%.2x', [token]),
