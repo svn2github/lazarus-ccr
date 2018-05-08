@@ -4526,7 +4526,7 @@ var
   C: TRxColumn;
   j, DataCol, L, R: integer;
   FIsMerged: Boolean;
-
+(*
 function CheckBoxHeight(const aState: TCheckboxState):integer;
 const
   arrtb:array[TCheckboxState] of TThemedButton = (tbCheckBoxUncheckedNormal, tbCheckBoxCheckedNormal, tbCheckBoxMixedNormal);
@@ -4551,7 +4551,7 @@ begin
       Result:=DefaultRowHeight;
   end;
 end;
-
+*)
 begin
   FIsMerged:=false;
 
@@ -4586,14 +4586,17 @@ begin
     else
     begin
       case ColumnEditorStyle(aCol, F) of
-        cbsCheckBoxColumn:begin
+        cbsCheckBoxColumn:
+(*        begin
           if C.Layout = tlTop then
             aRect.Bottom:=aRect.Top + CheckBoxHeight(cbChecked) + varCellPadding + 1
           else
           if C.Layout = tlBottom then
             aRect.Top:=aRect.Bottom - CheckBoxHeight(cbChecked) - varCellPadding - 1;
           DrawCheckBoxBitmaps(aCol, aRect, F);
-        end
+        end*)
+        DrawCheckBoxBitmaps(aCol, aRect, F);
+        //DrawGridCheckboxBitmaps(aCol, aRect, F);
       else
         S:=GetFieldDisplayText(F, C);
         if ((rdgWordWrap in FOptionsRx) and Assigned(C) and (C.WordWrap)) or (FIsMerged) then

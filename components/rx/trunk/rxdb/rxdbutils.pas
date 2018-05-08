@@ -128,7 +128,7 @@ procedure CloneRecord(DataSet: TDataSet; IgnoreFields: array of const);
 function FieldValueToStrings(const DataSet: TDataSet; const FieldName: string; List:TStrings = nil):TStrings;
 
 procedure AddSQLExpressionAnd(var MacroStr:string; const MacroWhere:string); overload;
-procedure AddSQLExpressionAnd(var MacroStr:string; const MacroWhere:string; Params:array of const); overload; inline;
+procedure AddSQLExpressionAnd(var MacroStr:string; const MacroWhere:string; Params:array of const); overload;
 procedure AddSQLExpressionOr(var MacroStr:string; const MacroWhere:string);
 
 { SQL expressions }

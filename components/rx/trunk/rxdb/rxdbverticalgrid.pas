@@ -1378,6 +1378,7 @@ begin
   end
   else
   begin
+    {$IF lcl_fullversion < 01090000}
     ChkBitmap := GetImageForCheckBox(aCol, Row, AState);
     if ChkBitmap<>nil then
     begin
@@ -1389,6 +1390,9 @@ begin
       YPos := Trunc((aRect.Top+aRect.Bottom-ChkBitmap.Height)/2);
       Canvas.Draw(XPos, YPos, ChkBitmap);
     end;
+    {$ELSE}
+    DrawGridCheckboxBitmaps(aCol, Row, aRect, aState);
+    {$ENDIF}
   end;
 end;
 
