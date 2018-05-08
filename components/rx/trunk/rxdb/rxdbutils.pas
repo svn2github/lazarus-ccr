@@ -43,7 +43,7 @@ const
 
   NumericDataTypes = IntegerDataTypes + [ftFloat, ftCurrency, ftBCD];
 
-  DataTimeTypes = [ftTime, ftDateTime, ftTimeStamp];
+  DataTimeTypes = [ftTime, ftDateTime, ftTimeStamp, ftDate];
 
   StringTypes = [ftString, {ftMemo,} ftFixedChar, ftWideString, ftFixedWideChar, ftWideMemo];
 

@@ -1188,9 +1188,9 @@ procedure RegisterRxDBGridSortEngine(RxDBGridSortEngineClass: TRxDBGridSortEngin
 
 implementation
 
-uses Math, rxdconst, rxstrutils, rxutils, strutils, rxdbgrid_findunit, Themes,
+uses Math, rxdateutil, rxdconst, rxstrutils, rxutils, strutils, rxdbgrid_findunit, Themes,
   rxdbgrid_columsunit, RxDBGrid_PopUpFilterUnit, rxlookup, rxtooledit, LCLProc,
-  Clipbrd, rxfilterby, rxsortby, variants, LazUTF8;
+  Clipbrd, rxfilterby, rxsortby, variants, LazUTF8, DateUtils;
 
 {$R rxdbgrid.res}
 
@@ -4164,21 +4164,40 @@ begin
   end
 end;
 
+function CompareDates(List: TStringList; Index1, Index: Integer): Integer;
+var
+  d1, d2: TDateTime;
+begin
+  TryStrToDateTime(List[Index1], d1);
+  TryStrToDateTime(List[Index], d2);
+  Result := -CompareDate(d1, d2);
+end;
+(*
+function CompareIntegers(List: TStringList; Index1, Index: Integer): Integer;
+var
+  d1, d2: Extended;
+begin
+  TryStrToFloat(List[Index1], d1);
+  TryStrToFloat(List[Index], d2);
+  Result := -CompareValue(d1, d2);
+end;
+*)
+
 procedure TRxDBGrid.FillFilterData;
 var
   i: Integer;
   C: TRxColumn;
   FBS, FAS: TDataSetNotifyEvent;
+
 begin
   for i := 0 to Columns.Count - 1 do
   begin
     C := TRxColumn(Columns[i]);
+    C.Filter.ValueList.SortStyle := sslAuto;
     C.Filter.ValueList.Clear;
     C.Filter.CurrentValues.Clear;
     C.Filter.ManulEditValue:='';
     C.Filter.ItemIndex := -1;
-    C.Filter.ValueList.Add(C.Filter.EmptyValue);
-    C.Filter.ValueList.Add(C.Filter.AllValue);
   end;
 
   if DatalinkActive then
@@ -4205,6 +4224,28 @@ begin
     DataSource.DataSet.AfterScroll:=FAS;
     DataSource.DataSet.EnableControls;
   end;
+
+  for i := 0 to Columns.Count - 1 do
+  begin
+    C := TRxColumn(Columns[i]);
+
+    if Assigned(C.Field) and (C.Field.DataType in DataTimeTypes) then
+    begin
+      C.Filter.ValueList.SortStyle := sslUser;
+      C.Filter.ValueList.CustomSort(@CompareDates);
+    end
+{    else
+    if Assigned(C.Field) and (C.Field.DataType in NumericDataTypes) then
+    begin
+      C.Filter.ValueList.SortStyle := sslUser;
+      C.Filter.ValueList.CustomSort(@CompareIntegers);
+    end};
+
+    C.Filter.ValueList.SortStyle := sslNone;
+    C.Filter.ValueList.Insert(0, C.Filter.AllValue);
+    C.Filter.ValueList.Insert(0, C.Filter.EmptyValue);
+  end;
+
 end;
 
 procedure TRxDBGrid.DefaultDrawCellA(aCol, aRow: integer; aRect: TRect;

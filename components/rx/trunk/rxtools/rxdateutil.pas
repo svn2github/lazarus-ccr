@@ -99,7 +99,7 @@ const
 
 implementation
 
-uses SysUtils, RXStrUtils, rxdconst{, DBConsts }{$IFDEF WIN32}, Windows{$ENDIF};
+uses DateUtils, SysUtils, RXStrUtils, rxdconst{, DBConsts }{$IFDEF WIN32}, Windows{$ENDIF};
 
 
 function NvlDate(DateValue, DefaultValue: TDateTime): TDateTime;
@@ -436,7 +436,7 @@ begin
   DateOrder := GetDateOrder(DateFormat);
   if DefaultFormatSettings.ShortDateFormat[1] = 'g' then { skip over prefix text }
     ScanToNumber(S, Pos);
-  if not (ScanNumber(S, MaxInt, Pos, N1) and ScanChar(S, Pos, DateSeparator) and
+  if not (ScanNumber(S, MaxInt, Pos, N1) and ScanChar(S, Pos, DefaultFormatSettings.DateSeparator) and
     ScanNumber(S, MaxInt, Pos, N2)) then Exit;
   if ScanChar(S, Pos, DateSeparator) then begin
     if not ScanNumber(S, MaxInt, Pos, N3) then Exit;
@@ -641,6 +641,7 @@ begin
   Result := Pos('YYYY', AnsiUpperCase(DefaultFormatSettings.ShortDateFormat)) > 0;
 end;
 {$ENDIF}
+
 
 {$IFDEF USE_FOUR_DIGIT_YEAR}
 initialization
