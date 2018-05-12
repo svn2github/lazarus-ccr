@@ -82,6 +82,8 @@ begin
     ZConnection1.Database := AppendPathDelim(Application.Location) + DBFILENAME;
     ZConnection1.Protocol := 'sqlite-3';
 
+//    ZConnection1.Connect;    // activate this to test issue #33717
+
     VpZeosDatastore1.Connection := ZConnection1;
     VpZeosDatastore1.AutoCreate := true;
     VpZeosDatastore1.Connected := true;

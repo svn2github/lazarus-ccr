@@ -7,7 +7,7 @@ object Form1: TForm1
   ClientHeight = 686
   ClientWidth = 980
   OnCreate = FormCreate
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.9.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 33
@@ -160,7 +160,6 @@ object Form1: TForm1
           Align = alBottom
           TabStop = True
           TabOrder = 1
-          KBNavigation = True
           DateLabelFormat = 'mmmm yyyy'
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Font.Name = 'Tahoma'
@@ -169,6 +168,7 @@ object Form1: TForm1
           DrawingStyle = dsFlat
           EventDayStyle = []
           HeadAttributes.Color = clBtnFace
+          KBNavigation = True
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
@@ -319,7 +319,7 @@ object Form1: TForm1
     top = 264
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.05'
+    Version = 'v1.10'
     DataStore = VpZeosDatastore1
     Options = []
     Placement.Position = mpCenter

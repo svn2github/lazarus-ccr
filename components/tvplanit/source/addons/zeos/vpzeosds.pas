@@ -544,11 +544,21 @@ begin
     exit;
 
   // To do: clear planit lists...
+  if (AValue <> nil) then begin
+    wasConnected := AValue.Connected;
+    AValue.Connected := false;
+  end else
+    wasConnected := false;
+  if FConnection <> nil then
+    Connected := false;
+
+  {
   if FConnection <> nil then begin
     wasConnected := FConnection.Connected;
     Connected := false;
   end else
     wasConnected := false;
+    }
   FConnection := AValue;
   FContactsTable.Connection := FConnection;
   FEventsTable.Connection := FConnection;
