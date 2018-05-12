@@ -754,6 +754,7 @@ function HTMLTextWidth(Canvas: TCanvas; Rect: TRect;
   const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
 function HTMLTextHeight(Canvas: TCanvas; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
 function HTMLPrepareText(const Text: string): string;
+function HTMLStringToColor(AText: String): TColor;
 
 (*************
 
@@ -7072,6 +7073,26 @@ begin
   Result := StringReplace(Result, cHR, cHR + sLineBreak, [rfReplaceAll, rfIgnoreCase]); // fixed <HR><BR>
 end;
 
+function HTMLStringToColor(AText: String): TColor;
+type
+  TRGBA = packed record
+    R, G, B, A: byte;
+  end;
+var
+  i: Integer;
+  c: Int32;
+begin
+  if AText[1] = '#' then AText[1] := '$';
+  if TryStrToInt(AText, c) then begin
+    TRgba(Result).R := TRgba(c).B;
+    TRgba(Result).G := TRgba(c).G;
+    TRgba(Result).B := TRgba(c).R;
+    TRgba(Result).A := 0;
+  end else begin
+    Result := StringToColor('cl'+AText);
+  end;
+end;
+
 function HTMLBeforeTag(var Str: string; DeleteToTag: Boolean = False): string;
 begin
   if Pos(cTagBegin, Str) > 0 then
@@ -7214,11 +7235,13 @@ var
     Width, Height: Integer;
     R: TRect;
     OriginalFontSize: Integer;
+    lineHeight: Integer;
   begin
     R := Rect;
     Inc(R.Left, CurLeft);
     if Assigned(Canvas) then
     begin
+      lineHeight := Canvas.TextHeight('Tg');
       OriginalFontSize := Canvas.Font.Size;
       try
         if ScriptPosition <> spNormal then
@@ -7228,7 +7251,7 @@ var
         Height := CanvasMaxTextHeight(Canvas);
 
         if ScriptPosition = spSubscript then
-          R.Top := R.Bottom - Height - 1;
+          R.Top := R.Top + lineHeight - Height - 1;
 
         if IsLink and not MouseOnLink then
           if (MouseY >= R.Top) and (MouseY <= R.Top + Height) and
@@ -7276,6 +7299,10 @@ begin
 
   if Canvas <> nil then
   begin
+    if Lowercase(Canvas.Font.Name) = 'default' then
+      Canvas.Font.Name := Screen.SystemFont.Name;
+    if Canvas.Font.Size = 0 then
+      Canvas.Font.Size := Screen.SystemFont.Size;
     OldFontStyles := Canvas.Font.Style;
     OldFontColor  := Canvas.Font.Color;
     OldBrushColor := Canvas.Brush.Color;
@@ -7440,20 +7467,16 @@ begin
                   if Pos(cCOLOR, TagPrp) > 0 then
                   begin
                     Prp := ExtractPropertyValue(TagPrp, cCOLOR);
-                    if Prp[1] = '#' then
-                      Prp[1] := '$';
-                    Canvas.Font.Color := StringToColor(Prp);
+                    Canvas.Font.Color := HTMLStringToColor(Prp);
                   end;
                   if Pos(cBGCOLOR, TagPrp) > 0 then
                   begin
                     Prp := ExtractPropertyValue(TagPrp, cBGCOLOR);
-                    if Prp[1] = '#' then
-                      Prp[1] := '$';
                     if UpperCase(Prp) = 'CLNONE' then
                       Trans := True
                     else
                     begin
-                      Canvas.Brush.Color := StringToColor(Prp);
+                      Canvas.Brush.Color := HTMLStringToColor(Prp);
                       Trans := False;
                     end;
                   end;
