@@ -64,6 +64,10 @@ msgstr "Закрити всі вікна, за виключенням цього
 msgid "Close all windows"
 msgstr "Закрити всі вікна"
 
+#: rxconst.sclosemessagehint
+msgid "Close message"
+msgstr ""
+
 #: rxconst.sclosevaliderror
 #, fuzzy
 #| msgid "Error. Expected vailes..."

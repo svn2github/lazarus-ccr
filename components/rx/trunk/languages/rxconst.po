@@ -53,6 +53,10 @@ msgstr ""
 msgid "Close all windows"
 msgstr ""
 
+#: rxconst.sclosemessagehint
+msgid "Close message"
+msgstr ""
+
 #: rxconst.sclosevaliderror
 msgid "Error. Expected values..."
 msgstr ""

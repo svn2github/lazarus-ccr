@@ -36,7 +36,7 @@ unit RxPopupNotifier;
 interface
 
 uses
-  Classes, SysUtils, ExtCtrls, Forms, Graphics, Controls, StdCtrls, Buttons;
+  Classes, SysUtils, ExtCtrls, Forms, Graphics, Controls, StdCtrls, Buttons, LCLType;
 
 type
   TRxPopupNotifierItem = class;
@@ -50,40 +50,70 @@ type
 
   TRxNotifierForm = class(TCustomForm)
   private
-    //FCloseButton:TSpeedButton;
-    FCloseButton:TButton;
+    FCloseButton:TSpeedButton;
     FCaptionLabel:TLabel;
     FMessageLabel:TLabel;
     FTimerLabel:TLabel;
     FOwnerItem:TRxPopupNotifierItem;
+    FMessageIcon:TImage;
     procedure CreateCloseButton;
     procedure CreateCaption(ACaption:string);
     procedure CreateMessage(AMessage:string);
     procedure CreateTimerLabel;
     procedure ButtonCloseClick(Sender: TObject);
+    procedure DoUpdateControls;
   protected
-    //procedure DoShowWindow; override;
   public
     constructor CreateNotifierForm(AOwnerItem:TRxPopupNotifierItem);
   end;
+
+  { TCloseButtonItem }
+
+  TCloseButtonItem = class(TPersistent)
+  private
+    FOwner: TRxPopupNotifierItem;
+    FFlat: Boolean;
+    FHint: TTranslateString;
+    FVisible: boolean;
+    procedure SetFlat(AValue: Boolean);
+    procedure SetHint(AValue: TTranslateString);
+    procedure SetVisible(AValue: boolean);
+  protected
+    procedure AssignTo(Dest: TPersistent); override;
+  public
+    constructor Create(AOwner:TRxPopupNotifierItem);
+  published
+    property Hint:TTranslateString read FHint write SetHint;
+    property Flat:Boolean read FFlat write SetFlat;
+    property Visible:boolean read FVisible write SetVisible default true;
+  end;
+
 
   { TRxPopupNotifierItem }
 
   TRxPopupNotifierItem = class(TCollectionItem)
   private
     FActive: boolean;
+    FAlphaBlend: boolean;
+    FAlphaBlendValue: Byte;
     FAutoClose: boolean;
     FCaption: string;
+    FCloseButton: TCloseButtonItem;
     FColor: TColor;
     FMessage: string;
     FNotifyForm:TRxNotifierForm;
-    FShowCloseButton: boolean;
     FShowCloseTimer: boolean;
     FCloseTime:TDateTime;
     FState: TRxPopupNotifierState;
+    function GetShowCloseButton: boolean;
     procedure OnNotifyFormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure SetActive(AValue: boolean);
+    procedure SetAlphaBlend(AValue: boolean);
+    procedure SetAlphaBlendValue(AValue: Byte);
+    procedure SetCloseButton(AValue: TCloseButtonItem);
     procedure SetColor(AValue: TColor);
+    procedure SetShowCloseButton(AValue: boolean);
+    procedure SetShowCloseTimer(AValue: boolean);
     procedure UpdateCloseLabel;
     procedure CreateNotifierForm;
     procedure UpdateFormSizes(var ATop:integer);
@@ -93,15 +123,19 @@ type
     procedure AssignTo(Dest: TPersistent); override;
   public
     constructor Create(ACollection: TCollection); override;
+    destructor Destroy; override;
     property State:TRxPopupNotifierState read FState;
   published
+    property AlphaBlend:boolean read FAlphaBlend write SetAlphaBlend default false;
+    property AlphaBlendValue:Byte read FAlphaBlendValue write SetAlphaBlendValue default 255;
     property Active:boolean read FActive write SetActive;
     property Color:TColor read FColor write SetColor default clYellow;
     property AutoClose:boolean read FAutoClose write FAutoClose default true;
-    property ShowCloseTimer:boolean read FShowCloseTimer write FShowCloseTimer default true;
-    property ShowCloseButton:boolean read FShowCloseButton write FShowCloseButton default true;
+    property ShowCloseTimer:boolean read FShowCloseTimer write SetShowCloseTimer default true;
+    property ShowCloseButton:boolean read GetShowCloseButton write SetShowCloseButton default true;
     property Caption:string read FCaption write FCaption;
     property Message:string read FMessage write FMessage;
+    property CloseButton:TCloseButtonItem read FCloseButton write SetCloseButton;
   end;
 
   { TNotifierCollection }
@@ -155,39 +189,99 @@ type
   end;
 
 implementation
-uses rxconst, LCLType;
+uses rxconst, rxlclutils;
+
+{ TCloseButtonItem }
+
+procedure TCloseButtonItem.SetFlat(AValue: Boolean);
+begin
+  if FFlat=AValue then Exit;
+  FFlat:=AValue;
+  FOwner.Changed(false);
+end;
+
+procedure TCloseButtonItem.SetHint(AValue: TTranslateString);
+begin
+  if FHint=AValue then Exit;
+  FHint:=AValue;
+  FOwner.Changed(false);
+end;
+
+procedure TCloseButtonItem.SetVisible(AValue: boolean);
+begin
+  if FVisible=AValue then Exit;
+  FVisible:=AValue;
+  FOwner.Changed(false);
+end;
+
+procedure TCloseButtonItem.AssignTo(Dest: TPersistent);
+begin
+  if Dest is TCloseButtonItem then
+  begin
+    TCloseButtonItem(Dest).FFlat:=FFlat;
+    TCloseButtonItem(Dest).FHint:=FHint;
+    TCloseButtonItem(Dest).FVisible:=FVisible;
+  end
+  else
+    inherited AssignTo(Dest);
+end;
+
+constructor TCloseButtonItem.Create(AOwner: TRxPopupNotifierItem);
+begin
+  inherited Create;
+  FOwner:=AOwner;
+  FFlat:=true;
+  FHint:=sCloseMessageHint;
+  FVisible:=true;
+end;
 
 { TRxNotifierForm }
 
 procedure TRxNotifierForm.CreateCloseButton;
+var
+  D: TBitmap;
 begin
-  begin
-    //FCloseButton:=TSpeedButton.Create(Self);
-    FCloseButton:=TButton.Create(Self);
-    FCloseButton.Parent:=Self;
-    FCloseButton.AutoSize:=true;
-    FCloseButton.Caption:=' X '; //sClose;
-    FCloseButton.Top:=6;
-    //FCloseButton.Flat:=true;
-    //FCloseButton.Left:=Width - Canvas.TextWidth(FCloseButton.Caption) - 6;
-    FCloseButton.Left:=Width - FCloseButton.Width - 6;
-{
-    FCloseButton.BorderSpacing.Around:=6;
-    FCloseButton.AnchorSideLeft.Control:=nil;
-    FCloseButton.AnchorSideRight.Control:=Self;
-    FCloseButton.AnchorSideRight.Side:=asrRight;
-    FCloseButton.AnchorSideTop.Control:=Self;}
+  FCloseButton:=TSpeedButton.Create(Self);
+  FCloseButton.Parent:=Self;
+  FCloseButton.BorderSpacing.Around:=6;
 
-    FCloseButton.OnClick:=@ButtonCloseClick;
-  end;
+  FCloseButton.Width:=26;
+  FCloseButton.Height:=26;
+  D:=LoadLazResBitmapImage('RxMDICloseIcon');
+  FCloseButton.Glyph:=D;
+  D.Free;
+  FCloseButton.Hint:=FOwnerItem.CloseButton.Hint;
+  FCloseButton.Flat:=FOwnerItem.CloseButton.Flat;
+
+  FCloseButton.Anchors:=[akTop, akRight];
+  FCloseButton.AnchorSideRight.Control:=Self;
+  FCloseButton.AnchorSideRight.Side:=asrRight;
+  FCloseButton.AnchorSideTop.Control:=Self;
+
+  FCloseButton.OnClick:=@ButtonCloseClick;
 end;
 
 procedure TRxNotifierForm.CreateCaption(ACaption: string);
 begin
   FCaptionLabel:=TLabel.Create(Self);
   FCaptionLabel.Parent:=Self;
+  FCaptionLabel.AutoSize:=true;
+
   FCaptionLabel.BorderSpacing.Around:=6;
-  FCaptionLabel.Align:=alTop;
+  FCaptionLabel.Anchors:=[akTop, akLeft, akRight];
+  FCaptionLabel.AnchorSideTop.Control:=Self;
+  FCaptionLabel.AnchorSideLeft.Control:=Self;
+  if Assigned(FCloseButton) then
+  begin
+    FCaptionLabel.AnchorSideRight.Control:=FCloseButton;
+    FCaptionLabel.AnchorSideRight.Side:=asrLeft;
+  end
+  else
+  begin
+    FCaptionLabel.AnchorSideRight.Control:=Self;
+    FCaptionLabel.AnchorSideRight.Side:=asrRight;
+  end;
+
   FCaptionLabel.Caption:=ACaption;
   FCaptionLabel.Font.Style:=FCaptionLabel.Font.Style + [fsBold];
   FCaptionLabel.OnClick:=@FOwnerItem.NotifierClick;
@@ -199,18 +293,51 @@ begin
   FMessageLabel.Parent:=Self;
   FMessageLabel.WordWrap:=true;
   FMessageLabel.BorderSpacing.Around:=6;
-  FMessageLabel.Align:=alClient;
+
+  FMessageLabel.Anchors:=[akTop, akLeft, akRight, akBottom];
+
+  FMessageLabel.AnchorSideTop.Side:=asrBottom;
+
+  FMessageLabel.AnchorSideLeft.Control:=Self;
+  FMessageLabel.AnchorSideRight.Control:=Self;
+  FMessageLabel.AnchorSideRight.Side:=asrRight;
+  FMessageLabel.AnchorSideBottom.Control:=Self;
+  FMessageLabel.AnchorSideBottom.Side:=asrBottom;
+
+
   FMessageLabel.Caption:=AMessage;
   FMessageLabel.OnClick:=@FOwnerItem.NotifierClick;
+
+  DoUpdateControls;
 end;
 
 procedure TRxNotifierForm.CreateTimerLabel;
 begin
   FTimerLabel:=TLabel.Create(Self);
   FTimerLabel.Parent:=Self;
-  FTimerLabel.Top:=FCaptionLabel.Height+1;
-  FTimerLabel.Align:=alTop;
+  FTimerLabel.AutoSize:=true;
+
   FTimerLabel.BorderSpacing.Around:=6;
+  FTimerLabel.Anchors:=[akTop, akLeft, akRight];
+
+  FTimerLabel.AnchorSideTop.Control:=FCaptionLabel;
+  FTimerLabel.AnchorSideTop.Side:=asrBottom;
+
+  FTimerLabel.AnchorSideLeft.Control:=Self;
+  FTimerLabel.AnchorSideLeft.Side:=asrLeft;
+
+  if Assigned(FCloseButton) then
+  begin
+    FTimerLabel.AnchorSideRight.Control:=FCloseButton;
+    FTimerLabel.AnchorSideRight.Side:=asrLeft;
+  end
+  else
+  begin
+    FTimerLabel.AnchorSideRight.Control:=Self;
+    FTimerLabel.AnchorSideRight.Side:=asrRight;
+  end;
+
+  FTimerLabel.Visible:=FOwnerItem.ShowCloseTimer;
   FTimerLabel.Font.Style:=FTimerLabel.Font.Style + [fsItalic];
   FTimerLabel.Caption:=' ';
   FTimerLabel.OnClick:=@FOwnerItem.NotifierClick;
@@ -220,25 +347,21 @@ procedure TRxNotifierForm.ButtonCloseClick(Sender: TObject);
 begin
   Close;
 end;
-(*
-procedure TRxNotifierForm.DoShowWindow;
+
+procedure TRxNotifierForm.DoUpdateControls;
 begin
-  if (ActiveControl = nil) and (not (csDesigning in ComponentState)) and (Parent=nil) then
-  begin
-    // automatically choose a control to focus
-    {$IFDEF VerboseFocus}
-    DebugLn('THintWindow.WMShowWindow ',DbgSName(Self),' Set ActiveControl := ',DbgSName(FindDefaultForActiveControl));
-    {$ENDIF}
-    ActiveControl := FindNextControl(nil, True, True, False); //FindDefaultForActiveControl;
-  end;
+  if FTimerLabel.Visible then
+    FMessageLabel.AnchorSideTop.Control:=FTimerLabel
+  else
+    FMessageLabel.AnchorSideTop.Control:=FCaptionLabel;
 end;
-*)
+
 constructor TRxNotifierForm.CreateNotifierForm(AOwnerItem: TRxPopupNotifierItem
   );
 begin
   inherited CreateNew(Application);
   FOwnerItem:=AOwnerItem;
-  //fCompStyle := csHintWindow;
+  ShowHint:=true;
 end;
 
 { TNotifierCollection }
@@ -281,6 +404,11 @@ begin
   FState:=rpsInactive;
 end;
 
+function TRxPopupNotifierItem.GetShowCloseButton: boolean;
+begin
+  Result:=FCloseButton.Visible;
+end;
+
 procedure TRxPopupNotifierItem.SetActive(AValue: boolean);
 begin
   if FActive=AValue then Exit;
@@ -301,6 +429,27 @@ begin
   Changed(false);
 end;
 
+procedure TRxPopupNotifierItem.SetAlphaBlend(AValue: boolean);
+begin
+  if FAlphaBlend=AValue then Exit;
+  FAlphaBlend:=AValue;
+  if Assigned(FNotifyForm) then
+    FNotifyForm.AlphaBlend:=FAlphaBlend;
+end;
+
+procedure TRxPopupNotifierItem.SetAlphaBlendValue(AValue: Byte);
+begin
+  if FAlphaBlendValue=AValue then Exit;
+  FAlphaBlendValue:=AValue;
+  if Assigned(FNotifyForm) then
+    FNotifyForm.AlphaBlendValue:=FAlphaBlendValue;
+end;
+
+procedure TRxPopupNotifierItem.SetCloseButton(AValue: TCloseButtonItem);
+begin
+  FCloseButton.Assign(AValue);
+end;
+
 procedure TRxPopupNotifierItem.SetColor(AValue: TColor);
 begin
   if FColor=AValue then Exit;
@@ -309,19 +458,35 @@ begin
     FNotifyForm.Color:=FColor;
 end;
 
+procedure TRxPopupNotifierItem.SetShowCloseButton(AValue: boolean);
+begin
+  FCloseButton.Visible:=AValue;
+end;
+
+procedure TRxPopupNotifierItem.SetShowCloseTimer(AValue: boolean);
+begin
+  if FShowCloseTimer=AValue then Exit;
+  FShowCloseTimer:=AValue;
+  if Assigned(FNotifyForm) then
+  begin
+    FNotifyForm.FTimerLabel.Visible:=AValue;
+    FNotifyForm.DoUpdateControls;
+  end;
+end;
+
 procedure TRxPopupNotifierItem.UpdateCloseLabel;
 var
-  D, D1: TDateTime;
+  D: TDateTime;
   N: Int64;
 begin
-  if Assigned(FNotifyForm) and FShowCloseTimer then
+  if Assigned(FNotifyForm) and FAutoClose then
   begin
     D:=Now;
     if FCloseTime < D then
       FState:=rpsMinimized
     else
+    if FShowCloseTimer then
     begin
-//      D1:=;
       N:=Trunc((FCloseTime - D) * SecsPerDay);
       FNotifyForm.FTimerLabel.Caption:=Format( sCloseAfterSec, [N]);
     end;
@@ -368,13 +533,14 @@ begin
   FNotifyForm.FormStyle:=fsStayOnTop;
   FNotifyForm.ShowInTaskBar:=stNever;
   FNotifyForm.Color:=FColor;
+  FNotifyForm.AlphaBlend:=FAlphaBlend;
+  FNotifyForm.AlphaBlendValue:=FAlphaBlendValue;
 
-  if FShowCloseButton then
+  if FCloseButton.Visible then
     FNotifyForm.CreateCloseButton;
 
   FNotifyForm.CreateCaption(FCaption);
-  if FShowCloseTimer then
-    FNotifyForm.CreateTimerLabel;
+  FNotifyForm.CreateTimerLabel;
   FNotifyForm.CreateMessage(FMessage);
 
   FNotifyForm.OnClose:=@OnNotifyFormClose;
@@ -465,7 +631,7 @@ begin
     TRxPopupNotifierItem(Dest).FShowCloseTimer:=FShowCloseTimer;
     TRxPopupNotifierItem(Dest).FCaption:=FCaption;
     TRxPopupNotifierItem(Dest).FMessage:=FMessage;
-    TRxPopupNotifierItem(Dest).FShowCloseButton:=FShowCloseButton;
+    TRxPopupNotifierItem(Dest).CloseButton:=CloseButton;
   end
   else
   inherited AssignTo(Dest);
@@ -474,9 +640,18 @@ end;
 constructor TRxPopupNotifierItem.Create(ACollection: TCollection);
 begin
   inherited Create(ACollection);
+  FCloseButton:=TCloseButtonItem.Create(Self);
   FColor:=TRxPopupNotifier(ACollection.Owner).FDefaultColor;
-  FShowCloseButton:=true;
   FShowCloseTimer:=true;
+  FAutoClose:=true;
+  FAlphaBlendValue:=255;
+  FAlphaBlend:=false;
+end;
+
+destructor TRxPopupNotifierItem.Destroy;
+begin
+  FreeAndNil(FCloseButton);
+  inherited Destroy;
 end;
 
 { TRxPopupNotifier }
@@ -534,7 +709,7 @@ begin
   for i:=FItems.Count - 1 downto 0 do
   begin
     F:=FItems.Items[i] as TRxPopupNotifierItem;
-    if F.Active and (F.State = rpsShowing) and F.ShowCloseTimer then
+    if F.Active and (F.State = rpsShowing) and F.AutoClose then
       F.UpdateCloseLabel;
   end;
 end;

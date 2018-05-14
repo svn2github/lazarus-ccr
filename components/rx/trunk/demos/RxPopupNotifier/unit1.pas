@@ -6,21 +6,25 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  PopupNotifier, ExtCtrls, ColorBox, MRUList, rxPopupNotifier, rxtooledit, DB;
+  ExtCtrls, ColorBox, ComCtrls, Buttons, rxPopupNotifier;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
+    BitBtn1: TBitBtn;
     Button1: TButton;
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
+    CheckBox1: TCheckBox;
     ColorBox1: TColorBox;
     Label1: TLabel;
     RadioGroup1: TRadioGroup;
     RxPopupNotifier1: TRxPopupNotifier;
+    SpeedButton1: TSpeedButton;
+    TrackBar1: TTrackBar;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -71,7 +75,14 @@ var
 begin
   Inc(FCurID);
   R1:=RxPopupNotifier1.AddNotifyItem('Warning', 'Error message № ' + IntToStr(FCurID));
-  R1.ShowCloseTimer:=true;
+
+  if TrackBar1.Position < 255 then
+  begin
+    R1.AlphaBlend:=true;
+    R1.AlphaBlendValue:=TrackBar1.Position;
+  end;
+
+  R1.ShowCloseTimer:=CheckBox1.Checked;
   R1.Color:=ColorBox1.Selected;
 end;
 
@@ -89,6 +100,7 @@ end;
 procedure TForm1.RadioGroup1Click(Sender: TObject);
 begin
   RxPopupNotifier1.MessageCorner:=TRxPopupNotifierCorner(RadioGroup1.ItemIndex);
+//  Hint:=;
 end;
 
 procedure TForm1.RxPopupNotifier1NotifiClick(Sender: TRxPopupNotifier;

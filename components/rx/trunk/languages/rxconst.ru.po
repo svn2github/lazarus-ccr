@@ -53,6 +53,10 @@ msgstr "Закрыть все окна, за исключением этого"
 msgid "Close all windows"
 msgstr "Закрыть все окна"
 
+#: rxconst.sclosemessagehint
+msgid "Close message"
+msgstr ""
+
 #: rxconst.sclosevaliderror
 msgid "Error. Expected values..."
 msgstr "Ошибка. Ожидается значение..."

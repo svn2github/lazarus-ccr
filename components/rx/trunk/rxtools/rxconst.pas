@@ -132,6 +132,8 @@ resourcestring
   { TRxNotifierForm }
   sClose                = 'Close';
   sCloseAfterSec        = 'Close after %d sec';
+  sCloseMessageHint    = 'Close message';
+
 implementation
 
 end.
