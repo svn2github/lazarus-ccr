@@ -29,6 +29,8 @@ type
     procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure SetConnected(const AValue: Boolean); override;
+    procedure SetTableConnections(AConnection: TZConnection);
+    function TablesExist: boolean;
 
   protected
     // Fix old tables
@@ -61,13 +63,14 @@ implementation
 
 uses
   LazFileUtils, ZAbstractDataset,
-  VpConst;
+  VpConst, VpException;
 
 { TVpZeosDatastore }
 
 constructor TVpZeosDatastore.Create(AOwner: TComponent);
 begin
   inherited;
+  FAutoCreate := false;
 
   FContactsTable := TZTable.Create(self);
   FContactsTable.TableName := 'Contacts';
@@ -103,11 +106,23 @@ begin
 end;
 
 procedure TVpZeosDatastore.CreateAllTables;
+var
+  wasConnected: Boolean;
 begin
-  if not FContactsTable.Exists then CreateTable(ContactsTableName);
-  if not FEventsTable.Exists then CreateTable(EventsTableName);
-  if not FResourceTable.Exists then CreateTable(ResourceTableName);
-  if not FTasksTable.Exists then CreateTable(TasksTableName);
+  wasConnected := FConnection.Connected;
+  try
+    if FContactsTable.Connection = nil then begin
+      FConnection.Connected := false;
+      SetTableConnections(FConnection);
+    end;
+    FConnection.Connected := true;
+    if not FContactsTable.Exists then CreateTable(ContactsTableName);
+    if not FEventsTable.Exists then CreateTable(EventsTableName);
+    if not FResourceTable.Exists then CreateTable(ResourceTableName);
+    if not FTasksTable.Exists then CreateTable(TasksTableName);
+  finally
+    FConnection.Connected := wasConnected;
+  end;
 end;
 
 procedure TVpZeosDatastore.CreateTable(const ATableName: String;
@@ -292,10 +307,18 @@ procedure TVpZeosDatastore.CreateTables;
 var
   wasConnected: Boolean;
 begin
+  if FConnection = nil then
+    raise EVpException.Create('Database must be connected in order to create tables.');
+
   wasConnected := FConnection.Connected;
-  FConnection.Connected := true;
-  CreateAllTables;
-  SetConnected(wasConnected or AutoConnect);
+  try
+    // Make sure that Connection property has been set
+    if not wasConnected then
+      SetTableconnections(FConnection);
+    CreateAllTables;
+  finally
+    Connected := wasConnected;
+  end;
 end;
 
 procedure TVpZeosDatastore.FixContactsTable;
@@ -514,25 +537,29 @@ begin
 end;
 
 procedure TVpZeosDatastore.SetConnected(const AValue: Boolean);
+var
+  canLoad: Boolean = false;
 begin
   if (AValue = Connected) or (FConnection = nil) then
     exit;
 
-  if AValue and AutoCreate then
+  if AValue and AutoCreate and not TablesExist then
     CreateTables;
 
   FConnection.Connected := AValue;
-  if FConnection.Connected then begin
+
+  if FConnection.Connected and TablesExist then begin
     FixContactsTable;
     FContactsTable.Open;
     FEventsTable.Open;
     FResourceTable.Open;
     FTasksTable.Open;
+    canLoad := true;
   end;
 
   inherited SetConnected(AValue);
 
-  if FConnection.Connected then
+  if canLoad then
     Load;
 end;
 
@@ -543,28 +570,51 @@ begin
   if AValue = FConnection then
     exit;
 
-  // To do: clear planit lists...
-  if (AValue <> nil) then begin
-    wasConnected := AValue.Connected;
-    AValue.Connected := false;
-  end else
-    wasConnected := false;
-  if FConnection <> nil then
-    Connected := false;
+  wasConnected := (AValue <> nil) and AValue.Connected and
+    (FConnection <> nil) and FConnection.Connected;
 
-  {
-  if FConnection <> nil then begin
-    wasConnected := FConnection.Connected;
-    Connected := false;
-  end else
-    wasConnected := false;
-    }
   FConnection := AValue;
-  FContactsTable.Connection := FConnection;
-  FEventsTable.Connection := FConnection;
-  FResourceTable.Connection := FConnection;
-  FTasksTable.Connection := FConnection;
-  if wasConnected then Connected := true;
+
+  if not Connected then
+    SetTableConnections(FConnection);
+
+  if AutoCreate and (FConnection <> nil) then
+    CreateTables;
+
+  if Autoconnect or wasConnected then
+    Connected := true;
+end;
+
+// Must be disconnected!
+procedure TVpZeosDatastore.SetTableConnections(AConnection: TZConnection);
+begin
+  if FContactsTable.Connection = nil then begin
+    FContactsTable.Connection := AConnection;
+    FEventsTable.Connection := AConnection;
+    FResourcetable.Connection := AConnection;
+    FTaskstable.Connection := AConnection;
+  end;
+end;
+
+function TVpZeosDatastore.TablesExist: Boolean;
+var
+  L: TStringList;
+begin
+  Result := false;
+  if not FConnection.Connected then
+    exit;
+
+  L := TStringList.Create;
+  try
+    L.CaseSensitive := false;
+    FConnection.GetTableNames('', L);
+    Result := (L.IndexOf(FContactsTable.TableName) <> -1) and
+              (L.IndexOf(FEventsTable.TableName) <> -1) and
+              (L.IndexOf(FResourceTable.TableName) <> -1) and
+              (L.IndexOf(FTasksTable.TableName) <> -1);
+  finally
+    L.Free;
+  end;
 end;
 
 end.
