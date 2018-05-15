@@ -209,11 +209,9 @@ object frmNavBarEd: TfrmNavBarEd
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 4
         BorderSpacing.Right = 4
-        ItemHeight = 13
+        ItemHeight = 0
         OnClick = lbItemsClick
         OnDrawItem = lbItemsDrawItem
-        OnMeasureItem = lbItemsMeasureItem
-        Style = lbOwnerDrawVariable
         TabOrder = 0
       end
       object pnlItemBtns: TPanel

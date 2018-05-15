@@ -536,8 +536,15 @@ begin
   FBar := ABar;
   FDesigner := ADesigner;
 
-  if FBar <> nil then
+  if FBar <> nil then begin
     FBar.FreeNotification(self);
+    if FBar.Images = nil then
+      lbItems.Style := lbStandard
+    else begin
+      lbItems.ItemHeight := FBar.Images.Height + 2 * vITEMS_MARGIN;
+      lbItems.Style := lbOwnerDrawFixed;
+    end;
+  end;
 
   PopulateFolderList;
   PopulateImagesList;
@@ -632,8 +639,8 @@ begin
       (Rect.Top + Rect.Bottom - Bar.Images.Height) div 2,
       btn.IconIndex
     );
+    dec(Rect.Right, Bar.Images.Width + 2*delta);
   end;
-  dec(Rect.Right, Bar.Images.Width + 2*delta);
 
   // Draw text
   ts := lb.Canvas.TextStyle;
