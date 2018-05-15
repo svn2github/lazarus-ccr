@@ -1475,6 +1475,7 @@ end;
 function TVpDayView.dvCalcColHeadHeight(Scale: Extended): Integer;
 var
   TextHeight: Integer;
+  glyphHeights: Integer;
 begin
   Canvas.Font.Assign(FHeadAttr.Font);
   Canvas.Font.Size := ScaleY(Canvas.Font.Size, DesignTimeDPI);
@@ -1484,6 +1485,12 @@ begin
   else
     TextHeight := Canvas.TextHeight(TallShortChars) + TextMargin * 2;
   Result := Round(TextHeight * Scale);
+
+  if Assigned(dvTodayBtn.Glyph) then begin
+    glyphHeights := dvDayUpBtn.Glyph.Height + dvTodayBtn.Glyph.Height + 6;
+    if Result < glyphHeights then Result := glyphHeights;
+  end;
+
   dvColHeadHeight := Result; 
 end;
 {=====}

@@ -1124,6 +1124,7 @@ begin
     dvTodayBtn.Visible := FShowNavButtons;
     dvWeekUpBtn.Visible := FShowNavButtons;
     dvWeekDownBtn.Visible := FShowNavButtons;
+
     { Calculate width of buttons }
     dvTodayBtn.Height := trunc(RealColHeadHeight div 2);
     dvTodayBtn.Width := RealRowHeadWidth;

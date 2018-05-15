@@ -79,7 +79,7 @@ function AssembleCSZ(AContact: TVpContact; AType: Integer; AFormat: String): Str
 procedure ParseName(Contact: TVpContact; const Value: string);
   { parses the name into it's elements and updates the contact }
 
-procedure ParseCSZ(Str: string; var City, State, Zip: string);
+procedure ParseCSZ(Str: string; out City, State, Zip: string);
 { parses the string and returns the city, state and zip parameters }
 
 {$IFDEF DELPHI}
@@ -296,7 +296,7 @@ begin
 end;
 {=====}
 
-procedure ParseCSZ(Str: string; var City, State, Zip: string);
+procedure ParseCSZ(Str: string; out City, State, Zip: string);
 var
   num: integer;
 begin

@@ -162,7 +162,7 @@ type
     procedure PushDocument;
     procedure PushString(const sVal: DOMString);
     function ReadChar(const UpdatePos: Boolean): DOMChar;
-    procedure ReadExternalIds(bInNotation: Boolean; var sIds: StringIds);
+    procedure ReadExternalIds(bInNotation: Boolean; out sIds: StringIds);
     function ReadLiteral(wFlags: Integer; var HasEntRef: Boolean): DOMString;
     function ReadNameToken(aValFirst: Boolean): DOMString;
     procedure Require(const S: array of Longint);
@@ -1604,7 +1604,7 @@ end;
 {--------}
 procedure TVpParser.ParseUntil(const S : array of Longint);
 var
-  TempStr  : AnsiString;
+  TempStr  : AnsiString = '';
   TempChar : AnsiChar;
   i        : Integer;
   Found    : Boolean;
@@ -1753,8 +1753,7 @@ begin
     FFilter.SkipChar;
 end;
 {--------}
-procedure TVpParser.ReadExternalIds(bInNotation : Boolean;
-                                var sIds        : StringIds);
+procedure TVpParser.ReadExternalIds(bInNotation : Boolean; out sIds: StringIds);
 var
   HasEntRef : Boolean;
   TempChar  : DOMChar;
