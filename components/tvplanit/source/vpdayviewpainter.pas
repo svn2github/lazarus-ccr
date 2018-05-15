@@ -26,6 +26,7 @@ type
     FDayView: TVpDayView;
     FScaledGutterWidth: Integer;
     FScaledIconMargin: Integer;
+    FScaledTickDist: Integer;
     // local parameters of the old render procedure
     ColHeadRect: TRect;
     CellsRect: TRect;
@@ -1384,7 +1385,7 @@ begin
         RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
         {$ENDIF}
         timeStr := Format('%s:%s', [hourStr, minuteStr]);
-        x := lineRect.Left + TICK_DIST;
+        x := lineRect.Left + FScaledTickDist;
         TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin, timeStr);
       end else
       begin
@@ -1447,8 +1448,8 @@ begin
   // The top-most tick is not drawn, it is identical with the lower edge of
   // the NavBar block. Only if there are all-day events we must paint it.
   if adEvHeight > 0 then begin
-    TPSMoveTo(RenderCanvas, Angle, RenderIn, lineRect.Right - TICK_DIST, y);
-    TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Left + TICK_DIST, y);
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, lineRect.Right - FScaledTickDist, y);
+    TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Left + FScaledTickdist, y);
   end;
 
   // Begin with I = 1 because top-most tick already has been handled
@@ -1476,11 +1477,11 @@ begin
     else
       isFullHour := TVpDayViewOpener(FDayView).dvLineMatrix[0, lineIndex].Minute = 0;
 
-    TPSMoveTo(RenderCanvas, Angle, RenderIn, lineRect.Right - TICK_DIST, y - 1);
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, lineRect.Right - FScaledTickDist, y - 1);
     if lineIndex mod FDayView.RowLinesStep = 0 then
       if isFullHour then
         // Hour tick line
-        TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Left + TICK_DIST, y - 1)
+        TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Left + FScaledTickDist, y - 1)
       else
        // Minutes tick lines
        TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Right - MinutesLen, y - 1);
@@ -1982,6 +1983,7 @@ begin
   TVpDayViewOpener(FDayView).dvCalcColHeadHeight(Scale);
   FScaledGutterWidth := Round(FDayView.GutterWidth * Scale);
   FScaledIconMargin := Round(ICON_MARGIN * Scale);
+  FScaledTickdist := Round(TICK_Dist * Scale);
 end;
 
 procedure TVpDayViewPainter.VerifyMaxWidthDevisors;
