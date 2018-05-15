@@ -261,6 +261,11 @@ type
     FAllowDragAndDrop: Boolean;
     FNumDays: Integer;
     FIncludeWeekends: Boolean;
+    FRowLinesStep: Integer;
+    FShowNavButtons: Boolean;
+    FFixedDate: Boolean;
+    FCustomRowHeight: Integer;
+    FSimpleRowTime: Boolean;
     { event variables }
     FOwnerDrawRowHead: TVpOwnerDrawRowEvent;
     FOwnerDrawCells: TVpOwnerDrawRowEvent;
@@ -323,7 +328,11 @@ type
     procedure SetIncludeWeekends(Value: Boolean);
     procedure SetDisplayDate(Value: TDateTime);
     procedure SetVScrollPos;
+    procedure SetCustomRowHeight(Value: Integer);
+    procedure SetRowLinesStep(Value: Integer);
+    procedure SetShowNavButtons(Value: Boolean);
     procedure SetShowResourceName(Value: Boolean);
+    procedure SetSimpleRowTime(Value: Boolean);
     procedure SetActiveRow(Value: Integer);
     procedure SetActiveCol(Value: Integer);
     procedure SetWrapStyle(const v: TVpDVWrapStyle);
@@ -486,6 +495,11 @@ type
     property NumDays: Integer read FNumDays write SetNumDays default 1;
     property WrapStyle: TVpDVWrapStyle read FWrapStyle Write SetWrapStyle default wsIconFlow;
     property HintMode: TVpHintMode read FHintMode write SetHintMode default hmPlannerHint;
+    property ShowNavButtons: Boolean read FShowNavButtons write SetShowNavButtons default true;
+    property FixedDate: Boolean read FFixedDate write FFixedDate default false;
+    property CustomRowHeight: Integer read FCustomRowHeight write SetCustomRowHeight default 0;
+    property RowLinesStep: Integer read FRowLinesStep write SetRowLinesStep default 1;
+    property SimpleRowTime: Boolean read FSimpleRowTime write SetSimpleRowTime default false;
     {events}
     property AfterEdit: TVpAfterEditEvent read FAfterEdit write FAfterEdit;
     property BeforeEdit: TVpBeforeEditEvent read FBeforeEdit write FBeforeEdit;
@@ -768,12 +782,17 @@ begin
   dvCreatingEditor := false;
   FDrawingStyle := ds3d;
   dvPainting := false;
+  FShowNavButtons := true;
   FShowResourceName := true;
   FColor := clWindow;
   FLineColor := clGray;
   Granularity := gr30min;
   FDefTopHour := h_07;
   FDisplayDate := Now;
+  FFixedDate := false;
+  FCustomRowHeight := 0;
+  FRowLinesStep := 1;
+  FSimpleRowTime := false;
   TopHour := FDefTopHour;
   FTimeFormat := tf12Hour;
   FDateLabelFormat := 'dddddd'; //'dddd, mmmm dd, yyyy';
@@ -1231,7 +1250,7 @@ begin
     Exit;
 
   StartTime := trunc(FDisplayDate + ActiveCol) + dvLineMatrix[ActiveCol, ActiveRow].Time;
-  EndTime := StartTime + dvTimeIncSize;
+  EndTime := StartTime + dvTimeIncSize * FRowLinesStep;
   FActiveEvent := DataStore.Resource.Schedule.AddEvent(
     DataStore.GetNextID(EventsTableName),
     StartTime,
@@ -1603,7 +1622,10 @@ begin
   Temp := Canvas.TextHeight(TallShortChars);
   if Temp > Result then
     Result := Temp;
-  Result := Result + TextMargin * 2;
+  if FCustomRowHeight = 0 then
+    Result := Result + TextMargin * 2
+  else
+    Result := FCustomRowHeight;
 
   Result := Round(Result * Scale);
   dvClientVArea := Result * MinutesInDay div GranularityMinutes[UseGran];
@@ -1762,7 +1784,7 @@ end;
 
 procedure TVpDayView.SetDisplayDate(Value: TDateTime);
 begin
-  if FDisplayDate <> Value then begin
+  if (not FFixedDate) and (FDisplayDate <> Value) then begin
     EndEdit(self);
     FDisplayDate := Value;
     if dvLoaded then
@@ -1963,7 +1985,7 @@ begin
       { otherwise, we must want to create a new event }
       StartTime := trunc(FDisplayDate + ActiveCol)
         + dvLineMatrix[ActiveCol, ActiveRow].Time;
-      EndTime := StartTime + dvTimeIncSize;
+      EndTime := StartTime + dvTimeIncSize * FRowLinesStep;
       FActiveEvent := DataStore.Resource.Schedule.AddEvent(
         DataStore.GetNextID(EventsTableName), StartTime, EndTime);
       { edit this new event }
@@ -2363,10 +2385,46 @@ begin
 end;
 {=====}
 
+procedure TVpDayView.SetCustomRowHeight(Value: Integer);
+begin
+  if Value <> FCustomRowHeight then begin
+    if (Value <> 0) and (Value < TextMargin)
+      then FCustomRowHeight := TextMargin
+      else FCustomRowHeight := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TVpDayView.SetRowLinesStep(Value: Integer);
+begin
+  if Value <> FRowLinesStep then begin
+    if Value < 1
+      then FRowLinesStep := 1
+      else FRowLinesStep := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TVpDayView.SetShowNavButtons(Value: Boolean);
+begin
+  if Value <> FShowNavButtons then begin
+    FShowNavButtons := Value;
+    Invalidate;
+  end;
+end;
+
 procedure TVpDayView.SetShowResourceName(Value: Boolean);
 begin
   if Value <> FShowResourceName then begin
     FShowResourceName := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TVpDayView.SetSimpleRowTime(Value: Boolean);
+begin
+  if Value <> FSimpleRowTime then begin
+    FSimpleRowTime := Value;
     Invalidate;
   end;
 end;

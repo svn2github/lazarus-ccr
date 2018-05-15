@@ -557,11 +557,9 @@ begin
 
       { Draw the lines }
       RenderCanvas.Pen.Color := FDayView.LineColor;
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Top);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Top);
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Bottom);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Bottom);
-
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Bottom - 1);
+      if (lineIndex + 1) mod FDayView.RowLinesStep = 0 then
+        TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Bottom - 1);
       inc(I);
     end;  // while true ...
 
@@ -1120,6 +1118,11 @@ var
 begin
   { size and place the Today button first. }
   with TVpDayViewOpener(FDayView) do begin
+    dvDayUpBtn.Visible := FShowNavButtons;
+    dvDayDownBtn.Visible := FShowNavButtons;
+    dvTodayBtn.Visible := FShowNavButtons;
+    dvWeekUpBtn.Visible := FShowNavButtons;
+    dvWeekDownBtn.Visible := FShowNavButtons;
     { Calculate width of buttons }
     dvTodayBtn.Height := trunc(RealColHeadHeight div 2);
     dvTodayBtn.Width := RealRowHeadWidth;
@@ -1373,7 +1376,7 @@ begin
           hourStr := '12';
       end;
 
-      if UseGran = gr60Min then
+      if (UseGran = gr60Min) or FDayView.SimpleRowTime then
       begin
         // In case of 60-min granularity paint time as simple string
         RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
@@ -1381,7 +1384,7 @@ begin
         RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
         {$ENDIF}
         timeStr := Format('%s:%s', [hourStr, minuteStr]);
-        x := lineRect.Right - RenderCanvas.TextWidth(timeStr) - MINUTES_BORDER;
+        x := lineRect.Left + TICK_DIST;
         TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin, timeStr);
       end else
       begin
@@ -1473,13 +1476,14 @@ begin
     else
       isFullHour := TVpDayViewOpener(FDayView).dvLineMatrix[0, lineIndex].Minute = 0;
 
-    TPSMoveTo(RenderCanvas, Angle, RenderIn, lineRect.Right - TICK_DIST, y);
-    if isFullHour then
-      // Hour tick line
-      TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Left + TICK_DIST, y)
-    else
-      // Minutes tick lines
-      TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Right - MinutesLen, y);
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, lineRect.Right - TICK_DIST, y - 1);
+    if lineIndex mod FDayView.RowLinesStep = 0 then
+      if isFullHour then
+        // Hour tick line
+        TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Left + TICK_DIST, y - 1)
+      else
+       // Minutes tick lines
+       TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Right - MinutesLen, y - 1);
 
     inc(I);
   end;
