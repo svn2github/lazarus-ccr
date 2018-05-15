@@ -327,7 +327,7 @@ end;
 procedure TfrmNavBarEd.FormShow(Sender: TObject);
 var
   delta: Integer;
-  h: Integer;
+  h: Integer = 0;
 begin
   PopulateImagesList;
   delta := lbFolders.Left;
@@ -599,7 +599,9 @@ procedure TfrmNavBarEd.lbItemsMeasureItem(Control: TWinControl;
 begin
   Unused(Control, Index);
   if (FBar <> nil) and (Bar.Images <> nil) then
-    Height := Bar.Images.Height + 2 * vITEMS_MARGIN;
+    Height := Bar.Images.Height + 2 * vITEMS_MARGIN
+  else
+    Height := lbItems.ItemHeight;
 end;
 
 procedure TfrmNavBarEd.lbItemsDrawItem(Control: TWinControl;

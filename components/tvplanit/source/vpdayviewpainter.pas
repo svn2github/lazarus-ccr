@@ -1125,6 +1125,16 @@ begin
     dvWeekUpBtn.Visible := FShowNavButtons;
     dvWeekDownBtn.Visible := FShowNavButtons;
 
+    { In order to hide the nav btns in designmode move them out of their parent }
+    if (csDesigning in ComponentState) and not FShowNavButtons then begin
+      dvTodayBtn.Left := -Width;
+      dvWeekDownBtn.Left := -Width;
+      dvWeekUpBtn.Left := -Width;
+      dvDayDownBtn.Left := -Width;
+      dvDayUpBtn.Left := -Width;
+      exit;
+    end;
+
     { Calculate width of buttons }
     dvTodayBtn.Height := trunc(RealColHeadHeight div 2);
     dvTodayBtn.Width := RealRowHeadWidth;
