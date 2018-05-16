@@ -546,6 +546,8 @@ begin
   FNotifyForm.OnClose:=@OnNotifyFormClose;
   FNotifyForm.Show;
 
+
+
   if Assigned(FSaveActiveForm) then
     FSaveActiveForm.BringToFront;
 end;

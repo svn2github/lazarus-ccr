@@ -12,10 +12,10 @@ object Form1: TForm1
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Button1
     AnchorSideTop.Side = asrBottom
-    Left = 232
-    Height = 36
-    Top = 48
-    Width = 113
+    Left = 235
+    Height = 23
+    Top = 35
+    Width = 106
     AutoSize = True
     BorderSpacing.Top = 6
     Caption = 'Static message'
@@ -27,10 +27,10 @@ object Form1: TForm1
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Button4
     AnchorSideTop.Side = asrBottom
-    Left = 225
-    Height = 36
-    Top = 90
-    Width = 127
+    Left = 229
+    Height = 23
+    Top = 64
+    Width = 118
     AutoSize = True
     BorderSpacing.Top = 6
     Caption = 'Dinamic message'
@@ -42,10 +42,10 @@ object Form1: TForm1
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = ColorBox1
     AnchorSideTop.Side = asrBottom
-    Left = 191
-    Height = 36
-    Top = 158
-    Width = 195
+    Left = 203
+    Height = 23
+    Top = 113
+    Width = 171
     AutoSize = True
     BorderSpacing.Top = 6
     Caption = 'Message without auto close'
@@ -56,9 +56,9 @@ object Form1: TForm1
     AnchorSideTop.Control = Button4
     AnchorSideTop.Side = asrBottom
     Left = 416
-    Height = 20
-    Top = 90
-    Width = 147
+    Height = 13
+    Top = 64
+    Width = 120
     BorderSpacing.Around = 6
     Caption = 'Dinamic message color'
     ParentColor = False
@@ -70,22 +70,22 @@ object Form1: TForm1
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 422
-    Height = 36
-    Top = 116
+    Height = 24
+    Top = 83
     Width = 149
     Selected = clYellow
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 6
-    ItemHeight = 0
+    ItemHeight = 20
     TabOrder = 3
   end
   object RadioGroup1: TRadioGroup
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
     Left = 6
-    Height = 117
+    Height = 86
     Top = 6
-    Width = 140
+    Width = 116
     AutoFill = True
     AutoSize = True
     BorderSpacing.Around = 6
@@ -97,8 +97,8 @@ object Form1: TForm1
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 96
-    ClientWidth = 138
+    ClientHeight = 68
+    ClientWidth = 112
     ItemIndex = 3
     Items.Strings = (
       'rpcTopLeft'
@@ -113,10 +113,10 @@ object Form1: TForm1
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Owner
-    Left = 228
-    Height = 36
+    Left = 232
+    Height = 23
     Top = 6
-    Width = 121
+    Width = 112
     AutoSize = True
     BorderSpacing.Top = 6
     Caption = 'Design message'
@@ -134,42 +134,17 @@ object Form1: TForm1
   end
   object CheckBox1: TCheckBox
     Left = 415
-    Height = 24
+    Height = 17
     Top = 53
-    Width = 137
+    Width = 107
     Caption = 'Show close timer'
     Checked = True
     State = cbChecked
     TabOrder = 7
   end
-  object SpeedButton1: TSpeedButton
-    Left = 422
-    Height = 26
-    Top = 7
-    Width = 26
-    Glyph.Data = {
-      1A020000424D1A0200000000000036000000280000000B0000000B0000000100
-      200000000000E401000064000000640000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000FF0000
-      00FF00000000000000000000000000000000000000FF000000FF000000000000
-      00000000000000000000000000FF000000FF0000000000000000000000FF0000
-      00FF000000000000000000000000000000000000000000000000000000FF0000
-      00FF000000FF000000FF00000000000000000000000000000000000000000000
-      00000000000000000000000000FF000000FF0000000000000000000000000000
-      000000000000000000000000000000000000000000FF000000FF000000FF0000
-      00FF000000000000000000000000000000000000000000000000000000FF0000
-      00FF0000000000000000000000FF000000FF0000000000000000000000000000
-      0000000000FF000000FF00000000000000000000000000000000000000FF0000
-      00FF000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000000000000000000000000000000000000000
-      000000000000000000000000000000000000000000000000000000000000
-    }
-  end
   object BitBtn1: TBitBtn
     Left = 150
-    Height = 36
+    Height = 26
     Top = 325
     Width = 60
     AutoSize = True

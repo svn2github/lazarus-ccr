@@ -45,6 +45,9 @@ const
   AllMask = '*';
   {$ENDIF}
 
+type
+  TRxMsgBeepStyle = (mbsBeep, mbsIconAsterisk, mbsIconExclamation, mbsIconError, mbsIconQuestion, mbsIconWarning, mbsOk);
+
 var
   DefCompanyName: string = '';
   RegUseAppTitle: Boolean = False;
@@ -93,6 +96,8 @@ function RxDefaultLogFileName:string;
 procedure InitRxLogs;
 
 function RxGetKeyboardLayoutName:string;
+
+function RxMessageBeep(AStyle:TRxMsgBeepStyle):boolean;
 
 implementation
 uses
@@ -280,6 +285,29 @@ begin
     Result:='';
   {$ENDIF LINUX}
   {$ENDIF WINDOWS}
+end;
+
+function RxMessageBeep(AStyle: TRxMsgBeepStyle): boolean;
+{$IFDEF WINDOWS}
+var
+  uType:UINT;
+{$ENDIF}
+begin
+  {$IFDEF WINDOWS}
+    case AStyle of
+      mbsIconAsterisk:uType:=MB_ICONASTERISK;
+      mbsIconExclamation:uType:=MB_ICONEXCLAMATION;
+      mbsIconError:uType:=MB_ICONERROR;
+      mbsIconQuestion:uType:=MB_ICONQUESTION;
+      mbsIconWarning:uType:=MB_ICONWARNING;
+      mbsBeep,
+      mbsOk:uType:=MB_OK;
+    else
+      uType:=0;
+    end;
+    MessageBeep(uType);
+  {$ELSE}
+  {$ENDIF}
 end;
 
 

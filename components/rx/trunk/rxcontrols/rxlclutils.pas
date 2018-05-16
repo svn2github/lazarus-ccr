@@ -43,6 +43,11 @@ uses
   ;
 
 
+const
+  COLORONCOLOR = 3;
+  STRETCH_DELETESCANS = COLORONCOLOR;
+  PaletteMask = $02000000;
+
 type
   TTextOrientation = (toHorizontal, toVertical90, toHorizontal180, toVertical270, toHorizontal360);
 
@@ -98,6 +103,7 @@ procedure FreeMemo(var fpBlock: Pointer);
 procedure RaiseIndexOutOfBounds(Control: TControl; Items:TStrings; Index: integer);
 
 procedure WriteTextHeader(ACanvas: TCanvas; ARect: TRect; const Text: string; Alignment: TAlignment);
+//procedure DrawBitmapTransparent(Dest: TCanvas; DstX, DstY: Integer; Bitmap: TBitmap; TransparentColor: TColor);
 
 {$IFDEF WIN32}
 type
@@ -784,6 +790,150 @@ if (ARect.Left<>ARect.Right) and (ARect.Top<>ARect.Bottom) then
     ALIGN_FLAGS_HEADER[Alignment] {or DT_VCENTER or  DT_END_ELLIPSIS } or DT_WORDBREAK
     );
 end;
+(*
+function PaletteColor(Color: TColor): Longint;
+begin
+  Result := ColorToRGB(Color) or PaletteMask;
+end;
+
+procedure StretchBltTransparent(DstDC: HDC; DstX, DstY, DstW, DstH: Integer;
+  SrcDC: HDC; SrcX, SrcY, SrcW, Srch: Integer; Palette: HPALETTE;
+  TransparentColor: TColorRef);
+var
+  Color: TColorRef;
+  bmAndBack, bmAndObject, bmAndMem, bmSave: HBITMAP;
+  bmBackOld, bmObjectOld, bmMemOld, bmSaveOld: HBITMAP;
+  MemDC, BackDC, ObjectDC, SaveDC: HDC;
+  palDst, palMem, palSave, palObj: HPALETTE;
+begin
+  { Create some DCs to hold temporary data }
+  BackDC := CreateCompatibleDC(DstDC);
+  ObjectDC := CreateCompatibleDC(DstDC);
+  MemDC := CreateCompatibleDC(DstDC);
+  SaveDC := CreateCompatibleDC(DstDC);
+  { Create a bitmap for each DC }
+  bmAndObject := CreateBitmap(SrcW, Srch, 1, 1, nil);
+  bmAndBack := CreateBitmap(SrcW, Srch, 1, 1, nil);
+  bmAndMem := CreateCompatibleBitmap(DstDC, DstW, DstH);
+  bmSave := CreateCompatibleBitmap(DstDC, SrcW, Srch);
+  { Each DC must select a bitmap object to store pixel data }
+  bmBackOld := SelectObject(BackDC, bmAndBack);
+  bmObjectOld := SelectObject(ObjectDC, bmAndObject);
+  bmMemOld := SelectObject(MemDC, bmAndMem);
+  bmSaveOld := SelectObject(SaveDC, bmSave);
+  { Select palette }
+  palDst := 0;
+  palMem := 0;
+  palSave := 0;
+  palObj := 0;
+  if Palette <> 0 then
+  begin
+    palDst := SelectPalette(DstDC, Palette, True);
+    RealizePalette(DstDC);
+    palSave := SelectPalette(SaveDC, Palette, False);
+    RealizePalette(SaveDC);
+    palObj := SelectPalette(ObjectDC, Palette, False);
+    RealizePalette(ObjectDC);
+    palMem := SelectPalette(MemDC, Palette, True);
+    RealizePalette(MemDC);
+  end;
+  { Set proper mapping mode }
+  SetMapMode(SrcDC, GetMapMode(DstDC));
+  SetMapMode(SaveDC, GetMapMode(DstDC));
+  { Save the bitmap sent here }
+  BitBlt(SaveDC, 0, 0, SrcW, Srch, SrcDC, SrcX, SrcY, SRCCOPY);
+  { Set the background color of the source DC to the color,         }
+  { contained in the parts of the bitmap that should be transparent }
+  Color := SetBkColor(SaveDC, PaletteColor(TransparentColor));
+  { Create the object mask for the bitmap by performing a BitBlt()  }
+  { from the source bitmap to a monochrome bitmap                   }
+  BitBlt(ObjectDC, 0, 0, SrcW, Srch, SaveDC, 0, 0, SRCCOPY);
+  { Set the background color of the source DC back to the original  }
+  SetBkColor(SaveDC, Color);
+  { Create the inverse of the object mask }
+  BitBlt(BackDC, 0, 0, SrcW, Srch, ObjectDC, 0, 0, NOTSRCCOPY);
+  { Copy the background of the main DC to the destination }
+  BitBlt(MemDC, 0, 0, DstW, DstH, DstDC, DstX, DstY, SRCCOPY);
+  { Mask out the places where the bitmap will be placed }
+  StretchBlt(MemDC, 0, 0, DstW, DstH, ObjectDC, 0, 0, SrcW, Srch, SRCAND);
+  { Mask out the transparent colored pixels on the bitmap }
+  BitBlt(SaveDC, 0, 0, SrcW, Srch, BackDC, 0, 0, SRCAND);
+  { XOR the bitmap with the background on the destination DC }
+  StretchBlt(MemDC, 0, 0, DstW, DstH, SaveDC, 0, 0, SrcW, Srch, SRCPAINT);
+  { Copy the destination to the screen }
+  BitBlt(DstDC, DstX, DstY, DstW, DstH, MemDC, 0, 0, SRCCOPY);
+  { Restore palette }
+  if Palette <> 0 then
+  begin
+    SelectPalette(MemDC, palMem, False);
+    SelectPalette(ObjectDC, palObj, False);
+    SelectPalette(SaveDC, palSave, False);
+    SelectPalette(DstDC, palDst, True);
+  end;
+  { Delete the memory bitmaps }
+  DeleteObject(SelectObject(BackDC, bmBackOld));
+  DeleteObject(SelectObject(ObjectDC, bmObjectOld));
+  DeleteObject(SelectObject(MemDC, bmMemOld));
+  DeleteObject(SelectObject(SaveDC, bmSaveOld));
+  { Delete the memory DCs }
+  DeleteDC(MemDC);
+  DeleteDC(BackDC);
+  DeleteDC(ObjectDC);
+  DeleteDC(SaveDC);
+end;
+
+procedure StretchBitmapTransparent(Dest: TCanvas; Bitmap: TBitmap;
+  TransparentColor: TColor; DstX, DstY, DstW, DstH, SrcX, SrcY,
+  SrcW, Srch: Integer);
+var
+  CanvasChanging: TNotifyEvent;
+begin
+  if DstW <= 0 then
+    DstW := Bitmap.Width;
+  if DstH <= 0 then
+    DstH := Bitmap.Height;
+  if (SrcW <= 0) or (Srch <= 0) then
+  begin
+    SrcX := 0;
+    SrcY := 0;
+    SrcW := Bitmap.Width;
+    Srch := Bitmap.Height;
+  end;
+  if not Bitmap.Monochrome then
+    SetStretchBltMode(Dest.Handle, STRETCH_DELETESCANS);
+  CanvasChanging := Bitmap.Canvas.OnChanging;
+  Bitmap.Canvas.Lock;
+  try
+    Bitmap.Canvas.OnChanging := nil;
+    if TransparentColor = clNone then
+    begin
+      StretchBlt(Dest.Handle, DstX, DstY, DstW, DstH, Bitmap.Canvas.Handle,
+        SrcX, SrcY, SrcW, Srch, Cardinal(Dest.CopyMode));
+    end
+    else
+    begin
+      if TransparentColor = clDefault then
+        TransparentColor := Bitmap.Canvas.Pixels[0, Bitmap.Height - 1];
+      if Bitmap.Monochrome then
+        TransparentColor := clWhite
+      else
+        TransparentColor := ColorToRGB(TransparentColor);
+      StretchBltTransparent(Dest.Handle, DstX, DstY, DstW, DstH,
+        Bitmap.Canvas.Handle, SrcX, SrcY, SrcW, Srch,
+        Bitmap.Palette, TransparentColor);
+    end;
+  finally
+    Bitmap.Canvas.OnChanging := CanvasChanging;
+    Bitmap.Canvas.Unlock;
+  end;
+end;
+
+procedure DrawBitmapTransparent(Dest: TCanvas; DstX, DstY: Integer;
+  Bitmap: TBitmap; TransparentColor: TColor);
+begin
+  StretchBitmapTransparent(Dest, Bitmap, TransparentColor, DstX, DstY,
+    Bitmap.Width, Bitmap.Height, 0, 0, Bitmap.Width, Bitmap.Height);
+end;    *)
 
 initialization
 {$IFDEF RX_USE_LAZARUS_RESOURCE}

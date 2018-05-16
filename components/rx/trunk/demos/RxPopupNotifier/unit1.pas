@@ -23,7 +23,6 @@ type
     Label1: TLabel;
     RadioGroup1: TRadioGroup;
     RxPopupNotifier1: TRxPopupNotifier;
-    SpeedButton1: TSpeedButton;
     TrackBar1: TTrackBar;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
@@ -44,6 +43,7 @@ var
   Form1: TForm1;
 
 implementation
+uses rxAppUtils;
 
 {$R *.lfm}
 
@@ -94,7 +94,9 @@ begin
   begin
     FRClose:=RxPopupNotifier1.AddNotifyItem('Information', 'Static text information without close');
     FRClose.ShowCloseTimer:=false;
-  end
+  end;
+
+  RxMessageBeep(mbsIconExclamation);
 end;
 
 procedure TForm1.RadioGroup1Click(Sender: TObject);

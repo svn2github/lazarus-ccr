@@ -3152,9 +3152,8 @@ begin
   if not FGlyph.Empty then
   begin
     RecalcDrawRect;
-//alexs
-{    DrawBitmapTransparent(Canvas, FGlyphOrigin.X, FGlyphOrigin.Y,
-      FGlyph, FGlyph.TransparentColor and not PaletteMask);}
+    Canvas.Draw(FGlyphOrigin.X, FGlyphOrigin.Y, FGlyph);
+    //DrawBitmapTransparent(Canvas, FGlyphOrigin.X, FGlyphOrigin.Y, FGlyph, FGlyph.TransparentColor and not PaletteMask);
   end;
 end;
 
@@ -3301,9 +3300,10 @@ begin
   finally
     RestoreDC(Canvas.Handle, SaveIndex);
   end;
-  if Active then begin
+  if Active then
+  begin
     PaintGlyph;
-    {PaintText;}
+    PaintText;
   end;
 end;
 
