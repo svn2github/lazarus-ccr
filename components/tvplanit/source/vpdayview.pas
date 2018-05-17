@@ -353,7 +353,7 @@ type
 
     { internal methods }
     function dvCalcRowHeight(Scale: Extended; UseGran: TVpGranularity): Integer;
-    function dvCalcVisibleLines(RenderHeight, ColHeadHeight, RowHeight: Integer;
+    function dvCalcVisibleLines(RenderHeight, ColHeadHeight, ARowHeight: Integer;
       Scale: Extended; StartLine, StopLine: Integer): Integer;
     function dvCalcColHeadHeight(Scale: Extended): Integer;
     procedure dvEditInPlace(Sender: TObject);
@@ -497,7 +497,7 @@ type
     property HintMode: TVpHintMode read FHintMode write SetHintMode default hmPlannerHint;
     property ShowNavButtons: Boolean read FShowNavButtons write SetShowNavButtons default true;
     property FixedDate: Boolean read FFixedDate write FFixedDate default false;
-    property CustomRowHeight: Integer read FCustomRowHeight write SetCustomRowHeight default 0;
+    property RowHeight: Integer read FCustomRowHeight write SetCustomRowHeight default 0;
     property RowLinesStep: Integer read FRowLinesStep write SetRowLinesStep default 1;
     property SimpleRowTime: Boolean read FSimpleRowTime write SetSimpleRowTime default false;
     {events}
@@ -1429,7 +1429,7 @@ begin
 end;
 {=====}
 
-function TVpDayView.dvCalcVisibleLines(RenderHeight, ColHeadHeight, RowHeight: Integer;
+function TVpDayView.dvCalcVisibleLines(RenderHeight, ColHeadHeight, ARowHeight: Integer;
   Scale: Extended; StartLine, StopLine: Integer): Integer;
 var
   vertical: integer;
@@ -1442,12 +1442,12 @@ begin
   { take into account the number lines that are allowed! }
 //  vertical := Round(RenderHeight - ColHeadHeight * Scale - 2);
   vertical := Round(RenderHeight - ColHeadHeight * Scale);
-  DivMod(Vertical, RowHeight, d, m);
+  DivMod(Vertical, ARowHeight, d, m);
   Result := d + ord(m <> 0);
   {
-  if Vertical mod RowHeight = 0 then
+  if Vertical mod ARowHeight = 0 then
     Result :=
-  Result := Vertical div RowHeight + 1; // - 4; //+2;
+  Result := Vertical div ARowHeight + 1; // - 4; //+2;
   }
   if Result > FLineCount then
     Result := FLineCount;
