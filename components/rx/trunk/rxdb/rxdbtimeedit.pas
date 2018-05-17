@@ -65,6 +65,8 @@ type
   protected
     function GetReadOnly: Boolean;override;
     procedure SetReadOnly(AValue: Boolean);override;
+    procedure UpClick(Sender: TObject); override;
+    procedure DownClick(Sender: TObject); override;
     property DataField: string read GetDataField write SetDataField;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
@@ -131,6 +133,7 @@ type
     property PasswordChar;
     property PopupMenu;
     property ShowHint;
+    property ShowSecond;
     property TabOrder;
     property TabStop;
     property Visible;
@@ -253,6 +256,8 @@ end;
 procedure TCustomRxDBTimeEdit.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   inherited KeyDown(Key, Shift);
+  if not IsReadOnly then
+    FDatalink.Edit;
   if Key=VK_ESCAPE then
   begin
     //cancel out of editing by reset on esc
@@ -261,17 +266,25 @@ begin
     Key := VK_UNKNOWN;
   end
   else
-  if Key=VK_DELETE then
-  begin
-    if not IsReadOnly then
-      FDatalink.Edit;
-  end
-  else
   if Key=VK_TAB then
   begin
     if FDataLink.CanModify and FDatalink.Editing then
       FDataLink.UpdateRecord;
   end;
+end;
+
+procedure TCustomRxDBTimeEdit.UpClick(Sender: TObject);
+begin
+  if not IsReadOnly then
+    FDatalink.Edit;
+  inherited;
+end;
+
+procedure TCustomRxDBTimeEdit.DownClick(Sender: TObject);
+begin
+  if not IsReadOnly then
+    FDatalink.Edit;
+  inherited;
 end;
 
 procedure TCustomRxDBTimeEdit.Change;

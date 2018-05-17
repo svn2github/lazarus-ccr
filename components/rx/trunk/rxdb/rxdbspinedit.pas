@@ -61,6 +61,8 @@ type
     procedure CMGetDataLink(var Message: TLMessage); message CM_GETDATALINK;
     function IsReadOnly: boolean;
   protected
+    FUpdating:Boolean;
+    procedure SetValue(const AValue: Double); override;
     function GetReadOnly: Boolean;override;
     procedure SetReadOnly(AValue: Boolean);override;
     property DataField: string read GetDataField write SetDataField;
@@ -251,6 +253,7 @@ end;
 
 procedure TCustomRxDBSpinEdit.Change;
 begin
+  IF FUpdating then exit;
   FDatalink.Edit;
   FDataLink.Modified;
   inherited Change;
@@ -261,6 +264,14 @@ begin
   Result := true;
   if FDatalink.Active and (not Self.ReadOnly) then
     Result := (Field = nil) or Field.ReadOnly;
+end;
+
+procedure TCustomRxDBSpinEdit.SetValue(const AValue: Double);
+begin
+  FUpdating:=true;
+  inherited SetValue(AValue);
+  Modified:=false;
+  FUpdating:=false;
 end;
 
 procedure TCustomRxDBSpinEdit.Loaded;

@@ -2,7 +2,8 @@
     brick08 - from freepascal.ru
     rtn - from freepascal.ru
     kit - from freepascal.ru
-  
+    linux-man
+    
   Component icon images:
     zoltanleo aka Док
 
