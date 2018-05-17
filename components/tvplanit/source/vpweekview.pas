@@ -210,7 +210,7 @@ type
     function GetEventAtCoord(Pt: TPoint): TVpEvent;
     function GetEventRect(AEvent: TVpEvent): TRect;
     procedure wvSetDateByCoord(Point: TPoint);
-    procedure wvSpawnEventEditDialog(NewEvent: Boolean);
+    procedure wvSpawnEventEditDialog(IsNewEvent: Boolean);
 
     { inherited standard methods }
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1337,21 +1337,21 @@ begin
   InitializeDefaultPopup;
 end;
 
-procedure TVpWeekView.wvSpawnEventEditDialog(NewEvent: Boolean);
+procedure TVpWeekView.wvSpawnEventEditDialog(IsNewEvent: Boolean);
 var
   AllowIt: Boolean;
   EventDlg : TVpEventEditDialog;
 begin
   if DataStore = nil then Exit;
 
-  if (not NewEvent) and (not ActiveEvent.CanEdit) then begin
+  if (not IsNewEvent) and (not ActiveEvent.CanEdit) then begin
     MessageDlg(RSCannotEditOverlayedEvent, mtInformation, [mbOk], 0);
     exit;
   end;
 
   AllowIt := false;
   if Assigned(FOwnerEditEvent) then
-    FOwnerEditEvent(self, ActiveEvent, NewEvent, DataStore.Resource, AllowIt)
+    FOwnerEditEvent(self, ActiveEvent, IsNewEvent, DataStore.Resource, AllowIt)
   else begin
     EventDlg := TVpEventEditDialog.Create(nil);
     try
@@ -1366,17 +1366,16 @@ begin
   if AllowIt then begin
     ActiveEvent.Changed := true;
     DataStore.PostEvents;
-    if Assigned(FOnAddEvent) then
+    if IsNewEvent and Assigned(FOnAddEvent) then
       FOnAddEvent(self, ActiveEvent);
-    Invalidate;
   end else begin
-    if NewEvent then begin
+    if IsNewEvent then begin
       DataStore.Resource.Schedule.DeleteEvent(ActiveEvent);
       ActiveEvent := nil;
     end;
     DataStore.PostEvents;
-    Invalidate;
   end;
+  Invalidate;
 end;
 {=====}
 

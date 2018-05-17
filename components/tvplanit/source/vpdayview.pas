@@ -377,7 +377,7 @@ type
     procedure InitializeDefaultPopup;
     procedure Paint; override;
     procedure Loaded; override;
-    procedure dvSpawnEventEditDialog(NewEvent: Boolean);
+    procedure dvSpawnEventEditDialog(IsNewEvent: Boolean);
     procedure dvSetActiveRowByCoord(Pnt: TPoint; Sloppy: Boolean);
     procedure dvSetActiveColByCoord(Pnt: TPoint);
     procedure dvPopulate;
@@ -2053,7 +2053,7 @@ begin
 end;
 {=====}
 
-procedure TVpDayView.dvSpawnEventEditDialog(NewEvent: Boolean);
+procedure TVpDayView.dvSpawnEventEditDialog(IsNewEvent: Boolean);
 var
   AllowIt: Boolean;
   EventDlg : TVpEventEditDialog;
@@ -2061,14 +2061,14 @@ begin
   if (DataStore = nil) or (DataStore.Resource = nil) or ReadOnly then
     Exit;
 
-  if (not NewEvent) and (not FActiveEvent.CanEdit) then begin
+  if (not IsNewEvent) and (not FActiveEvent.CanEdit) then begin
     MessageDlg(RSCannotEditOverlayedEvent, mtInformation, [mbOK], 0);
     exit;
   end;
 
   AllowIt := false;
   if Assigned(FOwnerEditEvent) then
-    FOwnerEditEvent(self, FActiveEvent, NewEvent, DataStore.Resource, AllowIt)
+    FOwnerEditEvent(self, FActiveEvent, IsNewEvent, DataStore.Resource, AllowIt)
   else begin
     EventDlg := TVpEventEditDialog.Create(nil);
     try
@@ -2082,19 +2082,18 @@ begin
   if AllowIt then begin
     FActiveEvent.Changed := true;
     DataStore.PostEvents;
-    if Assigned(FOnAddEvent) then
+    if IsNewEvent and Assigned(FOnAddEvent) then
       FOnAddEvent(self, FActiveEvent);
-    Invalidate;
   end else begin
-    if NewEvent then begin
+    if IsNewEvent then begin
       FActiveEvent.Deleted := true;
       DataStore.PostEvents;
       FActiveEvent := nil;
       dvActiveEventRec := Rect(0, 0, 0, 0);
       dvActiveIconRec := Rect(0, 0, 0, 0);
     end;
-    Invalidate;
   end;
+  Invalidate;
 end;
 {=====}
 

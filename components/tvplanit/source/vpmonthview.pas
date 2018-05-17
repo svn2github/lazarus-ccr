@@ -215,7 +215,7 @@ type
     { internal methods }
     function GetDateAtCoord(APoint: TPoint): TDateTime;
     procedure mvPopulate;
-    procedure mvSpawnEventEditDialog(NewEvent: Boolean);
+    procedure mvSpawnEventEditDialog(IsNewEvent: Boolean);
     procedure mvSpinButtonClick(Sender: TObject; Button: TUDBtnType);
     procedure mvSetDateByCoord(APoint: TPoint);
     procedure mvHookUp;
@@ -686,21 +686,21 @@ begin
 end;
 {=====}
 
-procedure TVpMonthView.mvSpawnEventEditDialog(NewEvent: Boolean);
+procedure TVpMonthView.mvSpawnEventEditDialog(IsNewEvent: Boolean);
 var
   AllowIt: Boolean;
   EventDlg : TVpEventEditDialog;
 begin
   if DataStore = nil then Exit;
 
-  if (not NewEvent) and (not mvActiveEvent.CanEdit) then begin
+  if (not IsNewEvent) and (not mvActiveEvent.CanEdit) then begin
     MessageDlg(RSCannotEditOverlayedEvent, mtInformation, [mbOk], 0);
     exit;
   end;
 
   AllowIt := false;
   if Assigned(FOwnerEditEvent) then
-    FOwnerEditEvent(self, mvActiveEvent, NewEvent, DataStore.Resource, AllowIt)
+    FOwnerEditEvent(self, mvActiveEvent, IsNewEvent, DataStore.Resource, AllowIt)
   else begin
     EventDlg := TVpEventEditDialog.Create(nil);
     try
@@ -715,17 +715,16 @@ begin
   if AllowIt then begin
     mvActiveEvent.Changed := true;
     DataStore.PostEvents;
-    if Assigned(FOnAddEvent) then
+    if IsNewEvent and Assigned(FOnAddEvent) then
       FOnAddEvent(self, mvActiveEvent);
-    Invalidate;
   end else begin
-    if NewEvent then begin
+    if IsNewEvent then begin
       DataStore.Resource.Schedule.DeleteEvent(mvActiveEvent);
       mvActiveEvent := nil;
     end;
     DataStore.PostEvents;
-    Invalidate;
   end;
+  Invalidate;
   mvActiveEvent := nil;
 end;
 

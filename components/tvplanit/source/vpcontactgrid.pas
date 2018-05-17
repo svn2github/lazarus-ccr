@@ -177,7 +177,7 @@ type
     procedure cgHookUp;
     procedure Paint; override;
     procedure Loaded; override;
-    procedure cgSpawnContactEditDialog(NewContact: Boolean);
+    procedure cgSpawnContactEditDialog(IsNewContact: Boolean);
     procedure cgSetActiveContactByCoord(Pnt: TPoint);
     function GetContactIndexByCoord(Pnt: TPoint): Integer;
     procedure cgScrollHorizontal(Rows: Integer);
@@ -1202,15 +1202,16 @@ begin
 end;
 {=====}
 
-procedure TVpContactGrid.cgSpawnContactEditDialog(NewContact: Boolean);
+procedure TVpContactGrid.cgSpawnContactEditDialog(IsNewContact: Boolean);
 var
   AllowIt: Boolean;
   Dlg : TVpContactEditDialog;
 begin
   AllowIt := false;
   if Assigned(FOwnerEditContact) then
-    FOwnerEditContact(self, FActiveContact, NewContact, DataStore.Resource, AllowIt)
-  else begin
+    FOwnerEditContact(self, FActiveContact, IsNewContact, DataStore.Resource, AllowIt)
+  else
+  begin
     Dlg := TVpContactEditDialog.Create(Owner);
     try
       Dlg.DataStore := DataStore;
@@ -1223,15 +1224,15 @@ begin
   if AllowIt then begin
     if FActiveContact.Changed = true then                                
       DataStore.PostContacts;                                            
-    Invalidate;
-  end else begin
-    if NewContact then begin
+  end else
+  begin
+    if IsNewContact then begin
       DataStore.Resource.Contacts.DeleteContact(FActiveContact);
       FActiveContact := nil;
     end;
     DataStore.PostContacts;
-    Invalidate;
   end;
+  Invalidate;
 end;
 {=====}
 

@@ -180,7 +180,7 @@ type
     procedure tlHookUp;
     procedure Paint; override;
     procedure Loaded; override;
-    procedure tlSpawnTaskEditDialog(NewTask: Boolean);
+    procedure tlSpawnTaskEditDialog(IsNewTask: Boolean);
     procedure tlSetActiveTaskByCoord(Pnt: TPoint);
     function tlVisibleTaskToTaskIndex(const VisTaskIndex: Integer) : Integer;
     function tlTaskIndexToVisibleTask(const ATaskIndex: Integer) : Integer;
@@ -907,7 +907,7 @@ begin
 end;
 {=====}
 
-procedure TVpTaskList.tlSpawnTaskEditDialog(NewTask: Boolean);
+procedure TVpTaskList.tlSpawnTaskEditDialog(IsNewTask: Boolean);
 var
   AllowIt: Boolean;
   Task: TVpTask;
@@ -920,7 +920,7 @@ begin
     Exit;
 
   AllowIt := false;
-  if NewTask then begin
+  if IsNewTask then begin
     Task := DataStore.Resource.Tasks.AddTask(DataStore.GetNextID('Tasks'));
     Task.CreatedOn := now;
     Task.DueDate := Now + 7;
@@ -928,7 +928,7 @@ begin
     Task := FActiveTask;
 
   if Assigned(FOwnerEditTask) then
-    FOwnerEditTask(self, Task, NewTask, DataStore.Resource, AllowIt)
+    FOwnerEditTask(self, Task, IsNewTask, DataStore.Resource, AllowIt)
   else begin
     TaskDlg := TVpTaskEditDialog.Create(nil);
     try
@@ -943,14 +943,13 @@ begin
   if AllowIt then begin
     DataStore.PostTasks();
     DataStore.NotifyDependents;
-    Invalidate;
   end else begin
-    if NewTask then begin
+    if IsNewTask then begin
       DataStore.Resource.Tasks.DeleteTask(Task);
     end;
     DataStore.PostTasks;
-    Invalidate;
   end;
+  Invalidate;
 end;
 {=====}
 
