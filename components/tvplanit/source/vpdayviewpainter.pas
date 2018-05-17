@@ -843,7 +843,8 @@ begin
     tmpRect := EventRect;
     if (AEventRec.Level <> 0) then
       inc(tmpRect.Left, FDayView.GutterWidth);
-    FDayView.OnBeforeDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent, RenderCanvas, tmpRect, IconRect);
+    FDayView.OnBeforeDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent,
+      RenderCanvas, GutterRect, tmpRect, IconRect);
   end;
 
   if FDayView.IconAttributes.ShowInPrint then
@@ -882,7 +883,8 @@ begin
     tmpRect := EventRect;
     if (AEventRec.Level <> 0) then
       inc(tmpRect.Left, FDayView.GutterWidth);
-    FDayView.OnAfterDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent, RenderCanvas, tmpRect, IconRect);
+    FDayView.OnAfterDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent,
+      RenderCanvas, GutterRect, tmpRect, IconRect);
   end;
 
   RenderCanvas.Brush.Assign(OldBrush);   // wp: Original code had "Canvas" here which does not look correct.
@@ -1910,7 +1912,9 @@ begin
     { added because level 0 events were one pixel too far to the right }
   else
     AEventRect.Left := AEventRect.Left - 1;
-  AEventRect.Right := AEventRect.Left + eventWidth + 1;
+  AEventRect.Right := AEventRect.Left + eventWidth;; // + 1;  -- wp: removed to avoid painting over the right border line
+
+  dec(AEventRect.Top);  // wp: without this, the top border line of the event is thicker than the others
 end;
 
 { remove the date portion from the start and end times }

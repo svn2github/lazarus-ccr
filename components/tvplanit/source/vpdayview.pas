@@ -96,10 +96,10 @@ type
   TVpDVIcons = array [itAlarm..itCustom] of TVpDVIconData;
 
   TVpOnDVBeforeDrawEvent = procedure (Sender: TObject; Event: TVpEvent;
-    Active: Boolean; ACanvas: TCanvas; EventRect: TRect; IconRect: TRect) of object;
+    AActive: Boolean; ACanvas: TCanvas; AGutterRect, AEventRect, AIconRect: TRect) of object;
 
   TVpOnDVAfterDrawEvent = procedure (Sender: TObject; Event: TVpEvent;
-    Active: Boolean; ACanvas: TCanvas; EventRect: TRect; IconRect: TRect) of object;
+    AActive: Boolean; ACanvas: TCanvas; AGutterRect, AEventRect, AIconRect: TRect) of object;
 
   TVpOnDVDrawIcons = procedure (Sender: TObject; Event: TVpEvent;
     var Icons: TVpDVIcons) of object;
