@@ -2092,8 +2092,7 @@ begin
       FActiveEvent := nil;
       dvActiveEventRec := Rect(0, 0, 0, 0);
       dvActiveIconRec := Rect(0, 0, 0, 0);
-    end else
-      DataStore.PostEvents;
+    end;
     Invalidate;
   end;
 end;
