@@ -389,6 +389,7 @@ uses
 {$ENDIF}
   VpMisc;
 
+
 { EAdStreamError }
 
 constructor EVpStreamError.CreateError(const FilePos: Integer;
@@ -410,6 +411,7 @@ begin
   seFilePos := FilePos;
 end;
 {$ENDIF}
+
 
 { EAdFilterError }
 
@@ -433,6 +435,7 @@ begin
 end;
 {$ENDIF}
 
+
 { EAdParserError }
 
 constructor EVpParserError.CreateError(Line, LinePos: Integer;
@@ -449,6 +452,7 @@ begin
 end;
 {$ENDIF}
 
+
 (*****************************************************************************)
 { TVpCustomControl }
 
@@ -457,7 +461,6 @@ begin
   inherited Create (AOwner);
   TabStop := True;
 end;
-{=====}
 
 procedure TVpCustomControl.CMVisibleChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
@@ -465,26 +468,22 @@ begin
   if csLoading in ComponentState then
     Exit;
 end;
-{=====}
 
 procedure TVpCustomControl.CreateWnd;
 begin
   inherited CreateWnd;
 end;
-{=====}
 
 function TVpCustomControl.GetVersion: string;
 begin
   Result := VpVersionStr;
 end;
-{=====}
 
 procedure TVpCustomControl.SetVersion(const Value: string);
 begin
   // This method left intentionally blank.
   Unused(Value);
 end;
-{=====}
 
 {$IFDEF DELPHI}
 procedure TVpCustomControl.WMMouseWheel(var Msg: TMessage);
@@ -504,9 +503,8 @@ begin
   if Assigned(FOnMouseWheel) then
     FOnMouseWheel(Self, Shift, Delta, XPos, YPos);
 end;
-
 {$ENDIF}
-{=====}
+
 
 (*****************************************************************************)
 { TVpCollection }
@@ -516,7 +514,6 @@ begin
   FOwner := AOwner;
   Inherited Create(ItemClass);
 end;
-{=====}
 
 destructor TVpCollection.Destroy;
 begin
@@ -524,20 +521,17 @@ begin
   Clear;
   inherited Destroy;
 end;
-{=====}
 
 procedure TVpCollection.DoOnItemSelected(Index: Integer);
 begin
   if Assigned(FOnItemSelected) then
     FOnItemSelected(Self, Index);
 end;
-{=====}
 
 function TVpCollection.GetCount: Integer;
 begin
   Result := inherited Count;
 end;
-{=====}
 
 function TVpCollection.GetEditorCaption: string;
 begin
@@ -545,7 +539,6 @@ begin
   if Assigned(FOnGetEditorCaption) then
     FOnGetEditorCaption(Result);
 end;
-{=====}
 
 function TVpCollection.Add: TVpCollectionItem;
 begin
@@ -553,7 +546,6 @@ begin
   if ItemEditor <> nil then
 //TODO:    SendMessage(ItemEditor.Handle, Vp_PROPCHANGE, 0, 0);
 end;
-{=====}
 
 {$IFNDEF VERSION4}
 function TVpCollection.Insert(Index: Integer): TVpCollectionItem;
@@ -565,7 +557,6 @@ begin
     Items[I].Index := I + 1;
   Items[Count - 1].Index := Index;
 end;
-{=====}
 {$ENDIF}
 
 function TVpCollection.GetItem(Index: Integer): TVpCollectionItem;
@@ -577,13 +568,11 @@ function TVpCollection.GetOwner: TPersistent;
 begin
   result := FOwner;
 end;
-{=====}
 
 procedure TVpCollection.SetItem(Index: Integer; Value: TVpCollectionItem);
 begin
   inherited SetItem(Index, Value);
 end;
-{=====}
 
 function TVpCollection.ItemByName(const Name: string): TVpCollectionItem;
 var
@@ -596,7 +585,6 @@ begin
     end;
   Result := nil;
 end;
-{=====}
 
 procedure TVpCollection.Loaded;
 begin
@@ -608,7 +596,6 @@ begin
   end;
   IsLoaded := True;
 end;
-{=====}
 
 function TVpCollection.ParentForm : TForm;
 var
@@ -619,7 +606,6 @@ begin
     Temp := TComponent(Temp).Owner;
   Result := TForm(Temp);
 end;
-{=====}
 
 
 (*****************************************************************************)
@@ -629,19 +615,17 @@ function TVpCollectionItem.GetVersion: String;
 begin
   Result := VpVersionStr;
 end;
-{=====}
 
 procedure TVpCollectionItem.SetVersion(const Value: String);
 begin
   Unused(Value);
 end;
-{=====}
 
 procedure TVpCollectionItem.SetName(Value: String);
 begin
   FName := Value;
 end;
-{=====}
+
 
 (*****************************************************************************)
 { TO32ContainerList }
@@ -651,7 +635,6 @@ begin
   inherited Create;
   FOwner := TComponent(AOwner);
 end;
-{=====}
 
 destructor TVpContainerList.Destroy;
 var
@@ -661,7 +644,7 @@ begin
     TPanel(Items[I]).Free;
   inherited;
 end;
-{=====}
+
 
 (*****************************************************************************)
 { TVpComponent }
@@ -670,20 +653,18 @@ constructor TVpComponent.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 end;
-{=====}
 
 function TVpComponent.GetVersion: string;
 begin
   Result := VpVersionStr;
 end;
-{=====}
 
 procedure TVpComponent.SetVersion(const Value: string);
 begin
 // This method left intentionally blank.
   Unused(Value);
 end;
-{=====}
+
 
 (*****************************************************************************)
 { VpFont }
@@ -700,14 +681,13 @@ begin
   else if FOwner is TVpPersistent then
     TVpPersistent(FOwner).Invalidate;
 end;
-{=====}
 
 constructor TVpFont.Create(AOwner: TObject);
 begin
   inherited Create;
   FOwner := AOwner;
 end;
-{=====}
+
 
 (*****************************************************************************)
 { TVpCategoryColorMap }
@@ -728,71 +708,15 @@ begin
     FCat[i].Color := CAT_COLORS[i];
     FCat[i].Description := Format(RSCategoryDesc, [i]);
   end;
-{
-  FCat0 := TVpCategoryInfo.Create;
-    FCat0.Color := clNavy;
-    FCat0.Description := RSCategoryDesc0;
-    FCat0.FIndex := 0;
-  FCat1 := TVpCategoryInfo.Create;
-    FCat1.Color := clRed;
-    FCat1.Description := RSCategoryDesc1;
-    FCat1.FIndex := 1;
-  FCat2 := TVpCategoryInfo.Create;
-    FCat2.Color := clYellow;
-    FCat2.Description := RSCategoryDesc2;
-    FCat2.FIndex := 2;
-  FCat3 := TVpCategoryInfo.Create;
-    FCat3.Color := clLime;
-    FCat3.Description := RSCategoryDesc3;
-    FCat3.FIndex := 3;
-  FCat4 := TVpCategoryInfo.Create;
-    FCat4.Color := clPurple;
-    FCat4.Description := RSCategoryDesc4;
-    FCat4.FIndex := 4;
-  FCat5 := TVpCategoryInfo.Create;
-    FCat5.Color := clTeal;
-    FCat5.Description := RSCategoryDesc5;
-    FCat5.FIndex := 5;
-  FCat6 := TVpCategoryInfo.Create;
-    FCat6.Color := clFuchsia;
-    FCat6.Description := RSCategoryDesc6;
-    FCat6.FIndex := 6;
-  FCat7 := TVpCategoryInfo.Create;
-    FCat7.Color := clOlive;
-    FCat7.Description := RSCategoryDesc7;
-    FCat7.FIndex := 7;
-  FCat8 := TVpCategoryInfo.Create;
-    FCat8.Color := clAqua;
-    FCat8.Description := RSCategoryDesc8;
-    FCat8.FIndex := 8;
-  FCat9 := TVpCategoryInfo.Create;
-    FCat9.Color := clMaroon;
-    FCat9.Description := RSCategoryDesc9;
-    FCat9.FIndex := 9;
-    }
 end;
-{=====}
 
 destructor TVpCategoryColorMap.Destroy;
 var
   i: Integer;
 begin
   for i:=0 to High(FCat) do FCat[i].Free;
-  {
-  FCat0.Free;
-  FCat1.Free;
-  FCat2.Free;
-  FCat3.Free;
-  FCat4.Free;
-  FCat5.Free;
-  FCat6.Free;
-  FCat7.Free;
-  FCat8.Free;
-  FCat9.Free;
-  }
   inherited;
 end;
-{=====}
 
 function TVpCategoryColorMap.GetCategory(AIndex: Integer): TVpCategoryInfo;
 begin
@@ -805,24 +729,7 @@ begin
     Result := FCat[Index].Color
   else
     Result := clBlack;
-  {
-  case Index of
-    0 : result := FCat0.Color;
-    1 : result := FCat1.Color;
-    2 : result := FCat2.Color;
-    3 : result := FCat3.Color;
-    4 : result := FCat4.Color;
-    5 : result := FCat5.Color;
-    6 : result := FCat6.Color;
-    7 : result := FCat7.Color;
-    8 : result := FCat8.Color;
-    9 : result := FCat9.Color;
-  else
-    result := clBlack;
-  end;
-  }
 end;
-{=====}
 
 function TVpCategoryColorMap.GetName(Index: Integer): string;
 begin
@@ -830,29 +737,13 @@ begin
     Result := FCat[Index].Description
   else
     Result := '';
-  {
-  case Index of
-    0 : result := FCat0.Description;
-    1 : result := FCat1.Description;
-    2 : result := FCat2.Description;
-    3 : result := FCat3.Description;
-    4 : result := FCat4.Description;
-    5 : result := FCat5.Description;
-    6 : result := FCat6.Description;
-    7 : result := FCat7.Description;
-    8 : result := FCat8.Description;
-    9 : result := FCat9.Description;
-  else
-    result := '';
-  end;
-  }
 end;
-{=====}
 
 procedure TVpCategoryColorMap.SetCat(AIndex: Integer; AValue: TVpCategoryInfo);
 begin
   FCat[AIndex] := AValue;
 end;
+
 
 (*****************************************************************************)
 { TVpCategoryInfo }
@@ -886,15 +777,12 @@ begin
   if Value <> FColor then
     FColor := Value;
 end;
-{=====}
 
 procedure TVpCategoryInfo.SetDescription(Value: string);
 begin
   if Value <> FDescription then
     FDescription := Value;
 end;
-{=====}
-
 
 
 { TVpTimeRange }
@@ -920,7 +808,6 @@ begin
   FRangeBegin := Value;
   SetStartTime((Ord(Value) * 60) / MinutesInDay);
 end;
-{=====}
 
 procedure TVpTimeRange.SetRangeEnd(const Value: TVpHours);
 begin
@@ -931,7 +818,6 @@ begin
   FRangeEnd := Value;
   SetEndTime((Ord(Value) * 60) / MinutesInDay);
 end;
-{=====}
 
 procedure TVpTimeRange.SetEndTime(const Value: TDateTime);
 begin
@@ -941,7 +827,6 @@ begin
   if FOwner is TVpTimeSlotColor then
     (FOwner as TVpTimeSlotColor).Changed;
 end;
-{=====}
 
 procedure TVpTimeRange.SetStartTime(const Value: TDateTime);
 begin
@@ -951,7 +836,6 @@ begin
   if FOwner is TVpTimeSlotColor then
     (FOwner as TVpTimeSlotColor).Changed;
 end;
-{=====}
 
 
 (*****************************************************************************)
@@ -968,20 +852,17 @@ begin
   FActive := clWhite;
   FWeekday := WEEKDAY_COLOR; //clWhite;
 end;
-{=====}
 
 destructor TVpTimeSlotColor.Destroy;
 begin
   FActiveRange.Free;
   inherited;
 end;
-{=====}
 
 procedure TVpTimeSlotColor.Changed;
 begin
   FOwner.Invalidate;
 end;
-{=====}
 
 procedure TVpTimeSlotColor.SetActive(const Value: TColor);
 begin
@@ -990,7 +871,6 @@ begin
     Changed;
   end;
 end;
-{=====}
 
 procedure TVpTimeSlotColor.SetHoliday(const Value: TColor);
 begin
@@ -999,7 +879,6 @@ begin
     Changed;
   end;
 end;
-{=====}
 
 procedure TVpTimeSlotColor.SetInactive(const Value: TColor);
 begin
@@ -1008,7 +887,6 @@ begin
     Changed;
   end;
 end;
-{=====}
 
 procedure TVpTimeSlotColor.SetWeekday(const Value: TColor);
 begin
@@ -1017,7 +895,6 @@ begin
     Changed;
   end;
 end;
-{=====}
 
 procedure TVpTimeSlotColor.SetWeekend(const Value: TColor);
 begin
