@@ -11,7 +11,7 @@ object DlgEventEdit: TDlgEventEdit
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.9.0.0'
   object ButtonPanel: TPanel
     Left = 0
     Height = 37
@@ -205,8 +205,9 @@ object DlgEventEdit: TDlgEventEdit
         Width = 253
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
-        ItemHeight = 15
+        ItemHeight = 17
         OnDrawItem = CategoryDrawItem
+        Style = csOwnerDrawFixed
         TabOrder = 2
       end
       object imgClock: TImage

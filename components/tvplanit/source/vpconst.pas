@@ -284,6 +284,7 @@ const
   VL_LCL_SCALING := 0;
 {$ENDIF}
 
+ DROPDOWN_COUNT = 24;
 
 implementation
 

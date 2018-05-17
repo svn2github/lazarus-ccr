@@ -252,6 +252,9 @@ begin
   LoadCaptions;
   EndDate.Enabled := False;
   EndTime.Enabled := false;
+
+  Category.DropDownCount := DROPDOWN_COUNT;
+  Category.ItemHeight := LocationEdit.Height - 4;
 end;
 {=====}
 
@@ -292,34 +295,58 @@ end;
 procedure TDlgEventEdit.CategoryDrawItem(Control: TWinControl; Index: Integer;
   ARect: TRect; State: TOwnerDrawState);
 var
-  Color, SaveColor: TColor;
-  Name: string;
+  lBkColor, lGutterColor, SavedColor: TColor;
+  lDesc: string;
+  lBmp: TBitmap;
   ColorRect: TRect;
+  IconX, IconY: Integer;
+  hTxt, hGutter, hDist, vMargin, hMargin: Integer;
+  SavedStyle: TBrushStyle;
 begin
-  Unused(Control, State);
+  Unused( State);
 
+  hTxt := Category.Canvas.TextHeight('Tj');
+  vMargin := ScaleY(2, DesignTimeDPI);
+  hMargin := ScaleX(3, DesignTimeDPI);
+  hGutter := ScaleX(10, DesignTimeDPI);
+  hDist := ScaleX(5, DesignTimeDPI);
+
+  with CatColorMap.GetCategory(Index) do begin
+    lGutterColor := Color;
+    lDesc := Description;
+    lBmp := Bitmap;
+    lBkColor := BackgroundColor;
+  end;
+
+  SavedColor := Category.Canvas.Brush.Color;
+  SavedStyle := Category.Canvas.Brush.Style;
+
+  if State * [odSelected, odFocused] = [] then
+    Category.Canvas.Brush.Color := lBkColor;
   Category.Canvas.FillRect(ARect);
 
-  Color := CatColorMap.GetCategory(Index).Color;
-  Name := CatColorMap.GetCategory(Index).Description;
-
-  SaveColor := Category.Canvas.Brush.Color;
-  Category.Canvas.Brush.Color := Color;
+  Category.Canvas.Brush.Color := lGutterColor;
   Category.Canvas.Pen.Color := clBlack;
-  ColorRect.Left := ARect.Left + 3;
-  ColorRect.Top := ARect.Top + 2;
-  ColorRect.Bottom := ARect.Bottom - 2;
-  ColorRect.Right := ColorRect.Left + 20;
+  ColorRect.Left := ARect.Left + hMargin;
+  ColorRect.Top := ARect.Top + vMargin;
+  ColorRect.Bottom := ARect.Bottom - vMargin;
+  ColorRect.Right := ColorRect.Left + hGutter;
   Category.Canvas.FillRect(ColorRect);
-  {$IFDEF VERSION5}
   Category.Canvas.Rectangle(ColorRect);
-  {$ELSE}
-  Category.Canvas.Rectangle(ColorRect.Left, ColorRect.Top, ColorRect.Right,
-    ColorRect.Bottom);
-  {$ENDIF}
-  ARect.Left := ColorRect.Right + 5;
-  Category.Canvas.Brush.Color := SaveColor;
-  Category.Canvas.TextOut(ARect.Left, ARect.Top, Name);
+
+  if lBmp <> nil then begin
+   IconX := ColorRect.Right + hMargin;
+   IconY := (ARect.Top + ARect.Bottom - lBmp.Height) div 2;
+   Category.Canvas.Draw(IconX, IconY, lBmp);
+   inc(ColorRect.Right, lBmp.Width);
+  end;
+
+  ARect.Left := ColorRect.Right + hDist;
+  Category.Canvas.Brush.Style := bsClear;
+  Category.Canvas.TextOut(ARect.Left, (ARect.Top + ARect.Bottom - hTxt) div 2, lDesc);
+
+  Category.Canvas.Brush.Color := SavedColor;
+  Category.canvas.Brush.Style := SavedStyle;
 end;
 
 procedure TDlgEventEdit.CancelBtnClick(Sender: TObject);
