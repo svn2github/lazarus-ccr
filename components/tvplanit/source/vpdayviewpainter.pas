@@ -1570,9 +1570,6 @@ begin
   ShowCategory := False;
   ShowCustom := False;
 
- // FDayView.IconAttributes.AlarmBitmap.SaveToFile('d:\test.bmp');
-
-
   if Event.AlarmSet then begin
     dvBmpAlarm.Assign(FDayView.IconAttributes.AlarmBitmap);
     ShowAlarm := (dvBmpAlarm.Width <> 0) and (dvBmpAlarm.Height <> 0);
@@ -1596,12 +1593,15 @@ begin
     if Event.Category < 10 then
     begin
       cat := FDayView.Datastore.CategoryColorMap.GetCategory(Event.Category);
+      dvBmpCategory.Assign(cat.Bitmap);
+      {
       w := cat.Bitmap.Width;
       h := cat.Bitmap.Height;
       dvBmpCategory.Width := w;
       dvBmpCategory.Height := h;
       R := Rect(0, 0, w, h);
       dvBmpCategory.Canvas.CopyRect(R, cat.Bitmap.canvas, R);
+      }
     end else
     begin
       dvBmpCategory.Width  := 0;
