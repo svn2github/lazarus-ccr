@@ -928,7 +928,7 @@ begin
     Task := FActiveTask;
 
   if Assigned(FOwnerEditTask) then
-    FOwnerEditTask(self, Task, DataStore.Resource, AllowIt)
+    FOwnerEditTask(self, Task, NewTask, DataStore.Resource, AllowIt)
   else begin
     TaskDlg := TVpTaskEditDialog.Create(nil);
     try

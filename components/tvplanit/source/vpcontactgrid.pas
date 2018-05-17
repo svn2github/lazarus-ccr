@@ -1209,7 +1209,7 @@ var
 begin
   AllowIt := false;
   if Assigned(FOwnerEditContact) then
-    FOwnerEditContact(self, FActiveContact, DataStore.Resource, AllowIt)
+    FOwnerEditContact(self, FActiveContact, NewContact, DataStore.Resource, AllowIt)
   else begin
     Dlg := TVpContactEditDialog.Create(Owner);
     try
@@ -1255,7 +1255,7 @@ begin
   AllowIt := true;
   { call the user defined BeforeEdit contact }
   if Assigned(FBeforeEdit) then
-    FBeforeEdit(Self, FActiveContact, DataStore.Resource, AllowIt);
+    FBeforeEdit(Self, FActiveContact, false, DataStore.Resource, AllowIt);
 
   if AllowIt then begin
     { find the field to edit }

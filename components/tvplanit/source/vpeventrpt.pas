@@ -731,7 +731,7 @@ begin
 
   AllowIt := false;
   if Assigned (FOwnerEditEvent) then
-    FOwnerEditEvent(self, FActiveEvent, DataStore.Resource, AllowIt)
+    FOwnerEditEvent(self, FActiveEvent, NewEvent, DataStore.Resource, AllowIt)
   else begin
     EventDlg := TVpEventEditDialog.Create(nil);
     try

@@ -81,8 +81,8 @@ type
   { contact events }
   TVpContactEvent = procedure(Sender: TObject; Contact: TVpContact) of object;
 
-  TVpEditContactEvent = procedure(Sender: TObject; Contact: TVpContact;
-    Resource: TVpResource; var AllowIt: Boolean) of object;              
+  TVpEditContactEvent = procedure(Sender: TObject; AContact: TVpContact;
+    IsNewContact: Boolean; AResource: TVpResource; var AllowIt: Boolean) of object;
 
   TVpOwnerDrawContactEvent = procedure(Sender: TObject; const Canvas: TCanvas;
     R: TRect; Contact: TVpContact; var Drawn: Boolean) of object;
@@ -96,8 +96,8 @@ type
 
   TVpAfterEditTask = procedure(Sender: TObject; Task: TVpTask) of object;
 
-  TVpEditTask = procedure(Sender: TObject; Task: TVpTask;
-    Resource: TVpResource; var AllowIt: Boolean) of object;
+  TVpEditTask = procedure(Sender: TObject; ATask: TVpTask; IsNewTask: Boolean;
+    AResource: TVpResource; var AllowIt: Boolean) of object;
 
   TVpOwnerDrawTask = procedure(Sender: TObject; const Canvas: TCanvas;
     R: TRect; Task: TVpTask; var Drawn: Boolean) of object;
@@ -110,8 +110,8 @@ type
 
   TVpAfterEditEvent = procedure(Sender: TObject; Event: TVpEvent) of object;
 
-  TVpEditEvent = procedure(Sender: TObject; Event: TVpEvent;
-    Resource:TVpResource; var AllowIt: Boolean) of object;
+  TVpEditEvent = procedure(Sender: TObject; AEvent: TVpEvent;
+    IsNewEvent: Boolean; AResource:TVpResource; var AllowIt: Boolean) of object;
 
   TVpOnAddNewEvent = procedure (Sender: TObject;
     Event: TVpEvent) of object;
