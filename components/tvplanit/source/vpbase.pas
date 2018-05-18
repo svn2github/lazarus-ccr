@@ -38,7 +38,7 @@ uses
   {$ELSE}
   Windows, Messages.
   {$ENDIF}
-  Classes, Graphics, Controls, Dialogs, Forms, ExtCtrls, SysUtils,
+  Classes, Graphics, Controls, Dialogs, Forms, ExtCtrls, SysUtils, ImgList,
   VpConst, VpSR;
 
 const
@@ -205,12 +205,14 @@ type
     FBackgroundColor: TColor;
     FColor: TColor;
     FDescription: string;
+    FImageIndex: TImageIndex;
     FIndex: Integer;
     FBitmap: TBitmap;
     procedure SetBackgroundColor(const v: TColor);
     procedure SetBitmap(v: TBitmap);
     procedure SetColor(Value: TColor);
     procedure SetDescription(Value: string);
+    procedure SetImageIndex(Value: TImageIndex);
   public
     constructor Create;
     destructor Destroy; override;
@@ -220,6 +222,7 @@ type
     property Bitmap: TBitmap read FBitmap write SetBitmap;
     property Color: TColor read FColor write SetColor;
     property Description: string read FDescription write SetDescription;
+    property ImageIndex: TImageIndex read FImageIndex write SetImageIndex default -1;
     property CategoryIndex: Integer read FCategoryIndex;
   end;
 
@@ -753,6 +756,7 @@ begin
   inherited Create;
   FBitmap := TBitmap.Create;
   FBackgroundColor := clWindow;
+  FImageIndex := -1;
 end;
 
 destructor TVpCategoryInfo.Destroy;
@@ -782,6 +786,12 @@ procedure TVpCategoryInfo.SetDescription(Value: string);
 begin
   if Value <> FDescription then
     FDescription := Value;
+end;
+
+procedure TVpCategoryInfo.SetImageIndex(Value: TImageIndex);
+begin
+  if Value <> FImageIndex then
+    FImageIndex := Value;
 end;
 
 

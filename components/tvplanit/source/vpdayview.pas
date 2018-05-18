@@ -63,7 +63,7 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ExtCtrls, StdCtrls, Buttons, Forms, Menus,
+  Classes, Graphics, Controls, ExtCtrls, StdCtrls, Buttons, Forms, Menus, ImgList,
   VpConst, VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpCanvasUtils;
 
 type
@@ -189,12 +189,16 @@ type
       FShowRecurringBitmap: Boolean;
       FAlarmBitmap: TBitmap;
       FRecurringBitmap: TBitmap;
+      FAlarmImageIndex: TImageIndex;
+      FRecurringImageIndex: TImageIndex;
       FShowInPrint: Boolean;
       FOwner: TVpLinkableControl;
 
     protected
       procedure SetAlarmBitmap(v: TBitmap);
+      procedure SetAlarmImageIndex(v: TImageIndex);
       procedure SetRecurringBitmap(v: TBitmap);
+      procedure SetRecurringImageIndex(v: TImageIndex);
       procedure SetShowAlarmBitmap(const v: Boolean);
       procedure SetShowCategoryBitmap(const v: Boolean);
       procedure SetShowRecurringBitmap(const v: Boolean);
@@ -206,8 +210,12 @@ type
     published
       property AlarmBitmap: TBitmap
         read FAlarmBitmap write SetAlarmBitmap;
+      property AlarmImageIndex: TImageIndex
+        read FAlarmImageIndex write SetAlarmImageIndex default -1;
       property RecurringBitmap: TBitmap
         read FRecurringBitmap write SetRecurringBitmap;
+      property RecurringImageIndex: TImageIndex
+        read FRecurringImageIndex write SetRecurringImageIndex default -1;
       property ShowAlarmBitmap: Boolean
         read FShowAlarmBitmap write SetShowAlarmBitmap default True;
       property ShowCategoryBitmap : Boolean
@@ -651,6 +659,8 @@ begin
   FOwner := AOwner;
   FAlarmBitmap := TBitmap.Create;
   FRecurringBitmap := TBitmap.Create;
+  FAlarmImageIndex := -1;
+  FRecurringImageIndex := -1;
   FShowAlarmBitmap := True;
   FShowCategoryBitmap := True;
   FShowRecurringBitmap := True;
@@ -671,11 +681,31 @@ begin
     FOwner.Invalidate;
 end;
 
+procedure TVpDayViewIconAttributes.SetAlarmImageIndex(v: TImageIndex);
+begin
+  if FAlarmImageIndex <> v then
+  begin
+    FAlarmImageIndex := v;
+    if Assigned(FOwner) then
+      FOwner.Invalidate;
+  end;
+end;
+
 procedure TVpDayViewIconAttributes.SetRecurringBitmap(v: TBitmap);
 begin
   FRecurringBitmap.Assign(v);
   if Assigned(FOwner) then
-    FOwner.Invalidate
+    FOwner.Invalidate;
+end;
+
+procedure TVpDayViewIconAttributes.SetRecurringImageIndex(v: TImageIndex);
+begin
+  if FRecurringImageIndex <> v then
+  begin
+    FRecurringImageIndex := v;
+    if Assigned(FOwner) then
+      FOwner.Invalidate;
+  end;
 end;
 
 procedure TVpDayViewIconAttributes.SetShowAlarmBitmap(const v: Boolean);

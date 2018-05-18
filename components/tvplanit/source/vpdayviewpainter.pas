@@ -5,7 +5,7 @@ unit VpDayViewPainter;
 interface
 
 uses
-  SysUtils, LCLType, LCLIntf, Types, Classes, Graphics,
+  SysUtils, LCLType, LCLIntf, Types, Classes, Graphics, ImgList,
   VpConst, VPBase, VpData, VpBasePainter, VpDayView;
 
 type
@@ -83,6 +83,7 @@ type
     function CountOverlappingEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     procedure CreateBitmaps;
     function DetermineIconRect(AEventRect: TRect): TRect;
+    function GetImageList: TCustomImageList;
     function GetMaxOLEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     procedure DrawAllDayEvents;
     procedure DrawBorders;
@@ -227,6 +228,15 @@ begin
   Result.Bottom := AEventRect.Top + MaxHeight;
   if Result.Right > AEventRect.Right then
     Result.Right := AEventRect.Right;
+end;
+
+{ Returns the imagelist attached to the datastore of the dayview. }
+function TVpDayViewPainter.GetImageList: TCustomImageList;
+begin
+  if (FDayView <> nil) and (FDayView.Datastore <> nil) then
+    Result := FDayView.Datastore.Images
+  else
+    Result := nil;
 end;
 
 { returns the maximum OLEvents value from all overlapping neighbors }
@@ -1564,20 +1574,29 @@ var
   R: TRect;
   isOverlayed: Boolean;
   grp: TVpResourceGroup;
+  imgList: TCustomImageList;
 begin
   ShowAlarm := False;
   ShowRecurring := False;
   ShowCategory := False;
   ShowCustom := False;
 
+  imgList := GetImageList;
+
   if Event.AlarmSet then begin
-    dvBmpAlarm.Assign(FDayView.IconAttributes.AlarmBitmap);
+    if (FDayView.IconAttributes.AlarmImageIndex > -1) and (imgList <> nil) then
+      imgList.Getbitmap(FDayView.IconAttributes.AlarmImageIndex, dvBmpAlarm)
+    else
+      dvBmpAlarm.Assign(FDayView.IconAttributes.AlarmBitmap);
     ShowAlarm := (dvBmpAlarm.Width <> 0) and (dvBmpAlarm.Height <> 0);
   end;
 
   if Event.RepeatCode <> rtNone then
   begin
-    dvBmpRecurring.Assign(FDayView.IconAttributes.RecurringBitmap);
+    if (FDayView.IconAttributes.RecurringImageIndex > -1) and (imgList <> nil) then
+      imgList.GetBitmap(FDayview.IconAttributes.RecurringImageIndex, dvBmpRecurring)
+    else
+      dvBmpRecurring.Assign(FDayView.IconAttributes.RecurringBitmap);
     ShowRecurring := (dvBmpRecurring.Width <> 0) and (dvBmpRecurring.Height <> 0);
   end;
 
@@ -1593,7 +1612,10 @@ begin
     if Event.Category < 10 then
     begin
       cat := FDayView.Datastore.CategoryColorMap.GetCategory(Event.Category);
-      dvBmpCategory.Assign(cat.Bitmap);
+      if (cat.ImageIndex > -1) and (imgList <> nil) then
+        imgList.GetBitmap(cat.ImageIndex, dvBmpCategory)
+      else
+        dvBmpCategory.Assign(cat.Bitmap);
       {
       w := cat.Bitmap.Width;
       h := cat.Bitmap.Height;

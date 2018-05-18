@@ -35,11 +35,11 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLIntf, LazFileUtils,
+  LMessages, LCLProc, LCLIntf, LCLVersion, LazFileUtils,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Dialogs, SysUtils, Graphics, Controls, StdCtrls, ExtCtrls,
+  Classes, Dialogs, SysUtils, Graphics, Controls, StdCtrls, ExtCtrls, ImgList,
   VpBase, VpData, Forms, VpPrtFmt, VpLocalize;
 
 type
@@ -203,7 +203,17 @@ type
   TVpCustomDataStore = class(TVpComponent)
   private
     FMediaFolder       : String;
+    FImages            : TCustomImageList;
     function IsStoredMediaFolder: Boolean;
+    procedure SetImages(AValue: TCustomImageList);
+
+ {$IFDEF LCL}
+  {$IF LCL_FullVersion >= 1090000}
+  private
+    FImagesWidth: Integer;
+    procedure SetImagesWidth(AValue: Integer);
+  {$IFEND}
+ {$ENDIF}
 
   protected{private}
     FAutoCreate        : Boolean;
@@ -301,6 +311,14 @@ type
       read FCategoryColorMap write FCategoryColorMap;
     property HiddenCategories: TVpCategoryInfo
       read FHiddenCategories write FHiddenCategories;
+    property Images: TCustomImageList
+      read FImages write SetImages;
+   {$IFDEF LCL}
+    {$IF LCL_FullVersion >= 1090000}
+    property ImagesWidth: Integer
+      read FImagesWidth write SetImagesWidth default 0;
+    {$IFEND}
+   {$ENDIF}
     property DefaultEventSound: string
       read FDefaultEventSound write FDefaultEventSound;
     property EnableEventTimer: Boolean
@@ -683,7 +701,24 @@ begin
       NotifyDependents;
   end;
 end;
-{=====}
+
+procedure TVpCustomDataStore.SetImages(AValue: TCustomImageList);
+begin
+  if FImages <> AValue then begin
+    FImages := AValue;
+  end;
+end;
+
+{$IFDEF LCL}
+{$IF LCL_FullVersion >= 1090000}
+procedure TVpCustomDataStore.SetImagesWidth(AValue: Integer);
+begin
+  if FImagesWidth <> AValue then begin
+    FImagesWidth := AValue;
+  end;
+end;
+{$IFEND}
+{$ENDIF}
 
 procedure TVpCustomDataStore.SetResourceID(Value: Integer);
 begin
@@ -701,7 +736,6 @@ begin
       NotifyDependents;
   end;
 end;
-{=====}
 
 procedure TVpCustomDataStore.SetResource(Value: TVpResource);
 begin
