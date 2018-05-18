@@ -2,7 +2,7 @@
 
 {$I vp.inc}
 
-unit VpXmlDs;
+unit VpXmlDS;
 
 interface
 

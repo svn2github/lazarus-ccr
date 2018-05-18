@@ -775,7 +775,6 @@ object MainForm: TMainForm
     Images = ImageList1
     ImagesWidth = 0
     ItemFont.Color = clWhite
-    PlaySounds = False
     SelectedItem = -1
     SelectedItemFont.Color = clWhite
     SelectedItemFont.Style = [fsBold]

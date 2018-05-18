@@ -48,13 +48,14 @@ uses
 
 const
   BuildTime = {$I %DATE%} + {$I %TIME}; //'09/13/2002 09:25 AM';
-  VpVersionStr = 'v1.10';    {Visual PlanIt library version}
+  VpVersionStr = 'v1.12';    {Visual PlanIt library version}
   VpProductName = 'Visual PlanIt';
 
-  BorderStyles    : array[TBorderStyle] of LongInt =
-                    (0, WS_BORDER);
-  ScrollBarStyles : array [TScrollStyle] of LongInt =
-                    (0, WS_HSCROLL, WS_VSCROLL, WS_HSCROLL or WS_VSCROLL{$IFDEF LCL},0,0,0{$ENDIF});
+  BorderStyles: array[TBorderStyle] of LongInt = (0, WS_BORDER);
+
+  ScrollBarStyles: array[TScrollStyle] of LongInt = (
+    0, WS_HSCROLL, WS_VSCROLL, WS_HSCROLL or WS_VSCROLL{$IFDEF LCL},0,0,0{$ENDIF}
+  );
 
   SecondsInDay     = 86400;   { Number of seconds in a day               }
   SecondsInHour    = 3600;    { Number of seconds in an hour             }

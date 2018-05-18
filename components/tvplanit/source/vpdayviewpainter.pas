@@ -1029,7 +1029,10 @@ var
     begin
       ABitmap.Transparent := True;
       R := Rect(0, 0, w, h);
-      OffsetRect(R, AIconRect.Left + FScaledIconMargin, AIconRect.Top + FScaledIconMargin);
+      OffsetRect(R,
+        AIconRect.Left + FScaledIconMargin + DrawPos,
+        AIconRect.Top + FScaledIconMargin
+      );
 
       bmp := TBitmap.Create;
       try
@@ -1049,10 +1052,10 @@ var
   end;
 
 begin
-  DrawPos := 1;
-  DrawIcon(dvBmpCustom, CustomW, CustomH);
-  DrawIcon(dvBmpCategory, CategoryW, CategoryH);
-  DrawIcon(dvBmpAlarm, AlarmW, AlarmH);
+  DrawPos := 0;
+  DrawIcon(dvBmpCustom, CustomW, CustomH, true);
+  DrawIcon(dvBmpCategory, CategoryW, CategoryH, true);
+  DrawIcon(dvBmpAlarm, AlarmW, AlarmH, true);
   DrawIcon(dvBmpRecurring, RecurringW, RecurringH, false);
 end;
 
