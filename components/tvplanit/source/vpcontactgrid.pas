@@ -252,6 +252,9 @@ type
   published
     property Align;
     property Anchors;
+   {$IFDEF LCL}
+   property BorderSpacing;
+   {$ENDIF}
     property TabStop;
     property TabOrder;
     property AllowInPlaceEditing: Boolean

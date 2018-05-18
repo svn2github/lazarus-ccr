@@ -303,6 +303,9 @@ type
     property DragKind;
     {$ENDIF}
     property Align;
+    {$IFDEF LCL}
+    property BorderSpacing;
+    {$ENDIF}
     property BorderStyle;
     property Color;
     property Colors;

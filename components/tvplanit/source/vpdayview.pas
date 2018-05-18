@@ -464,6 +464,9 @@ type
   published
     property Align;
     property Anchors;
+   {$IFDEF LCL}
+    property BorderSpacing;
+   {$ENDIF}
     property Constraints;
     property ReadOnly;
     property TabStop;

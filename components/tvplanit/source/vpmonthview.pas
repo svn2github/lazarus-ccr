@@ -301,6 +301,9 @@ type
     { inherited properties }
     property Align;
     property Anchors;
+    {$IFDEF LCL}
+    property BorderSpacing;
+    {$ENDIF}
     property TabStop;
     property TabOrder;
     property AllowDragAndDrop: Boolean read FAllowDragAndDrop write FAllowDragAndDrop default false;

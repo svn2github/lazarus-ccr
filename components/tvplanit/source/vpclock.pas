@@ -279,7 +279,6 @@ type
     {$ENDIF}
     {$IFDEF LCL}
     property BorderSpacing;
-    property ChildSizing;
     {$ENDIF}
     property Active;
     property Align;
