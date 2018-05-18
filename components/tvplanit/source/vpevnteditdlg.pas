@@ -180,7 +180,7 @@ type
 implementation
 
 uses
-  DateUtils,
+  DateUtils, ImgList,
   VpSR, VpMisc, VpWavDlg;
 
 {$IFDEF LCL}
@@ -297,65 +297,94 @@ procedure TDlgEventEdit.CategoryDrawItem(Control: TWinControl; Index: Integer;
 var
   lBkColor, lGutterColor, SavedColor: TColor;
   lDesc: string;
-  lBmp: TBitmap;
+  bmp: TBitmap;
   ColorRect: TRect;
   IconX, IconY: Integer;
   hTxt, hGutter, hDist, vMargin, hMargin: Integer;
   SavedStyle: TBrushStyle;
+  imgIndex: Integer;
+  h: Integer = 0;
+ {$IFDEF LCL}
+  {$IF LCL_FullVersion >= 1090000}
+  imgres: TScaledImageListResolution;
+  ppi: Integer;
+  f: Double;
+  {$IFEND}
+ {$ENDIF}
 begin
   Unused( State);
 
-  lBmp := TBitmap.Create;
-  try
-    hTxt := Category.Canvas.TextHeight('Tj');
-    vMargin := ScaleY(2, DesignTimeDPI);
-    hMargin := ScaleX(3, DesignTimeDPI);
-    hGutter := ScaleX(10, DesignTimeDPI);
-    hDist := ScaleX(5, DesignTimeDPI);
+  hTxt := Category.Canvas.TextHeight('Tj');
+  vMargin := ScaleY(2, DesignTimeDPI);
+  hMargin := ScaleX(3, DesignTimeDPI);
+  hGutter := ScaleX(10, DesignTimeDPI);
+  hDist := ScaleX(5, DesignTimeDPI);
 
-    with CatColorMap.GetCategory(Index) do begin
-      lGutterColor := Color;
-      lDesc := Description;
-      lBkColor := BackgroundColor;
-      if (ImageIndex > -1) and (FDataStore <> nil) and (FDataStore.Images <> nil) then
-        FDataStore.Images.GetBitmap(ImageIndex, lBmp)
-      else
-        lBmp.Assign(Bitmap);
+  with CatColorMap.GetCategory(Index) do begin
+    lGutterColor := Color;
+    lDesc := Description;
+    lBkColor := BackgroundColor;
+    imgIndex := ImageIndex;
+    if Bitmap <> nil then h := Bitmap.Height;
+  end;
+
+  SavedColor := Category.Canvas.Brush.Color;
+  SavedStyle := Category.Canvas.Brush.Style;
+
+  if State * [odSelected, odFocused] = [] then
+    Category.Canvas.Brush.Color := lBkColor;
+  Category.Canvas.FillRect(ARect);
+
+  Category.Canvas.Brush.Color := lGutterColor;
+  Category.Canvas.Pen.Color := clBlack;
+  ColorRect.Left := ARect.Left; // + hMargin;
+  ColorRect.Top := ARect.Top; // + vMargin;
+  ColorRect.Bottom := ARect.Bottom; //- vMargin;
+  ColorRect.Right := ColorRect.Left + hGutter;
+  Category.Canvas.FillRect(ColorRect);
+  Category.Canvas.Rectangle(ColorRect);
+
+  IconX := ColorRect.Right + hMargin;
+  IconY := (ARect.Top + ARect.Bottom - h) div 2;
+  if (imgIndex > -1) and (FDataStore <> nil) and (FDataStore.Images <> nil) then
+  begin
+   {$IFDEF LCL}
+    {$IF LCL_FullVersion >= 1090000}
+    ppi := Category.Font.PixelsPerInch;
+    f := Category.GetCanvasScaleFactor;
+    imgres := FDatastore.Images.ResolutionForPPI[FDatastore.ImagesWidth, ppi, f];
+    h := imgRes.Height;
+    IconY := (ARect.Top + ARect.Bottom - h) div 2;
+    imgres.Draw(Category.Canvas, IconX, IconY, imgIndex, true);
+    inc(ColorRect.Right, imgres.Width);
+    {$ELSE}
+    FDatastore.Images.Draw(Category.Canvas, IconX, IconY, imgIndex, true);
+    {$IFEND}
+   {$ENDIF}
+  end else begin
+    bmp := TBitmap.Create;
+    try
+      bmp.Assign(CatColorMap.GetCategory(Index).Bitmap);
+      Category.Canvas.Draw(IconX, IconY, bmp);
+      inc(ColorRect.Right, bmp.Width);
+    finally
+      bmp.Free;
     end;
-
-    SavedColor := Category.Canvas.Brush.Color;
-    SavedStyle := Category.Canvas.Brush.Style;
-
-    if State * [odSelected, odFocused] = [] then
-      Category.Canvas.Brush.Color := lBkColor;
-    Category.Canvas.FillRect(ARect);
-
-    Category.Canvas.Brush.Color := lGutterColor;
-    Category.Canvas.Pen.Color := clBlack;
-    ColorRect.Left := ARect.Left + hMargin;
-    ColorRect.Top := ARect.Top + vMargin;
-    ColorRect.Bottom := ARect.Bottom - vMargin;
-    ColorRect.Right := ColorRect.Left + hGutter;
-    Category.Canvas.FillRect(ColorRect);
-    Category.Canvas.Rectangle(ColorRect);
-
+  end;
+                 (*
     if lBmp <> nil then begin
      IconX := ColorRect.Right + hMargin;
      IconY := (ARect.Top + ARect.Bottom - lBmp.Height) div 2;
      Category.Canvas.Draw(IconX, IconY, lBmp);
      inc(ColorRect.Right, lBmp.Width);
-    end;
+    end;           *)
 
-    ARect.Left := ColorRect.Right + hDist;
-    Category.Canvas.Brush.Style := bsClear;
-    Category.Canvas.TextOut(ARect.Left, (ARect.Top + ARect.Bottom - hTxt) div 2, lDesc);
+  ARect.Left := ColorRect.Right + hDist;
+  Category.Canvas.Brush.Style := bsClear;
+  Category.Canvas.TextOut(ARect.Left, (ARect.Top + ARect.Bottom - hTxt) div 2, lDesc);
 
-    Category.Canvas.Brush.Color := SavedColor;
-    Category.canvas.Brush.Style := SavedStyle;
-
-  finally
-    lBmp.Free;
-  end;
+  Category.Canvas.Brush.Color := SavedColor;
+  Category.canvas.Brush.Style := SavedStyle;
 end;
 
 procedure TDlgEventEdit.CancelBtnClick(Sender: TObject);

@@ -5,7 +5,8 @@ unit VpDayViewPainter;
 interface
 
 uses
-  SysUtils, LCLType, LCLIntf, Types, Classes, Graphics, ImgList,
+  SysUtils, LCLType, LCLIntf, LCLVersion,
+  Types, Classes, Graphics, ImgList,
   VpConst, VPBase, VpData, VpBasePainter, VpDayView;
 
 type
@@ -209,11 +210,17 @@ end;
 function TVpDayViewPainter.DetermineIconRect(AEventRect: TRect): TRect;
 var
   MaxHeight: Integer;
+  w: Integer;
 begin
-  Result.Left := AEventRect.Left;
-  Result.Top := AEventRect.Top;
-  Result.Bottom := AEventRect.Bottom;
-  Result.Right := AEventRect.Left + AlarmW + RecurringW + CategoryW + CustomW + FScaledIconMargin + 2;
+  w := 0;
+  if AlarmW <> 0 then inc(w, AlarmW + FScaledIconMargin);
+  if RecurringW <> 0 then inc(w, RecurringW + FScaledIconMargin);
+  if CategoryW <> 0 then inc(w, CategoryW + FScaledIconMargin);
+  if CustomW <> 0 then inc(w, CustomW + FScaledIconMargin);
+  if w <> 0 then inc(w, FScaledIconMargin);
+
+  Result := AEventRect;
+  Result.Right := Result.Left + w;
 
   MaxHeight := AlarmH + FScaledIconMargin;
   if RecurringH + FScaledIconMargin > MaxHeight then
@@ -1048,15 +1055,16 @@ var
 
       if IncDrawPos then
         inc(DrawPos, w + FScaledIconMargin);
+
     end;
   end;
 
 begin
   DrawPos := 0;
+  DrawIcon(dvBmpAlarm, AlarmW, AlarmH, true);
+  DrawIcon(dvBmpRecurring, RecurringW, RecurringH, true);
   DrawIcon(dvBmpCustom, CustomW, CustomH, true);
   DrawIcon(dvBmpCategory, CategoryW, CategoryH, true);
-  DrawIcon(dvBmpAlarm, AlarmW, AlarmH, true);
-  DrawIcon(dvBmpRecurring, RecurringW, RecurringH, false);
 end;
 
 procedure TVpDayViewPainter.DrawEventText(const AText: String;
@@ -1578,6 +1586,13 @@ var
   isOverlayed: Boolean;
   grp: TVpResourceGroup;
   imgList: TCustomImageList;
+ {$IFDEF LCL}
+  {$IF LCL_FullVersion >= 1090000}
+  ppi: Integer;
+  f: Double;
+  w96: Integer;
+  {$IFEND}
+ {$ENDIF}
 begin
   ShowAlarm := False;
   ShowRecurring := False;
@@ -1585,11 +1600,29 @@ begin
   ShowCustom := False;
 
   imgList := GetImageList;
+ {$IFDEF LCL}
+  {$IF LCL_FullVersion >= 1090000}
+  ppi := FDayView.Font.PixelsPerInch;
+  f := FDayView.GetCanvasScaleFactor;
+  w96 := FDayView.DataStore.ImagesWidth;
+  w := imgList.SizeForPPI[w96, ppi].CX;
+  {$IFEND}
+ {$ENDIF}
 
   if Event.AlarmSet then begin
     if (FDayView.IconAttributes.AlarmImageIndex > -1) and (imgList <> nil) then
-      imgList.Getbitmap(FDayView.IconAttributes.AlarmImageIndex, dvBmpAlarm)
-    else
+    begin
+     {$IFDEF LCL}
+      {$IF LCL_FullVersion >= 1090000}
+      dvBmpAlarm.PixelFormat := pf32Bit;
+      dvBmpAlarm.SetSize(w, w);
+      imgList.DrawForPPI(dvBmpAlarm.Canvas, 0, 0,
+        FDayView.IconAttributes.AlarmImageIndex, w96, ppi, f);
+      {$ELSE}
+      imgList.GetBitmap(FDayView.IconAttributes.AlarmImageIndex, dvBmpAlarm)
+      {$IFEND}
+     {$ENDIF}
+    end else
       dvBmpAlarm.Assign(FDayView.IconAttributes.AlarmBitmap);
     ShowAlarm := (dvBmpAlarm.Width <> 0) and (dvBmpAlarm.Height <> 0);
   end;
@@ -1597,8 +1630,18 @@ begin
   if Event.RepeatCode <> rtNone then
   begin
     if (FDayView.IconAttributes.RecurringImageIndex > -1) and (imgList <> nil) then
+    begin
+     {$IFDEF LCL}
+      {$IF LCL_FullVersion >= 1090000}
+      dvBmpRecurring.PixelFormat := pf32Bit;
+      dvBmpRecurring.SetSize(w, w);
+      imgList.DrawForPPI(dvBmpRecurring.Canvas, 0, 0,
+        FDayView.IconAttributes.RecurringImageIndex, w96, ppi, f);
+      {$ELSE}
       imgList.GetBitmap(FDayview.IconAttributes.RecurringImageIndex, dvBmpRecurring)
-    else
+      {$IFEND}
+     {$ENDIF}
+    end else
       dvBmpRecurring.Assign(FDayView.IconAttributes.RecurringBitmap);
     ShowRecurring := (dvBmpRecurring.Width <> 0) and (dvBmpRecurring.Height <> 0);
   end;
@@ -1616,17 +1659,18 @@ begin
     begin
       cat := FDayView.Datastore.CategoryColorMap.GetCategory(Event.Category);
       if (cat.ImageIndex > -1) and (imgList <> nil) then
+      begin
+       {$IFDEF LCL}
+        {$IF LCL_FullVersion >= 1090000}
+        dvBmpCategory.PixelFormat := pf32Bit;
+        dvBmpCategory.SetSize(w, w);
+        imgList.DrawForPPI(dvBmpCategory.Canvas, 0, 0, cat.ImageIndex, w96, ppi, f);
+        {$ELSE}
         imgList.GetBitmap(cat.ImageIndex, dvBmpCategory)
-      else
+        {$IFEND}
+       {$ENDIF}
+      end else
         dvBmpCategory.Assign(cat.Bitmap);
-      {
-      w := cat.Bitmap.Width;
-      h := cat.Bitmap.Height;
-      dvBmpCategory.Width := w;
-      dvBmpCategory.Height := h;
-      R := Rect(0, 0, w, h);
-      dvBmpCategory.Canvas.CopyRect(R, cat.Bitmap.canvas, R);
-      }
     end else
     begin
       dvBmpCategory.Width  := 0;
