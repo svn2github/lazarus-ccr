@@ -1070,9 +1070,9 @@ end;
 procedure TVpDayViewPainter.DrawEventText(const AText: String;
   const AEventRect, AIconRect: TRect; ALevel: Integer);
 var
-  WorkRegion1: HRGN;
-  WorkRegion2: HRGN;
-  TextRegion: HRGN;
+  WorkRegion1: HRGN = 0;
+  WorkRegion2: HRGN = 0;
+  TextRegion: HRGN = 0;
   CW: Integer;
 begin
   if (FDayView.WrapStyle <> wsNone) then begin
@@ -1104,15 +1104,9 @@ begin
           Rect(AEventRect.Right - 6, AEventRect.Bottom - 7, AEventRect.Right - 3, AEventRect.Bottom - 4));
       end;
     finally
-      if ((AEventRect.Bottom > AIconRect.Bottom) and (AEventRect.Left > AIconRect.Right)) or
-         (FDayView.WrapStyle = wsIconFlow)
-      then begin
-        DeleteObject(WorkRegion1);
-        DeleteObject(WorkRegion2);
-        DeleteObject(TextRegion);
-      end else begin
-        DeleteObject(TextRegion);
-      end;
+      if WorkRegion1 <> 0 then DeleteObject(WorkRegion1);
+      if WorkRegion2 <> 0 then DeleteObject(WorkRegion2);
+      if TextRegion <> 0 then DeleteObject(TextRegion);
     end;
   end
   else begin
