@@ -2426,8 +2426,8 @@ end;
 procedure TVpDayView.SetCustomRowHeight(Value: Integer);
 begin
   if Value <> FCustomRowHeight then begin
-    if (Value <> 0) and (Value < TextMargin)
-      then FCustomRowHeight := TextMargin
+    if (Value <> 0) and (Value < 1)
+      then FCustomRowHeight := 1
       else FCustomRowHeight := Value;
     Invalidate;
   end;
