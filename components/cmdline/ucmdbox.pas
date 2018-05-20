@@ -75,7 +75,7 @@ unit uCmdBox;
 interface
 
 uses Classes, SysUtils, ExtCtrls, Controls, Graphics, Forms, LCLType, LCLIntf,
-     lmessages, lresources, ClipBrd, LCLProc;
+     lmessages, lresources, ClipBrd, LCLProc, LazUtf8;
 
 type
   TCaretType = (cartLine, cartSubBar, cartBigBar, cartUser);
