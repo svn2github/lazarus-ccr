@@ -91,6 +91,8 @@ procedure WarningBox(const S:string; Params:array of const); overload;
 procedure ErrorBox(const S:string);
 procedure ErrorBox(const S:string; Params:array of const);
 
+procedure RxWriteLog(ALogType:TEventType; const ALogMessage:string);
+procedure RxWriteLog(ALogType:TEventType; const ALogMessage:string; Params:array of const);
 procedure RxDefaultWriteLog( ALogType:TEventType; const ALogMessage:string);
 function RxDefaultLogFileName:string;
 procedure InitRxLogs;
@@ -131,7 +133,7 @@ begin
 end;
 {$ENDIF}
 
-procedure DoWriteLog(ALogType:TEventType; const ALogMessage:string);
+procedure RxWriteLog(ALogType:TEventType; const ALogMessage:string);
 begin
   if Assigned(OnRxLoggerEvent) then
     OnRxLoggerEvent(ALogType, ALogMessage)
@@ -140,7 +142,7 @@ end;
 procedure InfoBox(const S: string);
 begin
   MessageDlg(S, mtInformation, [mbOK], 0);
-  DoWriteLog(etInfo, S);
+  RxWriteLog(etInfo, S);
   Application.Log(etInfo, S);
 end;
 
@@ -152,7 +154,7 @@ end;
 procedure WarningBox(const S: string);
 begin
   MessageDlg(S, mtWarning, [mbOK], 0);
-  DoWriteLog(etWarning, S);
+  RxWriteLog(etWarning, S);
   Application.Log(etWarning, S);
 end;
 
@@ -164,13 +166,19 @@ end;
 procedure ErrorBox(const S: string);
 begin
   MessageDlg(S, mtError, [mbOK], 0);
-  DoWriteLog(etError, S);
+  RxWriteLog(etError, S);
   Application.Log(etError, S);
 end;
 
 procedure ErrorBox(const S: string; Params: array of const);
 begin
   ErrorBox(Format(S, Params));
+end;
+
+procedure RxWriteLog(ALogType: TEventType; const ALogMessage: string;
+  Params: array of const);
+begin
+  RxWriteLog(ALogType, Format(ALogMessage, Params));
 end;
 
 procedure RxDefaultWriteLog(ALogType: TEventType; const ALogMessage: string);
