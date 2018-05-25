@@ -79,6 +79,10 @@ msgstr "Dato cambiado. Salvar?"
 msgid "Database locked: %s"
 msgstr "Base de Dato bloqueada: %s"
 
+#: rxdconst.sdatabasename1
+msgid "Database"
+msgstr ""
+
 #: rxdconst.sdbcomboboxfieldnotassigned
 msgid "%s:TDBComboBox - DataField not assigned"
 msgstr ""

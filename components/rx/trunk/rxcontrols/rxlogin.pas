@@ -169,6 +169,8 @@ type
     KeyImage: TImage;
     HintLabel: TLabel;
     btnOK: TBitBtn;
+    Label1: TLabel;
+    Timer1: TTimer;
     UserNameLabel: TLabel;
     PasswordLabel: TLabel;
     UserNameEdit: TEdit;
@@ -180,6 +182,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   private
     FSelectDatabase: Boolean;
     FUnlockMode: Boolean;
@@ -206,7 +209,7 @@ function CreateLoginDialog(UnlockMode, ASelectDatabase: Boolean;
 implementation
 
 uses
-  Registry, IniFiles, RxAppUtils, RxDConst, rxlclutils, RxConst;
+  Registry, IniFiles, RxAppUtils, RxDConst, rxlclutils, RxConst, LazUTF8;
 
 const
   keyLoginSection                = 'Login Dialog';
@@ -216,6 +219,7 @@ const
   keyLastLoginFormDetailStatus   = 'Last Logged Detail Status';
   keyLastLoginFormDetailSelected = 'Last Logged Selected Detail';
 
+{$R *.lfm}
 
 function CreateLoginDialog(UnlockMode, ASelectDatabase: Boolean;
   FormShowEvent, OkClickEvent: TNotifyEvent): TRxLoginForm;
@@ -257,7 +261,7 @@ destructor TRxCustomLogin.Destroy;
 begin
   if FLocked then
   begin
-//    Application.UnhookMainWindow(UnlockHook);
+    //Application.AddOnActivateHandler(UnlockHook);
     FLocked := False;
   end;
   FreeAndNil(FDetailItems);
@@ -448,14 +452,16 @@ function TRxCustomLogin.UnlockHook(var Message: TLMessage): Boolean;
   var
     Popup: HWnd;
   begin
-(*    with Application do
-      if IsWindowVisible(Application.Handle) and IsWindowEnabled(Handle) then
+(*
+    with Application do
+      if IsWindowVisible(Application.MainForm.Handle) and IsWindowEnabled(Application.MainForm.Handle) then
 {$IFDEF WIN32}
         SetForegroundWindow(Handle);
 {$ELSE}
-        BringWindowToTop(Handle);
+        BringWindowToTop(Application.MainForm.Handle);
 {$ENDIF}
-    if FUnlockDlgShowing then begin
+    if FUnlockDlgShowing then
+    begin
       Popup := GetLastActivePopup(Application.Handle);
       if (Popup <> 0) and IsWindowVisible(Popup) and
         (WindowClassName(Popup) = TRxLoginForm.ClassName) then
@@ -465,20 +471,22 @@ function TRxCustomLogin.UnlockHook(var Message: TLMessage): Boolean;
 {$ELSE}
         BringWindowToTop(Popup);
 {$ENDIF}
-      end;  //*)
+      end;
       Result := False;
-(*      Exit;
+      Exit;
     end;
+*)
     FUnlockDlgShowing := True;
     try
       Result := DoUnlockDialog;
     finally
       FUnlockDlgShowing := False;
     end;
-    if Result then begin
+{    if Result then
+    begin
       Application.UnhookMainWindow(UnlockHook);
       FLocked := False;
-    end;*)
+    end;}
   end;
 
 begin
@@ -489,7 +497,8 @@ begin
 {      LM_QUERYOPEN:
         begin
           UnlockHook := not DoUnlock;
-        end;}
+        end;
+}
       LM_SHOWWINDOW:
         if Bool(WParam) then begin
           UnlockHook := not DoUnlock;
@@ -696,7 +705,7 @@ begin
   if FSelectDatabase then
   begin
     ClientHeight := CustomCombo.Top + PasswordEdit.Top - UserNameEdit.Top;
-    S := SDatabaseName;
+    S := SDatabaseName1;
     I := Pos(':', S);
     if I = 0 then I := Length(S);
     DataBaseLabel.Caption := '&' + Copy(S, 1, I);
@@ -706,6 +715,8 @@ begin
     DataBaseLabel.Visible := False;
     CustomCombo.Visible := False;
     btnMore.Visible := False;
+    Label1.AnchorSideLeft.Control:=Self;
+    Label1.AnchorSideLeft.Side:=asrLeft;
   end;
 
   SetShowDetailParams(ShowDetailParams);
@@ -727,6 +738,11 @@ begin
     ActiveControl := PasswordEdit;
   if Assigned(FOnFormShow) then FOnFormShow(Self);
   FAttempt := 0;
+end;
+
+procedure TRxLoginForm.Timer1Timer(Sender: TObject);
+begin
+  Label1.Caption:='  ' + UTF8UpperCase(UTF8Copy(RxGetKeyboardLayoutName, 1, 2)) + '  ';
 end;
 
 procedure TRxLoginForm.SetShowDetailParams(const AValue: boolean);
@@ -765,6 +781,4 @@ begin
   FSelectDatabase:=rloCustomSelect in AValue;
 end;
 
-initialization
- {$I rxlogin.lrs}
 end.

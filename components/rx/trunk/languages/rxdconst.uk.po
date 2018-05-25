@@ -84,6 +84,10 @@ msgstr "Дані були змінені. Зберегти?"
 msgid "Database locked: %s"
 msgstr "База даних блокована: %s"
 
+#: rxdconst.sdatabasename1
+msgid "Database"
+msgstr ""
+
 #: rxdconst.sdbcomboboxfieldnotassigned
 msgid "%s:TDBComboBox - DataField not assigned"
 msgstr "%s:TDBComboBox - Не присвоєно властивість DataField"

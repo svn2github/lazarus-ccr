@@ -81,6 +81,7 @@ resourcestring
   SExprBadCompare          = 'Compare opertion needs field and const';
   SConfirmSave             = 'Data changed. Save?';
   SDatabaseName            = 'Database locked: %s';
+  SDatabaseName1           = 'Database';
   SUnlockCaption           = 'Unlock';
   SUnlockHint              = 'Enter your password';
   SDeleteMultipleRecords   = 'Delete all selected records?';

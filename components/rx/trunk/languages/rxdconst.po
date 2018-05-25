@@ -74,6 +74,10 @@ msgstr ""
 msgid "Database locked: %s"
 msgstr ""
 
+#: rxdconst.sdatabasename1
+msgid "Database"
+msgstr ""
+
 #: rxdconst.sdbcomboboxfieldnotassigned
 msgid "%s:TDBComboBox - DataField not assigned"
 msgstr ""
