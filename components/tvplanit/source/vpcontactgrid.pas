@@ -351,7 +351,7 @@ begin
   TabStop := False;
   BorderStyle := bsNone;
   {$IFDEF VERSION4}
-  DoubleBuffered := False;
+//  DoubleBuffered := False;
   {$ENDIF}
   { make it tiny }
   Height := 1;
@@ -446,7 +446,7 @@ begin
 
   { Set styles and initialize internal variables }
   {$IFDEF VERSION4}
-  DoubleBuffered        := true;
+//  DoubleBuffered        := true;
   {$ENDIF}
   FVisibleContacts      := 0;
   FAllowInPlaceEdit     := true;

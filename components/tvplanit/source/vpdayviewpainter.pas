@@ -1599,7 +1599,10 @@ begin
   ppi := FDayView.Font.PixelsPerInch;
   f := FDayView.GetCanvasScaleFactor;
   w96 := FDayView.DataStore.ImagesWidth;
-  w := imgList.SizeForPPI[w96, ppi].CX;
+  if imgList <> nil then
+    w := imgList.SizeForPPI[w96, ppi].CX
+  else
+    w := w96;
   {$IFEND}
  {$ENDIF}
 

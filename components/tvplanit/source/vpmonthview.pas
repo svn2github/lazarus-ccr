@@ -457,7 +457,7 @@ begin
 
    { Set styles and initialize internal variables }
   {$IFDEF VERSION4}
-  DoubleBuffered := true;
+//  DoubleBuffered := true;
   {$ENDIF}
   FShowEvents := true;
   FEventDayStyle := [];

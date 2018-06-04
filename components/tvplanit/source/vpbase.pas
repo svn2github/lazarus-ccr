@@ -198,8 +198,11 @@ type
   end;
 
   {TVpCategoryColorMap}
+  TVpCategoryColorMap = class;
+
   TVpCategoryInfo= class(TPersistent)
   private
+    FOwner: TComponent;  // This is the DataStore.
     FCategoryIndex: Integer;
   protected
     FBackgroundColor: TColor;
@@ -214,8 +217,9 @@ type
     procedure SetDescription(Value: string);
     procedure SetImageIndex(Value: TImageIndex);
   public
-    constructor Create;
+    constructor Create(AOwner: TComponent);
     destructor Destroy; override;
+    property Owner: TComponent read FOwner;
   published
     property BackgroundColor: TColor
       read FBackgroundColor write SetBackgroundColor default clWindow;
@@ -228,10 +232,11 @@ type
 
   TVpCategoryColorMap = class(TPersistent)
   protected
+    FOwner: TComponent;
     FCat: array[0..9] of TVpCategoryInfo;
     procedure SetCat(AIndex: Integer; AValue: TVpCategoryInfo);
   public
-    constructor Create;
+    constructor Create(AOwner: TComponent);
     destructor Destroy; override;
     function GetColor(Index: Integer): TColor;
     function GetName(Index: Integer):string;
@@ -695,7 +700,7 @@ end;
 (*****************************************************************************)
 { TVpCategoryColorMap }
 
-constructor TVpCategoryColorMap.Create;
+constructor TVpCategoryColorMap.Create(AOwner: TComponent);
 const
   CAT_COLORS: Array[0..9] of TColor = (
     clNavy, clRed, clYellow, clLime, clPurple, clTeal, clFuchsia, clOlive, clAqua, clMaroon
@@ -704,9 +709,10 @@ var
   i: Integer;
 begin
   inherited Create;
+  FOwner := AOwner;
   for i:=0 to High(FCat) do
   begin
-    FCat[i] := TVpCategoryInfo.Create;
+    FCat[i] := TVpCategoryInfo.Create(FOwner);
     FCat[i].FIndex := i;
     FCat[i].Color := CAT_COLORS[i];
     FCat[i].Description := Format(RSCategoryDesc, [i]);
@@ -751,9 +757,10 @@ end;
 (*****************************************************************************)
 { TVpCategoryInfo }
 
-constructor TVpCategoryInfo.Create;
+constructor TVpCategoryInfo.Create(AOwner: TComponent);
 begin
   inherited Create;
+  FOwner := AOwner;
   FBitmap := TBitmap.Create;
   FBackgroundColor := clWindow;
   FImageIndex := -1;

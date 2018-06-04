@@ -456,8 +456,8 @@ begin
   FResources := TVpResources.Create(Self);
   FTimeRange := TVpTimeRange.Create(Self);
 
-  FCategoryColorMap := TVpCategoryColorMap.Create;
-  FHiddenCategories := TVpCategoryInfo.Create;
+  FCategoryColorMap := TVpCategoryColorMap.Create(Self);
+  FHiddenCategories := TVpCategoryInfo.Create(Self);
   with FHiddenCategories do begin
     BackgroundColor := clSilver;
     Color := clGray;

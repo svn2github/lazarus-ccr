@@ -38,7 +38,7 @@ interface
 uses
  {$IFDEF LCL}
   LCLProc, LCLType, LCLIntf, LazFileUtils,
-  PropEdits, LazarusPackageIntf, FieldsEditor, ComponentEditors,
+  PropEdits, GraphPropEdits, LazarusPackageIntf, FieldsEditor, ComponentEditors,
  {$ELSE}
   Windows,
   {$IFDEF VERSION6}
@@ -47,10 +47,16 @@ uses
   DsgnIntf,
   {$ENDIF}
  {$ENDIF}
-  Dialogs, Classes, Controls, TypInfo, Forms, SysUtils,
+  Dialogs, Classes, Controls, TypInfo, Forms, SysUtils, ImgList,
   VpDatePropEdit;
 
 type
+  { TVpCategoryInfoImageIndexProperty }
+  TVpCategoryInfoImageIndexProperty = class(TImageIndexPropertyEditor)
+  protected
+    function GetImageList: TCustomImageList; overload;
+  end;
+
   {TDBStringProperty}
   TDBStringProperty = class(TStringProperty)
   public
@@ -200,6 +206,25 @@ uses
   VpAbout,                    { About form for the About property editor     }
   VpNabEd,                    { component editor for the VpNavBar            }
   VpFlxDSEd1;                 { Field mapper component editor for the FlexDS }
+
+
+(*****************************************************************************)
+{ TVpCategoryInfoImageIndexProperty }
+
+function TVpCategoryInfoImageIndexProperty.GetImageList: TCustomImageList;
+var
+  P: TPersistent;
+begin
+  P := GetComponent(0);
+  if P is TVpCategoryInfo then begin
+    if TVpCategoryInfo(P).Owner is TVpCustomDatastore then begin
+      P := TVpCategoryInfo(P).Owner;
+      Result := TVpCustomDataStore(P).Images;
+      exit;
+    end;
+  end;
+  Result := nil;
+end;
 
 
 (*****************************************************************************)
@@ -614,6 +639,9 @@ begin
   RegisterPropertyEditor(TypeInfo(string), TVpCustomDataStore,
     'DefaultEventSound', TWavFilenameProperty);
  {$ENDIF}
+
+  RegisterPropertyEditor(TypeInfo(TImageIndex), TVpCategoryInfo,
+    'ImageIndex', TVpCategoryInfoImageIndexProperty);
 
   RegisterPropertyEditor(TypeInfo(String), TVpCustomDatastore,
     'DefaultEventSound', TVpWavFilenameProperty);

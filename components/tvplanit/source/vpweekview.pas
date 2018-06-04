@@ -333,7 +333,7 @@ begin
   TabStop := False;
   BorderStyle := bsNone;
   {$IFDEF VERSION4}
-  DoubleBuffered := False;
+//  DoubleBuffered := False;
   {$ENDIF}
 end;
 {=====}
@@ -472,7 +472,7 @@ begin
 
   { Set styles and initialize internal variables }
   {$IFDEF VERSION4}
-  DoubleBuffered := true;
+//  DoubleBuffered := true;
   {$ENDIF}
 
   FWeekStartsOn := dtMonday;

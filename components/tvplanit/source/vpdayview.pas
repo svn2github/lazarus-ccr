@@ -540,7 +540,7 @@ begin
   inherited Create(AOwner);
   TabStop := False;
   BorderStyle := bsNone;
-  DoubleBuffered := False;
+//  DoubleBuffered := False;
 end;
 {=====}
 
@@ -804,7 +804,7 @@ begin
 
   { Set styles and initialize internal variables }
   {$IFDEF VERSION4}
-  DoubleBuffered := true;
+//  DoubleBuffered := true;
   {$ENDIF}
   NumDays := 1;
   dvInLinkHandler := false;
