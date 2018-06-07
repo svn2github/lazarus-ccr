@@ -3205,8 +3205,8 @@ end;
 procedure TVpCustomNavBar.ScaleFontsPPI(const AProportion: Double);
 begin
   inherited;
-  DoScaleFontPPI(FItemFont.Font, AProportion);
-  DoScaleFontPPI(FScaledItem.Font, AProportion);
+  DoScaleFontPPI(FItemFont, AProportion);
+  DoScaleFontPPI(FSelectedItemFont, AProportion);
 end;
 {$ENDIF}
 {$ENDIF}
