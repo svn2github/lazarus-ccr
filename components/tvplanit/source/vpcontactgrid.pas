@@ -177,12 +177,12 @@ type
     procedure cgHookUp;
     procedure Paint; override;
     procedure Loaded; override;
-    procedure cgSpawnContactEditDialog(IsNewContact: Boolean);
-    procedure cgSetActiveContactByCoord(Pnt: TPoint);
-    function GetContactIndexByCoord(Pnt: TPoint): Integer;
     procedure cgScrollHorizontal(Rows: Integer);
+    procedure cgSetActiveContactByCoord(Pnt: TPoint);
+    procedure cgSpawnContactEditDialog(IsNewContact: Boolean);
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
+    function GetContactIndexByCoord(Pnt: TPoint): Integer;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
@@ -190,6 +190,7 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure PopupAddContact(Sender: TObject);
+    procedure PopupAddVCards(Sender: TObject);
     procedure PopupDeleteContact(Sender: TObject);
     procedure PopupEditContact(Sender: TObject);
     procedure EditContact;
@@ -291,7 +292,7 @@ implementation
 
 uses
   SysUtils, DateUtils, Dialogs,
-  VpContactEditDlg, VpContactGridPainter;
+  VpVCard, VpContactEditDlg, VpContactGridPainter;
 
 
 (*****************************************************************************)
@@ -1472,32 +1473,42 @@ var
 
 begin
   if RSContactPopupAdd <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSContactPopupAdd;
     NewItem.OnClick := PopupAddContact;
     NewItem.Tag := 0;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
+  end;
+
+  if RsContactPopupAddVCards <> '' then begin
+    NewItem := TMenuItem.Create(Self);
+    NewItem.Caption := RSContactPopupAddVCards;
+    NewItem.OnClick := PopupAddVCards;
+    NewItem.Tag := 0;
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   if RSContactPopupEdit <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSContactPopupEdit;
     NewItem.OnClick := PopupEditContact;
     NewItem.Tag := 1;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   if RSContactPopupDelete <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSContactPopupDelete;
     NewItem.OnClick := PopupDeleteContact;
     NewItem.Tag := 1;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 end;
 {=====}
 
-procedure TVpContactGrid.PopupAddContact (Sender : TObject);
+procedure TVpContactGrid.PopupAddContact(Sender: TObject);
+var
+  id: Integer;
 begin
   if ReadOnly then                                                     
     Exit;                                                              
@@ -1508,12 +1519,57 @@ begin
   if not Assigned (DataStore.Resource) then                            
     Exit;                                                              
   { we must want to create a new contact }
-  FActiveContact := DataStore.Resource.Contacts.AddContact (
-                        DataStore.GetNextID (ContactsTableName));
+  id := DataStore.GetNextID(ContactsTableName);
+  FActiveContact := DataStore.Resource.Contacts.AddContact(id);
   { Allow the user to fill in all the new information }
   cgSpawnContactEditDialog(True);
 end;
 {=====}
+
+procedure TVpContactGrid.PopupAddVCards(Sender: TObject);
+var
+  dlg: TOpenDialog;
+  vcards: TVpVCards;
+  i: Integer;
+  fn: String;
+  id: Integer;
+begin
+  if ReadOnly or (not CheckCreateResource) or
+     (not Assigned(Datastore)) or (not Assigned(Datastore.Resource))
+  then
+    exit;
+
+  dlg := TOpenDialog.Create(nil);
+  try
+    dlg.Title := RSLoadVCardsTitle;
+    dlg.Filter := RSVCardFilter;
+    dlg.FileName := '';
+    dlg.Options := dlg.Options + [ofAllowMultiSelect, ofFileMustExist];
+    if dlg.Execute then begin
+      Screen.Cursor := crHourGlass;
+      Application.ProcessMessages;
+      vcards := TVpVCards.Create;
+      try
+        for fn in dlg.Files do begin
+          vcards.LoadFromFile(fn);
+          for i := 0 to vcards.Count-1 do begin
+            id := DataStore.GetNextID (ContactsTableName);
+            FActiveContact := Datastore.Resource.Contacts.AddContact(id);
+            FActiveContact.LoadFromVCard(vcards[i]);
+            Datastore.PostContacts;
+            DataStore.NotifyDependents;
+          end;
+        end;
+        Invalidate;
+      finally
+        vcards.Free;
+        Screen.Cursor := crDefault;
+      end;
+    end;
+  finally
+    dlg.Free;
+  end;
+end;
 
 procedure TVpContactGrid.PopupDeleteContact (Sender : TObject);
 begin

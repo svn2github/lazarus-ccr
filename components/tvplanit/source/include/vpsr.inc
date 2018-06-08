@@ -161,16 +161,19 @@ resourcestring
 
   {Contact Specific}
   RSContactPopupAdd         = 'Add contact...';
+  RSContactPopupAddVCards   = 'Add contact from vCard(s)...';
   RSContactPopupEdit        = 'Edit contact...';
   RSContactPopupDelete      = 'Delete contact...';
   RSConfirmDeleteContact    = 'Delete contact %s?';
+  RSLoadVCardsTitle         = 'Load vCard(s)';
+  RSVCardFilter             = 'vCard files (*.vcf)|*.vcf';
 
   {Event Specific}
   RSEvent                   = 'Event';
   RSFromSchedule            = 'from your schedule?';
   RSConfirmDeleteEvent      = 'Delete event from schedule?';
   RSStartEndTimeError       = 'Incorrect order of start and end times. ' +
-                              'Do you want to flip them?';
+                              'Do you want to exchange them?';
   RSCannotEditOverlayedEvent= 'Cannot edit this overlayed event.';
   RSNoOverlayedEvents       = 'none';
   RSOverlayedEvent          = 'overlayed';

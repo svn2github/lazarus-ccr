@@ -262,6 +262,10 @@ msgstr "Supprimer la tache de votre liste?"
 msgid "Add contact..."
 msgstr "Ajouter un contact..."
 
+#: vpsr.rscontactpopupaddvcards
+msgid "Add contact from vCard(s)..."
+msgstr ""
+
 #: vpsr.rscontactpopupdelete
 msgid "Delete contact..."
 msgstr "Supprimer un contact..."
@@ -581,6 +585,10 @@ msgstr ""
 
 #: vpsr.rsloadfilebtn
 msgid "Load file..."
+msgstr ""
+
+#: vpsr.rsloadvcardstitle
+msgid "Load vCard(s)"
 msgstr ""
 
 #: vpsr.rslocation
@@ -1121,7 +1129,9 @@ msgid "Error: Unable to update "
 msgstr "Erreur: Modification à echoué"
 
 #: vpsr.rsstartendtimeerror
-msgid "Incorrect order of start and end times. Do you want to flip them?"
+#, fuzzy
+#| msgid "Incorrect order of start and end times. Do you want to flip them?"
+msgid "Incorrect order of start and end times. Do you want to exchange them?"
 msgstr "Ordre incorrect des heures de début et de fin. Voulez-vous les retourner?"
 
 #: vpsr.rsstarttimelbl
@@ -1259,6 +1269,10 @@ msgstr ""
 
 #: vpsr.rsuppercasework
 msgid "WORK"
+msgstr ""
+
+#: vpsr.rsvcardfilter
+msgid "vCard files (*.vcf)|*.vcf"
 msgstr ""
 
 #: vpsr.rsvisible
@@ -1525,6 +1539,7 @@ msgid "Invalid XML Character found"
 msgstr "Caractère XML non valide trouvé"
 
 #: vpsr.sinvalidxmlversion
+#, fuzzy,badformat
 msgid "XMLPartner does not support XML specification greater than %s"
 msgstr "XMLPartner ne supporte pas la spécification XML supérieure à"
 
@@ -1633,6 +1648,7 @@ msgid "End of input while looking for delimiter: "
 msgstr "Fin de l'entrée tout en recherchant delimiter:"
 
 #: vpsr.sunknownaxis
+#, fuzzy,badformat
 msgid "Unknown axis specifier: %s"
 msgstr "Spécificateur d'axe inconnu"
 

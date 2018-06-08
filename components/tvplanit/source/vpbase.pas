@@ -103,8 +103,11 @@ type
   TVpHolidayEvent = procedure(Sender: TObject; ADate: TDateTime;
     var AHolidayName: String) of object;
 
+  { Visual planit Exceptions }
+  EVpException = class(Exception);
+
   { XML exceptions }
-  EXML = class(Exception);
+  EXML = class(EVpException);
 
   EVpStreamError = class(EXML)
   private

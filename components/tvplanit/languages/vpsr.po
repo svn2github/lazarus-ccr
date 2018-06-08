@@ -246,6 +246,10 @@ msgstr ""
 msgid "Add contact..."
 msgstr ""
 
+#: vpsr.rscontactpopupaddvcards
+msgid "Add contact from vCard(s)..."
+msgstr ""
+
 #: vpsr.rscontactpopupdelete
 msgid "Delete contact..."
 msgstr ""
@@ -565,6 +569,10 @@ msgstr ""
 
 #: vpsr.rsloadfilebtn
 msgid "Load file..."
+msgstr ""
+
+#: vpsr.rsloadvcardstitle
+msgid "Load vCard(s)"
 msgstr ""
 
 #: vpsr.rslocation
@@ -1105,7 +1113,7 @@ msgid "Error: Unable to update "
 msgstr ""
 
 #: vpsr.rsstartendtimeerror
-msgid "Incorrect order of start and end times. Do you want to flip them?"
+msgid "Incorrect order of start and end times. Do you want to exchange them?"
 msgstr ""
 
 #: vpsr.rsstarttimelbl
@@ -1243,6 +1251,10 @@ msgstr ""
 
 #: vpsr.rsuppercasework
 msgid "WORK"
+msgstr ""
+
+#: vpsr.rsvcardfilter
+msgid "vCard files (*.vcf)|*.vcf"
 msgstr ""
 
 #: vpsr.rsvisible

@@ -256,6 +256,10 @@ msgstr "Diese Aufgabe von Ihrer Liste löschen?"
 msgid "Add contact..."
 msgstr "Kontakt hinzufügen..."
 
+#: vpsr.rscontactpopupaddvcards
+msgid "Add contact from vCard(s)..."
+msgstr ""
+
 #: vpsr.rscontactpopupdelete
 msgid "Delete contact..."
 msgstr "Kontakt löschen..."
@@ -576,6 +580,10 @@ msgstr "M"
 #: vpsr.rsloadfilebtn
 msgid "Load file..."
 msgstr "Datei laden..."
+
+#: vpsr.rsloadvcardstitle
+msgid "Load vCard(s)"
+msgstr ""
 
 #: vpsr.rslocation
 msgid "Location"
@@ -1115,7 +1123,9 @@ msgid "Error: Unable to update "
 msgstr "Fehler: Kann nicht updaten"
 
 #: vpsr.rsstartendtimeerror
-msgid "Incorrect order of start and end times. Do you want to flip them?"
+#, fuzzy
+#| msgid "Incorrect order of start and end times. Do you want to flip them?"
+msgid "Incorrect order of start and end times. Do you want to exchange them?"
 msgstr "Falsche Reihenfolge der Start- und Ende-Zeit. Wollen Sie die beiden vertauschen?"
 
 #: vpsr.rsstarttimelbl
@@ -1254,6 +1264,10 @@ msgstr "BEMERKUNGEN"
 #: vpsr.rsuppercasework
 msgid "WORK"
 msgstr "ARBEIT"
+
+#: vpsr.rsvcardfilter
+msgid "vCard files (*.vcf)|*.vcf"
+msgstr ""
 
 #: vpsr.rsvisible
 msgid "Visible"
@@ -1633,3 +1647,4 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
+

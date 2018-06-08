@@ -67,6 +67,8 @@ function DefaultEpoch : Integer;
 procedure GetRGB(Clr : TColor; var IR, IG, IB : Byte);
 function GetStartOfWeek(Date: TDateTime; StartOn: TVpDayType): TDateTime;
 
+function Split(const AStr: String; ADelimiter: Char): TStringArray;
+
 procedure StripString(var Str: string);
   { strips non-alphanumeric characters from the beginning and end of the string}
 
@@ -196,6 +198,25 @@ uses
   DateUtils, StrUtils,
  {$ENDIF}
   VpSR, VpBaseDS;
+
+function Split(const AStr: String; ADelimiter: Char): TStringArray;
+var
+  L: TStrings;
+  i: Integer;
+begin
+  L := TStringList.Create;
+  try
+    L.Delimiter := ADelimiter;
+    L.StrictDelimiter := true;
+    L.DelimitedText := AStr;
+    SetLength(Result, L.Count);
+    if L.Count > 0 then
+      for i:=0 to L.Count-1 do
+        Result[i] := L[i];
+  finally
+    L.Free;
+  end;
+end;
 
 procedure StripString(var Str: string);
 begin

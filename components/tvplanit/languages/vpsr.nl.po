@@ -256,6 +256,10 @@ msgstr "Deze taak uit de lijst wissen?"
 msgid "Add contact..."
 msgstr "Contact toevoegen..."
 
+#: vpsr.rscontactpopupaddvcards
+msgid "Add contact from vCard(s)..."
+msgstr ""
+
 #: vpsr.rscontactpopupdelete
 msgid "Delete contact..."
 msgstr "Contact wissen..."
@@ -575,6 +579,10 @@ msgstr "M"
 
 #: vpsr.rsloadfilebtn
 msgid "Load file..."
+msgstr ""
+
+#: vpsr.rsloadvcardstitle
+msgid "Load vCard(s)"
 msgstr ""
 
 #: vpsr.rslocation
@@ -1115,7 +1123,9 @@ msgid "Error: Unable to update "
 msgstr "Fout: Updaten niet mogelijk "
 
 #: vpsr.rsstartendtimeerror
-msgid "Incorrect order of start and end times. Do you want to flip them?"
+#, fuzzy
+#| msgid "Incorrect order of start and end times. Do you want to flip them?"
+msgid "Incorrect order of start and end times. Do you want to exchange them?"
 msgstr "Incorrecte volgorde van start- en eindtijden. Wilt u ze verwisselen?"
 
 #: vpsr.rsstarttimelbl
@@ -1253,6 +1263,10 @@ msgstr ""
 
 #: vpsr.rsuppercasework
 msgid "WORK"
+msgstr ""
+
+#: vpsr.rsvcardfilter
+msgid "vCard files (*.vcf)|*.vcf"
 msgstr ""
 
 #: vpsr.rsvisible

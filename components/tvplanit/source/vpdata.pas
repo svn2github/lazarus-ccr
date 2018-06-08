@@ -41,7 +41,7 @@ uses
   {$ENDIF}
   SysUtils, Classes, Dialogs, Graphics,
   {$IFDEF VERSION6} Types, {$ENDIF}
-  VpSR;
+  VpSR, VpVCard;
 
 type
   TVpEventRec = packed record
@@ -610,6 +610,7 @@ type
     function ContainsWorkData: Boolean;
     function ContainsHomeData: Boolean;
     function FullName: string;
+    procedure LoadFromVCard(ACard: TVpVCard);
 
     property Loading: Boolean read FLoading write FLoading;
     property Changed: Boolean read FChanged write SetChanged;
@@ -1878,6 +1879,124 @@ begin
   else
     Result := FFirstName + ' ' + FLastName;
 end;
+
+procedure TVpContact.LoadFromVCard(ACard: TVpVCard);
+const
+  NUM_PHONES = 5;
+var
+  s: String;
+  dt: TDateTime;
+  phoneIdx: Integer;
+  phones: array[1..NUM_PHONES] of ^String;
+  phonetypes: array[1..NUM_PHONES] of ^Integer;
+begin
+  phones[1] := @FPhone1;   phonetypes[1] := @FPhoneType1;
+  phones[2] := @FPhone2;   phonetypes[2] := @FPhoneType2;
+  phones[3] := @FPhone3;   phonetypes[3] := @FPhoneType3;
+  phones[4] := @FPhone4;   phonetypes[4] := @FPhoneType4;
+  phones[5] := @FPhone5;   phonetypes[5] := @FPhoneType5;
+
+  FLastName := ACard.LastName;
+  FFirstName := ACard.FirstName;
+  FTitle := ACard.Title;
+
+  FCompany := ACard.Company;
+  FAddress1 := ACard.WorkAddress;
+  FCity1 := ACard.WorkCity;
+  FZip1 := ACard.WorkZip;
+  FState1 := ACard.WorkState;
+  FCountry1 := ACard.WorkCountry;
+  FAddressType1 := ord(atWork);
+
+  FAddress2 := ACard.HomeAddress;
+  FCity2 := ACard.HomeCity;
+  FZip2 := ACard.HomeZip;
+  FState2 := ACard.HomeState;
+  FCountry2 := ACard.HomeCountry;
+  FAddressType2 := ord(atHome);
+
+  FEmail1 := ACard.WorkEMail;
+  FEMailType1 := ord(mtWork);
+  FEmail2 := ACard.HomeEMail;
+  FEMailType2 := ord(mtHome);
+
+  phoneIdx := 1;
+  s := ACard.Mobile;
+  if s <> '' then begin
+    phones[phoneidx]^ := s;
+    phonetypes[phoneidx]^ := ord(ptMobile);
+    inc(phoneidx);
+  end;
+  s := ACard.WorkPhone;
+  if s <> '' then begin
+    phones[phoneidx]^ := s;
+    phonetypes[phoneidx]^ := ord(ptWork);
+    inc(phoneidx);
+  end;
+  s := ACard.WorkFax;
+  if s <> '' then begin
+    phones[phoneidx]^ := s;
+    phonetypes[phoneidx]^ := ord(ptWorkFax);
+    inc(phoneidx);
+  end;
+  s := ACard.Pager;
+  if s <> '' then begin
+    phones[phoneidx]^ := s;
+    phonetypes[phoneidx]^ := ord(ptPager);
+    inc(phoneidx);
+  end;
+  s := ACard.CarPhone;
+  if (s <> '') and (phoneIdx <= NUM_PHONES) then begin
+    phones[phoneidx]^ := s;
+    phonetypes[phoneidx]^ := ord(ptCar);
+    inc(phoneidx);
+  end;
+  s := ACard.HomePhone;
+  if (s <> '') and (phoneIdx <= NUM_PHONES) then begin
+    phones[phoneidx]^ := s;
+    phonetypes[phoneidx]^ := ord(ptHome);
+    inc(phoneidx);
+  end;
+  s := ACard.HomeFax;
+  if (s <> '') and (phoneIdx <= NUM_PHONES) then begin
+    phones[phoneidx]^ := s;
+    phonetypes[phoneidx]^ := ord(ptHomeFax);
+    inc(phoneidx);
+  end;
+  s := ACard.ISDN;
+  if (s <> '') and (phoneIdx <= NUM_PHONES) then begin
+    phones[phoneidx]^ := s;
+    phonetypes[phoneidx]^ := ord(ptISDN);
+    inc(phoneidx);
+  end;
+
+  s := ACard.Value['BDAY', ''];
+  if s <> '' then begin
+    dt := VCardDate(s);
+    if dt > -1 then FBirthdate := dt;
+  end;
+
+  s := ACard.Value['ANNIVERSARY', ''];
+  if s <> '' then begin
+    dt := VCardDate(s);
+    if dt > -1 then FAnniversary := dt;
+  end;
+
+  FNotes := ACard.Value['NOTE', ''];
+
+  FPosition := ACard.Value['TITLE', ''];
+  s := ACard.Value['ROLE', ''];
+  if s <> '' then begin
+    if FPosition = '' then
+      FPosition := s
+    else
+      FPosition := FPosition + '; ' + s;
+  end;
+
+  FOwner.FOwner.ContactsDirty := true;
+  FChanged := true;
+end;
+
 
 procedure TVpContact.SetBirthDate(Value: TDateTIme);
 begin
