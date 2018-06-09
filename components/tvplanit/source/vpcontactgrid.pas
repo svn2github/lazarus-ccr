@@ -183,6 +183,9 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
     function GetContactIndexByCoord(Pnt: TPoint): Integer;
+    function GetDisplayEMail(AContact: TVpContact): String;
+    function GetDisplayEMailField(AContact: TVpContact): String;
+    procedure SetDisplayEMail(AContact: TVpContact; AEMail: String);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
@@ -1331,7 +1334,7 @@ begin
             end;
             { edit email }
             if field = 'EMail' then begin
-              cgInPlaceEditor.Field := 'EMail1';
+              cgInPlaceEditor.Field := GetDisplayEMailField(FActiveContact); //'EMail1';
               cgInPlaceEditor.Move(EMailRect, true);
               Canvas.DrawFocusRect(Rect(EMailRect.Left - TextMargin,
                 EMailRect.Top, EMailRect.Right + 3, EMailRect.Bottom + 3));
@@ -1409,7 +1412,8 @@ begin
     {EMail}
     else if cgInPlaceEditor.field = 'EMail' then begin
       if cgInPlaceEditor.Text <> FActiveContact.EMail1 then begin
-        FActiveContact.EMail1 := cgInPlaceEditor.Text;
+        SetDisplayEMail(FACtiveContact, cgInplaceEditor.Text);
+//        FActiveContact.EMail1 := cgInPlaceEditor.Text;
         FActiveContact.Changed := true;
       end;
     end
@@ -1817,6 +1821,39 @@ begin
       FOnClickContact(Self, FActiveContact);
   end;
   Invalidate;
+end;
+
+function TVpContactGrid.GetDisplayEMail(AContact: TVpContact): String;
+begin
+  if AContact = nil then
+    Result := ''
+  else begin
+    Result := AContact.EMail1;
+    if Result = '' then Result := AContact.EMail2;
+    if Result = '' then Result := AContact.EMail3;
+  end;
+end;
+
+function TVpContactGrid.GetDisplayEMailField(AContact: TVpContact): String;
+begin
+  if (AContact.EMail1 <> '') then
+    Result := 'EMail1'
+  else if (AContact.EMail2 <> '') then
+    Result := 'EMail2'
+  else if (AContact.EMail3 <> '') then
+    Result := 'EMail3'
+  else
+    Result := 'EMail1';
+end;
+
+procedure TVpContactGrid.SetDisplayEMail(AContact: TVpContact; AEMail: String);
+begin
+  if (AContact.EMail1 <> '') then
+    AContact.EMail1 := AEMail
+  else if (AContact.EMail2 <> '') then
+    AContact.EMail2 := AEMail
+  else if (AContact.EMail3 <> '') then
+    AContact.EMail3 := AEMail;
 end;
 
 {$IF VP_LCL_SCALING = 2}

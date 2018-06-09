@@ -236,6 +236,7 @@ var
   Phone3Rect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
   Phone4Rect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
   Phone5Rect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
+  R: TRect;
 begin
   oldCol1RecCount := TVpContactGridOpener(FContactGrid).cgCol1RecCount;
   TVpContactGridOpener(FContactGrid).FVisibleContacts := 0;
@@ -257,11 +258,11 @@ begin
   TmpBmp := TBitmap.Create;
   try
     if (Angle = ra0) or (Angle = ra180) then begin
-      TmpBmp.Width  := RealColumnWidth - TextMargin * 4;
+      TmpBmp.Width  := RealColumnWidth - TextMargin * 4 + 4;    // wp:+4
       TmpBmp.Height := RealHeight - TextMargin * 2;
       TextColWidth := TmpBmp.Width;
     end else begin
-      TmpBmp.Height := RealColumnWidth - TextMargin * 4;
+      TmpBmp.Height := RealColumnWidth - TextMargin * 4 + 4;   // wp: +4
       TmpBmp.Width  := RealHeight - TextMargin * 2;
       TextColWidth := TmpBmp.Height;
     end;
@@ -323,18 +324,22 @@ begin
         {$IF VP_LCL_SCALING = 0}
         TmpBmp.Canvas.Font.Size := ScaleY(TmpBmp.Canvas.Font.Size, DesignTimeDPI);
         {$ENDIF}
+        if FContactGrid.Focused and (TmpCon = FContactGrid.ActiveContact) then
+          TmpBmp.Canvas.Font.Style := [fsBold];
         case Angle of
           ra0:
             begin
               WholeRect.TopLeft := Point(0, 0);
-              HeadRect.TopLeft := Point(TextMargin, 0);
+//              HeadRect.TopLeft := Point(TextMargin, TextMargin div 2);
+//              HeadRect.TopLeft := Point(TextMargin, 0);
+              HeadRect.TopLeft := Point(0, 0);
               HeadRect.BottomRight := Point(
                 TmpBmp.Width,
                 HeadRect.Top + TmpBmp.Canvas.TextHeight(VpProductName) + TextMargin div 2
               );
               WholeRect.BottomRight := HeadRect.BottomRight;
             end;
-          ra90:
+          ra90:                                         // TO DO: CHECK THE USAGE OF TextMargin HERE !!!!!!!!!
             begin
               HeadRect.TopLeft := Point(
                 TmpBmpRect.Right - TextMargin - TmpBmp.Canvas.TextHeight(VpProductName) + TextMargin div 2,
@@ -458,7 +463,8 @@ begin
           DrawContactLine(TmpBmp, TmpCon.Phone5, Str, WholeRect, Phone5Rect);
 
           { do EMail }
-          DrawContactLine(TmpBmp, TmpCon.EMail1, RSEmail + ': ', WholeRect, EMailRect);
+          Str := TVpContactGridOpener(FContactGrid).GetDisplayEMail(TmpCon);
+          DrawContactLine(TmpBmp, Str, RSEmail + ': ', WholeRect, EMailRect);
 
           { if this record's too big to fit in the remaining area of this }
           { column, then slide over to the top of the next column }
@@ -525,7 +531,7 @@ begin
 
           { add a little spacing between records }
           case Angle of
-            ra0   : WholeRect.Bottom := WholeRect.Bottom + TextMargin * 2;
+            ra0   : WholeRect.Bottom := WholeRect.Bottom + TextMargin; // * 2;
             ra90  : WholeRect.Left := WholeRect.Left - TextMargin * 2;
             ra180 : WholeRect.Top := WholeRect.Top - TextMargin * 2;
             ra270 : WholeRect.Right := WholeRect.Right + TextMargin * 2;
@@ -626,9 +632,16 @@ begin
 
           { draw focusrect around selected record }
           if FContactGrid.Focused and (TmpCon = FContactGrid.ActiveContact) then begin
-            with TVpContactGridOpener(FContactGrid).cgContactArray[I] do
+            with TVpContactGridOpener(FContactGrid).cgContactArray[I] do begin
+              R := WholeRect;
+              InflateRect(R, 3, 3);
+              dec(R.Bottom, 2*3);
+              RenderCanvas.DrawFocusRect(R);
+              {
               RenderCanvas.DrawFocusRect(Rect(WholeRect.Left, WholeRect.Top - 3,
                 WholeRect.Right + TextMargin, WholeRect.Bottom - 2));
+              }
+            end;
           end;
 
           { slide anchor down for the next record }
@@ -728,6 +741,7 @@ begin
       BarPos + ExtraBarWidth + FContactGrid.BarWidth,
       RealBottom
     );
+
     TVpContactGridOpener(FContactGrid).cgBarArray[BarCount].Index := BarCount;
     for I := 1 to FContactGrid.BarWidth do begin
       TPSMoveTo(RenderCanvas, Angle, RenderIn, BarPos, RealTop + 2 + TextMargin * 2);
