@@ -373,7 +373,8 @@ begin
   VK_ESCAPE:
     begin
       Key := 0;
-      Grid.EndEdit(self);
+      Hide;
+      Grid.SetFocus;
     end;
 
   else

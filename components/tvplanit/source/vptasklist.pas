@@ -477,7 +477,9 @@ begin
     VK_ESCAPE:
       begin
         Key := 0;
-        TaskList.EndEdit(Self);
+        Hide;
+        TaskList.SetFocus;
+//        TaskList.EndEdit(Self);
       end;
 
     else

@@ -109,7 +109,7 @@ type
   { Forward Declarations }
   TVpDayView = class;
 
-  TVpDvInPlaceEdit = class(TCustomEdit)
+  TVpDvInplaceEdit = class(TCustomEdit)
   protected{private}
     procedure CreateParams(var Params: TCreateParams); override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
@@ -583,6 +583,7 @@ begin
     VK_ESCAPE:
       begin
         Key := 0;
+        Hide;
         TVpDayView(Owner).SetFocus;
       end;
 
