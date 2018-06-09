@@ -724,7 +724,7 @@ begin
     TVpContactGridOpener(FContactGrid).cgBarArray[BarCount].Rec := Rect(
       BarPos - ExtraBarWidth,
       RealTop,
-      BarPos - ExtraBarWidth + FContactGrid.BarWidth,
+      BarPos + ExtraBarWidth + FContactGrid.BarWidth,
       RealBottom
     );
     TVpContactGridOpener(FContactGrid).cgBarArray[BarCount].Index := BarCount;

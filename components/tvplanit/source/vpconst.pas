@@ -75,13 +75,14 @@ const
   MaxEventDepth    = 50;      { the maximum number of side by side       }
                               { events, which can be displayed in the    }
                               { DayView component.                       }
-  ClickDelay : Integer = 500; { the number of milliseconds of delay for  } 
+  ClickDelay: Integer = 500;  { the number of milliseconds of delay for  }
                               { each event click in the TimeGrid         }
   calDefHeight     = 140;     { popup calendar default height            }
   calDefWidth      = 200;     { popup calendar default width             }
   ExtraBarWidth    = 2;       { The extra, draggable area on either side }
                               { of the Contact Grid's horizontal bars.   }
-  CompareTimeEPS   = 1.0 / (24*60*60*10); { Epsilon for time comparison, 0.1 sec }
+  CompareTimeEPS   = 0.1 * OneSecond; { Epsilon for time comparison, 0.1 sec }
+//  CompareTimeEPS   = 1.0 / (24*60*60*10); { Epsilon for time comparison, 0.1 sec }
 
   cmPerInch        = 2.54;    { 1 inch is 2.54 cm                        }
 
