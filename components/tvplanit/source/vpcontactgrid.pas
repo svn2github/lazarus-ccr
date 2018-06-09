@@ -83,7 +83,7 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
   public
-    field: string;
+    Field: string;
     constructor Create(AOwner: TComponent); override;
     procedure Move(const Loc: TRect; Redraw: Boolean);
   end;
@@ -358,7 +358,6 @@ begin
   Height := 1;
   Width := 1;
 end;
-{=====}
 
 procedure TVpCGInPlaceEdit.Move(const Loc: TRect; Redraw: Boolean);
 var
@@ -387,46 +386,54 @@ begin
   if Redraw then Invalidate;
   SetFocus;
 end;
-{=====}
 
 procedure TVpCGInPlaceEdit.CreateParams(var Params: TCreateParams);
 begin
   inherited CreateParams(Params);
   Params.Style := Params.Style{ or ES_MULTILINE};
 end;
-{=====}
 
 procedure TVpCGInPlaceEdit.KeyDown(var Key: Word; Shift: TShiftState);
 var
-  Grid : TVpContactGrid;
+  Grid: TVpContactGrid;
 begin
   Grid := TVpContactGrid(Owner);
 
   case Key of
-  VK_RETURN: begin
-    Key := 0;
-    Grid.EndEdit(Self);
-    Grid.SetFocus;    
-  end;
+    VK_RETURN:
+      begin
+        Key := 0;
+        Grid.EndEdit(Self);
+        Grid.SetFocus;
+      end;
 
-  VK_UP: begin
-    Grid.EndEdit(Self);
-    Grid.ContactIndex := Grid.ContactIndex - 1;
-    Key := 0;
-    Grid.SetFocus;
-  end;
+    VK_UP:
+      begin
+        Grid.EndEdit(Self);
+        Grid.ContactIndex := Grid.ContactIndex - 1;
+        Key := 0;
+        Grid.SetFocus;
+      end;
 
-  VK_DOWN: begin
-    Grid.EndEdit(Self);
-    Grid.ContactIndex := Grid.ContactIndex + 1;
-    Key := 0;
-    Grid.SetFocus;
-  end;
-  else
-    inherited;
+    VK_DOWN:
+      begin
+        Grid.EndEdit(Self);
+        Grid.ContactIndex := Grid.ContactIndex + 1;
+        Key := 0;
+        Grid.SetFocus;
+      end;
+
+    VK_ESCAPE:
+      begin
+        Hide;
+        Key := 0;
+        Grid.SetFocus;
+      end;
+    else
+      inherited;
   end;
 end;
-{=====}
+
 
 (*****************************************************************************)
 { TVpContactGrid }
@@ -1299,7 +1306,7 @@ begin
 
             { edit address }
             if field = 'Address' then begin
-              cgInPlaceEditor.Field := field;
+              cgInPlaceEditor.Field := 'Address1';
               cgInPlaceEditor.Move(AddressRect, true);
               Canvas.DrawFocusRect(Rect(AddressRect.Left + TextMargin - 1,
                 AddressRect.Top, AddressRect.Right + 3, AddressRect.Bottom + 3));
@@ -1324,7 +1331,7 @@ begin
             end;
             { edit email }
             if field = 'EMail' then begin
-              cgInPlaceEditor.Field := field;
+              cgInPlaceEditor.Field := 'EMail1';
               cgInPlaceEditor.Move(EMailRect, true);
               Canvas.DrawFocusRect(Rect(EMailRect.Left - TextMargin,
                 EMailRect.Top, EMailRect.Right + 3, EMailRect.Bottom + 3));
@@ -1384,7 +1391,7 @@ procedure TVpContactGrid.EndEdit(Sender: TObject);
 var
   City, State, Zip: string;
 begin
-  if cgInPlaceEditor <> nil then begin
+  if Assigned(cgInPlaceEditor) and cgInPlaceEditor.Visible then begin
     {Address}
     if cgInPlaceEditor.field = 'Address' then begin
       if cgInPlaceEditor.Text <> FActiveContact.Address1 then begin

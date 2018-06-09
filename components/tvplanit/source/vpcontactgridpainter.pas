@@ -47,6 +47,7 @@ type
 implementation
 
 uses
+  StrUtils,
   VpCanvasUtils, VpMisc, VpSR;
 
 type
@@ -430,7 +431,7 @@ begin
           DrawContactLine(TmpBmp, TmpCon.Company, '', WholeRect, CompanyRect);
 
           { do address... }
-          DrawContactLine(TmpBmp, TmpCon.Address, '', WholeRect, AddrRect);
+          DrawContactLine(TmpBmp, TmpCon.Address1, '', WholeRect, AddrRect);
 
           { do City, State, Zip }
           Str := AssembleCSZ(TmpCon, 1, FContactGrid.GetCityStateZipFormat);
@@ -457,7 +458,7 @@ begin
           DrawContactLine(TmpBmp, TmpCon.Phone5, Str, WholeRect, Phone5Rect);
 
           { do EMail }
-          DrawContactLine(TmpBmp, TmpCon.EMail, RSEmail + ': ', WholeRect, EMailRect);
+          DrawContactLine(TmpBmp, TmpCon.EMail1, RSEmail + ': ', WholeRect, EMailRect);
 
           { if this record's too big to fit in the remaining area of this }
           { column, then slide over to the top of the next column }
