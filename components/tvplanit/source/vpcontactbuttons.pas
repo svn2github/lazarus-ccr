@@ -50,7 +50,8 @@ const
   VP_MIN_BUTTONS = 2;
   VP_LETTERS_IN_ALPHABET = 26;
   VP_MAX_BUTTONS = VP_LETTERS_IN_ALPHABET + 1;
-  VP_LETTER_A = Ord('a');
+  VP_LETTER_A_UC = Ord('A');
+  VP_LETTER_A_LC = Ord('a');
 
 type
   TVpButtonRec = packed record
@@ -59,6 +60,8 @@ type
   end;
 
   TVpButtonArray = array[0..VP_MAX_BUTTONS - 1] of TVpButtonRec;
+
+  TVpButtonCaptionStyle = (csLowercase, csUppercase);
 
   TVpButtonBarOrientation = (baHorizontal, baVertical);
 
@@ -75,6 +78,7 @@ type
     FButtonHeight: Integer;
     FButtonsArray: TVpButtonArray;
     FButtonWidth: Integer;
+    FCaptionStyle: TVpButtonCaptionStyle;
     FContactGrid: TVpContactGrid;
     FDrawingStyle: TVpDrawingStyle;
     FOnButtonClick: TVpButtonBarClickEvent;
@@ -95,6 +99,7 @@ type
     procedure SetButtonColor(const Value: TColor);
     procedure SetButtonHeight(const Value: Integer);
     procedure SetButtonWidth(const Value: Integer);
+    procedure SetCaptionStyle(const Value: TVpButtonCaptionStyle);
     procedure SetContactGrid(Value: TVpContactGrid);
     procedure SetDrawingStyle(const Value: TVpDrawingStyle);
     procedure SetShowNumberButton(const Value: Boolean);
@@ -123,6 +128,8 @@ type
       read FButtonHeight write SetButtonHeight default 18;
     property ButtonWidth: Integer
       read FButtonWidth write SetButtonWidth default 34;
+    property CaptionStyle: TVpButtonCaptionStyle
+      read FCaptionStyle write SetCaptionStyle default csLowerCase;
     property ContactGrid: TVpContactGrid
       read FContactGrid write SetContactGrid;
     property DrawingStyle: TVpDrawingStyle
@@ -201,6 +208,7 @@ begin
   FButtonColor := clBtnFace;
   FButtonHeight := 18;
   FButtonWidth := 34;
+  FCaptionStyle := csLowercase;
   FDrawingStyle := ds3d;
   FShowNumberButton := True;
 end;
@@ -225,6 +233,7 @@ var
   btnHeight: Integer;
   btnWidth: Integer;
   brdrWidth: Integer;
+  VP_Letter_A: integer;
 begin
   I := 0;
 
@@ -234,6 +243,11 @@ begin
   end else begin
     MaxButtons := VP_LETTERS_IN_ALPHABET;
     MinButtons := VP_MIN_BUTTONS;
+  end;
+
+  case FCaptionStyle of
+    csUppercase: VP_Letter_A := VP_LETTER_A_UC;
+    csLowercase: VP_Letter_A := VP_LETTER_A_LC;
   end;
 
   btnHeight := ScaleY(FButtonHeight, DesignTimeDPI);
@@ -276,8 +290,8 @@ begin
     ButtonLetters := VP_LETTERS_IN_ALPHABET / FButtonCount;
 
   for i := 0 to FButtonCount - Offset - 1 do begin
-    StartLetter := Chr(Round(VP_LETTER_A + ButtonLetters * I));
-    EndLetter := Chr(Round(VP_LETTER_A + ButtonLetters * (I + 1)) - 1);
+    StartLetter := Chr(round(VP_Letter_A + ButtonLetters * I));
+    EndLetter := Chr(round(VP_Letter_A + ButtonLetters * (I + 1) - 1));
 
     if Ord(EndLetter) = Ord(StartLetter) then
       ButtonCaption := StartLetter
@@ -457,6 +471,15 @@ begin
 end;
 {=====}
 
+procedure TVpContactButtonBar.SetCaptionStyle(const Value: TVpButtonCaptionStyle);
+begin
+  if (FCaptionStyle <> Value) then begin
+    FCaptionStyle := Value;
+    CreateButtons;
+    Invalidate;
+  end;
+end;
+
 procedure TVpContactButtonBar.SetContactGrid(Value: TVpContactGrid);
 begin
   if (FContactGrid <> Value) then begin
@@ -467,7 +490,6 @@ begin
     end;
   end;
 end;
-{=====}
 
 procedure TVpContactButtonBar.bbPopulateSearchString;
 var

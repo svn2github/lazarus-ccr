@@ -413,6 +413,7 @@ object MainForm: TMainForm
           BorderWidth = 3
           ButtonHeight = 20
           ButtonWidth = 36
+          CaptionStyle = csUppercase
           ContactGrid = VpContactGrid1
           DrawingStyle = dsNoBorder
           RadioStyle = True
