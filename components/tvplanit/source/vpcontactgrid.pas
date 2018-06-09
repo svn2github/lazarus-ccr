@@ -165,7 +165,7 @@ type
     procedure SetContactIndex(Value: Integer);
     procedure SetColumnWidth(Value: Integer);
     procedure SetDrawingStyle(const Value: TVpDrawingStyle);
-    procedure SetColor(Value: TColor); override;
+    procedure SetColor(Value: TColor); reintroduce;
     procedure SetHScrollPos;
     procedure SetPrintNumColumns (const v : Integer);
     procedure SetSortBy (const v : TVpContactSort);
