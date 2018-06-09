@@ -5,7 +5,7 @@ unit bufdsdatamodule;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, VpBaseDS, VpBufDS;
+  Classes, SysUtils, FileUtil, VpBufDS;
 
 type
 

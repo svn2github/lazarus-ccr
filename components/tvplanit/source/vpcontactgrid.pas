@@ -165,7 +165,7 @@ type
     procedure SetContactIndex(Value: Integer);
     procedure SetColumnWidth(Value: Integer);
     procedure SetDrawingStyle(const Value: TVpDrawingStyle);
-    procedure SetColor(const Value: TColor);
+    procedure SetColor(Value: TColor); override;
     procedure SetHScrollPos;
     procedure SetPrintNumColumns (const v : Integer);
     procedure SetSortBy (const v : TVpContactSort);
@@ -814,7 +814,7 @@ begin
 end;
 {=====}                                                                  
 
-procedure TVpContactGrid.SetColor(const Value: TColor);
+procedure TVpContactGrid.SetColor(Value: TColor);
 begin
   if FColor <> Value then begin
     FColor := Value;
@@ -1303,7 +1303,7 @@ begin
               cgInPlaceEditor.Move(AddressRect, true);
               Canvas.DrawFocusRect(Rect(AddressRect.Left + TextMargin - 1,
                 AddressRect.Top, AddressRect.Right + 3, AddressRect.Bottom + 3));
-              cgInPlaceEditor.Text := FActiveContact.Address;
+              cgInPlaceEditor.Text := FActiveContact.Address1;
             end;
             { edit company }
             if field = 'Company' then begin
@@ -1319,8 +1319,8 @@ begin
               cgInPlaceEditor.Move(CSZRect, true);
               Canvas.DrawFocusRect(Rect(CSZRect.Left + TextMargin - 1,
                 CSZRect.Top, CSZRect.Right + 3, CSZRect.Bottom + 3));
-              cgInPlaceEditor.Text := FActiveContact.City + ', ' + FActiveContact.State
-                + ' ' + FActiveContact.Zip;
+              cgInPlaceEditor.Text := FActiveContact.City1 + ', ' + FActiveContact.State1
+                + ' ' + FActiveContact.Zip1;
             end;
             { edit email }
             if field = 'EMail' then begin
@@ -1328,7 +1328,7 @@ begin
               cgInPlaceEditor.Move(EMailRect, true);
               Canvas.DrawFocusRect(Rect(EMailRect.Left - TextMargin,
                 EMailRect.Top, EMailRect.Right + 3, EMailRect.Bottom + 3));
-              cgInPlaceEditor.Text := FActiveContact.EMail;
+              cgInPlaceEditor.Text := FActiveContact.EMail1;
             end;
             { edit Phone1 }
             if field = 'Phone1' then begin
@@ -1387,8 +1387,8 @@ begin
   if cgInPlaceEditor <> nil then begin
     {Address}
     if cgInPlaceEditor.field = 'Address' then begin
-      if cgInPlaceEditor.Text <> FActiveContact.Address then begin
-        FActiveContact.Address := cgInPlaceEditor.Text;
+      if cgInPlaceEditor.Text <> FActiveContact.Address1 then begin
+        FActiveContact.Address1 := cgInPlaceEditor.Text;
         FActiveContact.Changed := true;
       end;
     end
@@ -1401,20 +1401,20 @@ begin
     end
     {EMail}
     else if cgInPlaceEditor.field = 'EMail' then begin
-      if cgInPlaceEditor.Text <> FActiveContact.EMail then begin
-        FActiveContact.EMail := cgInPlaceEditor.Text;
+      if cgInPlaceEditor.Text <> FActiveContact.EMail1 then begin
+        FActiveContact.EMail1 := cgInPlaceEditor.Text;
         FActiveContact.Changed := true;
       end;
     end
     {City, State, Zip}
     else if cgInPlaceEditor.field = 'CSZ' then begin
       ParseCSZ(cgInPlaceEditor.Text, City, State, Zip);
-      if (City <> FActiveContact.City)
-      or (State <> FActiveContact.State)
-      or (Zip <> FActiveContact.Zip) then begin
-        FActiveContact.City := City;
-        FActiveContact.State := State;
-        FActiveContact.Zip := Zip;
+      if (City <> FActiveContact.City1)
+      or (State <> FActiveContact.State1)
+      or (Zip <> FActiveContact.Zip1) then begin
+        FActiveContact.City1 := City;
+        FActiveContact.State1 := State;
+        FActiveContact.Zip1 := Zip;
         FActiveContact.Changed := true;
       end;
     end

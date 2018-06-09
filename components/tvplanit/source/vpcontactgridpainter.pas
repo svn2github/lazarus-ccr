@@ -708,7 +708,6 @@ begin
   end;
 end;
 
-
 procedure TVpContactGridPainter.DrawVerticalBars;
 var
   BarPos, BarCount, I: Integer;

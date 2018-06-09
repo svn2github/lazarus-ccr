@@ -1575,8 +1575,7 @@ var
   ShowCustom: Boolean;
   Icons: TVpDVIcons;
   cat: TVpCategoryInfo;
-  w, h: Integer;
-  R: TRect;
+  w: Integer;
   isOverlayed: Boolean;
   grp: TVpResourceGroup;
   imgList: TCustomImageList;

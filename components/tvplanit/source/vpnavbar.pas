@@ -309,12 +309,6 @@ type
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
     {$ENDIF}
-    {$IF VP_LCL_SCALING = 2}
-    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
-    {$ELSEIF VP_LCL_SCALING = 1}
-    procedure ScaleFontsPPI(const AProportion: Double); override;
-    {$ENDIF}
-    {$ENDIF}
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
 
@@ -403,6 +397,14 @@ type
     procedure RemoveItem(AFolderIndex, AItemIndex: Integer);
     procedure RenameItem(AFolderIndex, AItemIndex: Integer);
     procedure PlaySound(const AWavFile: String; APlaySoundMode: TVpPlaySoundMode);
+
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
+    {$ENDIF}
+
     property ActiveItem: Integer read FActiveItem;
     property Containers[Index: Integer]: TVpFolderContainer read GetContainer;
     property Folders[Index: Integer]: TVpNavFolder read GetFolder;

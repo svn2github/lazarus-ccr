@@ -124,42 +124,12 @@ end;
 
 procedure TfrmReportSetup.PositionControls;
 var
-  i, w, h: Integer;
+  i, w: Integer;
   cnv: TControlCanvas;
 begin
   AutoSize := false;
 
   AlignOKCancel(btnOK, btnCancel, ButtonPanel);
-  (*
-  btnOK.AutoSize := true;
-  btnCancel.AutoSize := true;
-  w := Max(btnOK.Width, btnCancel.Width);
-  h := btnOK.Height;
-
-  btnOK.AutoSize := false;
-  btnOK.Width := w;
-  btnOK.Height := h;
-
-  btnCancel.AutoSize := false;
-  btnCancel.Width := w;
-  btnCancel.Height := h;
-
-  {$IFDEF MSWINDOWS}   // button order: OK - Cancel
-  btnCancel.AnchorSideRight.Control := self;
-  btnCancel.Anchors := [akTop, akRight];
-  btnOK.AnchorSideRight.Control := btnCancel;
-  btnOK.Anchors := [akTop, akRight];
-  btnOK.TabOrder := PrintFormatCombo.TabOrder;
-  btnCancel.TabOrder := PrintFormatCombo.TabOrder + 1;
-  {$ELSE}              // button order: Cancel - OK
-  btnOK.AnchorSideRight.Control := self;
-  btnOK.Anchors := [akTop, akRight];
-  btnCancel.AnchorSideRight.Control := btnOK;
-  btnCancel.Anchors := [akTop, akRight];
-  btnCancel.TabOrder := PrintFormatCombo.TabOrder;
-  btnOK.TabOrder := PrintFormatCombo.TabOrder + 1;
-  {$ENDIF}
-  *)
 
   cnv := TControlCanvas.Create;
   try

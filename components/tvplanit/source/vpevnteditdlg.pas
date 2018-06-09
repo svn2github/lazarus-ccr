@@ -300,7 +300,7 @@ var
   bmp: TBitmap;
   ColorRect: TRect;
   IconX, IconY: Integer;
-  hTxt, hGutter, hDist, vMargin, hMargin: Integer;
+  hTxt, hGutter, hDist, hMargin: Integer;
   SavedStyle: TBrushStyle;
   imgIndex: Integer;
   h: Integer = 0;
@@ -312,10 +312,9 @@ var
   {$IFEND}
  {$ENDIF}
 begin
-  Unused( State);
+  Unused(Control, State);
 
   hTxt := Category.Canvas.TextHeight('Tj');
-  vMargin := ScaleY(2, DesignTimeDPI);
   hMargin := ScaleX(3, DesignTimeDPI);
   hGutter := ScaleX(10, DesignTimeDPI);
   hDist := ScaleX(5, DesignTimeDPI);

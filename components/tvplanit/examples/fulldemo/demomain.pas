@@ -275,8 +275,6 @@ procedure UpdateFormatSettings(ALang: String);
 {$IFDEF WINDOWS}
 var
   LCID: Integer;
-  i: Integer;
-  codepage: String;
 {$ENDIF}
 begin
  {$IFDEF WINDOWS}
@@ -306,6 +304,7 @@ end;
 function GetFirstDayOfWeek(ALang: String): TVpDayType;
 // Don't know how to determine this from the OS
 begin
+   Unused(ALang);
    Result := dtSunday;
 end;
 
@@ -1182,7 +1181,8 @@ end;
 procedure TMainForm.VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; Index: Integer);
 begin
- SetActiveView(VpNavBar1.ActiveFolder * 1000 + Index);
+  Unused(Button, Shift);
+  SetActiveView(VpNavBar1.ActiveFolder * 1000 + Index);
 end;
 
 procedure TMainForm.SetActiveView(AValue: Integer);

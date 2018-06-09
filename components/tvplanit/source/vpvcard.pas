@@ -165,7 +165,6 @@ end;
 function VCardDate(AText: String): TDate;
 var
   fs: TFormatSettings;
-  value: String;
   y, m, d: Integer;
 begin
   if AText <> '' then begin
@@ -395,7 +394,6 @@ const
 var
   i: Integer;
   item: TVpVCardItem;
-  s: String;
 begin
   for i := 0 to FItems.Count-1 do begin
     item := TVpVCardItem(FItems[i]);
