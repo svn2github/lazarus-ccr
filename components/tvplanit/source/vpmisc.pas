@@ -103,6 +103,9 @@ function RightOf(AControl: TControl): Integer;
 function BottomOf(AControl: TControl): Integer;
   {- returns the bottom edge of a control }
 
+function MoveRect(const ARect: TRect; const ADelta: TPoint): TRect;
+  { - moves ARect by dx in ADelta.x and dy in ADelta.y direction }
+
 function GetDisplayString(Canvas : TCanvas; const S : string;
   MinChars, MaxWidth : Integer) : string;
   { given a string, a minimum number of chars to display, and a max width,
@@ -856,6 +859,13 @@ end;
 function Bottomof(AControl: TControl): Integer;
 begin
   Result := AControl.Top + AControl.Height;
+end;
+
+{ Moves a rectangle ARect by ADelta.x in x, and by ADelta.y in y direction }
+function MoveRect(const ARect: TRect; const ADelta: TPoint): TRect;
+begin
+  Result := ARect;
+  OffsetRect(Result, ADelta.x, ADelta.y);
 end;
 
 { Replaces embedded C-style line endings (\n) by FPC line endings (#13#10, #13,

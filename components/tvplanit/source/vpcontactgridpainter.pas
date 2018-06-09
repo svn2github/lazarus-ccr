@@ -531,7 +531,7 @@ begin
 
           { add a little spacing between records }
           case Angle of
-            ra0   : WholeRect.Bottom := WholeRect.Bottom + TextMargin; // * 2;
+            ra0   : WholeRect.Bottom := WholeRect.Bottom + TextMargin * 2;
             ra90  : WholeRect.Left := WholeRect.Left - TextMargin * 2;
             ra180 : WholeRect.Top := WholeRect.Top - TextMargin * 2;
             ra270 : WholeRect.Right := WholeRect.Right + TextMargin * 2;
@@ -539,6 +539,19 @@ begin
 
           { Update Array Rects }
           with TVpContactGridOpener(FContactGrid) do begin
+            cgContactArray[I].WholeRect := MoveRect(WholeRect, Anchor);
+            cgContactArray[I].HeaderRect := MoveRect(HeadRect, Anchor);
+            cgContactArray[I].AddressRect := MoveRect(AddrRect, Anchor);
+            cgContactArray[I].CSZRect := MoveRect(CSZRect, Anchor);
+            cgContactArray[I].CompanyRect := MoveRect(CompanyRect, Anchor);
+            cgContactArray[I].EMailRect := MoveRect(EMailRect, Anchor);
+            cgContactArray[I].Phone1Rect := MoveRect(Phone1Rect, Anchor);
+            cgContactArray[I].Phone2Rect := MoveRect(Phone2Rect, Anchor);
+            cgContactArray[I].Phone3Rect := MoveRect(Phone3Rect, Anchor);
+            cgContactArray[I].Phone4Rect := MoveRect(Phone4Rect, Anchor);
+            cgContactArray[I].Phone5Rect := MoveRect(Phone5Rect, Anchor);
+                                                           (*
+
             cgContactArray[I].WholeRect.TopLeft := Point(
               Anchor.X, Anchor.Y + WholeRect.Top);
             cgContactArray[I].WholeRect.BottomRight := Point(
@@ -593,6 +606,7 @@ begin
               Anchor.X + Phone5Rect.Left, Anchor.Y + Phone5Rect.Top);
             cgContactArray[I].Phone5Rect.BottomRight := Point(
               Anchor.X + TmpBmp.Width, Anchor.Y + Phone5Rect.Bottom);
+              *)
           end;
 
           { move the drawn record from the bitmap to the component canvas }

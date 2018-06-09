@@ -426,6 +426,7 @@ object MainForm: TMainForm
           Width = 794
           ControlLink = VpControlLink1
           Color = clWindow
+          ParentFont = False
           Align = alClient
           TabStop = True
           TabOrder = 1

@@ -167,9 +167,9 @@ type
     procedure SetDrawingStyle(const Value: TVpDrawingStyle);
     procedure SetColor(Value: TColor); reintroduce;
     procedure SetHScrollPos;
-    procedure SetPrintNumColumns (const v : Integer);
-    procedure SetSortBy (const v : TVpContactSort);
-    procedure SetDataStore (const Value : TVpCustomDataStore); override;
+    procedure SetPrintNumColumns(const v: Integer);
+    procedure SetSortBy(const Value: TVpContactSort);
+    procedure SetDataStore(const Value: TVpCustomDataStore); override;
 
     { internal methods }
     procedure cgCalcRowHeight;
@@ -353,7 +353,7 @@ begin
   inherited Create(AOwner);
   field := '';
   TabStop := False;
-  BorderStyle := bsNone;
+  //BorderStyle := bsNone;
   {$IFDEF VERSION4}
 //  DoubleBuffered := False;
   {$ENDIF}
@@ -363,27 +363,17 @@ begin
 end;
 
 procedure TVpCGInPlaceEdit.Move(const Loc: TRect; Redraw: Boolean);
-var
-  Margin: Integer;
+const
+  dy = 2;
 begin
   CreateHandle;
   Redraw := Redraw or not IsWindowVisible(Handle);
   Invalidate;
   with Loc do begin
-    Margin := 0;
-    if (Field = 'Address') or (Field = 'Company') or (Field ='CSZ') then
-      Margin := TextMargin * 2;
    {$IFDEF LCL}
-    SetBounds(
-      Left + Margin,
-      Top + TextMargin div 2,
-      Right - Left - TextMargin * 2,
-      Bottom - Top
-    );
+    SetBounds(Left, Top-dy, Right-Left, Bottom - Top);
    {$ELSE}
-    SetWindowPos(Handle, HWND_TOP, Left + Margin,
-      Top + (TextMargin div 2), Right - Left - TextMargin * 2, Bottom - Top,
-      SWP_NOREDRAW);
+    SetWindowPos(Handle, HWND_TOP, Left, Top-dy, Right-Left, Bottom-Top, SWP_NOREDRAW);
    {$ENDIF}
   end;
   if Redraw then Invalidate;
@@ -889,7 +879,7 @@ procedure TVpContactGrid.SetContactIndex(Value: Integer);
 begin
   FContactIndex := Value;
   if (DataStore <> nil) and (DataStore.Resource <> nil) then
-    FActiveContact := DataStore.Resource.Contacts.GetContact(Value)
+    FActiveContact := DataStore.Resource.Contacts.GetContact(FContactIndex)
   else
     FContactIndex := -1;
 end;
@@ -1311,24 +1301,30 @@ begin
             if field = 'Address' then begin
               cgInPlaceEditor.Field := 'Address1';
               cgInPlaceEditor.Move(AddressRect, true);
+              {
               Canvas.DrawFocusRect(Rect(AddressRect.Left + TextMargin - 1,
                 AddressRect.Top, AddressRect.Right + 3, AddressRect.Bottom + 3));
+                }
               cgInPlaceEditor.Text := FActiveContact.Address1;
             end;
             { edit company }
             if field = 'Company' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(CompanyRect, true);
+              {
               Canvas.DrawFocusRect(Rect(CompanyRect.Left + TextMargin - 1,
                 CompanyRect.Top, CompanyRect.Right + 3, CompanyRect.Bottom + 3));
+                }
               cgInPlaceEditor.Text := FActiveContact.Company;
             end;
             { edit CSZ }
             if field = 'CSZ' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(CSZRect, true);
+              {
               Canvas.DrawFocusRect(Rect(CSZRect.Left + TextMargin - 1,
                 CSZRect.Top, CSZRect.Right + 3, CSZRect.Bottom + 3));
+                }
               cgInPlaceEditor.Text := FActiveContact.City1 + ', ' + FActiveContact.State1
                 + ' ' + FActiveContact.Zip1;
             end;
@@ -1336,48 +1332,56 @@ begin
             if field = 'EMail' then begin
               cgInPlaceEditor.Field := GetDisplayEMailField(FActiveContact); //'EMail1';
               cgInPlaceEditor.Move(EMailRect, true);
-              Canvas.DrawFocusRect(Rect(EMailRect.Left - TextMargin,
-                EMailRect.Top, EMailRect.Right + 3, EMailRect.Bottom + 3));
-              cgInPlaceEditor.Text := FActiveContact.EMail1;
+              {
+              Canvas.DrawFocusRect(EMailRect);
+//              Canvas.DrawFocusRect(Rect(EMailRect.Left - TextMargin,
+//                EMailRect.Top, EMailRect.Right + 3, EMailRect.Bottom + 3));
+}
+              cgInPlaceEditor.Text := GetDisplayEMail(FActiveContact); //FActiveContact.EMail1;
             end;
             { edit Phone1 }
             if field = 'Phone1' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(Phone1Rect, true);
+              {
               Canvas.DrawFocusRect(Rect(Phone1Rect.Left - TextMargin,
-                Phone1Rect.Top, Phone1Rect.Right + 3, Phone1Rect.Bottom + 3));
+                Phone1Rect.Top, Phone1Rect.Right + 3, Phone1Rect.Bottom + 3));}
               cgInPlaceEditor.Text := FActiveContact.Phone1;
             end;
             { edit Phone2 }
             if field = 'Phone2' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(Phone2Rect, true);
+              {
               Canvas.DrawFocusRect(Rect(Phone2Rect.Left - TextMargin,
-                Phone2Rect.Top, Phone2Rect.Right + 3, Phone2Rect.Bottom + 3));
+                Phone2Rect.Top, Phone2Rect.Right + 3, Phone2Rect.Bottom + 3));}
               cgInPlaceEditor.Text := FActiveContact.Phone2;
             end;
             { edit Phone3 }
             if field = 'Phone3' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(Phone3Rect, true);
+              {
               Canvas.DrawFocusRect(Rect(Phone3Rect.Left - TextMargin,
-                Phone3Rect.Top, Phone3Rect.Right + 3, Phone3Rect.Bottom + 3));
+                Phone3Rect.Top, Phone3Rect.Right + 3, Phone3Rect.Bottom + 3)); }
               cgInPlaceEditor.Text := FActiveContact.Phone3;
             end;
             { edit Phone4 }
             if field = 'Phone4' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(Phone4Rect, true);
+              {
               Canvas.DrawFocusRect(Rect(Phone4Rect.Left - TextMargin ,
-                Phone4Rect.Top, Phone4Rect.Right + 3, Phone4Rect.Bottom + 3));
+                Phone4Rect.Top, Phone4Rect.Right + 3, Phone4Rect.Bottom + 3));}
               cgInPlaceEditor.Text := FActiveContact.Phone4;
             end;
             { edit Phone5 }
             if field = 'Phone5' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(Phone5Rect, true);
+              {
               Canvas.DrawFocusRect(Rect(Phone5Rect.Left - TextMargin,
-                Phone5Rect.Top, Phone5Rect.Right + 3, Phone5Rect.Bottom + 3));
+                Phone5Rect.Top, Phone5Rect.Right + 3, Phone5Rect.Bottom + 3));}
               cgInPlaceEditor.Text := FActiveContact.Phone5;
             end;
           end;
@@ -1614,11 +1618,17 @@ begin
       if ContactIndex < Pred(DataStore.Resource.Contacts.Count) then
         ContactIndex := ContactIndex + 1;
     VK_HOME  :
+      ContactIndex := 0;
+    {
       if ContactIndex > 0 then
         ContactIndex := ContactIndex - 1;
+        }
     VK_END   :
+      ContactIndex := Pred(Datastore.Resource.Contacts.Count);
+    {
       if ContactIndex < Pred(DataStore.Resource.Contacts.Count) then
         ContactIndex := ContactIndex + 1;
+        }
     VK_RIGHT :
       if ContactIndex + cgCol1RecCount <= Pred(DataStore.Resource.Contacts.Count) then
         ContactIndex := ContactIndex + cgCol1RecCount
@@ -1639,16 +1649,14 @@ begin
         Windows.SetFocus (GetNextDlgTabItem(GetParent(Handle), Handle, True));
 {$ENDIF}
     VK_F10   :
-      if (ssShift in Shift) and not (Assigned (PopupMenu)) then begin
+      if (ssShift in Shift) and not Assigned(PopupMenu) then begin
         PopupPoint := GetClientOrigin;
-        FDefaultPopup.Popup (PopupPoint.x + 10,
-                             PopupPoint.y + 10);
+        FDefaultPopup.Popup(PopupPoint.x + 10, PopupPoint.y + 10);
       end;
     VK_APPS  :
-      if not Assigned (PopupMenu) then begin
+      if not Assigned(PopupMenu) then begin
         PopupPoint := GetClientOrigin;
-        FDefaultPopup.Popup (PopupPoint.x + 10,
-                             PopupPoint.y + 10);
+        FDefaultPopup.Popup(PopupPoint.x + 10, PopupPoint.y + 10);
       end;
   end;
   Invalidate;
@@ -1774,13 +1782,13 @@ begin
 end;
 {=====}
 
-procedure TVpContactGrid.SetSortBy (const v : TVpContactSort);
+procedure TVpContactGrid.SetSortBy(const Value: TVpContactSort);
 begin
-  if v <> FSortBy then begin
-    FSortBy := v;
-    if not Assigned (DataStore) then
+  if Value <> FSortBy then begin
+    FSortBy := Value;
+    if not Assigned(DataStore) then
       Exit;
-    if not Assigned (DataStore.Resource) then
+    if not Assigned(DataStore.Resource) then
       Exit;
     DataStore.Resource.Contacts.ContactSort := FSortBy;
     cgClickTimer.Enabled := False;
@@ -1812,7 +1820,7 @@ begin
     if PointInRect(Pnt, cgContactArray[I].WholeRect) then begin
       { Set ActiveContact to the selected one }
       FContactIndex := I;
-      FActiveContact := TVpCOntact(cgContactArray[I].Contact);
+      FActiveContact := TVpContact(cgContactArray[I].Contact);
       Break;
     end;
   end;
