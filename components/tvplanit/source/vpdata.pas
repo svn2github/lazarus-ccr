@@ -742,6 +742,21 @@ begin
     Result := CompareValue(TVpTask(Item1).DueDate, TVpTask(Item2).DueDate);
 end;
 
+function CompareContacts_Minors(Item1, Item2: Pointer): Integer;
+begin
+  Result := CompareText(TVpContact(Item1).Email1, TVpContact(Item2).EMail1);
+  if Result = 0 then
+    Result := CompareText(TVpContact(Item1).Phone1, TVpContact(Item2).Phone1);
+  if Result = 0 then
+    Result := CompareText(TVpContact(Item1).Phone2, TVpContact(Item2).Phone2);
+  if Result = 0 then
+    Result := CompareText(TVpContact(Item1).Phone3, TVpContact(Item2).Phone3);
+  if Result = 0 then
+    Result := CompareText(TVpContact(Item1).Phone4, TVpContact(Item2).Phone4);
+  if Result = 0 then
+    Result := CompareText(TVpContact(Item1).Phone5, TVpContact(Item2).Phone5);
+end;
+
 { Compare function for sorting contacts: Compare the first names of the contacts,
   if equal compare the last names. }
 function CompareContacts_FirstLast(Item1, Item2: Pointer): Integer;
@@ -751,6 +766,8 @@ begin
     Result := CompareText(TVpContact(Item1).LastName, TVpContact(Item2).LastName);
   if Result = 0 then
     Result := CompareText(TVpContact(Item1).Company, TVpContact(Item2).Company);
+  if Result = 0 then
+    Result := CompareContacts_Minors(Item1, Item2);
 end;
 
 { Compare function for sorting contacts: Compare the last names of the contacts,
@@ -762,6 +779,8 @@ begin
     Result := CompareText(TVpContact(Item1).FirstName, TVpContact(Item2).FirstName);
   if Result = 0 then
     Result := CompareText(TVpContact(Item1).Company, TVpContact(Item2).Company);
+  if Result = 0 then
+    Result := CompareContacts_Minors(Item1, Item2);
 end;
 
 

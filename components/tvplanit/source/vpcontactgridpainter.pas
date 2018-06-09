@@ -287,7 +287,7 @@ begin
     TmpBmp.Canvas.FillRect(Rect(0, 0, TmpBmp.Width, TmpBmp.Height));
 
     { sort the records }
-    FContactGrid.DataStore.Resource.Contacts.Sort;
+    FContactGrid.DataStore.Resource.Contacts.Sort;     // wp: why sort here?
 
     { Set the anchor starting point }
     case Angle of
@@ -463,7 +463,7 @@ begin
           DrawContactLine(TmpBmp, TmpCon.Phone5, Str, WholeRect, Phone5Rect);
 
           { do EMail }
-          Str := TVpContactGridOpener(FContactGrid).GetDisplayEMail(TmpCon);
+          Str := TVpContactGridOpener(FContactGrid).GetDisplayEMailValue(TmpCon);
           DrawContactLine(TmpBmp, Str, RSEmail + ': ', WholeRect, EMailRect);
 
           { if this record's too big to fit in the remaining area of this }
@@ -550,67 +550,9 @@ begin
             cgContactArray[I].Phone3Rect := MoveRect(Phone3Rect, Anchor);
             cgContactArray[I].Phone4Rect := MoveRect(Phone4Rect, Anchor);
             cgContactArray[I].Phone5Rect := MoveRect(Phone5Rect, Anchor);
-                                                           (*
-
-            cgContactArray[I].WholeRect.TopLeft := Point(
-              Anchor.X, Anchor.Y + WholeRect.Top);
-            cgContactArray[I].WholeRect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + WholeRect.Bottom);
-
-            cgContactArray[I].HeaderRect.TopLeft := Point(
-              Anchor.X, Anchor.Y + HeadRect.Top);
-            cgContactArray[I].HeaderRect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + HeadRect.Bottom);
-
-            cgContactArray[I].AddressRect.TopLeft := Point(
-              Anchor.X, Anchor.Y + AddrRect.Top);
-            cgContactArray[I].AddressRect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + AddrRect.Bottom);
-
-            cgContactArray[I].CSZRect.TopLeft := Point(
-              Anchor.X, Anchor.Y + CSZRect.Top);
-            cgContactArray[I].CSZRect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + CSZRect.Bottom);
-
-            cgContactArray[I].CompanyRect.TopLeft := Point(
-              Anchor.X, Anchor.Y + CompanyRect.Top);
-            cgContactArray[I].CompanyRect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + CompanyRect.Bottom);
-
-            cgContactArray[I].EMailRect.TopLeft := Point(
-              Anchor.X + EMailRect.Left, Anchor.Y + EMailRect.Top);
-            cgContactArray[I].EMailRect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + EMailRect.Bottom);
-
-            cgContactArray[I].Phone1Rect.TopLeft := Point(
-              Anchor.X + Phone1Rect.Left, Anchor.Y + Phone1Rect.Top);
-            cgContactArray[I].Phone1Rect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + Phone1Rect.Bottom);
-
-            cgContactArray[I].Phone2Rect.TopLeft := Point(
-              Anchor.X + Phone2Rect.Left, Anchor.Y + Phone2Rect.Top);
-            cgContactArray[I].Phone2Rect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + Phone2Rect.Bottom);
-
-            cgContactArray[I].Phone3Rect.TopLeft := Point(
-              Anchor.X + Phone3Rect.Left, Anchor.Y + Phone3Rect.Top);
-            cgContactArray[I].Phone3Rect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + Phone3Rect.Bottom);
-
-            cgContactArray[I].Phone4Rect.TopLeft := Point(
-              Anchor.X + Phone4Rect.Left, Anchor.Y + Phone4Rect.Top);
-            cgContactArray[I].Phone4Rect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + Phone4Rect.Bottom);
-
-            cgContactArray[I].Phone5Rect.TopLeft := Point(
-              Anchor.X + Phone5Rect.Left, Anchor.Y + Phone5Rect.Top);
-            cgContactArray[I].Phone5Rect.BottomRight := Point(
-              Anchor.X + TmpBmp.Width, Anchor.Y + Phone5Rect.Bottom);
-              *)
           end;
 
           { move the drawn record from the bitmap to the component canvas }
-
           case Angle of
             ra0   :
               RenderCanvas.CopyRect (Rect (Anchor.X + WholeRect.Left + RenderIn.Left,

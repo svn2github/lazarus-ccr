@@ -183,9 +183,9 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
     function GetContactIndexByCoord(Pnt: TPoint): Integer;
-    function GetDisplayEMail(AContact: TVpContact): String;
     function GetDisplayEMailField(AContact: TVpContact): String;
-    procedure SetDisplayEMail(AContact: TVpContact; AEMail: String);
+    function GetDisplayEMailValue(AContact: TVpContact): String;
+    procedure SetDisplayEMailValue(AContact: TVpContact; AEMail: String);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
@@ -1301,87 +1301,55 @@ begin
             if field = 'Address' then begin
               cgInPlaceEditor.Field := 'Address1';
               cgInPlaceEditor.Move(AddressRect, true);
-              {
-              Canvas.DrawFocusRect(Rect(AddressRect.Left + TextMargin - 1,
-                AddressRect.Top, AddressRect.Right + 3, AddressRect.Bottom + 3));
-                }
               cgInPlaceEditor.Text := FActiveContact.Address1;
             end;
             { edit company }
             if field = 'Company' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(CompanyRect, true);
-              {
-              Canvas.DrawFocusRect(Rect(CompanyRect.Left + TextMargin - 1,
-                CompanyRect.Top, CompanyRect.Right + 3, CompanyRect.Bottom + 3));
-                }
               cgInPlaceEditor.Text := FActiveContact.Company;
             end;
             { edit CSZ }
             if field = 'CSZ' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(CSZRect, true);
-              {
-              Canvas.DrawFocusRect(Rect(CSZRect.Left + TextMargin - 1,
-                CSZRect.Top, CSZRect.Right + 3, CSZRect.Bottom + 3));
-                }
               cgInPlaceEditor.Text := FActiveContact.City1 + ', ' + FActiveContact.State1
                 + ' ' + FActiveContact.Zip1;
             end;
             { edit email }
             if field = 'EMail' then begin
-              cgInPlaceEditor.Field := GetDisplayEMailField(FActiveContact); //'EMail1';
+              cgInPlaceEditor.Field := GetDisplayEMailField(FActiveContact);
               cgInPlaceEditor.Move(EMailRect, true);
-              {
-              Canvas.DrawFocusRect(EMailRect);
-//              Canvas.DrawFocusRect(Rect(EMailRect.Left - TextMargin,
-//                EMailRect.Top, EMailRect.Right + 3, EMailRect.Bottom + 3));
-}
-              cgInPlaceEditor.Text := GetDisplayEMail(FActiveContact); //FActiveContact.EMail1;
+              cgInPlaceEditor.Text := GetDisplayEMailValue(FActiveContact);
             end;
             { edit Phone1 }
             if field = 'Phone1' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(Phone1Rect, true);
-              {
-              Canvas.DrawFocusRect(Rect(Phone1Rect.Left - TextMargin,
-                Phone1Rect.Top, Phone1Rect.Right + 3, Phone1Rect.Bottom + 3));}
               cgInPlaceEditor.Text := FActiveContact.Phone1;
             end;
             { edit Phone2 }
             if field = 'Phone2' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(Phone2Rect, true);
-              {
-              Canvas.DrawFocusRect(Rect(Phone2Rect.Left - TextMargin,
-                Phone2Rect.Top, Phone2Rect.Right + 3, Phone2Rect.Bottom + 3));}
               cgInPlaceEditor.Text := FActiveContact.Phone2;
             end;
             { edit Phone3 }
             if field = 'Phone3' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(Phone3Rect, true);
-              {
-              Canvas.DrawFocusRect(Rect(Phone3Rect.Left - TextMargin,
-                Phone3Rect.Top, Phone3Rect.Right + 3, Phone3Rect.Bottom + 3)); }
               cgInPlaceEditor.Text := FActiveContact.Phone3;
             end;
             { edit Phone4 }
             if field = 'Phone4' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(Phone4Rect, true);
-              {
-              Canvas.DrawFocusRect(Rect(Phone4Rect.Left - TextMargin ,
-                Phone4Rect.Top, Phone4Rect.Right + 3, Phone4Rect.Bottom + 3));}
               cgInPlaceEditor.Text := FActiveContact.Phone4;
             end;
             { edit Phone5 }
             if field = 'Phone5' then begin
               cgInPlaceEditor.Field := field;
               cgInPlaceEditor.Move(Phone5Rect, true);
-              {
-              Canvas.DrawFocusRect(Rect(Phone5Rect.Left - TextMargin,
-                Phone5Rect.Top, Phone5Rect.Right + 3, Phone5Rect.Bottom + 3));}
               cgInPlaceEditor.Text := FActiveContact.Phone5;
             end;
           end;
@@ -1416,17 +1384,17 @@ begin
     {EMail}
     else if cgInPlaceEditor.field = 'EMail' then begin
       if cgInPlaceEditor.Text <> FActiveContact.EMail1 then begin
-        SetDisplayEMail(FACtiveContact, cgInplaceEditor.Text);
-//        FActiveContact.EMail1 := cgInPlaceEditor.Text;
+        SetDisplayEMailValue(FActiveContact, cgInplaceEditor.Text);
         FActiveContact.Changed := true;
       end;
     end
     {City, State, Zip}
     else if cgInPlaceEditor.field = 'CSZ' then begin
       ParseCSZ(cgInPlaceEditor.Text, City, State, Zip);
-      if (City <> FActiveContact.City1)
-      or (State <> FActiveContact.State1)
-      or (Zip <> FActiveContact.Zip1) then begin
+      if (City <> FActiveContact.City1) or
+         (State <> FActiveContact.State1) or
+         (Zip <> FActiveContact.Zip1) then
+      begin
         FActiveContact.City1 := City;
         FActiveContact.State1 := State;
         FActiveContact.Zip1 := Zip;
@@ -1607,15 +1575,14 @@ end;
 
 procedure TVpContactGrid.KeyDown(var Key: Word; Shift: TShiftState);
 var
-  PopupPoint : TPoint;
-
+  PopupPoint: TPoint;
 begin
   case Key of
     VK_UP    :
       if ContactIndex > 0 then
         ContactIndex := ContactIndex - 1;
     VK_DOWN  :
-      if ContactIndex < Pred(DataStore.Resource.Contacts.Count) then
+      if ContactIndex < DataStore.Resource.Contacts.Count - 1 then
         ContactIndex := ContactIndex + 1;
     VK_HOME  :
       ContactIndex := 0;
@@ -1624,16 +1591,16 @@ begin
         ContactIndex := ContactIndex - 1;
         }
     VK_END   :
-      ContactIndex := Pred(Datastore.Resource.Contacts.Count);
+      ContactIndex := Datastore.Resource.Contacts.Count - 1;
     {
       if ContactIndex < Pred(DataStore.Resource.Contacts.Count) then
         ContactIndex := ContactIndex + 1;
         }
     VK_RIGHT :
-      if ContactIndex + cgCol1RecCount <= Pred(DataStore.Resource.Contacts.Count) then
+      if ContactIndex + cgCol1RecCount <= DataStore.Resource.Contacts.Count - 1 then
         ContactIndex := ContactIndex + cgCol1RecCount
       else
-        ContactIndex := Pred(DataStore.Resource.Contacts.Count);
+        ContactIndex := DataStore.Resource.Contacts.Count - 1;
     VK_LEFT :
       if ContactIndex - cgCol1RecCount <= 0 then
         ContactIndex := 0
@@ -1658,8 +1625,13 @@ begin
         PopupPoint := GetClientOrigin;
         FDefaultPopup.Popup(PopupPoint.x + 10, PopupPoint.y + 10);
       end;
+    else
+      inherited;
   end;
+
+  Key := 0;
   Invalidate;
+  inherited;
 end;
 {=====}
 
@@ -1831,7 +1803,7 @@ begin
   Invalidate;
 end;
 
-function TVpContactGrid.GetDisplayEMail(AContact: TVpContact): String;
+function TVpContactGrid.GetDisplayEMailValue(AContact: TVpContact): String;
 begin
   if AContact = nil then
     Result := ''
@@ -1854,7 +1826,7 @@ begin
     Result := 'EMail1';
 end;
 
-procedure TVpContactGrid.SetDisplayEMail(AContact: TVpContact; AEMail: String);
+procedure TVpContactGrid.SetDisplayEMailValue(AContact: TVpContact; AEMail: String);
 begin
   if (AContact.EMail1 <> '') then
     AContact.EMail1 := AEMail
