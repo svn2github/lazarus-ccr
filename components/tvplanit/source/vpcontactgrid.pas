@@ -192,6 +192,7 @@ type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure ScrollIntoView;
     procedure PopupAddContact(Sender: TObject);
     procedure PopupAddVCards(Sender: TObject);
     procedure PopupDeleteContact(Sender: TObject);
@@ -242,7 +243,7 @@ type
       DisplayOnly: Boolean); override;
 
     { - Added to support the buttonbar component.                         }
-    function SelectContactByName(const Name: String): Boolean;           
+    function SelectContactByName(const Name: String): Boolean;
 
     {$IF VP_LCL_SCALING = 2}
     procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
@@ -784,6 +785,23 @@ begin
   finally
     painter.Free;
     cgPainting := false;
+  end;
+end;
+
+procedure TVpContactGrid.ScrollIntoView;
+begin
+  if FContactIndex < FContactsBefore then begin
+    FContactsBefore := FContactIndex;
+    Invalidate;
+  end else begin
+    if FContactIndex > FContactsBefore + FVisibleContacts - 2 then begin
+      FContactsBefore := FContactIndex - FVisibleContacts + 2;
+      Invalidate;
+    end;
+    while ContactIndex > FContactsBefore + FVisibleContacts - 2 do begin
+      inc(FContactsBefore);
+      Invalidate;
+    end;
   end;
 end;
 
@@ -1576,51 +1594,46 @@ end;
 procedure TVpContactGrid.KeyDown(var Key: Word; Shift: TShiftState);
 var
   PopupPoint: TPoint;
+  idx: Integer;
+  contactCount: Integer;
 begin
+  contactCount := DataStore.Resource.Contacts.Count;
   case Key of
-    VK_UP    :
+    VK_UP:
       if ContactIndex > 0 then
         ContactIndex := ContactIndex - 1;
-    VK_DOWN  :
-      if ContactIndex < DataStore.Resource.Contacts.Count - 1 then
+    VK_DOWN:
+      if ContactIndex < contactCount - 1 then
         ContactIndex := ContactIndex + 1;
-    VK_HOME  :
+    VK_HOME:
       ContactIndex := 0;
-    {
-      if ContactIndex > 0 then
-        ContactIndex := ContactIndex - 1;
-        }
-    VK_END   :
-      ContactIndex := Datastore.Resource.Contacts.Count - 1;
-    {
-      if ContactIndex < Pred(DataStore.Resource.Contacts.Count) then
-        ContactIndex := ContactIndex + 1;
-        }
-    VK_RIGHT :
-      if ContactIndex + cgCol1RecCount <= DataStore.Resource.Contacts.Count - 1 then
+    VK_END:
+      ContactIndex := contactCount - 1;
+    VK_RIGHT:
+      if ContactIndex + cgCol1RecCount <= contactCount - 1 then
         ContactIndex := ContactIndex + cgCol1RecCount
       else
-        ContactIndex := DataStore.Resource.Contacts.Count - 1;
-    VK_LEFT :
+        ContactIndex := contactCount - 1;
+    VK_LEFT:
       if ContactIndex - cgCol1RecCount <= 0 then
         ContactIndex := 0
       else
         ContactIndex := ContactIndex - cgCol1RecCount;
-    VK_DELETE :
+    VK_DELETE:
       DeleteActiveContact (true);
 {$IFNDEF LCL}
-    VK_TAB   :
+    VK_TAB:
       if ssShift in Shift then
         Windows.SetFocus (GetNextDlgTabItem(GetParent(Handle), Handle, False))
       else
         Windows.SetFocus (GetNextDlgTabItem(GetParent(Handle), Handle, True));
 {$ENDIF}
-    VK_F10   :
+    VK_F10:
       if (ssShift in Shift) and not Assigned(PopupMenu) then begin
         PopupPoint := GetClientOrigin;
         FDefaultPopup.Popup(PopupPoint.x + 10, PopupPoint.y + 10);
       end;
-    VK_APPS  :
+    VK_APPS:
       if not Assigned(PopupMenu) then begin
         PopupPoint := GetClientOrigin;
         FDefaultPopup.Popup(PopupPoint.x + 10, PopupPoint.y + 10);
@@ -1629,8 +1642,9 @@ begin
       inherited;
   end;
 
-  Key := 0;
   Invalidate;
+  ScrollIntoView;
+  Key := 0;
   inherited;
 end;
 {=====}

@@ -2564,7 +2564,7 @@ begin
     Result := FContactsList.IndexOf(Contact);                            
 end;                                                                     
 
-procedure TVpContacts.SetContactSort (const v : TVpContactSort);
+procedure TVpContacts.SetContactSort(const v: TVpContactSort);
 begin
   if v <> FContactSort then begin
     FContactSort := v;

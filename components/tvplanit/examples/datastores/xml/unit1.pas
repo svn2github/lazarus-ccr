@@ -39,6 +39,7 @@ type
     procedure BtnNewResClick(Sender: TObject);
     procedure BtnEditResClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { private declarations }
   public
@@ -84,6 +85,11 @@ begin
     lastRes := datastore.Resources.Items[datastore.Resources.Count-1];
     datastore.ResourceID := lastRes.ResourceID;
   end;
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  VpXMLDatastore1.Connected := false;
 end;
 
 end.

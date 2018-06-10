@@ -237,7 +237,11 @@ var
   Phone4Rect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
   Phone5Rect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
   R: TRect;
+  contactCount: Integer;
+  baseTextHeight: Integer;
+  maxTextWidth: Integer;
 begin
+  contactCount := FContactGrid.DataStore.Resource.Contacts.Count;
   oldCol1RecCount := TVpContactGridOpener(FContactGrid).cgCol1RecCount;
   TVpContactGridOpener(FContactGrid).FVisibleContacts := 0;
   TVpContactGridOpener(FContactGrid).cgCol1RecCount := 0;
@@ -271,6 +275,7 @@ begin
     {$IF VP_LCL_SCALING = 0}
     TmpBmp.Canvas.Font.Size := ScaleY(TmpBmp.Canvas.Font.Size, DesignTimeDPI);
     {$ENDIF}
+    baseTextHeight := TmpBmp.Canvas.TextHeight(VpProductName);
 
     { Calculate Phone Lbl Width }
     PhoneLblWidth := TmpBmp.Canvas.TextWidth(RSEmail);
@@ -308,14 +313,14 @@ begin
     end;
     RecsInCol := 0;
 
-    for I := StartContact to pred(FContactGrid.DataStore.Resource.Contacts.Count) do begin
+    for I := StartContact to pred(contactCount) do begin
       TmpCon := FContactGrid.DataStore.Resource.Contacts.GetContact(I);
       if (TmpCon <> nil) then begin
+        TVpContactGridOpener(FContactGrid).cgContactArray[I].Contact := TmpCon;
+
         { Clear bmp canvas }
         TmpBmp.Canvas.Brush.Color := RealColor;
         TmpBmp.Canvas.FillRect(Rect(0, 0, TmpBmp.Width, TmpBmp.Height));
-
-        TVpContactGridOpener(FContactGrid).cgContactArray[I].Contact := TmpCon;
 
         { start building the WholeRect and build the HeaderRect}
         TmpBmp.Canvas.Pen.Color := BevelDarkShadow;
@@ -335,14 +340,14 @@ begin
               HeadRect.TopLeft := Point(0, 0);
               HeadRect.BottomRight := Point(
                 TmpBmp.Width,
-                HeadRect.Top + TmpBmp.Canvas.TextHeight(VpProductName) + TextMargin div 2
+                HeadRect.Top + baseTextHeight + TextMargin div 2
               );
               WholeRect.BottomRight := HeadRect.BottomRight;
             end;
-          ra90:                                         // TO DO: CHECK THE USAGE OF TextMargin HERE !!!!!!!!!
+          ra90:                      // TO DO: CHECK CORRECT USAGE OF TextMargin HERE !!!!!!!!!
             begin
               HeadRect.TopLeft := Point(
-                TmpBmpRect.Right - TextMargin - TmpBmp.Canvas.TextHeight(VpProductName) + TextMargin div 2,
+                TmpBmpRect.Right - TextMargin - baseTextHeight + TextMargin div 2,
                 0
               );
               HeadRect.BottomRight := Point(TmpBmpRect.Right, TmpBmp.Height);
@@ -354,7 +359,7 @@ begin
               WholeRect.BottomRight := Point(TmpBmp.Width, TmpBmp.Height);
               HeadRect.TopLeft := Point(
                 TextMargin,
-                TmpBmpRect.Bottom - TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin
+                TmpBmpRect.Bottom - baseTextHeight - TextMargin
               );
               HeadRect.BottomRight := Point(
                 TmpBmp.Width,
@@ -367,112 +372,110 @@ begin
               WholeRect.TopLeft := Point(0, 0);
               HeadRect.TopLeft := Point(0, TextMargin);
               HeadRect.BottomRight := Point(
-                TextMargin + TmpBmp.Canvas.TextHeight(VpProductName) + TextMargin div 2,
+                TextMargin + baseTextHeight + TextMargin div 2,
                 TmpBmp.Height
               );
               WholeRect.BottomRight := HeadRect.BottomRight;
             end;
         end;
 
-        { assemble the header string }
-        Str := AssembleName(TmpCon);
+        { paint the header cell's background }
+        TmpBmp.Canvas.Brush.Color := RealContactHeadAttrColor;
+        TmpBmp.Canvas.FillRect(HeadRect);
 
-        { if the name isn't empty then paint all of the contact information }
-        if Str > '' then begin
-          { paint the header cell's background }
-          if (Angle = ra0) or (Angle = ra180) then
-            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, WidthOf(HeadRect) - TextMargin)
-          else
-            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, HeightOf(HeadRect) - TextMargin);
-          TmpBmp.Canvas.Brush.Color := RealContactHeadAttrColor;
-          TmpBmp.Canvas.FillRect(HeadRect);
-          { paint the header cell's border }
-          if FContactGrid.ContactHeadAttributes.Bordered and (FContactGrid.DrawingStyle <> dsNoBorder)
-          then begin
-            TmpBmp.Canvas.Pen.Style := psSolid;
-            {$IFDEF VERSION5}
-            TmpBmp.Canvas.Rectangle(HeadRect);
-            {$ELSE}
-            TmpBmp.Canvas.Rectangle(HeadRect.Left, HeadRect.Top, HeadRect.Right, HeadRect.Bottom);
-            {$ENDIF}
-          end;
-          { paint the header cell's text }
-          case Angle of
-            ra90:
-              begin
-                TextXOffset := WidthOf(HeadRect) - TextMargin div 2;
-                TextYOffset := TextMargin div 3;
-              end;
-            ra180:
-              begin
-                TextXOffset := WidthOf(HeadRect) - TextMargin;
-                TextYOffset := HeightOf(HeadRect) - TextMargin div 3;
-              end;
-            ra270:
-              begin
-                TextXOffset := TextMargin div 2;
-                TextYOffset := HeightOf(HeadRect) - TextMargin div 3;
-              end;
-          end;
-          TPSTextOutAtPoint(
-            TmpBmp.Canvas,
-            Angle,
-            TmpBmpRect,
-            HeadRect.Left + TextMargin div 2 + TextXOffset,
-            HeadRect.Top + TextMargin div 3 + TextYOffset,
-            Str
-          );
-
-          { restore font and colors }
-          TmpBmp.Canvas.Font.Assign(FContactGrid.Font);
-          {$IF VP_LCL_SCALING = 0}
-          TmpBmp.Canvas.Font.Size := ScaleY(TmpBmp.Canvas.Font.Size, DesignTimeDPI);
-          {$ENDIF}
-          TmpBmp.Canvas.Brush.Color := RealColor;
-          TmpBmp.Canvas.Pen.Color := BevelDarkShadow;
+        { paint the header cell's border }
+        if FContactGrid.ContactHeadAttributes.Bordered and (FContactGrid.DrawingStyle <> dsNoBorder)
+        then begin
           TmpBmp.Canvas.Pen.Style := psSolid;
+          TmpBmp.Canvas.Rectangle(HeadRect);
+        end;
 
-          { do Company }
-          DrawContactLine(TmpBmp, TmpCon.Company, '', WholeRect, CompanyRect);
+        { paint the header cell's text }
+        case Angle of
+          ra90:
+            begin
+              TextXOffset := WidthOf(HeadRect) - TextMargin div 2;
+              TextYOffset := TextMargin div 3;
+            end;
+          ra180:
+            begin
+              TextXOffset := WidthOf(HeadRect) - TextMargin;
+              TextYOffset := HeightOf(HeadRect) - TextMargin div 3;
+            end;
+          ra270:
+            begin
+              TextXOffset := TextMargin div 2;
+              TextYOffset := HeightOf(HeadRect) - TextMargin div 3;
+            end;
+        end;
 
-          { do address... }
-          DrawContactLine(TmpBmp, TmpCon.Address1, '', WholeRect, AddrRect);
+        { assemble the header string }
+        if (Angle in [ra0, ra180]) then
+          maxTextWidth := WidthOf(HeadRect)
+        else
+          maxTextWidth := HeightOf(HeadRect);
+        Str := AssembleName(TmpCon);
+        Str := GetDisplayString(TmpBmp.Canvas, Str, 2, maxTextWidth - TextMargin);
 
-          { do City, State, Zip }
-          Str := AssembleCSZ(TmpCon, 1, FContactGrid.GetCityStateZipFormat);
-          DrawContactLine(TmpBmp, Str, '', WholeRect, CSZRect);
+        TPSTextOutAtPoint(
+          TmpBmp.Canvas,
+          Angle,
+          TmpBmpRect,
+          HeadRect.Left + TextMargin div 2 + TextXOffset,
+          HeadRect.Top + TextMargin div 3 + TextYOffset,
+          Str
+        );
 
-          { do Phone1 }
-          Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType1)) + ': ';
-          DrawContactLine(TmpBmp, TmpCon.Phone1, Str, WholeRect, Phone1Rect);
+        { restore font and colors }
+        TmpBmp.Canvas.Font.Assign(FContactGrid.Font);
+        {$IF VP_LCL_SCALING = 0}
+        TmpBmp.Canvas.Font.Size := ScaleY(TmpBmp.Canvas.Font.Size, DesignTimeDPI);
+        {$ENDIF}
+        TmpBmp.Canvas.Brush.Color := RealColor;
+        TmpBmp.Canvas.Pen.Color := BevelDarkShadow;
+        TmpBmp.Canvas.Pen.Style := psSolid;
 
-          { do Phone2 }
-          Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType2)) + ': ';
-          DrawContactLine(TmpBmp, TmpCon.Phone2, Str, WholeRect, Phone2Rect);
+        { do Company }
+        DrawContactLine(TmpBmp, TmpCon.Company, '', WholeRect, CompanyRect);
 
-          { do Phone3 }
-          Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType3)) + ': ';
-          DrawContactLine(TmpBmp, TmpCon.Phone3, Str, WholeRect, Phone3Rect);
+        { do address... }
+        DrawContactLine(TmpBmp, TmpCon.Address1, '', WholeRect, AddrRect);
 
-          { do Phone4 }
-          Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType4)) + ': ';
-          DrawContactLine(TmpBmp, TmpCon.Phone4, Str, WholeRect, Phone4Rect);
+        { do City, State, Zip }
+        Str := AssembleCSZ(TmpCon, 1, FContactGrid.GetCityStateZipFormat);
+        DrawContactLine(TmpBmp, Str, '', WholeRect, CSZRect);
 
-          { do Phone5 }
-          Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType5)) + ': ';
-          DrawContactLine(TmpBmp, TmpCon.Phone5, Str, WholeRect, Phone5Rect);
+        { do Phone1 }
+        Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType1)) + ': ';
+        DrawContactLine(TmpBmp, TmpCon.Phone1, Str, WholeRect, Phone1Rect);
 
-          { do EMail }
-          Str := TVpContactGridOpener(FContactGrid).GetDisplayEMailValue(TmpCon);
-          DrawContactLine(TmpBmp, Str, RSEmail + ': ', WholeRect, EMailRect);
+        { do Phone2 }
+        Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType2)) + ': ';
+        DrawContactLine(TmpBmp, TmpCon.Phone2, Str, WholeRect, Phone2Rect);
 
-          { if this record's too big to fit in the remaining area of this }
-          { column, then slide over to the top of the next column }
+        { do Phone3 }
+        Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType3)) + ': ';
+        DrawContactLine(TmpBmp, TmpCon.Phone3, Str, WholeRect, Phone3Rect);
+
+        { do Phone4 }
+        Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType4)) + ': ';
+        DrawContactLine(TmpBmp, TmpCon.Phone4, Str, WholeRect, Phone4Rect);
+
+        { do Phone5 }
+        Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType5)) + ': ';
+        DrawContactLine(TmpBmp, TmpCon.Phone5, Str, WholeRect, Phone5Rect);
+
+        { do EMail }
+        Str := TVpContactGridOpener(FContactGrid).GetDisplayEMailValue(TmpCon);
+        DrawContactLine(TmpBmp, Str, RSEmail + ': ', WholeRect, EMailRect);
+
+        { if this record's too big to fit in the remaining area of this }
+        { column, then slide over to the top of the next column }
+        if RecsInCol > 0 then
           case Angle of
-            ra0 : begin
-              if (RenderIn.Top + Anchor.y + WholeRect.Bottom >= RenderIn.Bottom - TextMargin * 3) and
-                 (RecsInCol > 0)
-              then begin
+            ra0:
+              if (RenderIn.Top + Anchor.y + WholeRect.Bottom >= RenderIn.Bottom - TextMargin * 3) then
+              begin
                 Anchor := Point(
                   Anchor.x + WholeRect.Right + FContactGrid.BarWidth + 1 + TextMargin * 3,
                   2 + TextMargin * 2
@@ -484,11 +487,9 @@ begin
                 if DisplayOnly and (Anchor.X + TextColWidth >= RenderIn.Right) then
                   Exit;
               end;
-            end;
-            ra90 : begin
-              if (Anchor.x + RenderIn.Left + WholeRect.Right - WholeRect.Left > RenderIn.Right - TextMargin * 3) and
-                 (RecsInCol > 0)
-              then begin
+            ra90 :
+              if (Anchor.x + RenderIn.Left + WholeRect.Right - WholeRect.Left > RenderIn.Right - TextMargin * 3) then
+              begin
                 Anchor.x := 2 + TextMargin * 2;
                 Anchor.y := Anchor.y + WholeRect.Bottom + FContactGrid.BarWidth + 1 + TextMargin * 3;
                 if Col = 1 then
@@ -498,10 +499,8 @@ begin
                 if DisplayOnly and (Anchor.y + TextColWidth >= RenderIn.Bottom) then
                   Exit;
               end;
-            end;
-            ra180 : begin
-              if (Anchor.y + RenderIn.Top - WholeRect.Bottom - WholeRect.Top <= RenderIn.Top + TextMargin * 3) and
-                 (RecsInCol > 0) then
+            ra180 :
+              if (Anchor.y + RenderIn.Top - WholeRect.Bottom - WholeRect.Top <= RenderIn.Top + TextMargin * 3) then
               begin
                 Anchor.x := Anchor.x - (WholeRect.Right + FContactGrid.BarWidth + 1 + TextMargin * 3);
                 Anchor.y := TmpBmp.Height - 2 - TextMargin * 2;
@@ -512,10 +511,8 @@ begin
                 if DisplayOnly and (Anchor.x + TextColWidth < RenderIn.Left) then
                   Exit;
               end;
-            end;
-            ra270 : begin
-              if (Anchor.x + RenderIn.Left + (WholeRect.Right - WholeRect.Left) >= RenderIn.Right - TextMargin * 3) and
-                 (RecsInCol > 0) then
+            ra270 :
+              if (Anchor.x + RenderIn.Left + (WholeRect.Right - WholeRect.Left) >= RenderIn.Right - TextMargin * 3) then
               begin
                 Anchor.x := 2 + TextMargin * 2;
                 Anchor.y := Anchor.y - (WholeRect.Bottom + FContactGrid.BarWidth + 1 + TextMargin * 3);
@@ -526,90 +523,72 @@ begin
                 if DisplayOnly and (Anchor.y + TextColWidth <= RenderIn.Top) then
                   Exit;
               end;
-            end;
-          end;
-
-          { add a little spacing between records }
-          case Angle of
-            ra0   : WholeRect.Bottom := WholeRect.Bottom + TextMargin * 2;
-            ra90  : WholeRect.Left := WholeRect.Left - TextMargin * 2;
-            ra180 : WholeRect.Top := WholeRect.Top - TextMargin * 2;
-            ra270 : WholeRect.Right := WholeRect.Right + TextMargin * 2;
-          end;
-
-          { Update Array Rects }
-          with TVpContactGridOpener(FContactGrid) do begin
-            cgContactArray[I].WholeRect := MoveRect(WholeRect, Anchor);
-            cgContactArray[I].HeaderRect := MoveRect(HeadRect, Anchor);
-            cgContactArray[I].AddressRect := MoveRect(AddrRect, Anchor);
-            cgContactArray[I].CSZRect := MoveRect(CSZRect, Anchor);
-            cgContactArray[I].CompanyRect := MoveRect(CompanyRect, Anchor);
-            cgContactArray[I].EMailRect := MoveRect(EMailRect, Anchor);
-            cgContactArray[I].Phone1Rect := MoveRect(Phone1Rect, Anchor);
-            cgContactArray[I].Phone2Rect := MoveRect(Phone2Rect, Anchor);
-            cgContactArray[I].Phone3Rect := MoveRect(Phone3Rect, Anchor);
-            cgContactArray[I].Phone4Rect := MoveRect(Phone4Rect, Anchor);
-            cgContactArray[I].Phone5Rect := MoveRect(Phone5Rect, Anchor);
-          end;
-
-          { move the drawn record from the bitmap to the component canvas }
-          case Angle of
-            ra0   :
-              RenderCanvas.CopyRect (Rect (Anchor.X + WholeRect.Left + RenderIn.Left,
-                                           Anchor.Y + WholeRect.Top + RenderIn.Top,
-                                           Anchor.X + TmpBmp.Width + RenderIn.Left,
-                                           Anchor.Y + WholeRect.Bottom + RenderIn.Top),
-                                     TmpBmp.Canvas, WholeRect);
-            ra90  :
-              RenderCanvas.CopyRect (Rect (WholeRect.Left + RenderIn.Left - Anchor.X,
-                                           Anchor.Y + WholeRect.Top + RenderIn.Top,
-                                           WholeRect.Right + RenderIn.Left - Anchor.X,
-                                           Anchor.Y + WholeRect.Bottom + RenderIn.Top),
-                                     TmpBmp.Canvas,
-                                     Rect (WholeRect.Left,
-                                           WholeRect.Top,
-                                           WholeRect.Right,
-                                           WholeRect.Bottom));
-
-            ra180 :
-              RenderCanvas.CopyRect (Rect (Anchor.X + WholeRect.Left + RenderIn.Left,
-                                           Anchor.Y - (WholeRect.Bottom - WholeRect.Top) + RenderIn.Top,
-                                           Anchor.X + TmpBmp.Width + RenderIn.Left,
-                                           Anchor.Y + RenderIn.Top),
-                                     TmpBmp.Canvas, WholeRect);
-
-            ra270 :
-              RenderCanvas.CopyRect (Rect (Anchor.X + RenderIn.Left,
-                                           Anchor.Y + RenderIn.Top,
-                                           Anchor.X + RenderIn.Left + (WholeRect.Right - WholeRect.Left),
-                                           Anchor.Y + RenderIn.Top + (WholeRect.Bottom - WholeRect.Top)),
-                                     TmpBmp.Canvas, WholeRect);
-          end;
-
-          { draw focusrect around selected record }
-          if FContactGrid.Focused and (TmpCon = FContactGrid.ActiveContact) then begin
-            with TVpContactGridOpener(FContactGrid).cgContactArray[I] do begin
-              R := WholeRect;
-              InflateRect(R, 3, 3);
-              dec(R.Bottom, 2*3);
-              RenderCanvas.DrawFocusRect(R);
-              {
-              RenderCanvas.DrawFocusRect(Rect(WholeRect.Left, WholeRect.Top - 3,
-                WholeRect.Right + TextMargin, WholeRect.Bottom - 2));
-              }
-            end;
-          end;
-
-          { slide anchor down for the next record }
-          case Angle of
-            ra0   : Anchor.Y := Anchor.Y + WholeRect.Bottom;
-            ra90  : Anchor.X := Anchor.X + (WholeRect.Right - WholeRect.Left);
-            ra180 : Anchor.Y := Anchor.Y - (WholeRect.Bottom - WholeRect.Top);
-            ra270 : Anchor.X := Anchor.X + WholeRect.Right;
-          end;
-          Inc(RecsInCol);
         end;
-      end;
+
+        { add a little spacing between records }
+        case Angle of
+          ra0   : WholeRect.Bottom := WholeRect.Bottom + TextMargin * 2;
+          ra90  : WholeRect.Left := WholeRect.Left - TextMargin * 2;
+          ra180 : WholeRect.Top := WholeRect.Top - TextMargin * 2;
+          ra270 : WholeRect.Right := WholeRect.Right + TextMargin * 2;
+        end;
+
+        { Update Array Rects }
+        with TVpContactGridOpener(FContactGrid) do begin
+          cgContactArray[I].WholeRect := MoveRect(WholeRect, Anchor);
+          cgContactArray[I].HeaderRect := MoveRect(HeadRect, Anchor);
+          cgContactArray[I].AddressRect := MoveRect(AddrRect, Anchor);
+          cgContactArray[I].CSZRect := MoveRect(CSZRect, Anchor);
+          cgContactArray[I].CompanyRect := MoveRect(CompanyRect, Anchor);
+          cgContactArray[I].EMailRect := MoveRect(EMailRect, Anchor);
+          cgContactArray[I].Phone1Rect := MoveRect(Phone1Rect, Anchor);
+          cgContactArray[I].Phone2Rect := MoveRect(Phone2Rect, Anchor);
+          cgContactArray[I].Phone3Rect := MoveRect(Phone3Rect, Anchor);
+          cgContactArray[I].Phone4Rect := MoveRect(Phone4Rect, Anchor);
+          cgContactArray[I].Phone5Rect := MoveRect(Phone5Rect, Anchor);
+        end;
+
+        { move the drawn record from the bitmap to the component canvas }
+        case Angle of
+          ra0   : R := Rect(Anchor.X + WholeRect.Left + RenderIn.Left,
+                            Anchor.Y + WholeRect.Top + RenderIn.Top,
+                            Anchor.X + TmpBmp.Width + RenderIn.Left,
+                            Anchor.Y + WholeRect.Bottom + RenderIn.Top);
+          ra90  : R := Rect(WholeRect.Left + RenderIn.Left - Anchor.X,
+                            Anchor.Y + WholeRect.Top + RenderIn.Top,
+                            WholeRect.Right + RenderIn.Left - Anchor.X,
+                            Anchor.Y + WholeRect.Bottom + RenderIn.Top);
+          ra180 : R := Rect(Anchor.X + WholeRect.Left + RenderIn.Left,
+                            Anchor.Y - (WholeRect.Bottom - WholeRect.Top) + RenderIn.Top,
+                            Anchor.X + TmpBmp.Width + RenderIn.Left,
+                            Anchor.Y + RenderIn.Top);
+          ra270 : R := Rect(Anchor.X + RenderIn.Left,
+                            Anchor.Y + RenderIn.Top,
+                            Anchor.X + RenderIn.Left + (WholeRect.Right - WholeRect.Left),
+                            Anchor.Y + RenderIn.Top + (WholeRect.Bottom - WholeRect.Top));
+        end;
+        RenderCanvas.CopyRect(R, TmpBmp.Canvas, WholeRect);
+
+        { draw focusrect around selected record }
+        if FContactGrid.Focused and (TmpCon = FContactGrid.ActiveContact) then begin
+          with TVpContactGridOpener(FContactGrid).cgContactArray[I] do begin
+            R := WholeRect;
+            InflateRect(R, 3, 0);
+            OffsetRect(R, 0, -3);
+            RenderCanvas.DrawFocusRect(R);
+          end;
+        end;
+
+        { slide anchor down for the next record }
+        case Angle of
+          ra0   : Anchor.Y := Anchor.Y + WholeRect.Bottom;
+          ra90  : Anchor.X := Anchor.X + (WholeRect.Right - WholeRect.Left);
+          ra180 : Anchor.Y := Anchor.Y - (WholeRect.Bottom - WholeRect.Top);
+          ra270 : Anchor.X := Anchor.X + WholeRect.Right;
+        end;
+
+        Inc(RecsInCol);
+      end;  // for I := StartCont to ...
 
       if not DisplayOnly then
         case Angle of
@@ -618,48 +597,48 @@ begin
               if (Anchor.X > RenderIn.Right) and (I < DataStore.Resource.Contacts.Count)
               then begin
                 { we have filled in the visible area }
-                FContactsAfter := DataStore.Resource.Contacts.Count - I;
-                FVisibleContacts := DataStore.Resource.Contacts.Count - StartContact - FContactsAfter;
+                FContactsAfter := contactCount - I;
+                FVisibleContacts := contactCount - StartContact - FContactsAfter;
                 Break;
               end else begin
                 FContactsAfter := 0;
-                FVisibleContacts := DataStore.Resource.Contacts.Count - StartContact;
+                FVisibleContacts := contactCount - StartContact;
               end;
           ra90 :
             with TVpContactGridOpener(FContactGrid) do
-              if (Anchor.Y > RenderIn.Bottom) and (I < DataStore.Resource.Contacts.Count)
+              if (Anchor.Y > RenderIn.Bottom) and (I < contactCount)
               then begin
                 { we have filled in the visible area }
-                FContactsAfter := DataStore.Resource.Contacts.Count - I;
-                FVisibleContacts := DataStore.Resource.Contacts.Count - StartContact - FContactsAfter;
+                FContactsAfter := contactCount - I;
+                FVisibleContacts := contactCount - StartContact - FContactsAfter;
                 Break;
               end else begin
                 FContactsAfter := 0;
-                FVisibleContacts := DataStore.Resource.Contacts.Count - StartContact;
+                FVisibleContacts := contactCount - StartContact;
               end;
           ra180 :
             with TVpContactGridOpener(FContactGrid) do begin
-              if (Anchor.X < RenderIn.Left) and (I < DataStore.Resource.Contacts.Count)
+              if (Anchor.X < RenderIn.Left) and (I < contactCount)
               then begin
                 { we have filled in the visible area }
-                FContactsAfter := DataStore.Resource.Contacts.Count - I;
-                FVisibleContacts := DataStore.Resource.Contacts.Count - StartContact - FContactsAfter;
+                FContactsAfter := contactCount - I;
+                FVisibleContacts := contactCount - StartContact - FContactsAfter;
                 Break;
               end else
                 FContactsAfter := 0;
-              FVisibleContacts := DataStore.Resource.Contacts.Count - StartContact;
+              FVisibleContacts := contactCount - StartContact;
             end;
           ra270 :
             with TVpContactGridOpener(FContactGrid) do begin
-              if (Anchor.Y < RenderIn.Top) and (I < DataStore.Resource.Contacts.Count)
+              if (Anchor.Y < RenderIn.Top) and (I < contactCount)
               then begin
                 { we have filled in the visible area }
-                FContactsAfter := DataStore.Resource.Contacts.Count - I;
-                FVisibleContacts := DataStore.Resource.Contacts.Count - StartContact - FContactsAfter;
+                FContactsAfter := contactCount - I;
+                FVisibleContacts := contactCount - StartContact - FContactsAfter;
                 Break;
               end else
                 FContactsAfter := 0;
-              FVisibleContacts := DataStore.Resource.Contacts.Count - StartContact;
+              FVisibleContacts := contactCount - StartContact;
             end;
         end;
     end;

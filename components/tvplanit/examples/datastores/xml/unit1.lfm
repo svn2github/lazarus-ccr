@@ -7,7 +7,8 @@ object Form1: TForm1
   ClientHeight = 686
   ClientWidth = 980
   OnCreate = FormCreate
-  LCLVersion = '1.6.4.0'
+  OnDestroy = FormDestroy
+  LCLVersion = '1.9.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 33
@@ -170,7 +171,6 @@ object Form1: TForm1
           Align = alBottom
           TabStop = True
           TabOrder = 1
-          KBNavigation = True
           DateLabelFormat = 'mmmm yyyy'
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Font.Name = 'Tahoma'
@@ -181,6 +181,7 @@ object Form1: TForm1
           EventDayStyle = []
           EventFont.Height = -12
           HeadAttributes.Color = clBtnFace
+          KBNavigation = True
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
@@ -245,20 +246,21 @@ object Form1: TForm1
     end
     object TabSheet2: TTabSheet
       Caption = 'Contacts'
-      ClientHeight = 624
+      ClientHeight = 625
       ClientWidth = 972
       object VpContactButtonBar1: TVpContactButtonBar
         Left = 0
-        Height = 624
+        Height = 625
         Top = 0
         Width = 40
+        ContactGrid = VpContactGrid1
         DrawingStyle = dsFlat
         RadioStyle = False
         Align = alLeft
       end
       object VpContactGrid1: TVpContactGrid
         Left = 40
-        Height = 624
+        Height = 625
         Top = 0
         Width = 932
         DataStore = VpXmlDatastore1
@@ -295,7 +297,7 @@ object Form1: TForm1
     top = 264
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.05'
+    Version = 'v1.12'
     DataStore = VpXmlDatastore1
     Options = []
     Placement.Position = mpCenter
