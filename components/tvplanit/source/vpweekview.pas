@@ -260,7 +260,7 @@ type
     procedure LinkHandler(Sender: TComponent;
       NotificationType: TVpNotificationType; const Value: Variant); override;
     function GetControlType: TVpItemType; override;
-    procedure EditSelectedEvent;
+    procedure EditSelectedEvent(IsNewEvent: Boolean = false);
     procedure PaintToCanvas(ACanvas: TCanvas;  ARect: TRect;
       Angle: TVpRotationAngle; ADate: TDateTime);
     procedure RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
@@ -1254,10 +1254,10 @@ begin
 end;
 {=====}
 
-procedure TVpWeekView.EditSelectedEvent;
+procedure TVpWeekView.EditSelectedEvent(IsNewEvent: Boolean = false);
 begin
   if ActiveEvent <> nil then
-    wvSpawnEventEditDialog(false);
+    wvSpawnEventEditDialog(IsNewEvent);
 end;
 {=====}
 

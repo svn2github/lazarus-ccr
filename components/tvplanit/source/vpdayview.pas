@@ -439,7 +439,7 @@ type
     procedure LoadLanguage;
     procedure LinkHandler(Sender: TComponent; NotificationType: TVpNotificationType;
       const Value: Variant); override;
-    procedure EditSelectedEvent;
+    procedure EditSelectedEvent(IsNewEvent: Boolean = false);
 
     function GetControlType: TVpItemType; override;
     procedure AutoScaledPaintToCanvas(PaintCanvas: TCanvas; PaintTo: TRect;
@@ -2078,12 +2078,12 @@ begin
 end;
 {$ENDIF}
 
-procedure TVpDayView.EditSelectedEvent;
+procedure TVpDayView.EditSelectedEvent(IsNewEvent: Boolean = false);
 begin
   if ReadOnly then
     Exit;
   if FActiveEvent <> nil then
-    dvSpawnEventEditDialog(false);
+    dvSpawnEventEditDialog(IsNewEvent);
 end;
 {=====}
 
