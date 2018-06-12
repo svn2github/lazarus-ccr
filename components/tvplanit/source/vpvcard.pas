@@ -279,7 +279,7 @@ function TVpVCardItem.UnEscape(AValueText: String): String;
 const
   BUFSIZE = 100;
 var
-  p: PChar;
+  p, q: PChar;
   idx: Integer;
 
   procedure AddChar(ch: Char);
@@ -303,9 +303,12 @@ begin
     if p^ = '\' then begin
       inc(p);
       if p^ = 'n' then begin
-        AddChar(LineEnding[1]);
-        if Length(LineEnding) > 1 then
-          AddChar(LineEnding[2]);
+        q := PChar(LineEnding);
+        AddChar(Char(q^));
+        if Length(LineEnding) > 1 then begin
+          inc(q);
+          AddChar(char(q^));
+        end;
       end else
         AddChar(char(p^));
     end else
