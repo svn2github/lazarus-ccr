@@ -5358,8 +5358,8 @@ begin
   ShowInRow(FCurrRow, FBufferIndex, numBytes, IntToStr(n),
     'Number of following cell range addresses');
 
-  numbytes := 2;
   for i:=1 to n do begin
+    numbytes := 2;
     Move(FBuffer[FBufferIndex], w, numBytes);
     ShowInRow(FCurrRow, FBufferIndex, numBytes, IntToStr(WordLEToN(w)), 'Index to first row');
     Move(FBuffer[FBufferIndex], w, numBytes);
