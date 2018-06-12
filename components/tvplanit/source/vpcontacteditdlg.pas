@@ -166,6 +166,7 @@ type
     ceContact: TVpContact;
     ceResource: TVpResource;
   public
+    constructor Create(AOwner: TComponent); override;
     function AddNewContact: Boolean;
     function Execute(Contact: TVpContact): Boolean; reintroduce;
   published
@@ -256,7 +257,8 @@ end;
 procedure TContactEditForm.OKBtnClick(Sender: TObject);
 begin
   if (edLastName.Text = '') and (edFirstName.Text = '') then begin
-    raise EVpContactEditError.Create(RSNameIsRequired);
+    MessageDlg(RSNameIsRequired, mtError, [mbOK], 0);
+//    raise EVpContactEditError.Create(RSNameIsRequired);
     exit;
   end;
   ReturnCode := rtCommit;
@@ -350,11 +352,12 @@ begin
   edFirstName.Text := Contact.FirstName;
   edTitle.Text := Contact.Title;
   if contact.Birthdate = 0.0 then
-    edBirthdate.Clear else
+    edBirthdate.Clear
+  else
     edBirthdate.Date := Contact.Birthdate;
 
   cbCategory.Items.Clear;
-  for ct := Low (TVpCategoryType) to High (TVpCategoryType) do
+  for ct := Low(TVpCategoryType) to High(TVpCategoryType) do
     cbCategory.Items.Add(CategoryLabel(ct));
   cbCategory.ItemIndex := Contact.Category;
 
@@ -505,19 +508,22 @@ var
   Labels: TLabelArray;
   Comboboxes: TComboboxArray;
   largestLabelWidth: Integer;
-  i: Integer;
+  comboArrowWidth: Integer;
+  i, w: Integer;
   OldFont: TFont;
+  hlabeldist: Integer = 8;  // min distance from label to edge of owner
   hdist: Integer = 4;    // Horizontal distance between label and edit/combo
   vDist: Integer = 4;    // Vertical distance between edits
   hBorder: Integer = 8;  // Horizontal distance between container border and label
   vBorder: Integer = 8;  // Vertical distance between container border and 1st control
-  comboArrowWidth: Integer;
+  P: TPoint;
 begin
   {----------------------------------------------------------------------------}
   { Preparations                                                               }
   {----------------------------------------------------------------------------}
   hdist := ScaleX(hdist, DesignTimeDPI);
   vdist := ScaleY(vdist, DesignTimeDPI);
+  hlabeldist := ScaleX(hlabeldist, DesignTimeDPI);
   hBorder := ScaleX(hBorder, DesignTimeDPI);
   vBorder := ScaleY(vBorder, DesignTimeDPI);
   edBirthdate.ButtonWidth := edBirthdate.Height;
@@ -540,6 +546,17 @@ begin
   {----------------------------------------------------------------------------}
   { Page "Base data"                                                           }
   {----------------------------------------------------------------------------}
+  SetLength(labels, 5);
+  labels[0] := lblLastName;
+  labels[1] := lblFirstName;
+  labels[2] := lblTitle;
+  labels[3] := lblCategory;
+  labels[4] := lblBirthdate;
+  largestLabelWidth := 0;
+  for i:=0 to High(labels) do
+    largestLabelWidth := Max(largestLabelWidth, GetLabelWidth(labels[i]));
+  edLastName.Left := largestLabelWidth + hlabelDist;
+
   edBirthdate.Width := edTitle.Width;
   cbCategory.Width := edTitle.Width;
   {$IFDEF NEW_ICONS}
@@ -584,6 +601,25 @@ begin
   end;
 
   {----------------------------------------------------------------------------}
+  { Page "Adresses"                                                            }
+  {----------------------------------------------------------------------------}
+  SetLength(labels, 8);
+  labels[0] := lblCompany;
+  labels[1] := lblDepartment;
+  labels[2] := lblPosition;
+  labels[3] := lblAddressW;
+  labels[4] := lblCityW;
+  labels[5] := lblZipCodeW;
+  labels[6] := lblStateW;
+  labels[7] := lblCountryW;
+  largestLabelWidth := 0;
+  for i:=0 to High(labels) do
+    largestLabelWidth := Max(largestLabelWidth, GetLabelWidth(labels[i]));
+
+  edCompany.Left := largestlabelWidth + hlabeldist;
+  edAddressH.Left := edCompany.Left;
+
+  {----------------------------------------------------------------------------}
   { Page "User-defined"                                                        }
   {----------------------------------------------------------------------------}
   SetLength(Labels, 4);
@@ -596,12 +632,15 @@ begin
   for i := Low(Labels) to High(Labels) do
     largestLabelWidth := Max(largestLabelWidth, GetLabelWidth(Labels[i]));
 
-  edCustom1.Left := hBorder + largestLabelWidth + hDist;
+  edCustom1.Left := hBorder + largestLabelWidth + hLabelDist;
 
   {----------------------------------------------------------------------------}
   { Form size                                                                  }
   {----------------------------------------------------------------------------}
-  Autosize := true;
+  P := Point(0, gbHomeAddress.Height + gbHomeAddress.BorderSpacing.Bottom);
+  P := gbHomeAddress.ClientToScreen(P);
+  P := ScreenToClient(P);
+  Height := P.Y + pnlBottom.Height;
 end;
 
 procedure TContactEditForm.DisplayCurrentCountry(AddressType: TVpAddressType);
@@ -781,6 +820,33 @@ end;
 
 { TVpContactEditDialog }
 
+constructor TVpContactEditDialog.Create(AOwner: TComponent);
+begin
+  inherited;
+  FOptions := FOptions + [doSizeable];
+end;
+
+function TVpContactEditDialog.AddNewContact: Boolean;
+begin
+  result := false;
+  if DataStore <> nil then begin
+    if DataStore.Resource = nil then
+      Exit;
+    ceContact := DataStore.Resource.Contacts.AddContact(
+      DataStore.GetNextID(ContactsTableName));
+    if ceContact <> nil then begin
+      Result := Execute(ceContact);
+      if not Result then
+      (*
+      if Result then
+        DataStore.PostContacts
+      else
+        *)
+        ceContact.Free;
+    end;
+  end;
+end;
+
 function TVpContactEditDialog.Execute(Contact: TVpContact): Boolean;
 var
   EditForm: TContactEditForm;
@@ -809,27 +875,6 @@ begin
     ceContact.Changed := true;
     DataStore.PostContacts;
     DataStore.NotifyDependents;
-  end;
-end;
-
-function TVpContactEditDialog.AddNewContact: Boolean;
-begin
-  result := false;
-  if DataStore <> nil then begin
-    if DataStore.Resource = nil then
-      Exit;
-    ceContact := DataStore.Resource.Contacts.AddContact(
-      DataStore.GetNextID(ContactsTableName));
-    if ceContact <> nil then begin
-      Result := Execute(ceContact);
-      if not Result then
-      (*
-      if Result then
-        DataStore.PostContacts
-      else
-        *)
-        ceContact.Free;
-    end;
   end;
 end;
 

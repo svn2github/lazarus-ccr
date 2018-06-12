@@ -1,7 +1,7 @@
 object ContactEditForm: TContactEditForm
-  Left = 479
+  Left = 397
   Height = 610
-  Top = 165
+  Top = 158
   Width = 506
   HorzScrollBar.Page = 432
   VertScrollBar.Page = 320
@@ -9,20 +9,19 @@ object ContactEditForm: TContactEditForm
   Caption = 'ContactEdit'
   ClientHeight = 610
   ClientWidth = 506
-  Constraints.MinWidth = 480
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.9.0.0'
   object PageControl: TPageControl
     Left = 0
     Height = 577
     Top = 0
     Width = 506
-    ActivePage = tabBaseData
+    ActivePage = tabAddresses
     Align = alClient
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     OnChange = PageControlChange
     object tabBaseData: TTabSheet
@@ -54,7 +53,7 @@ object ContactEditForm: TContactEditForm
         Height = 23
         Top = 8
         Width = 384
-        Anchors = [akTop, akRight]
+        Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 8
         BorderSpacing.Right = 8
         MaxLength = 100
@@ -194,19 +193,19 @@ object ContactEditForm: TContactEditForm
       ClientWidth = 498
       ImageIndex = 1
       object gbWorkAddress: TGroupBox
-        Left = 8
+        Left = 24
         Height = 298
         Top = 8
-        Width = 482
+        Width = 466
         Align = alTop
         AutoSize = True
-        BorderSpacing.Left = 8
+        BorderSpacing.Left = 24
         BorderSpacing.Top = 8
         BorderSpacing.Right = 8
         BorderSpacing.Bottom = 8
         Caption = 'gbWorkAddress'
         ClientHeight = 278
-        ClientWidth = 478
+        ClientWidth = 462
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
@@ -214,11 +213,11 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = gbWorkAddress
           AnchorSideRight.Control = gbWorkAddress
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 0
-          Width = 338
-          Anchors = [akTop, akRight]
+          Width = 326
+          Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Right = 8
           MaxLength = 50
           OnChange = ItemChanged
@@ -229,7 +228,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edCompany
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCompany
-          Left = 59
+          Left = 55
           Height = 15
           Top = 4
           Width = 65
@@ -246,7 +245,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edDepartment
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCompany
-          Left = 48
+          Left = 44
           Height = 15
           Top = 31
           Width = 76
@@ -265,10 +264,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edCompany
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 27
-          Width = 338
+          Width = 326
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           MaxLength = 50
@@ -280,7 +279,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edPosition
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCompany
-          Left = 68
+          Left = 64
           Height = 15
           Top = 58
           Width = 56
@@ -299,10 +298,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edCompany
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 54
-          Width = 338
+          Width = 326
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           MaxLength = 50
@@ -314,7 +313,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edAddressW
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCompany
-          Left = 69
+          Left = 65
           Height = 15
           Top = 85
           Width = 55
@@ -333,10 +332,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edCompany
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 81
-          Width = 338
+          Width = 326
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           MaxLength = 100
@@ -348,7 +347,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edCityW
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCompany
-          Left = 90
+          Left = 86
           Height = 15
           Top = 112
           Width = 34
@@ -367,10 +366,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edCompany
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 108
-          Width = 338
+          Width = 326
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           MaxLength = 50
@@ -382,7 +381,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edStateW
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCompany
-          Left = 85
+          Left = 81
           Height = 15
           Top = 139
           Width = 39
@@ -401,10 +400,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edCompany
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 135
-          Width = 338
+          Width = 326
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           MaxLength = 25
@@ -416,14 +415,14 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = cbStateW
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCompany
-          Left = 49
+          Left = 41
           Height = 15
           Top = 166
           Width = 79
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           BorderSpacing.Left = 8
-          BorderSpacing.Right = 4
+          BorderSpacing.Right = 8
           Caption = 'lblStateCombo'
           FocusControl = cbStateW
           ParentColor = False
@@ -436,10 +435,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edCompany
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 162
-          Width = 338
+          Width = 326
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           ItemHeight = 15
@@ -452,7 +451,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edZipCodeW
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCompany
-          Left = 66
+          Left = 62
           Height = 15
           Top = 193
           Width = 58
@@ -470,7 +469,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = cbStateW
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 189
           Width = 120
@@ -485,7 +484,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = cbCountryW
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCompany
-          Left = 28
+          Left = 24
           Height = 15
           Top = 220
           Width = 96
@@ -505,10 +504,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edCompany
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 216
-          Width = 338
+          Width = 326
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           BorderSpacing.Bottom = 8
@@ -523,7 +522,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edCountryW
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCompany
-          Left = 68
+          Left = 64
           Height = 15
           Top = 251
           Width = 56
@@ -542,10 +541,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edCompany
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 247
-          Width = 338
+          Width = 326
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           BorderSpacing.Bottom = 8
@@ -574,7 +573,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edAddressH
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edAddressH
-          Left = 69
+          Left = 65
           Height = 15
           Top = 4
           Width = 55
@@ -591,11 +590,11 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = gbHomeAddress
           AnchorSideRight.Control = gbHomeAddress
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 0
-          Width = 338
-          Anchors = [akTop, akRight]
+          Width = 342
+          Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Right = 8
           MaxLength = 100
           OnChange = ItemChanged
@@ -606,7 +605,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edCityH
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCityH
-          Left = 90
+          Left = 86
           Height = 15
           Top = 31
           Width = 34
@@ -625,10 +624,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edAddressH
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 27
-          Width = 338
+          Width = 342
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           MaxLength = 50
@@ -640,7 +639,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edStateH
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edStateH
-          Left = 85
+          Left = 81
           Height = 15
           Top = 58
           Width = 39
@@ -659,10 +658,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edAddressH
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 54
-          Width = 338
+          Width = 342
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           MaxLength = 25
@@ -674,7 +673,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = cbStateH
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = cbStateH
-          Left = 49
+          Left = 45
           Height = 15
           Top = 85
           Width = 79
@@ -694,10 +693,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edAddressH
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 81
-          Width = 338
+          Width = 342
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           ItemHeight = 15
@@ -710,7 +709,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edZipCodeH
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edZipCodeH
-          Left = 66
+          Left = 62
           Height = 15
           Top = 112
           Width = 58
@@ -728,7 +727,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = cbStateH
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 108
           Width = 120
@@ -743,7 +742,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = cbCountryH
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = cbCountryH
-          Left = 28
+          Left = 24
           Height = 15
           Top = 139
           Width = 96
@@ -763,10 +762,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edAddressH
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 135
-          Width = 338
+          Width = 342
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           BorderSpacing.Bottom = 8
@@ -781,7 +780,7 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Control = edCountryH
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edCountryH
-          Left = 68
+          Left = 64
           Height = 15
           Top = 170
           Width = 56
@@ -800,10 +799,10 @@ object ContactEditForm: TContactEditForm
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = edAddressH
           AnchorSideRight.Side = asrBottom
-          Left = 132
+          Left = 128
           Height = 23
           Top = 166
-          Width = 338
+          Width = 342
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Top = 4
           BorderSpacing.Bottom = 8
@@ -814,7 +813,7 @@ object ContactEditForm: TContactEditForm
     end
     object tabContact: TTabSheet
       Caption = 'tabContact'
-      ClientHeight = 545
+      ClientHeight = 549
       ClientWidth = 498
       ImageIndex = 1
       object gbPhone: TGroupBox
@@ -1233,7 +1232,7 @@ object ContactEditForm: TContactEditForm
     end
     object tabCustom: TTabSheet
       Caption = 'tabCustom'
-      ClientHeight = 545
+      ClientHeight = 549
       ClientWidth = 498
       ImageIndex = 3
       object lblCustom1: TLabel

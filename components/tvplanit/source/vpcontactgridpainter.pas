@@ -241,13 +241,6 @@ var
   baseTextHeight: Integer;
   maxTextWidth: Integer;
 begin
-  contactCount := FContactGrid.DataStore.Resource.Contacts.Count;
-  oldCol1RecCount := TVpContactGridOpener(FContactGrid).cgCol1RecCount;
-  TVpContactGridOpener(FContactGrid).FVisibleContacts := 0;
-  TVpContactGridOpener(FContactGrid).cgCol1RecCount := 0;
-  TextXOffset := 0;
-  TextYOffset := 0;
-
   { if the component is sufficiently small then no sense in painting it }
   if (FContactGrid.Height < 20) then exit;
 
@@ -257,6 +250,14 @@ begin
      (FContactGrid.DataStore.Resource = nil)
   then
     Exit;
+
+  { Some initializations }
+  contactCount := FContactGrid.DataStore.Resource.Contacts.Count;
+  oldCol1RecCount := TVpContactGridOpener(FContactGrid).cgCol1RecCount;
+  TVpContactGridOpener(FContactGrid).FVisibleContacts := 0;
+  TVpContactGridOpener(FContactGrid).cgCol1RecCount := 0;
+  TextXOffset := 0;
+  TextYOffset := 0;
 
   { create a temporary bitmap for painting the items }
   TmpBmp := TBitmap.Create;

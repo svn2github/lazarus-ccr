@@ -74,18 +74,17 @@ type
 
     function GetVersion: String;
     procedure SetVersion(const Value: string);
-    procedure SetControlLink (const v : TVpControlLink);
+    procedure SetControlLink (const v: TVpControlLink);
     procedure SetDataStore(Value: TVpCustomDataStore);
-    procedure DoFormPlacement(Form : TForm);
-    procedure SetFormCaption(Form : TForm; const Title, SubTitle : string);
-    property Options : TVpDialogOptions read FOptions write FOptions;
-    property Placement : TVpDialogPlacement read FPlacement write FPlacement;
+    procedure DoFormPlacement(Form: TForm);
+    procedure SetFormCaption(Form: TForm; const Title, SubTitle: string);
+    property Options: TVpDialogOptions read FOptions write FOptions;
+    property Placement: TVpDialogPlacement read FPlacement write FPlacement;
   public
-    constructor Create(AOwner : TComponent); override;
+    constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    function Execute : Boolean; virtual;
-    property ControlLink : TVpControlLink
-             read FControlLink write SetControlLink;
+    function Execute: Boolean; virtual;
+    property ControlLink: TVpControlLink read FControlLink write SetControlLink;
   published
     property DataStore: TVpCustomDataStore read FDataStore write SetDataStore;
     property Version: string read GetVersion write SetVersion;
