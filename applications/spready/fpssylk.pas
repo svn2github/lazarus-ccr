@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils,
-  fpstypes, fpspreadsheet, fpsReaderWriter, xlsCommon;
+  fpstypes, fpsReaderWriter, xlsCommon;
 
 type
   TsSYLKField = record
@@ -30,7 +30,7 @@ type
     procedure ProcessLine(const ALine: String);
     procedure ProcessRecord(ARecordType: String; const AFields: TsSYLKFields);
   public
-    constructor Create(AWorkbook: TsWorkbook); override;
+    constructor Create(AWorkbook: TsBasicWorkbook); override;
     procedure ReadFromFile(AFileName: String; APassword: String = '';
       AParams: TsStreamParams = []); override;
     procedure ReadFromStrings(AStrings: TStrings; AParams: TsStreamParams = []); override;
@@ -62,7 +62,7 @@ type
     procedure WriteNumberFormatList(AStream: TStream);
     procedure WriteOptions(AStream: TStream);
   public
-    constructor Create(AWorkbook: TsWorkbook); override;
+    constructor Create(AWorkbook: TsBasicWorkbook); override;
     procedure WriteToStream(AStream: TStream; AParams: TsStreamParams = []); override;
   end;
 
@@ -87,13 +87,13 @@ var
 implementation
 
 uses
-  fpsUtils, fpsNumFormat;
+  fpsUtils, fpsNumFormat, fpspreadsheet;
 
 {==============================================================================}
 {                               TsSYLKReader                                   }
 {==============================================================================}
 
-constructor TsSYLKReader.Create(AWorkbook: TsWorkbook);
+constructor TsSYLKReader.Create(AWorkbook: TsBasicWorkbook);
 begin
   inherited Create(AWorkbook);
   FWorksheetName := 'Sheet1';  // will be replaced by filename
@@ -121,17 +121,20 @@ var
   sval, expr: String;
   val: Double;
   cell: PCell;
+  sheet: TsWorksheet;
 begin
+  sheet := FWorksheet as TsWorksheet;
+
   col := StrToInt(GetFieldValue(AFields, 'X')) - 1;
   row := StrToInt(GetFieldValue(AFields, 'Y')) - 1;
-  cell := FWorksheet.GetCell(row, col);
+  cell := sheet.GetCell(row, col);
 
   // Formula
   expr := GetFieldValue(AFields, 'E');  // expression in R1C1 syntax
   if expr <> '' then
   begin
     expr := 'A1';  // to do: Convert R1C1 expression to A1 expression!
-    FWorksheet.WriteFormula(cell, expr);  // to do!!!!
+    sheet.WriteFormula(cell, expr);  // to do!!!!
     exit;
   end;
 
@@ -142,13 +145,13 @@ begin
     begin
       sval := UnquoteStr(sval);
       if (sval = 'TRUE') or (sval = 'FALSE') then
-        FWorksheet.WriteBoolValue(cell, (sval = 'TRUE'))
+        sheet.WriteBoolValue(cell, (sval = 'TRUE'))
       else
-        FWorksheet.WriteText(cell, UnquoteStr(sval))
+        sheet.WriteText(cell, UnquoteStr(sval))
       // to do: error values
     end else begin
       val := StrToFloat(sval, FPointSeparatorSettings);
-      FWorksheet.WriteNumber(cell, val);
+      sheet.WriteNumber(cell, val);
       // to do: dates
     end;
   end;
@@ -165,7 +168,10 @@ var
   ha: TsHorAlignment;
   val: Double;
   P: PChar;
+  sheet: TsWorksheet;
 begin
+  sheet := FWorksheet as TsWorksheet;
+
   nf := nfGeneral;
   ha := haDefault;
   decs := 0;
@@ -223,10 +229,10 @@ begin
     begin
       if not TryStrToInt(scol, col) then exit;
       if not TryStrToInt(srow, row) then exit;
-      cell := FWorksheet.GetCell(row, col);
+      cell := sheet.GetCell(row, col);
 
-      FWorksheet.WriteNumberFormat(cell, nf, decs);
-      FWorksheet.WriteHorAlignment(cell, ha);
+      sheet.WriteNumberFormat(cell, nf, decs);
+      sheet.WriteHorAlignment(cell, ha);
     end;
   end;
 
@@ -257,7 +263,7 @@ begin
        TryStrToFloat(sval, val, FPointSeparatorSettings) then
     begin
       for col := col1-1 to col2-1 do
-        FWorksheet.WriteColWidth(col, val, suChars);
+        sheet.WriteColWidth(col, val, suChars);
     end;
   end;
 end;
@@ -350,7 +356,7 @@ begin
   Unused(AParams);
 
   // Create worksheet
-  FWorksheet := FWorkbook.AddWorksheet(FWorksheetName, true);
+  FWorksheet := (FWorkbook as TsWorkbook).AddWorksheet(FWorksheetName, true);
 
   for i:=0 to AStrings.Count-1 do
     ProcessLine(AStrings[i]);
@@ -361,7 +367,7 @@ end;
 {                               TsSYLKWriter                                   }
 {==============================================================================}
 
-constructor TsSYLKWriter.Create(AWorkbook: TsWorkbook);
+constructor TsSYLKWriter.Create(AWorkbook: TsBasicWorkbook);
 begin
   inherited Create(AWorkbook);
   FDateMode := SYLKSettings.DateMode;
@@ -378,9 +384,13 @@ var
   nfp: TsNumFormatParams;
   style: String;
   fnt: TsFont;
+  wkBook: TsWorkbook;
 begin
   Result := '';
-  cellFmt := FWorkbook.GetPointerToCellFormat(ACell^.FormatIndex);
+
+  wkBook := FWorkbook as TsWorkbook;
+
+  cellFmt := wkBook.GetPointerToCellFormat(ACell^.FormatIndex);
   if cellFmt <> nil then
   begin
     // Number format --> field ";P"
@@ -388,7 +398,7 @@ begin
     decs := '0'; // decimal places
     if (uffNumberFormat in cellFmt^.UsedFormattingFields) then begin
       Result := Result + Format(';P%d', [cellFmt^.NumberFormatIndex+1]);  // +1 because of General format not in list
-      nfp := FWorkbook.GetNumberFormat(cellFmt^.NumberFormatIndex);
+      nfp := wkBook.GetNumberFormat(cellFmt^.NumberFormatIndex);
       case nfp.Sections[0].NumFormat of
         nfFixed      : ch1 := 'F';
         nfCurrency   : ch1 := 'C';
@@ -414,7 +424,7 @@ begin
     style := '';
     if (uffFont in cellFmt^.UsedFormattingFields) then
     begin
-      fnt := FWorkbook.GetFont(cellFmt^.FontIndex);
+      fnt := wkBook.GetFont(cellFmt^.FontIndex);
       if (fssBold in fnt.Style) then style := style + 'D';
       if (fssItalic in fnt.Style) then style := style + 'I';
     end;
@@ -438,7 +448,8 @@ end;
 function TsSYLKWriter.GetFormulaStr(ACell: PCell): String;
 begin
   if HasFormula(ACell) then
-    Result := ';E' + FWorksheet.ConvertFormulaDialect(ACell, fdExcelR1C1) else
+    Result := ';E' + (FWorksheet as TsWorksheet).ConvertFormulaDialect(ACell, fdExcelR1C1)
+  else
     Result := '';
 end;
 
@@ -487,7 +498,7 @@ begin
     cctUTF8String:
       WriteLabel(AStream, ACell^.Row, ACell^.Col, ACell^.UTF8StringValue, ACell);
   end;
-  if FWorksheet.HasComment(ACell) then
+  if (FWorksheet as TsWorksheet).HasComment(ACell) then
     WriteComment(AStream, ACell);
 end;
 
@@ -501,7 +512,7 @@ procedure TsSYLKWriter.WriteComment(AStream: TStream; ACell: PCell);
 var
   comment: String;
 begin
-  comment := FWorksheet.ReadComment(ACell);
+  comment := (FWorksheet as TsWorksheet).ReadComment(ACell);
   if comment <> '' then
     AppendToStream(AStream, Format(
       'C;Y%d;X%d;A%s' + LineEnding, [ACell^.Row+1, ACell^.Col+1, comment]));
@@ -526,12 +537,15 @@ end;
   the row and column counts.
 -------------------------------------------------------------------------------}
 procedure TsSYLKWriter.WriteDimensions(AStream: TStream);
+var
+  sheet: TsWorksheet;
 begin
+  sheet := FWorksheet as TsWorksheet;
   AppendToStream(AStream, Format(
     'B;Y%d;X%d;D%d %d %d %d' + LineEnding, [
-    FWorksheet.GetLastRowIndex+1, FWorksheet.GetLastColIndex+1,
-    FWorksheet.GetFirstRowIndex, FWorksheet.GetFirstColIndex,
-    FWorksheet.GetLastRowIndex, FWorksheet.GetLastColIndex
+    sheet.GetLastRowIndex+1, sheet.GetLastColIndex+1,
+    sheet.GetFirstRowIndex, sheet.GetFirstColIndex,
+    sheet.GetLastRowIndex, sheet.GetLastColIndex
   ]));
 end;
 
@@ -615,12 +629,15 @@ var
   nfp: TsNumFormatParams;
   nfs: String;
   i, j: Integer;
+  wkbook: TsWorkbook;
 begin
+  wkbook := FWorkbook as TsWorkbook;
+
   AppendToStream(AStream,
     'P;PGeneral' + LineEnding);
 
-  for i:=0 to FWorkbook.GetNumberFormatCount-1 do begin
-    nfp := FWorkbook.GetNumberFormat(i);
+  for i:=0 to wkBook.GetNumberFormatCount-1 do begin
+    nfp := wkBook.GetNumberFormat(i);
     nfs := BuildFormatStringFromSection(nfp.Sections[0]);
     for j:=1 to High(nfp.Sections) do
       nfs := nfs + ';;' + BuildFormatStringFromSection(nfp.Sections[j]);
@@ -648,18 +665,22 @@ end;
 
 procedure TsSYLKWriter.WriteToStream(AStream: TStream;
   AParams: TsStreamParams = []);
+var
+  wkBook: TsWorkbook;
 begin
   Unused(AParams);
-  if (FSheetIndex < 0) or (FSheetIndex >= FWorkbook.GetWorksheetCount) then
+  wkbook := FWorkbook as TsWorkbook;
+
+  if (FSheetIndex < 0) or (FSheetIndex >= wkBook.GetWorksheetCount) then
     raise Exception.Create('[TsSYLKWriter.WriteToStream] Non-existing worksheet.');
 
-  FWorksheet := FWorkbook.GetWorksheetByIndex(FSheetIndex);
+  FWorksheet := wkBook.GetWorksheetByIndex(FSheetIndex);
 
   WriteHeader(AStream);
   WriteNumberFormatList(AStream);
   WriteDimensions(AStream);
   WriteOptions(AStream);
-  WriteCellsToStream(AStream, FWorksheet.Cells);
+  WriteCellsToStream(AStream, (FWorksheet as TsWorksheet).Cells);
   WriteEndOfFile(AStream);
 end;
 
