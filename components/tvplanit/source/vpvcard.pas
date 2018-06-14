@@ -1,4 +1,4 @@
-{ Reads vCard contact files }
+{ Imports vCard contact files }
 
 unit VpVCard;
 
@@ -7,32 +7,17 @@ unit VpVCard;
 interface
 
 uses
-  Classes, SysUtils, contnrs;
+  Classes, SysUtils, VpBaseDataFiles;
+
+const
+  ITEM_SEPARATOR = ';';
 
 type
-  TVpVCardItem = class
-  private
-    FRaw: String;
-    FKey: String;
-    FTags: TStrings;
-    FValue: String;
-  protected
-    procedure Analyze(AVersion: String);
-    procedure GetParts(AText, AVersion: String;
-      out AKey: String; out ATags: TStringArray; out AValue: String);
-    function UnEscape(AValueText: String): String;
-    function UnquotePrintable(AValueText: String): String;
-  public
-    constructor Create(AText: String);
-    destructor Destroy; override;
-    property Key: String read FKey;
-    property Tags: TStrings read FTags;
-    property Value: String read FValue;
+  TVpVCardItem = class(TVpFileItem)
   end;
 
-  TVpVCard = class
+  TVpVCard = class(TVpFileBlock)
   private
-    FItems: TObjectList;
     FVersion: String;
 
     FFirstName: String;
@@ -62,13 +47,9 @@ type
     FCarPhone: String;
     FISDN: String;
     FPager: String;
-
-    function GetValue(const AKey, ATags: String): String;
   public
     constructor Create;
-    destructor Destroy; override;
-    procedure Add(const AText: String);
-    procedure Analyze;
+    procedure Analyze; override;
     function FindItem(AKey, ATags: String): TVpVCardItem;
 
     property FirstName: String read FFirstName;
@@ -100,7 +81,6 @@ type
     property Pager: String read FPager;
 
     property Version: String read FVersion;
-    property Value[AKey: String; const ATags: String]: String read GetValue;
   end;
 
   TVpVCards = class
@@ -131,7 +111,7 @@ implementation
 
 uses
   StrUtils, DateUtils,
-  vpBase, vpMisc;
+  vpMisc;
 
 const
   ITEMS_DELIMITER = ';';
@@ -200,208 +180,26 @@ end;
 
 
 {==============================================================================}
-{                              TVpVCardItem                                    }
-{==============================================================================}
-
-constructor TVpVCardItem.Create(AText: String);
-begin
-  inherited Create;
-  FRaw := AText;
-end;
-
-destructor TVpVCardItem.Destroy;
-begin
-  FTags.Free;
-  inherited;
-end;
-
-procedure TVpVCardItem.Analyze(AVersion: String);
-var
-  tagarray: TStringArray;
-  i: Integer;
-begin
-  GetParts(FRaw, AVersion, FKey, tagarray, FValue);
-  FTags := TStringList.Create;
-  for i:=0 to High(tagarray) do
-    FTags.Add(tagarray[i]);
-end;
-
-// Example:
-//   ADR;TYPE=WORK,POSTAL,PARCEL:;;One Microsoft Way;Redmond;WA;98052-6399;USA
-procedure TVpVCardItem.GetParts(AText, AVersion: String; out AKey: String;
-  out ATags: TStringArray; out AValue: String);
-var
-  p: Integer;
-  keypart, valuepart: String;
-  i: Integer;
-  QuotedPrintable: Boolean = false;
-  typeSeparator: Char;
-begin
-  // Split at ':' into key and value parts
-  p := pos(':', AText);
-  if p = 0 then
-    raise EVpException.CreateFmt('Illegal vcf structure in line "%s"', [AText]);
-  keypart := Uppercase(copy(AText, 1, p-1));
-  valuepart := copy(AText, p+1, MaxInt);
-
-  if AVersion = '2.1' then
-    typeseparator := ';'
-  else
-    typeseparator := ',';
-
-  // Process key part
-  p := pos(';', keypart);
-  if p = 0 then begin
-    AKey := keypart;
-    SetLength(ATags, 0);
-  end else begin
-    AKey := Copy(keypart, 1, p-1);
-    keypart := Copy(keypart, p+1, MaxInt);
-    p := pos('=', keypart);
-    if p > 0 then
-      keypart := copy(keypart, p+1, MaxInt);
-    ATags := Split(keypart, typeSeparator);
-    for i:=Low(ATags) to High(ATags) do
-      if ATags[i] = 'QUOTED-PRINTABLE' then begin
-        QuotedPrintable := true;
-        break;
-      end;
-  end;
-
-  // Process value part
-  if quotedPrintable then
-    AValue := UnquotePrintable(valuepart)
-  else
-    AValue := UnEscape(valuepart);
-end;
-
-function TVpVCardItem.UnEscape(AValueText: String): String;
-const
-  BUFSIZE = 100;
-var
-  p, q: PChar;
-  idx: Integer;
-
-  procedure AddChar(ch: Char);
-  begin
-    Result[idx] := ch;
-    inc(idx);
-    if idx > Length(Result) then SetLength(Result, Length(Result) + BUFSIZE);
-  end;
-
-begin
-  if AValueText = '' then begin
-    Result := '';
-    exit;
-  end;
-
-  SetLength(Result, Length(AValueText));
-  idx := 1;
-
-  p := @AValueText[1];
-  while p^ <> #0 do begin
-    if p^ = '\' then begin
-      inc(p);
-      if p^ = 'n' then begin
-        q := PChar(LineEnding);
-        AddChar(Char(q^));
-        if Length(LineEnding) > 1 then begin
-          inc(q);
-          AddChar(char(q^));
-        end;
-      end else
-        AddChar(char(p^));
-    end else
-      AddChar(char(p^));
-    inc(p);
-  end;
-  SetLength(Result, idx-1);
-end;
-
-function TVpVCardItem.UnQuotePrintable(AValueText: String): String;
-const
-  BUFSIZE = 100;
-var
-  p: PChar;
-  idx: Integer;
-  code: String[2];
-  inUTF8: Boolean;
-  ch: Char;
-
-  procedure AddChar(ch: Char);
-  begin
-    Result[idx] := ch;
-    inc(idx);
-    if idx > Length(Result) then SetLength(Result, Length(Result) + BUFSIZE);
-  end;
-
-begin
-  if AValueText = '' then begin
-    Result := '';
-    exit;
-  end;
-
-  SetLength(Result, Length(AValueText));
-  idx := 1;
-  inUTF8 := false;
-
-  p := @AValueText[1];
-  while p^ <> #0 do begin
-    if p^ = '=' then begin
-      code := '';
-      inUTF8 := true;
-    end else
-    if inUTF8 then begin
-      if code = '' then
-        code := p^
-      else begin
-        code := code + p^;
-        ch := char(StrToInt('$'+code));
-        inUTF8 := false;
-        AddChar(ch);
-      end;
-    end else
-      AddChar(char(p^));
-    inc(p);
-  end;
-  SetLength(Result, idx-1);
-end;
-
-
-{==============================================================================}
 {                                TVpVCard                                      }
 {==============================================================================}
 
 constructor TVpVCard.Create;
 begin
-  inherited;
-  FItems := TObjectList.Create;
-end;
-
-destructor TVpVCard.Destroy;
-begin
-  FItems.Free;
-  inherited;
-end;
-
-procedure TVpVCard.Add(const AText: String);
-begin
-  if Pos('version', Lowercase(AText)) > 0 then
-    FVersion := Copy(AText, Pos(':', AText)+1, MaxInt);
-  FItems.Add(TVpVCardItem.Create(AText));
+  inherited Create(TVpVCardItem);
 end;
 
 procedure TVpVCard.Analyze;
-const
-  ITEM_SEPARATOR = '; ';
 var
   i: Integer;
   item: TVpVCardItem;
 begin
+  inherited;
+
   for i := 0 to FItems.Count-1 do begin
     item := TVpVCardItem(FItems[i]);
-    item.Analyze(FVersion);
     case item.Key of
+      'VERSION':
+        FVersion := item.Value;
       'FN':
         VCardName(item.Value, FLastName, FFirstName, FTitle);
       'ORG':
@@ -448,54 +246,9 @@ begin
   end;
 end;
 
-{ Finds the item with the specified key and tags. Several tags can be combined
-  by a semicolon. If a tag name begins with a '-' then it must NOT be present.
-  The conditions are and-ed, i.e. all conditions must be met for the item to
-  be accepted. }
 function TVpVCard.FindItem(AKey, ATags: String): TVpVCardItem;
-var
-  i: Integer;
-  item: TVpVCardItem;
-  tagArr: TStringArray;
-  tag, notTag: String;
-  ok: Boolean;
 begin
-  tagArr := Split(ATags, ';');
-
-  for i:=0 to FItems.Count-1 do begin
-    item := TVpVCardItem(FItems[i]);
-    if (AKey = item.Key) then
-    begin
-      ok := true;                  // No tags specified --> use first item found
-      if Length(tagArr) > 0 then begin
-        for tag in tagArr do begin
-          if tag[1] = '-' then
-            notTag := Copy(tag, 2, MaxInt);
-          if item.Tags.IndexOf(tag) = -1 then begin  // Tag not found --> reject
-            ok := false;
-            break;
-          end;
-          if item.Tags.Indexof(notTag) <> -1 then begin // "NOT" tag found --> reject
-            ok := false;
-            break;
-          end;
-        end;
-      end;
-      if ok then begin
-        Result := item;
-        exit;
-      end;
-    end;
-  end;
-  Result := nil;
-end;
-
-function TVpVCard.GetValue(const AKey, ATags: String): String;
-var
-  item: TVpVCardItem;
-begin
-  item := FindItem(AKey, ATags);
-  if item <> nil then Result := item.Value else Result := '';
+  Result := TVpVCardItem(inherited FindItem(AKey, ATags));
 end;
 
 

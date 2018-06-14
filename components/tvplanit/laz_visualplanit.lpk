@@ -32,7 +32,7 @@ Portions created by TurboPower Software Inc. are Copyright (C) 2002 TurboPower S
 
 Contributor(s): "/>
     <Version Major="1" Release="11"/>
-    <Files Count="72">
+    <Files Count="73">
       <Item1>
         <Filename Value="source\vpbase.pas"/>
         <UnitName Value="VpBase"/>
@@ -321,6 +321,10 @@ Contributor(s): "/>
         <Filename Value="source\vpvcard.pas"/>
         <UnitName Value="vpvcard"/>
       </Item72>
+      <Item73>
+        <Filename Value="source\vpbasedatafiles.pas"/>
+        <UnitName Value="vpbasedatafiles"/>
+      </Item73>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>
