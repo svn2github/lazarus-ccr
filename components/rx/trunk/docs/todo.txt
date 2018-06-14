@@ -1,0 +1,10 @@
+Переименовать (need renaming component):
+
+TDualListDialog -> TRxDualListDialog
+TAutoPanel -> TRxAutoPanel
+TCurrencyEdit -> TRxCurrencyEdit
+TFolderLister -> TRxFolderLister
+TPageManager -> TRxPageManager
+TSecretPanel -> TRxSecretPanel
+TToolPanel -> TRxToolPanel
+TLookupEdit -> TRxLookupEdit
