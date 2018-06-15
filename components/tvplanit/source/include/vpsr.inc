@@ -165,7 +165,7 @@ resourcestring
   RSContactPopupEdit        = 'Edit contact...';
   RSContactPopupDelete      = 'Delete contact...';
   RSConfirmDeleteContact    = 'Delete contact %s?';
-  RSLoadVCardsTitle         = 'Load vCard(s)';
+  RSLoadVCardsTitle         = 'Import from vCard(s)';
   RSVCardFilter             = 'vCard files (*.vcf)|*.vcf';
 
   {Event Specific}
@@ -174,10 +174,13 @@ resourcestring
   RSConfirmDeleteEvent      = 'Delete event from schedule?';
   RSStartEndTimeError       = 'Incorrect order of start and end times. ' +
                               'Do you want to exchange them?';
+  RSStartEndTimesEqual      = 'Start and end times cannot be equal.';
   RSCannotEditOverlayedEvent= 'Cannot edit this overlayed event.';
+  RSLoadICalTitle           = 'Import from iCal file(s)';
   RSNoOverlayedEvents       = 'none';
   RSOverlayedEvent          = 'overlayed';
   RSOverlayed               = 'Overlayed';
+  RSICalFilter              = 'iCalendar files (*.ical;*.ics)|*.ical;*.ics';
 
   {Task Specific}
   RSConfirmDeleteTask       = 'Delete this task from your list?';
@@ -189,6 +192,7 @@ resourcestring
 
   { Popup specific }
   RSPopupAddEvent           = 'Add event...';
+  RSPopupAddEventFromICal   = 'Import from iCalendar file(s)...';
   RSPopupEditEvent          = 'Edit event...';
   RSPopupDeleteEvent        = '&Delete event...';
   RSPopupChangeDate         = 'Change date';

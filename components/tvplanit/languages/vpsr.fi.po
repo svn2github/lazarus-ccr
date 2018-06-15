@@ -511,6 +511,10 @@ msgstr ""
 msgid "Hours"
 msgstr "Tunnit"
 
+#: vpsr.rsicalfilter
+msgid "iCalendar files (*.ical;*.ics)|*.ical;*.ics"
+msgstr ""
+
 #: vpsr.rsinches
 msgid "Inches"
 msgstr ""
@@ -572,8 +576,12 @@ msgstr "M"
 msgid "Load file..."
 msgstr ""
 
+#: vpsr.rsloadicaltitle
+msgid "Import from iCal file(s)"
+msgstr ""
+
 #: vpsr.rsloadvcardstitle
-msgid "Load vCard(s)"
+msgid "Import from vCard(s)"
 msgstr ""
 
 #: vpsr.rslocation
@@ -911,6 +919,10 @@ msgctxt "vpsr.rspopupaddevent"
 msgid "Add event..."
 msgstr ""
 
+#: vpsr.rspopupaddeventfromical
+msgid "Import from iCalendar file(s)..."
+msgstr ""
+
 #: vpsr.rspopupchangedate
 msgctxt "vpsr.rspopupchangedate"
 msgid "Change date"
@@ -1115,6 +1127,10 @@ msgstr ""
 
 #: vpsr.rsstartendtimeerror
 msgid "Incorrect order of start and end times. Do you want to exchange them?"
+msgstr ""
+
+#: vpsr.rsstartendtimesequal
+msgid "Start and end times cannot be equal."
 msgstr ""
 
 #: vpsr.rsstarttimelbl

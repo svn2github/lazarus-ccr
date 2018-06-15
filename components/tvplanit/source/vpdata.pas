@@ -26,7 +26,9 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I vp.inc}
+{$MODE ObjFPC}{$H+}
+
+//{$I vp.inc}
 
 unit VpData;
   { Data classes for Visual PlanIt's resources, events, tasks, contacts, etc... }
@@ -34,14 +36,9 @@ unit VpData;
 interface
 
 uses
-  {$IFDEF LCL}
   LCLProc, LCLType,
-  {$ELSE}
-  Windows,
-  {$ENDIF}
   SysUtils, Classes, Dialogs, Graphics,
-  {$IFDEF VERSION6} Types, {$ENDIF}
-  VpSR, VpVCard;
+  VpSR, VpVCard, VpICal;
 
 type
   TVpEventRec = packed record
@@ -307,6 +304,7 @@ type
     function CanEdit: Boolean;
     function GetResource: TVpResource;
     function IsOverlayed: Boolean;
+    procedure LoadFromICalendar(AEntry: TVpICalEvent);
     property Owner: TVpSchedule read FOwner;
     property ResourceID: Integer read FResourceID write FResourceID;
     property Loading : Boolean read FLoading write FLoading;
@@ -696,7 +694,7 @@ function CompareEventsByTimeOnly(Item1, Item2: Pointer): Integer;
 implementation
 
 uses
-  Math,
+  Math, DateUtils,
   VpException, VpConst, VpMisc;
 
 const
@@ -913,7 +911,7 @@ var
 begin
   result := nil;
   for I := 0 to pred(FResourceList.Count) do begin
-    res := FResourceList.Items[I];
+    res := TVpResource(FResourceList.Items[I]);
     if Res.ResourceID = ID then begin
       result := Res;
       Exit;
@@ -1263,6 +1261,111 @@ begin
   end;
 end;
 
+function IsInteger(d, Epsilon: Double): Boolean;
+begin
+  Result := abs(d - round(d)) < Epsilon;
+end;
+
+procedure TVpEvent.LoadFromICalendar(AEntry: TVpICalEvent);
+var
+  dt: Double;
+begin
+  if AEntry = nil then
+    exit;
+
+  { Standard event properties }
+  FDescription := AEntry.Summary;
+  FNotes := AEntry.Description;
+  FLocation := AEntry.Location;
+  // Start and end time already have been set --> Skip .
+
+  { All-day event }
+  FAllDayEvent := (frac(FStartTime) = 0) and (frac(FEndTime) = 0);
+
+  { Alarm properties }
+  if AEntry.Alarm <> nil then begin
+    FAlarmSet := true;
+    dt := abs(AEntry.Alarm.Trigger);
+    if IsInteger(dt, 1.0 / SecondsInDay) then begin
+      FAlarmAdvType := atDays;
+      FAlarmAdv := round(dt);
+    end else
+    if IsInteger(dt*HoursInDay, HoursInDay / SecondsInDay) then begin
+      FAlarmAdvType := atHours;
+      FAlarmAdv := round(dt * HoursInDay);
+    end else begin
+      FAlarmAdvType := atMinutes;
+      FAlarmAdv := round(dt * MinutesInDay);
+    end;
+    FDingPath := AEntry.Alarm.AudioSrc;
+    if not FileExists(FDingPath) then FDingPath := '';
+  end else
+    FAlarmSet := false;
+
+  { Recurrence }
+  FRepeatCode := rtNone;
+  FRepeatRangeEnd := 0;
+  case AEntry.RecurrenceFrequency of
+    'YEARLY':
+      if AEntry.RecurrenceInterval = 0 then
+        FRepeatCode := rtYearlyByDate   // or rtYearlyByDay ?
+      else begin
+        FRepeatCode := rtCustom;
+        FCustInterval := AEntry.RecurrenceInterval * 365; // * SecondsInDay;
+      end;
+    'MONTHLY':
+      if AEntry.RecurrenceInterval = 0 then
+        FRepeatCode := rtMonthlyByDate  // or rtMonthlyByDay ?
+      else begin
+        FRepeatCode := rtCustom;
+        FCustInterval := AEntry.RecurrenceInterval * 30; // * SecondsInDay;
+      end;
+    'WEEKLY':
+      if AEntry.RecurrenceInterval = 0 then
+        FRepeatCode := rtWeekly
+      else begin
+        FRepeatCode := rtCustom;
+        FCustInterval := AEntry.RecurrenceInterval * 7; // * SecondsInDay;
+      end;
+    'DAILY':
+      if AEntry.RecurrenceInterval = 0 then
+        FRepeatCode := rtDaily
+      else begin
+        FRepeatCode := rtCustom;
+        FCustInterval := AEntry.RecurrenceInterval; // * SecondsInDay;
+      end;
+    (*
+    'HOURLY':
+      begin
+        FRepeatCode := rtCustom;
+        FCustInterval := AEntry.RecurrenceInterval * SecondsInHour;
+      end;
+    'MINUTELY':
+      begin
+        FRepeatCode := rtCustom;
+        FCustInterval := AEntry.RecurrenceInterval * SecondsInMinute;
+      end;
+      *)
+  end;
+  if (AEntry.RecurrenceEndDate = 0) and (AEntry.RecurrenceCount > 0) then begin
+    FRepeatRangeEnd := trunc(FStartTime);
+    case FRepeatCode of
+      rtYearlyByDate:
+        FRepeatRangeEnd := IncYear(FRepeatRangeEnd, AEntry.RecurrenceCount);
+      rtMonthlyByDate:
+        FRepeatRangeEnd := IncMonth(FRepeatRangeEnd, AEntry.RecurrenceCount);
+      rtWeekly:
+        FRepeatRangeEnd := FRepeatRangeEnd + 7 * AEntry.RecurrenceCount;
+      rtDaily:
+        FRepeatRangeEnd := FRepeatRangeEnd + AEntry.RecurrenceCount;
+    end;
+  end else
+    FRepeatRangeEnd := AEntry.RecurrenceEndDate;
+
+  // There is also "CustomInterval" which may be extracted from the RecurrenceByXXXX data
+  // But this is very complex...
+end;
+
 procedure TVpEvent.SetAlarmAdv(Value: Integer);
 begin
   if Value <> FAlarmAdv then begin
@@ -1451,93 +1554,22 @@ begin
   FEventList.Sort(@CompareEvents);
 end;
 
-(*
-procedure TVpSchedule.Sort;
-var
-  i, j       : integer;
-  IndexOfMin : integer;
-  Temp       : pointer;
-  CompResult : integer; {Comparison Result}
-begin
-  { WARNING!!  The DayView component is heavily dependent upon the events }
-  { being properly sorted.  If you change the way this procedure works,   }
-  { you WILL break the DayView component!!!                               }
-
-  { for greater performance, we don't sort while doing batch updates. }
-  if FBatchUpdate > 0 then exit;
-
-  for i := 0 to pred(FEventList.Count) do begin
-    IndexOfMin := i;
-    for j := i to FEventList.Count - 1 do begin
-
-      { compare start times of item[j] and item[i] }
-      CompResult := Compare(TVpEvent(FEventList.List^[j]).StartTime,
-        TVpEvent(FEventList.List^[IndexOfMin]).StartTime);
-
-      { if the starttime of j is less than the starttime of i then flip 'em}
-      if CompResult < 0 then
-        IndexOfMin := j
-
-      { if the start times match then sort by end time }
-      else if CompResult = 0 then begin
-
-        { if the endtime of j is less than the end time of i then flip 'em}
-        if (Compare(TVpEvent(FEventList.List^[j]).EndTime,
-          TVpEvent(FEventList.List^[IndexOfMin]).EndTime) < 0)
-        then
-          IndexOfMin := j;
-      end;
-    end;
-
-    Temp := FEventList.List^[i];
-    FEventList.List^[i] := FEventList.List^[IndexOfMin];
-    FEventList.List^[IndexOfMin] := Temp;
-  end;
-
-  { Fix object embedded ItemIndexes }
-  {
-  for i := 0 to pred(FEventList.Count) do begin
-    TVpEvent(FEventList.List^[i]).FItemIndex := i;
-  end;
-  }
-end;
-
-{ Used in the above sort procedure.  Compares the start times of the two }
-{ passed in events.                                                      }
-function TVpSchedule.Compare(Time1, Time2: TDateTime): Integer;
-begin
-  { Compares the value of the Item start dates }
-
-  if Time1 < Time2 then
-    result := -1
-
-  else if Time1 = Time2 then
-    result := 0
-
-  else
-    {Time2 is earlier than Time1}
-    result := 1;
-end;                   *)
-
 {Adds the event to the eventlist and returns a pointer to it, or nil on failure}
 function TVpSchedule.AddEvent(RecordID: Integer; StartTime,
   EndTime: TDateTime): TVpEvent;
 begin
-  Result := nil;
-  if EndTime > StartTime then begin
-    Result := TVpEvent.Create(Self);
-    try
-      Result.Loading := true;
-      FEventList.Add(Result);
-      Result.RecordID := RecordID;
-      Result.StartTime := StartTime;
-      Result.EndTime := EndTime;
-      Result.Loading := false;
-      Sort;
-    except
-      Result.free;
-      raise EFailToCreateEvent.Create;
-    end;
+  Result := TVpEvent.Create(Self);
+  try
+    Result.Loading := true;
+    FEventList.Add(Result);
+    Result.RecordID := RecordID;
+    Result.StartTime := StartTime;
+    Result.EndTime := EndTime;
+    Result.Loading := false;
+    Sort;
+  except
+    Result.Free;
+    raise EFailToCreateEvent.Create;
   end;
 end;
 
@@ -1590,7 +1622,7 @@ end;
 function TVpSchedule.GetEvent(Index: Integer): TVpEvent;
 begin
   { Returns an event on success or nil on failure }
-  result := FEventList.Items[Index];
+  result := TVpEvent(FEventList[Index]);
 end;
 
 function TVpSchedule.RepeatsOn(Event: TVpEvent; Day: TDateTime): Boolean;
@@ -1600,22 +1632,30 @@ var
   EventWkDay, EventDayCount: Word;
   ThisWkDay, ThisDayCount: Word;
   EventJulian, ThisJulian: Word;
+  DayInRepeatRange: Boolean;
 begin
   result := false;
 
-  if (Event.RepeatCode <> rtNone) and (trunc(Event.RepeatRangeEnd + 1) > now) then
+  DayInRepeatRange := (Day > trunc(Event.StartTime)) and
+    ((Event.RepeatRangeEnd = 0) or (Day < trunc(Event.RepeatRangeEnd) + 1));
+
+  if (Event.RepeatCode <> rtNone) and
+     ((Event.RepeatRangeEnd = 0) or (trunc(Event.RepeatRangeEnd + 1) > now)) then
   begin
     case Event.RepeatCode of
       rtDaily:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        if DayInRepeatRange then
+//        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
           result := true;
 
       rtWeekly:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        if DayInRepeatRange then
+//        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
           result := (Trunc(Day) - Trunc(Event.StartTime)) mod 7 = 0;
 
       rtMonthlyByDay:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        if DayInRepeatRange then
+        //if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
         begin
           // Get the year, month and day of the first event in the series
           DecodeDate(Event.StartTime, EY, EM, ED);
@@ -1635,7 +1675,8 @@ begin
         end;
 
       rtMonthlyByDate:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        if DayInRepeatRange then
+//        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
         begin
           // Get the year, month and day of the first event in the series
           DecodeDate(Event.StartTime, EY, EM, ED);
@@ -1646,7 +1687,8 @@ begin
         end;
 
       rtYearlyByDay:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        if DayInRepeatRange then
+//        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
         begin
           // Get the julian date of the first event in the series
           EventJulian := GetJulianDate(Event.StartTime);
@@ -1657,7 +1699,8 @@ begin
         end;
 
       rtYearlyByDate:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        if DayInRepeatRange then
+//        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
         begin
           // Get the year, month and day of the first event in the series.
           DecodeDate(Event.StartTime, EY, EM, ED);
@@ -1668,7 +1711,8 @@ begin
         end;
 
       rtCustom:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        if DayInRepeatRange and (Event.CustomInterval > 0) then
+//        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
         begin
           // If the number of elapsed days between the "Day" parameter and
           // the event start time is evenly divisible by the event's custom
@@ -1743,8 +1787,6 @@ begin
       if Event.AllDayEvent and
         (DateInRange(Date, Event.StartTime, Event.EndTime, true) or RepeatsOn(Event, Date))
       then
-//      if (((trunc(Date) >= trunc(Event.StartTime)) and (trunc(Date) <= trunc(Event.EndTime))) or (RepeatsOn(Event,Date)))
-//        and (Event.AllDayEvent) then
         EventList.Add(Event);
     end;
   end;
@@ -2483,12 +2525,12 @@ end;
 
 function TVpContacts.Last: TVpContact;
 begin
-  result := FContactsList.Items[FContactsList.Count - 1];
+  result := TVpContact(FContactsList[FContactsList.Count - 1]);
 end;
 
 function TVpContacts.First: TVpContact;
 begin
-  result := FContactsList.Items[0];
+  result := TVpContact(FContactsList[0]);
 end;
 
 procedure TVpContacts.DeleteContact(Contact: TVpContact);
@@ -2499,7 +2541,7 @@ end;
 
 function TVpContacts.GetContact(Index: Integer): TVpContact;
 begin
-  result := FContactsList.Items[Index];
+  result := TVpContact(FContactsList[Index]);
 end;
 
 procedure TVpContacts.ClearContacts;
@@ -2537,7 +2579,7 @@ begin
       if Copy(uppercase(TVpContact(FContactsList[I]).LastName), 1, SearchLength) = SearchStr
       then begin                                                         
         // We found a match, so return it and bail out
-        Result := FContactsList[I];
+        Result := TVpContact(FContactsList[I]);
         Exit;                                                            
       end;                                                               
     end else begin                                                       
@@ -2545,7 +2587,7 @@ begin
       if Copy(TVpContact(FContactsList[I]).LastName, 1, SearchLength) = SearchStr
       then begin                                                         
         // We found a match, so return it and bail out
-        Result := FContactsList[I];
+        Result := TVpContact(FContactsList[I]);
         Exit;                                                            
       end;                                                               
     end;                                                                 
@@ -2736,12 +2778,12 @@ end;
 
 function TVpTasks.Last: TVpTask;
 begin
-  result := FTaskList.Last;
+  result := TVpTask(FTaskList.Last);
 end;
 
 function TVpTasks.First: TVpTask;
 begin
-  result := FTaskList.First;
+  result := TVpTask(FTaskList.First);
 end;
 
 function TVpTasks.CountByDay(Date: TDateTime): Integer;
@@ -2833,7 +2875,7 @@ end;
 
 function TVpTasks.GetTask(Index: Integer): TVpTask;
 begin
-  result := FTaskList.Items[Index];
+  result := TVpTask(FTaskList[Index]);
 end;
 
 end.

@@ -79,8 +79,9 @@ object FrmSoundDialog: TFrmSoundDialog
             Left = 0
             Height = 25
             Top = 4
-            Width = 48
+            Width = 77
             Anchors = [akTop, akLeft, akBottom]
+            Caption = 'Play'
             Glyph.Data = {
               DE010000424DDE01000000000000760000002800000024000000120000000100
               0400000000006801000000000000000000001000000010000000000000000000
@@ -99,8 +100,9 @@ object FrmSoundDialog: TFrmSoundDialog
               6666666666666688666666660000666666666666666666666666666666666666
               0000
             }
-            Layout = blGlyphRight
+            Margin = 4
             NumGlyphs = 2
+            Spacing = -1
             OnClick = PlayButtonClick
           end
           object OkBtn: TButton

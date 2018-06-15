@@ -139,11 +139,11 @@ end;
 
 procedure TFrmSoundDialog.FormShow(Sender: TObject);
 begin
-  AlignOKCancel(OkBtn, CancelBtn, ButtonPanel);
-  PlayButton.Width := MulDiv(PlayButton.Height, 3, 2) ;
   {$IFDEF NEW_ICONS}
   LoadGlyphFromRCDATA(PlayButton.Glyph, 'VpSpeaker', 16, 24, 32);
   {$ENDIF}
+  AlignOKCancel(OkBtn, CancelBtn, ButtonPanel);
+  PlayButton.Width := CancelBtn.Width; //MulDiv(PlayButton.Height, 3, 2) ;
 end;
 
 function TFrmSoundDialog.GetSelectedFileName: String;
@@ -181,32 +181,6 @@ begin
   Label3.Caption := RSNothingToSelectFrom;
   Label4.Caption := RSNothingToSelectFrom;
 
-  (*
-  DIST := ScaleX(DIST, DesignTimeDPI);
-  VDist := ScaleY(VDist, DesignTimeDPI);
-  HBORDER := ScaleX(HBORDER, DesignTimeDPI);
-
-  OKBtn.Height := ScaleX(OKBtn.Height, DesignTimeDPI);
-  CancelBtn.Height := OKBtn.Height;
-  ButtonPanel.Height := VDist + OKBtn.Height + VDist;
-  OKBtn.Top := VDist;
-  CancelBtn.Top := VDist;
-  PlayButton.Top := (ButtonPanel.Height - PlayButton.Height) div 2;
-
-  OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
-  CancelBtn.Width := OKBtn.Width;
- {$IFDEF MSWINDOWS}
-  CancelBtn.Left := ButtonPanel.ClientWidth - HBORDER - CancelBtn.Width;
-  OKBtn.Left := CancelBtn.Left - DIST - OKBtn.Width;
-  OKBtn.TabOrder := 0;
-  CancelBtn.TabOrder := 1;
- {$ELSE}
-  OKBtn.Left := ButtonPanel.ClientWidth - HBORDER - OKBtn.Width;
-  CancelBtn.Left := OKBtn.Left - DIST - CancelBtn.Width;
-  CancelBtn.TabOrder := 0;
-  OKBtn.TabOrder := 1;
- {$ENDIF}
- *)
   if DingPath = '' then begin
     CBDefault.Checked := true;
     if (MediaFolder <> '') and DirectoryExists(MediaFolder) then
@@ -215,6 +189,7 @@ begin
   if FileExists(DingPath) then begin
     ShellTreeview.Path := ExtractFileDir(DingPath);
     ShellListview.Selected := FindFileItem(DingPath);
+    CbDefault.Checked := false;
   end else begin
     ShellTreeView.Path := MediaFolder;
   end;

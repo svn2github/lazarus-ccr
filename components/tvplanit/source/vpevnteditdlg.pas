@@ -286,6 +286,10 @@ begin
      {$ENDIF}
     end else
       exit;
+  end else
+  if (tStart = tEnd) and not CbAllDay.Checked then begin
+    MessageDlg(RSStartEndTimesEqual, mtError, [mbOK], 0);
+    exit;
   end;
 
   ReturnCode := rtCommit;
@@ -608,13 +612,15 @@ end;
 
 procedure TDlgEventEdit.RecurringTypeChange(Sender: TObject);
 begin
-  if (RecurringType.ItemIndex > 0) and (RepeatUntil.Date <= StartDate.Date) then
+  if (RecurringType.ItemIndex > 0) and
+     (RepeatUntil.Date > 0) and (RepeatUntil.Date <= StartDate.Date)
+  then
     RepeatUntil.Date := StartDate.Date + 365;
 
   RecurrenceEndsLbl.Enabled := (RecurringType.ItemIndex > 0);
   RepeatUntil.Enabled := RecurrenceEndsLbl.Enabled;
 
-  CustomInterval.Enabled := RecurringType.ItemIndex = 7;
+  CustomInterval.Enabled := RecurringType.ItemIndex = ord(rtCustom);
   IntervalLbl.Enabled := CustomInterval.Enabled;
   IntervalUpDown.Enabled := CustomInterval.Enabled;
   if CustomInterval.Enabled then begin

@@ -15,9 +15,9 @@ type
   protected
     FRaw: String;
     FKey: String;
-    FTags: TStrings;
+    FAttributes: TStrings;
     FValue: String;
-    procedure GetParts(AText: String; out AKey: String; out ATags: TStringArray;
+    procedure GetParts(AText: String; out AKey: String; out Attr: TStringArray;
       out AValue: String);
     function UnEscape(AValueText: String): String;
     function UnquotePrintable(AValueText: String): String;
@@ -26,7 +26,7 @@ type
     destructor Destroy; override;
     procedure Analyze;
     property Key: String read FKey;
-    property Tags: TStrings read FTags;
+    property Attributes: TStrings read FAttributes;
     property Value: String read FValue;
   end;
 
@@ -35,7 +35,7 @@ type
   TVpFileBlock = class
   private
     FItemClass: TVpFileItemClass;
-    function GetValue(const AKey, ATags: String): String;
+    function GetValue(const AKey, Attributes: String): String;
   protected
     FItems: TObjectList;
   public
@@ -43,8 +43,8 @@ type
     destructor Destroy; override;
     procedure Add(const AText: String);
     procedure Analyze; virtual;
-    function FindItem(AKey, ATags: String): TVpFileItem;
-    property Value[AKey: String; const ATags: String]: String read GetValue;
+    function FindItem(AKey, Attributes: String): TVpFileItem;
+    property Value[AKey: String; const Attributes: String]: String read GetValue;
   end;
 
 const
@@ -71,25 +71,25 @@ end;
 
 destructor TVpFileItem.Destroy;
 begin
-  FTags.Free;
+  FAttributes.Free;
   inherited;
 end;
 
 procedure TVpFileItem.Analyze;
 var
-  tagarray: TStringArray;
+  attrArray: TStringArray;
   i: Integer;
 begin
-  GetParts(FRaw, FKey, tagarray, FValue);
-  FTags := TStringList.Create;
-  for i:=Low(tagarray) to High(tagarray) do
-    FTags.Add(tagarray[i]);
+  GetParts(FRaw, FKey, attrArray, FValue);
+  FAttributes := TStringList.Create;
+  for i:=Low(attrArray) to High(attrArray) do
+    FAttributes.Add(attrArray[i]);
 end;
 
 // Example
 //   ADR;TYPE=WORK,POSTAL,PARCEL:;;One Microsoft Way;Redmond;WA;98052-6399;USA
 procedure TVpFileItem.GetParts(AText: String; out AKey: String;
-  out ATags: TStringArray; out AValue: String);
+  out Attr: TStringArray; out AValue: String);
 var
   p: Integer;
   keypart, valuepart: String;
@@ -107,17 +107,17 @@ begin
   p := pos(KEY_DELIMITER, keypart);
   if p = 0 then begin
     AKey := keypart;
-    SetLength(ATags, 0);
+    SetLength(Attr, 0);
   end else begin
     AKey := Copy(keypart, 1, p-1);
     keypart := Copy(keypart, p+1, MaxInt);
     if pos('TYPE=', keypart) = 1 then begin
       keypart := copy(keypart, Length('TYPE='), MaxInt);
-      ATags := Split(keypart, TYPE_DELIMITER);  // Split at ','
+      Attr := Split(keypart, TYPE_DELIMITER);  // Split at ','
     end else
-      ATags := Split(keypart, KEY_DELIMITER);   // Split at ';'
-    for i:=Low(ATags) to High(ATags) do
-      if ATags[i] = 'QUOTED-PRINTABLE' then begin
+      Attr := Split(keypart, KEY_DELIMITER);   // Split at ';'
+    for i:=Low(Attr) to High(Attr) do
+      if Attr[i] = 'QUOTED-PRINTABLE' then begin
         QuotedPrintable := true;
         break;
       end;
@@ -256,34 +256,39 @@ begin
   end;
 end;
 
-{ Finds the item with the specified key and tags. Several tags can be combined
-  by a semicolon. If a tag name begins with a '-' then it must NOT be present.
+{ Finds the item with the specified key and attributes.
+  Several attributes can be combined by a semicolon.
+  If an attribute name begins with a '-' then it must NOT be present.
   The conditions are and-ed, i.e. all conditions must be met for the item to
   be accepted. }
-function TVpFileBlock.FindItem(AKey, ATags: String): TVpFileItem;
+function TVpFileBlock.FindItem(AKey, Attributes: String): TVpFileItem;
 var
   i: Integer;
   item: TVpFileItem;
-  tagArr: TStringArray;
-  tag, notTag: String;
+  attrArray: TStringArray;
+  attr, notAttr: String;
   ok: Boolean;
 begin
-  tagArr := Split(ATags, ';');
+  attrArray := Split(Attributes, ';');
 
   for i:=0 to FItems.Count-1 do begin
     item := TVpFileItem(FItems[i]);
     if (AKey = item.Key) then
     begin
-      ok := true;                  // No tags specified --> use first item found
-      if Length(tagArr) > 0 then begin
-        for tag in tagArr do begin
-          if tag[1] = '-' then
-            notTag := Copy(tag, 2, MaxInt);
-          if item.Tags.IndexOf(tag) = -1 then begin  // Tag not found --> reject
+      ok := true;                  // No attr specified --> use first item found
+      if Length(attrArray) > 0 then begin
+        for attr in attrArray do begin
+          if attr[1] = '-' then
+            notAttr := Copy(attr, 2, MaxInt)
+          else
+            notAttr := '';
+          if item.Attributes.IndexOf(attr) = -1 then begin
+            // required attribute not found --> reject
             ok := false;
             break;
           end;
-          if item.Tags.Indexof(notTag) <> -1 then begin // "NOT" tag found --> reject
+          if (notAttr <> '') and (item.Attributes.IndexOf(notAttr) <> -1) then begin
+            // forbidden attribute found --> reject
             ok := false;
             break;
           end;
@@ -298,11 +303,11 @@ begin
   Result := nil;
 end;
 
-function TVpFileBlock.GetValue(const AKey, ATags: String): String;
+function TVpFileBlock.GetValue(const AKey, Attributes: String): String;
 var
   item: TVpFileItem;
 begin
-  item := FindItem(AKey, ATags);
+  item := FindItem(AKey, Attributes);
   if item <> nil then
     Result := item.Value
   else

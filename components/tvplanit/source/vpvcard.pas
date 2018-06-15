@@ -205,9 +205,9 @@ begin
       'ORG':
         FCompany := item.Value;
       'ADR':
-        if item.Tags.IndexOf('WORK') <> -1 then
+        if item.Attributes.IndexOf('WORK') <> -1 then
           VCardAddress(item.Value, FWorkAddress, FWorkCity, FWorkZip, FWorkState, FWorkCountry)
-        else if item.Tags.IndexOf('HOME') <> -1 then
+        else if item.Attributes.IndexOf('HOME') <> -1 then
           VCardAddress(item.value, FHomeAddress, FHomeCity, FHomeZip, FHomeState, FHomeCountry)
         else
         if FCompany = '' then
@@ -215,30 +215,30 @@ begin
         else
           VCardAddress(item.Value, FWorkAddress, FWorkCity, FWorkZip, FWorkState, FWorkCountry);
       'EMAIL':
-        if (FCompany = '') or (item.Tags.IndexOf('HOME') <> -1) then
+        if (FCompany = '') or (item.Attributes.IndexOf('HOME') <> -1) then
           FHomeEMail := IfThen(FHomeEMail = '', item.Value, FHomeEMail + ITEM_SEPARATOR + item.Value)
         else
           FWorkEMail := IfThen(FWorkEMail = '', item.Value, FWorkEMail + ITEM_SEPARATOR + item.Value);
       'TEL':
-        if item.Tags.IndexOf('CELL') <> -1 then
+        if item.Attributes.IndexOf('CELL') <> -1 then
           FMobile := item.Value
         else
-        if item.Tags.IndexOf('PAGER') <> -1 then
+        if item.Attributes.IndexOf('PAGER') <> -1 then
           FPager := item.Value
         else
-        if item.Tags.IndexOf('FAX') <> -1 then begin
-          if (FCompany = '') or (item.Tags.IndexOf('HOME') <> -1) then
+        if item.Attributes.IndexOf('FAX') <> -1 then begin
+          if (FCompany = '') or (item.Attributes.IndexOf('HOME') <> -1) then
             FHomeFax := item.Value
           else
             FWorkFax := item.Value;
         end else
-        if item.Tags.IndexOf('CAR') <> -1 then
+        if item.Attributes.IndexOf('CAR') <> -1 then
           FCarPhone := item.Value
         else
-        if item.Tags.IndexOf('ISDN') <> -1 then
+        if item.Attributes.IndexOf('ISDN') <> -1 then
           FISDN := item.Value
         else
-        if (FCompany = '') or (item.tags.IndexOf('HOME') <> -1) then
+        if (FCompany = '') or (item.Attributes.IndexOf('HOME') <> -1) then
           FHomePhone := IfThen(FHomePhone = '', item.Value, FHomePhone + ITEM_SEPARATOR + item.Value)
         else
           FWorkPhone := IfThen(FWorkPhone = '', item.Value, FWorkPhone + ITEM_SEPARATOR + item.Value);

@@ -520,6 +520,10 @@ msgstr "Zuhause"
 msgid "Hours"
 msgstr "Stunden"
 
+#: vpsr.rsicalfilter
+msgid "iCalendar files (*.ical;*.ics)|*.ical;*.ics"
+msgstr ""
+
 #: vpsr.rsinches
 msgid "Inches"
 msgstr "Zoll"
@@ -581,8 +585,12 @@ msgstr "M"
 msgid "Load file..."
 msgstr "Datei laden..."
 
+#: vpsr.rsloadicaltitle
+msgid "Import from iCal file(s)"
+msgstr ""
+
 #: vpsr.rsloadvcardstitle
-msgid "Load vCard(s)"
+msgid "Import from vCard(s)"
 msgstr ""
 
 #: vpsr.rslocation
@@ -920,6 +928,10 @@ msgctxt "vpsr.rspopupaddevent"
 msgid "Add event..."
 msgstr "Ereignis hinzufügen..."
 
+#: vpsr.rspopupaddeventfromical
+msgid "Import from iCalendar file(s)..."
+msgstr ""
+
 #: vpsr.rspopupchangedate
 msgctxt "vpsr.rspopupchangedate"
 msgid "Change date"
@@ -1127,6 +1139,10 @@ msgstr "Fehler: Kann nicht updaten"
 #| msgid "Incorrect order of start and end times. Do you want to flip them?"
 msgid "Incorrect order of start and end times. Do you want to exchange them?"
 msgstr "Falsche Reihenfolge der Start- und Ende-Zeit. Wollen Sie die beiden vertauschen?"
+
+#: vpsr.rsstartendtimesequal
+msgid "Start and end times cannot be equal."
+msgstr ""
 
 #: vpsr.rsstarttimelbl
 msgid "Start time:"
