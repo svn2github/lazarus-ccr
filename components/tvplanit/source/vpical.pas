@@ -19,7 +19,7 @@ type
   private
     FCalendar: TVpICalendar;
   public
-    constructor Create(ACalendar: TVpICalendar);
+    constructor Create(ACalendar: TVpICalendar); virtual;
     function FindItem(AKey: String): TVpICalItem;
   end;
 
@@ -46,6 +46,8 @@ type
     property AudioSrc: String read FAudioSrc;
   end;
 
+  { TVpICalEvent }
+
   TVpICalEvent = class(TVpICalEntry)
   private
     FSummary: String;        // --> Description
@@ -62,9 +64,13 @@ type
     FRecurrenceCount: Integer;
     FRecurrenceByXXX: String;
     FAlarm: TVpICalAlarm;
+    FCategories: TStrings;
+    function GetCategory(AIndex: Integer): String;
+    function GetCategoryCount: Integer;
     function GetEndTime(UTC: Boolean): TDateTime;
     function GetStartTime(UTC: Boolean): TDateTime;
   public
+    constructor Create(ACalendar: TVpICalendar); override;
     destructor Destroy; override;
     procedure Analyze; override;
     procedure UseAlarm;
@@ -73,6 +79,8 @@ type
     property Location: String read FLocation;
     property StartTime[UTC: Boolean]: TDateTime read GetStartTime;
     property EndTime[UTC: Boolean]: TDateTime read GetEndTime;
+    property Category[AIndex: Integer]: String read GetCategory;
+    property CategoryCount: Integer read GetCategoryCount;
     property Alarm: TVpICalAlarm read FAlarm;
     property RecurrenceFrequency: String read FRecurrenceFreq;
     property RecurrenceInterval: Integer read FRecurrenceInterval;
@@ -287,8 +295,17 @@ end;
 {                              TVpICalEvent                                    }
 {==============================================================================}
 
+constructor TVpICalEvent.Create(ACalendar: TVpICalendar);
+begin
+  inherited;
+  FCategories := TStringList.Create;
+  FCategories.Delimiter := VALUE_DELIMITER;
+  FCategories.StrictDelimiter := True;
+end;
+
 destructor TVpICalEvent.Destroy;
 begin
+  FCategories.Free;
   FAlarm.Free;
   inherited;
 end;
@@ -328,6 +345,8 @@ begin
         FLocation := item.Value;
       'DURATION':
         FDuration := ICalDuration(item.Value);
+      'CATEGORIES':
+        FCategories.DelimitedText := item.Value;
       'RRULE':
         begin
           L := TStringList.Create;
@@ -352,6 +371,19 @@ begin
         end;
     end;
   end;
+end;
+
+function TVpICalEvent.GetCategory(AIndex: Integer): String;
+begin
+  if (AIndex >= 0) and (AIndex < FCategories.Count) then
+    Result := FCategories[AIndex]
+  else
+    Result := '';
+end;
+
+function TVpICalEvent.GetCategoryCount: Integer;
+begin
+  Result := FCategories.Count;
 end;
 
 function TVpICalEvent.GetEndTime(UTC: Boolean): TDateTime;

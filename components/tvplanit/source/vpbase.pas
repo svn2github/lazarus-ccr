@@ -241,9 +241,12 @@ type
   public
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
-    function GetColor(Index: Integer): TColor;
-    function GetName(Index: Integer):string;
+    function GetColor(AIndex: Integer): TColor;
+    function GetName(AIndex: Integer):string;
     function GetCategory(AIndex: Integer): TVpCategoryInfo;
+    function IndexOfCategory(AName: String): Integer;
+    function IndexOfFirstUnusedCategory: Integer;
+    procedure SetCategoryName(AIndex: Integer; AName: String);
   published
     property Category0: TVpCategoryInfo index 0 read GetCategory write SetCat;
     property Category1: TVpCategoryInfo index 1 read GetCategory write SetCat;
@@ -713,7 +716,7 @@ var
 begin
   inherited Create;
   FOwner := AOwner;
-  for i:=0 to High(FCat) do
+  for i:=Low(FCat) to High(FCat) do
   begin
     FCat[i] := TVpCategoryInfo.Create(FOwner);
     FCat[i].FIndex := i;
@@ -726,7 +729,7 @@ destructor TVpCategoryColorMap.Destroy;
 var
   i: Integer;
 begin
-  for i:=0 to High(FCat) do FCat[i].Free;
+  for i:=Low(FCat) to High(FCat) do FCat[i].Free;
   inherited;
 end;
 
@@ -735,18 +738,42 @@ begin
   Result := FCat[AIndex];
 end;
 
-function TVpCategoryColorMap.GetColor(Index: Integer): TColor;
+function TVpCategoryColorMap.IndexOfCategory(AName: String): Integer;
+var
+  i: Integer;
 begin
-  if Index <= High(FCat) then
-    Result := FCat[Index].Color
+  for i:=Low(FCat) to High(FCat) do
+    if SameText(FCat[i].Description, AName) then begin
+      Result := i;
+      exit;
+    end;
+  Result := -1;
+end;
+
+function TVpCategoryColorMap.IndexOfFirstUnusedCategory: Integer;
+var
+  i: Integer;
+begin
+  for i := Low(FCat) to High(FCat) do
+    if FCat[i].Description = Format(RSCategoryDesc, [i]) then begin
+      Result := i;
+      exit;
+    end;
+  Result := -1;
+end;
+
+function TVpCategoryColorMap.GetColor(AIndex: Integer): TColor;
+begin
+  if (AIndex >= Low(FCat)) and (AIndex <= High(FCat)) then
+    Result := FCat[AIndex].Color
   else
     Result := clBlack;
 end;
 
-function TVpCategoryColorMap.GetName(Index: Integer): string;
+function TVpCategoryColorMap.GetName(AIndex: Integer): string;
 begin
-  if Index <= High(FCat) then
-    Result := FCat[Index].Description
+  if (AIndex >= Low(FCat)) and (AIndex <= High(FCat)) then
+    Result := FCat[AIndex].Description
   else
     Result := '';
 end;
@@ -756,6 +783,11 @@ begin
   FCat[AIndex] := AValue;
 end;
 
+procedure TVpCategoryColorMap.SetCategoryName(AIndex: Integer; AName: String);
+begin
+  if (AIndex >= Low(FCat)) and (AIndex <= High(FCat)) then
+    FCat[AIndex].Description := AName;
+end;
 
 (*****************************************************************************)
 { TVpCategoryInfo }

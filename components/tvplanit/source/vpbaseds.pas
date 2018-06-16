@@ -233,7 +233,7 @@ type
     FResource          : TVpResource;
     dsAlertTimer       : TTimer;           { fires the alerts }
     FNotifiers         : TList;
-    FLinkedOwner: TComponent;
+    FLinkedOwner       : TComponent;
 
     {events}
     FOnConnect         : TNotifyEvent;

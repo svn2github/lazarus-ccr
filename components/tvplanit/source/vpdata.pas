@@ -77,7 +77,7 @@ type
 
   TVpResources = class
   private
-    FOwner: TObject;
+    FOwner: TObject;   // This is the Datastore.
     FResourceGroups: TList;
     function GetCount: Integer;
     function GetItem(Index: Integer): TVpResource;
@@ -695,7 +695,7 @@ implementation
 
 uses
   Math, DateUtils,
-  VpException, VpConst, VpMisc;
+  VpException, VpConst, VpMisc, VpBaseDS;
 
 const
   TIME_EPS = 1.0 / SecondsInDay;  // Epsilon for comparing times
@@ -1269,6 +1269,9 @@ end;
 procedure TVpEvent.LoadFromICalendar(AEntry: TVpICalEvent);
 var
   dt: Double;
+  cat: String;
+  i, j, k: Integer;
+  datastore: TVpCustomDatastore;
 begin
   if AEntry = nil then
     exit;
@@ -1278,6 +1281,30 @@ begin
   FNotes := AEntry.Description;
   FLocation := AEntry.Location;
   // Start and end time already have been set --> Skip .
+
+  { Category }
+  { tvplanit has only 1 category, ical may have several. We pick the first one
+    defined in the datastore. If none is defined we create the first one. }
+  if AEntry.CategoryCount > 0 then begin
+    datastore := TVpCustomDatastore(Owner.Owner.Owner.Owner);
+    k := -1;
+    for i := 0 to AEntry.CategoryCount-1 do begin
+      cat := AEntry.category[i];
+      j := datastore.CategoryColorMap.IndexOfCategory(cat);
+      if j <> -1 then begin
+        k := j;
+        break;
+      end;
+    end;
+    if k = -1 then begin // category not found in data store
+      k := datastore.CategoryColorMap.IndexOfFirstUnusedCategory;
+      if k <> -1 then
+        datastore.CategoryColorMap.SetCategoryName(k, AEntry.Category[0]);
+    end;
+    if k <> -1 then
+      FCategory := k;
+  end;
+
 
   { All-day event }
   FAllDayEvent := (frac(FStartTime) = 0) and (frac(FEndTime) = 0);
