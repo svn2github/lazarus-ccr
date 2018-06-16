@@ -188,6 +188,7 @@ type
     procedure wvEditInPlace(Sender: TObject);
     procedure wvHookUp;
     procedure PopupAddEvent(Sender: TObject);
+    procedure PopupAddFromICalFile(Sender: TObject);
     procedure PopupDeleteEvent(Sender: TObject);
     procedure PopupEditEvent(Sender: TObject);
     procedure PopupToday(Sender: TObject);
@@ -321,7 +322,7 @@ uses
   DateUtils,
  {$ENDIF}
   SysUtils, StrUtils, LazUTF8, Dialogs,
-  VpEvntEditDlg, VpWeekViewPainter;
+  VpEvntEditDlg, VpWeekViewPainter, VpICal;
 
 (*****************************************************************************)
 { TVpTGInPlaceEdit }
@@ -1098,7 +1099,7 @@ begin
   canEdit := (FActiveEvent <> nil) and FActiveEvent.CanEdit;
   FDefaultPopup.Items.Clear;
 
-  if RSPopupAddEvent <> '' then begin
+  if RSPopupAddEvent <> '' then begin               // Add
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSPopupAddEvent;
     NewItem.OnClick := PopupAddEvent;
@@ -1106,7 +1107,15 @@ begin
     FDefaultPopup.Items.Add(NewItem);
   end;
 
-  if RSPopupEditEvent <> '' then begin
+  if RSPopupAddEventFromICal <> '' then begin
+    NewItem := TMenuItem.Create(Self);
+    NewItem.Caption := RSPopupAddEventFromICal;    // Import from iCal
+    NewItem.OnClick := PopupAddFromICalFile;
+    NewItem.Tag := 0;
+    FDefaultPopup.Items.Add(NewItem);
+  end;
+
+  if RSPopupEditEvent <> '' then begin            // Edit
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSPopupEditEvent;
     NewItem.Enabled := canEdit;
@@ -1115,7 +1124,7 @@ begin
     FDefaultPopup.Items.Add(NewItem);
   end;
 
-  if RSPopupDeleteEvent <> '' then begin
+  if RSPopupDeleteEvent <> '' then begin            // Delete
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSPopupDeleteEvent;
     NewItem.Enabled := canEdit;
@@ -1124,17 +1133,17 @@ begin
     FDefaultPopup.Items.Add(NewItem);
   end;
 
-  NewItem := TMenuItem.Create(Self);
+  NewItem := TMenuItem.Create(Self);               // ---
   NewItem.Caption := '-';
   FDefaultPopup.Items.Add(NewItem);
 
-  if RSPopupChangeDate <> '' then begin
+  if RSPopupChangeDate <> '' then begin           // Change date
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSPopupChangeDate;
     NewItem.Tag := 0;
     FDefaultPopup.Items.Add(NewItem);
 
-    if RSToday <> '' then begin
+    if RSToday <> '' then begin                  // Today
       NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSToday;
       NewSubItem.OnClick := PopupToday;
@@ -1142,11 +1151,11 @@ begin
       NewItem.Add(NewSubItem);
     end;
 
-    NewSubItem := TMenuItem.Create(Self);
+    NewSubItem := TMenuItem.Create(Self);      // -------
     NewSubItem.Caption := '-';
     NewItem.Add(NewSubItem);
 
-    if RSNextWeek <> '' then begin
+    if RSNextWeek <> '' then begin             // Next week
       NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSNextWeek;
       NewSubItem.OnClick := PopupNextWeek;
@@ -1154,7 +1163,7 @@ begin
       NewItem.Add(NewSubItem);
     end;
 
-    if RSPrevWeek <> '' then begin
+    if RSPrevWeek <> '' then begin           // Previous week
       NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSPrevWeek;
       NewSubItem.OnClick := PopupPrevWeek;
@@ -1162,11 +1171,11 @@ begin
       NewItem.Add(NewSubItem);
     end;
 
-    NewSubItem := TMenuItem.Create(Self);
+    NewSubItem := TMenuItem.Create(Self);     // -----
     NewSubItem.Caption := '-';
     NewItem.Add(NewSubItem);
 
-    if RSNextMonth <> '' then begin
+    if RSNextMonth <> '' then begin          // Next month
       NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSNextMonth;
       NewSubItem.OnClick := PopupNextMonth;
@@ -1174,7 +1183,7 @@ begin
       NewItem.Add(NewSubItem);
     end;
 
-    if RSPrevMonth <> '' then begin
+    if RSPrevMonth <> '' then begin           // Previous month
       NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSPrevMonth;
       NewSubItem.OnClick := PopupPrevMonth;
@@ -1182,11 +1191,11 @@ begin
       NewItem.Add(NewSubItem);
     end;
 
-    NewSubItem := TMenuItem.Create(Self);
+    NewSubItem := TMenuItem.Create(Self);       // -------
     NewSubItem.Caption := '-';
     NewItem.Add(NewSubItem);
 
-    if RSNextYear <> '' then begin
+    if RSNextYear <> '' then begin             // Next year
       NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSNextYear;
       NewSubItem.OnClick := PopupNextYear;
@@ -1194,7 +1203,7 @@ begin
       NewItem.Add(NewSubItem);
     end;
 
-    if RSPrevYear <> '' then begin
+    if RSPrevYear <> '' then begin             // previous year
       NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSPrevYear;
       NewSubItem.OnClick := PopupPrevYear;
@@ -1234,6 +1243,53 @@ begin
   wvSpawnEventEditDialog(True);
 end;
 {=====}
+
+procedure TVpWeekView.PopupAddFromICalFile(Sender: TObject);
+var
+  dlg: TOpenDialog;
+  ical: TVpICalendar;
+  fn: String;
+  i: Integer;
+  id: Integer;
+  startTime, endTime: TDateTime;
+begin
+  dlg := TOpenDialog.Create(nil);
+  try
+    dlg.Title := RSLoadICalTitle;
+    dlg.Filter := RSICalFilter;
+    dlg.FileName := '';
+    dlg.Options := dlg.Options + [ofAllowMultiSelect, ofFileMustExist];
+    if dlg.Execute then begin
+      Screen.Cursor := crHourGlass;
+      Application.ProcessMessages;
+      ical := TVpICalendar.Create;
+      try
+        for fn in dlg.Files do begin
+          ical.LoadFromFile(fn);
+          for i := 0 to ical.Count-1 do begin
+            if not (ical[i] is TVpICalEvent) then
+              Continue;
+            startTime := TVpICalEvent(ical[i]).StartTime[false];  // use local times
+            endTime := TVpICalEvent(ical[i]).EndTime[false];
+            if (startTime = 0) and (endTime = 0) then
+              continue;
+            id := DataStore.GetNextID(EventsTableName);
+            FActiveEvent := Datastore.Resource.Schedule.AddEvent(id, starttime, endtime);
+            FActiveEvent.LoadFromICalendar(TVpICalEvent(ical[i]));
+            Datastore.PostEvents;
+            Datastore.NotifyDependents;
+          end;
+        end;
+        Invalidate;
+      finally
+        ical.Free;
+        Screen.Cursor := crDefault;
+      end;
+    end;
+  finally
+    dlg.Free;
+  end;
+end;
 
 procedure TVpWeekView.PopupDeleteEvent(Sender: TObject);
 begin
