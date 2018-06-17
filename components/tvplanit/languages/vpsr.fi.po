@@ -920,6 +920,12 @@ msgid "Add event..."
 msgstr ""
 
 #: vpsr.rspopupaddeventfromical
+msgctxt "vpsr.rspopupaddeventfromical"
+msgid "Import from iCalendar file(s)..."
+msgstr ""
+
+#: vpsr.rspopupaddtaskfromical
+msgctxt "vpsr.rspopupaddtaskfromical"
 msgid "Import from iCalendar file(s)..."
 msgstr ""
 

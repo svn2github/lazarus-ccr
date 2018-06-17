@@ -172,6 +172,7 @@ type
     { internal methods }
     procedure InitializeDefaultPopup;
     procedure PopupAddTask(Sender: TObject);
+    procedure PopupAddFromICalFile(Sender: TObject);
     procedure PopupDeleteTask(Sender: TObject);
     procedure PopupEditTask(Sender: TObject);
     procedure tlSetVScrollPos;
@@ -259,7 +260,8 @@ type
 implementation
 
 uses
-  SysUtils, Forms, Dialogs, VpTaskEditDlg, VpDlg, VpTasklistPainter;
+  SysUtils, Forms, Dialogs,
+  VpDlg, VpTaskEditDlg, VpTasklistPainter, VpICal;
 
 (*****************************************************************************)
 
@@ -848,7 +850,7 @@ procedure TVpTaskList.InitializeDefaultPopup;
 var
   NewItem: TMenuItem;
 begin
-  if RSTaskPopupAdd <> '' then begin
+  if RSTaskPopupAdd <> '' then begin      // "Add"
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSTaskPopupAdd;
     NewItem.OnClick := PopupAddTask;
@@ -856,7 +858,15 @@ begin
     FDefaultPopup.Items.Add(NewItem);
   end;
 
-  if RSTaskPopupEdit <> '' then begin
+  if RSPopupAddTaskFromICal <> '' then begin     // Import from iCal
+    NewItem := TMenuItem.Create(Self);
+    NewItem.Caption := RSPopupAddTaskFromICal;
+    NewItem.OnClick := PopupAddFromICalFile;
+    NewItem.Tag := 0;
+    FDefaultPopup.Items.Add(NewItem);
+  end;
+
+  if RSTaskPopupEdit <> '' then begin     // "Edit"
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSTaskPopupEdit;
     NewItem.OnClick := PopupEditTask;
@@ -864,7 +874,7 @@ begin
     FDefaultPopup.Items.Add(NewItem);
   end;
 
-  if RSTaskPopupDelete <> '' then begin
+  if RSTaskPopupDelete <> '' then begin    // "Delete"
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSTaskPopupDelete;
     NewItem.OnClick := PopupDeleteTask;
@@ -885,6 +895,51 @@ begin
   tlSpawnTaskEditDialog(True);
 end;
 {=====}
+
+procedure TVpTaskList.PopupAddFromICalFile(Sender: TObject);
+var
+  dlg: TOpenDialog;
+  ical: TVpICalendar;
+  fn: String;
+  i: Integer;
+  id: Integer;
+begin
+  if ReadOnly or (not CheckCreateResource) then
+    exit;
+
+  dlg := TOpenDialog.Create(nil);
+  try
+    dlg.Title := RSLoadICalTitle;
+    dlg.Filter := RSICalFilter;
+    dlg.FileName := '';
+    dlg.Options := dlg.Options + [ofAllowMultiSelect, ofFileMustExist];
+    if dlg.Execute then begin
+      Screen.Cursor := crHourGlass;
+      Application.ProcessMessages;
+      ical := TVpICalendar.Create;
+      try
+        for fn in dlg.Files do begin
+          ical.LoadFromFile(fn);
+          for i := 0 to ical.Count-1 do begin
+            if not (ical[i] is TVpICalToDo) then
+              Continue;
+            id := DataStore.GetNextID(EventsTableName);
+            FActiveTask := Datastore.Resource.Tasks.AddTask(id);
+            FActiveTask.LoadFromICalendar(TVpICalToDo(ical[i]));
+            Datastore.PostTasks;
+            Datastore.NotifyDependents;
+          end;
+        end;
+        Invalidate;
+      finally
+        ical.Free;
+        Screen.Cursor := crDefault;
+      end;
+    end;
+  finally
+    dlg.Free;
+  end;
+end;
 
 procedure TVpTaskList.PopupDeleteTask(Sender: TObject);
 begin

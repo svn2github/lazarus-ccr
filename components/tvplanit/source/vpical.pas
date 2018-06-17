@@ -89,6 +89,40 @@ type
     property RecurrenceByXXX: String read FRecurrenceByXXX;
   end;
 
+  TVpICalToDo = class(TVpICalEntry)
+  private
+    FSummary: String;
+    FComment: String;
+    FStartTime: TDateTime;
+    FStartTimeTZ: String;
+    FDueTime: TDateTime;
+    FDueTimeTZ: String;
+    FCompletedTime: TDateTime;
+    FCompletedTimeTZ: String;
+    FDuration: double;
+    FCategories: TStrings;
+    FPriority: integer;
+    FStatus: String;
+    function GetCategory(AIndex: integer): String;
+    function GetCategoryCount: Integer;
+    function GetCompletedTime(UTC: Boolean): TDateTime;
+    function GetDueTime(UTC: Boolean): TDateTime;
+    function GetStartTime(UTC: Boolean): TDateTime;
+  public
+    constructor Create(AOwner: TVpICalendar); override;
+    destructor Destroy; override;
+    procedure Analyze; override;
+    property Summary: String read FSummary;
+    property Comment: String read FComment;
+    property StartTime[UTC: Boolean]: TDateTime read GetStartTime;
+    property DueTime[UTC: Boolean]: TDateTime read GetDueTime;
+    property CompletedTime[UTC: Boolean]: TDateTime read GetCompletedTime;
+    property Category[AIndex: Integer]: String read GetCategory;
+    property CategoryCount: Integer read GetCategoryCount;
+    property Priority: Integer read FPriority; // 0=undefined, 1-highest, 9=lowest
+    property Status: String read FStatus;
+  end;
+
   TVpICalendar = class
   private
     FEntries: array of TVpICalEntry;
@@ -412,6 +446,114 @@ end;
 
 
 {==============================================================================}
+{                             TVpICalToDo                                      }
+{==============================================================================}
+
+constructor TVpICalToDo.Create(AOwner: TVpICalendar);
+begin
+  inherited;
+  FCategories := TStringList.Create;
+  FCategories.Delimiter := VALUE_DELIMITER;
+  FCategories.StrictDelimiter := true;
+end;
+
+destructor TVpICalToDo.Destroy;
+begin
+  FCategories.Free;
+  inherited;
+end;
+
+procedure TVpICalToDo.Analyze;
+var
+  i, j: Integer;
+  item: TVpICalItem;
+  L: TStrings;
+  s: String;
+  isUTC: Boolean;
+begin
+  inherited;
+
+  for i := 0 to FItems.Count-1 do begin
+    item := TVpICalItem(FItems[i]);
+    case item.Key of
+      'SUMMARY':
+        FSummary := item.Value;
+      'COMMENT':
+        FComment := item.Value;
+      'DTSTART':
+        begin
+          FStartTimeTZ := item.GetAttribute('TZID');
+          FStartTime := iCalDateTime(item.Value, isUTC);
+          if not isUTC then
+            FStartTime := FCalendar.LocalTimeToUTC(FStartTime, FStartTimeTZ);
+        end;
+      'DUE':
+        begin
+          FDueTimeTZ := item.GetAttribute('TZID');
+          FDueTime := iCalDateTime(item.Value, isUTC);
+          if not isUTC then
+            FDueTime := FCalendar.LocalTimeToUTC(FDueTime, FDueTimeTZ);
+        end;
+      'DURATION':
+        FDuration := ICalDuration(item.Value);
+      'COMPLETED':
+        begin
+          FCompletedTimeTZ := item.GetAttribute('TZID');
+          FCompletedTime := iCalDateTime(item.Value, isUTC);
+          if not isUTC then
+            FCompletedTime := FCalendar.LocalTimeToUTC(FCompletedTime, FCompletedTimeTZ);
+        end;
+      'CATEGORIES':
+        FCategories.DelimitedText := item.Value;
+      'PRIORITY':
+        FPriority := StrToIntDef(item.Value, 0);
+      'STATUS':
+        FStatus := item.Value;
+    end;
+  end;
+end;
+
+function TVpICalToDo.GetCategory(AIndex: Integer): String;
+begin
+  if (AIndex >= 0) and (AIndex < FCategories.Count) then
+    Result := FCategories[AIndex]
+  else
+    Result := '';
+end;
+
+function TVpICalToDo.GetCategoryCount: Integer;
+begin
+  Result := FCategories.Count;
+end;
+
+function TVpICalToDo.GetCompletedTime(UTC: Boolean): TDateTime;
+begin
+  Result := FCompletedTime;
+  if (Result > 0) and (not UTC) then
+    Result := FCalendar.UTCToLocalTime(Result, FCompletedTimeTZ);
+end;
+
+function TVpICalToDo.GetDueTime(UTC: Boolean): TDateTime;
+begin
+  if FDueTime <> 0 then
+    Result := FDueTime
+  else
+    Result := FStartTime + FDuration;
+  if (Result > 0) and (not UTC) then
+    Result := FCalendar.UTCToLocalTime(Result, FDueTimeTZ);
+end;
+
+function TVpICalToDo.GetStartTime(UTC: Boolean): TDateTime;
+begin
+  if UTC then
+    Result := FStartTime
+  else
+    Result := FCalendar.LocalTimeToUTC(FStartTime, FStartTimeTZ);
+end;
+
+
+
+{==============================================================================}
 {                             TVpICalendar                                     }
 {==============================================================================}
 
@@ -512,11 +654,14 @@ begin
                 currEntry := TVpICalEvent.Create(self);
                 FEntries[n] := currEntry;
               end;
-            'VFREEBUSY':
-              currEntry := nil;
             'VTODO':
-              currEntry := nil;
+              begin
+                currEntry :=TVpICalToDo.Create(self);
+                FEntries[n] := currEntry;
+              end;
             'VJOURNAL':
+              currEntry := nil;
+            'VFREEBUSY':
               currEntry := nil;
             'VALARM':
               if currEntry is TVpICalEvent then begin

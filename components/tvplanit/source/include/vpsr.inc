@@ -185,6 +185,7 @@ resourcestring
   {Task Specific}
   RSConfirmDeleteTask       = 'Delete this task from your list?';
   RSTaskPopupAdd            = 'Add task...';
+  RSPopupAddTaskFromICal    = 'Import from iCalendar file(s)...';
   RSTaskPopupEdit           = 'Edit task...';
   RSTaskPopupDelete         = 'Delete task...';
   RSTaskTitleResource       = 'Task list - ';                            {!!.01}

@@ -422,6 +422,7 @@ type
   public
     constructor Create(Owner: TVpTasks);
     destructor Destroy; override;
+    procedure LoadFromICalendar(AEntry: TVpICalToDo);
     property Loading: Boolean read FLoading write FLoading;
     property Changed: Boolean read FChanged write SetChanged;
     property Deleted: Boolean read FDeleted write FDeleted;
@@ -439,8 +440,8 @@ type
     property Complete: Boolean read FComplete write SetComplete;
     property CreatedOn: TDateTime read FCreatedOn write SetCreatedOn;
     property CompletedOn: TDateTIme read FCompletedOn write SetCompletedOn;
-    property Priority: Integer read FPriority write SetPriority;
-    property Category: Integer read FCategory write SetCategory;
+    property Priority: Integer read FPriority write SetPriority;   // --> TVpTaskPriority
+    property Category: Integer read FCategory write SetCategory;   // --> TVpCategoryType
 
     { Reserved for your use }
     property UserField0: string read FUserField0 write FUserField0;
@@ -1305,7 +1306,6 @@ begin
       FCategory := k;
   end;
 
-
   { All-day event }
   FAllDayEvent := (frac(FStartTime) = 0) and (frac(FEndTime) = 0);
 
@@ -1361,18 +1361,6 @@ begin
         FRepeatCode := rtCustom;
         FCustInterval := AEntry.RecurrenceInterval; // * SecondsInDay;
       end;
-    (*
-    'HOURLY':
-      begin
-        FRepeatCode := rtCustom;
-        FCustInterval := AEntry.RecurrenceInterval * SecondsInHour;
-      end;
-    'MINUTELY':
-      begin
-        FRepeatCode := rtCustom;
-        FCustInterval := AEntry.RecurrenceInterval * SecondsInMinute;
-      end;
-      *)
   end;
   if (AEntry.RecurrenceEndDate = 0) and (AEntry.RecurrenceCount > 0) then begin
     FRepeatRangeEnd := trunc(FStartTime);
@@ -1388,9 +1376,6 @@ begin
     end;
   end else
     FRepeatRangeEnd := AEntry.RecurrenceEndDate;
-
-  // There is also "CustomInterval" which may be extracted from the RecurrenceByXXXX data
-  // But this is very complex...
 end;
 
 procedure TVpEvent.SetAlarmAdv(Value: Integer);
@@ -2672,6 +2657,55 @@ end;
 function TVpTask.IsOverdue: Boolean;
 begin
   result := (Trunc(DueDate) < now + 1);
+end;
+
+procedure TVpTask.LoadFromICalendar(AEntry: TVpICalToDo);
+var
+  dt: Double;
+  cat: String;
+  i, j, k: Integer;
+  ct: TVpCategoryType;
+  catFound: Boolean;
+begin
+  if AEntry = nil then
+    exit;
+
+  { Standard event properties }
+  FDescription := AEntry.Summary;
+  FDetails := AEntry.Comment;
+  FCreatedOn := AEntry.StartTime[false];
+  FDueDate := AEntry.DueTime[false];
+  FCompletedOn := AEntry.CompletedTime[false];
+
+  { Status }
+  FComplete := SameText(AEntry.Status, 'COMPLETED');
+
+  { Priority }
+  case AEntry.Priority of
+    1, 2, 3: FPriority := ord(tpHigh);
+    4, 5, 6: FPriority := ord(tpNormal);
+    7, 8, 9: FPriority := ord(tpLow);
+    else     FPriority := ord(tpNormal);
+  end;
+
+  { Category }
+  { tvplanit has only 1 category, ical may have several. We pick the first one
+    defined by TVpCategorytype. If none is found we select ctOther. }
+  FCategory := ord(ctOther);
+  catFound := false;
+  if AEntry.CategoryCount > 0 then begin
+    for i := 0 to AEntry.CategoryCount-1 do begin
+      cat := AEntry.category[i];
+      for ct in TVpCategoryType do begin
+        if cat = CategoryLabel(ct) then begin
+          FCategory := ord(ct);
+          catFound := true;
+          break;
+        end;
+      end;
+      if catFound then break;
+    end;
+  end;
 end;
 
 procedure TVpTask.SetCategory(const Value: Integer);
