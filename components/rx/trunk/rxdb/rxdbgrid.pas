@@ -3830,12 +3830,16 @@ begin
     if DataSource.DataSet.OnPostError = @ErrorPo then
       DataSource.DataSet.OnPostError:=F_EventOnPostError;
 
+    if Datalink.OnDataSetScrolled = @OnDataSetScrolled then
+      Datalink.OnDataSetScrolled:=FSaveOnDataSetScrolled;
+
     F_EventOnPostError:=nil;
     F_EventOnFilterRec:=nil;
     F_EventOnBeforeDelete:=nil;
     F_EventOnBeforePost:=nil;
     F_EventOnDeleteError:=nil;
     F_EventOnPostError:=nil;
+    FSaveOnDataSetScrolled:=nil;
   end;
 end;
 
