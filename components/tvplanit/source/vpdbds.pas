@@ -129,7 +129,6 @@ begin
   { initialize internal fields }
   FReadOnly := False;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.CreateFieldDefs(const TableName: string;
   FieldDefs: TFieldDefs);
@@ -984,7 +983,6 @@ begin
     end; {with FieldDefs do}
   end;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.CreateIndexDefs(const TableName: string;
   IndexDefs: TIndexDefs);
@@ -1071,13 +1069,11 @@ begin
     end;
   end;
 end;
-{=====}
 
 destructor TVpCustomDBDataStore.Destroy;
 begin
   inherited Destroy;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.Load;
 var
@@ -1414,7 +1410,6 @@ begin
       end; {while}
     end; {with TasksTable}
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.PostContacts;
 var
@@ -1600,126 +1595,6 @@ begin
       FAfterPostContacts(self);
   end;
 end;
-{=====}
-
-(*
-procedure TVpCustomDBDataStore.PostContacts;
-var
-  I: Integer;
-  Contact: TVpContact;
-  F: TField;
-begin
-  if (Resource <> nil) and Resource.ContactsDirty then begin
-    { Dump this resource's dirty contacts to the DB }
-    if ResourceTable.Locate('ResourceID', Resource.ResourceID, []) then begin
-      SetFilterCriteria(ContactsTable, False, Resource.ResourceID, 0, 0);
-
-      for I := pred(Resource.Contacts.Count) downto 0 do begin
-        Contact := Resource.Contacts.GetContact(I);
-        { if the delete flag is set then delete the record }
-        { and free the event instance }
-        if Contact.Deleted then begin
-          if ContactsTable.Locate('RecordID', Contact.RecordID, [])   
-          then ContactsTable.Delete;
-          Contact.Free;
-          Continue;
-        end;
-
-        if Contact.Changed then begin
-          if ContactsTable.Locate('RecordID', Contact.RecordID, []) then
-            { this event already exists in the database so update it }
-            ContactsTable.Edit
-          else begin
-            { this record doesn't exist in the database, so it's a new event }
-            ContactsTable.Append;
-          end;
-          try
-            { DataStore descendants that can use an autoincrement RecordID }
-            { field set the RecordID to -1 by default.  If the RecordID is }
-            { -1 then this is a new record and we shouldn't overwrite      }
-            { RecordID with a bogus value }
-            if Contact.RecordID > -1 then
-              ContactsTable.FieldByName('RecordID').AsInteger := Contact.RecordID;
-
-            ContactsTable.FieldByName('ResourceID').AsInteger := Resource.ResourceID;
-            ContactsTable.FieldByName('FirstName').AsString := Contact.FirstName;
-            ContactsTable.FieldByName('LastName').AsString := Contact.LastName;
-            ContactsTable.FieldByName('Birthdate').AsDateTime := Contact.Birthdate;
-            ContactsTable.FieldByName('Anniversary').AsDateTime := Contact.Anniversary;
-            ContactsTable.FieldByName('Title').AsString := Contact.Title;
-            ContactsTable.FieldByName('Company').AsString := Contact.Company;
-            ContactsTable.FieldByName('Job_Position').AsString := Contact.Job_Position;
-            ContactsTable.FieldByName('EMail').AsString := Contact.EMail;
-            ContactsTable.FieldByName('Address').AsString := Contact.Address;
-            ContactsTable.FieldByName('City').AsString := Contact.City;
-            ContactsTable.FieldByName('State').AsString := Contact.State;
-            ContactsTable.FieldByName('Zip').AsString := Contact.Zip;
-            ContactsTable.FieldByName('Country').AsString := Contact.Country;
-            F := ContactsTable.FieldByName('Notes');
-            if F = nil then F := ContactsTable.FieldByName('Note');
-            if F <> nil then F.AsString := Contact.Notes;
-            ContactsTable.FieldByName('Phone1').AsString := Contact.Phone1;
-            ContactsTable.FieldByName('Phone2').AsString := Contact.Phone2;
-            ContactsTable.FieldByName('Phone3').AsString := Contact.Phone3;
-            ContactsTable.FieldByName('Phone4').AsString := Contact.Phone4;
-            ContactsTable.FieldByName('Phone5').AsString := Contact.Phone5;
-            ContactsTable.FieldByName('PhoneType1').AsInteger := Contact.PhoneType1;
-            ContactsTable.FieldByName('PhoneType2').AsInteger := Contact.PhoneType2;
-            ContactsTable.FieldByName('PhoneType3').AsInteger := Contact.PhoneType3;
-            ContactsTable.FieldByName('PhoneType4').AsInteger := Contact.PhoneType4;
-            ContactsTable.FieldByName('PhoneType5').AsInteger := Contact.PhoneType5;
-            ContactsTable.FieldByName('Category').AsInteger := Contact.Category;
-            ContactsTable.FieldByName('Custom1').AsString := Contact.Custom1;
-            ContactsTable.FieldByName('Custom2').AsString := Contact.Custom2;
-            ContactsTable.FieldByName('Custom3').AsString := Contact.Custom3;
-            ContactsTable.FieldByName('Custom4').AsString := Contact.Custom4;
-            F := ContactsTable.FindField('UserField0');
-            if F <> nil then F.AsString := Contact.UserField0;
-            F := ContactsTable.FindField('UserField1');
-            if F <> nil then F.AsString := Contact.UserField1;
-            F := ContactsTable.FindField('UserField2');
-            if F <> nil then F.AsString := Contact.UserField2;
-            F := ContactsTable.FindField('UserField3');
-            if F <> nil then F.AsString := Contact.UserField3;
-            F := ContactsTable.FindField('UserField4');
-            if F <> nil then F.AsString := Contact.UserField4;
-            F := ContactsTable.FindField('UserField5');
-            if F <> nil then F.AsString := Contact.UserField5;
-            F := ContactsTable.FindField('UserField6');
-            if F <> nil then F.AsString := Contact.UserField6;
-            F := ContactsTable.FindField('UserField7');
-            if F <> nil then F.AsString := Contact.UserField7;
-            F := ContactsTable.FindField('UserField8');
-            if F <> nil then F.AsString := Contact.UserField8;
-            F := ContactsTable.FindField('UserField9');
-            if F <> nil then F.AsString := Contact.UserField9;
-            ContactsTable.Post;
-          except
-            ContactsTable.Cancel;
-            raise EDBPostError.Create;
-          end;
-          { DataStore descendants that can use an autoincrement RecordID }
-          { field set the RecordID to -1 by default.  If the RecordID is }
-          { -1 then this is a new record and we need to assign the real  }
-          { record ID value from the dataset. }
-          if Contact.RecordID = -1 then
-            Contact.RecordID := ContactsTable.FieldByName('RecordID').AsInteger;
-
-          Contact.Changed := false;
-        end;
-      end;
-    end;
-    Resource.ContactsDirty := false;
-
-    if not Loading then
-      NotifyDependents;
-
-    if Assigned(AfterPostContacts) then
-      FAfterPostContacts(self);
-  end;
-end;
-{=====}
-*)
 
 procedure TVpCustomDBDataStore.PostEvents;
 var
@@ -1823,7 +1698,6 @@ begin
       FAfterPostEvents(self);
   end;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.PostTasks;
 var
@@ -1908,7 +1782,6 @@ begin
       FAfterPostTasks(self);
   end;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.PostResources;
 var
@@ -2000,7 +1873,6 @@ begin
     Loading := false;
   end;
 end;
-{=====}
 
 { - Added}
 procedure TVpCustomDBDataStore.PurgeResource(Res: TVpResource);
@@ -2009,7 +1881,6 @@ begin
   PostResources;
   Load;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.PurgeEvents(Res: TVpResource);
 begin
@@ -2017,7 +1888,6 @@ begin
   { classes                                                            !!.01}
   inherited;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.PurgeContacts(Res: TVpResource);
 begin
@@ -2025,7 +1895,6 @@ begin
   { classes                                                            !!.01}
   inherited;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.PurgeTasks(Res: TVpResource);
 begin
@@ -2033,7 +1902,6 @@ begin
   { classes                                                            !!.01}
   inherited;
 end;
-{=====}
 { - End}
 
 procedure TVpCustomDBDataStore.SetResourceByName(Value: string);
@@ -2055,7 +1923,6 @@ begin
     end;
   end;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.RefreshContacts;
 var
@@ -2078,7 +1945,6 @@ begin
   end;
   inherited;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.RefreshEvents;
 begin
@@ -2088,7 +1954,6 @@ begin
   end;
   inherited;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.RefreshTasks;
 var
@@ -2172,7 +2037,6 @@ begin
 
   inherited;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.SetReadOnly(const Value: boolean);
 var
@@ -2187,7 +2051,6 @@ begin
     end;
   end;
 end;
-{=====}
 
 { NOTE: Depending on the syntax dialect used by the dataset components an
   'EDatabaseError' may be raised here with message: "Index based on unknown field '>='."
@@ -2225,6 +2088,5 @@ begin
   ATable.Filter := filter;
   ATable.Filtered := true;
 end;
-{=====}
 
 end.
