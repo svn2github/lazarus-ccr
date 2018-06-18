@@ -42,5 +42,11 @@ rm rx.res
   TRxMDITasks.png TRxMDITasks_150.png TRxMDITasks_200.png \
   TRxRadioGroup.png TRxRadioGroup_150.png TRxRadioGroup_200.png \
   TRxRangeSelector.png TRxRangeSelector_150.png TRxRangeSelector_200.png \
-  TRxHistoryNavigator.png TRxCloseFormValidator.png TRxIniPropStorage.png \
-  TRxLoginDialog.png TRxVersionInfo.png
+  TRxHistoryNavigator.png TRxHistoryNavigator_150.png TRxHistoryNavigator_200.png \
+  TRxCloseFormValidator.png TRxCloseFormValidator_150.png TRxCloseFormValidator_200.png \
+  TRxIniPropStorage.png TRxIniPropStorage_150.png TRxIniPropStorage_200.png \
+  TRxLoginDialog.png TRxLoginDialog_150.png TRxLoginDialog_200.png \
+  TRxPopupNotifier.png TRxPopupNotifier_150.png TRxPopupNotifier_200.png \
+  TRxSystemServices.png TRxSystemServices_150.png TRxSystemServices_200.png \
+  TRxVersionInfo.png TRxVersionInfo_150.png TRxVersionInfo_200.png \
+  TRxXMLPropStorage.png TRxXMLPropStorage_150.png TRxXMLPropStorage_200.png
