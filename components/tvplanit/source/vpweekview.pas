@@ -1276,6 +1276,7 @@ begin
               continue;
             id := DataStore.GetNextID(EventsTableName);
             FActiveEvent := Datastore.Resource.Schedule.AddEvent(id, starttime, endtime);
+            FActiveEvent.Changed := true;
             FActiveEvent.LoadFromICalendar(TVpICalEvent(ical[i]));
             Datastore.PostEvents;
             Datastore.NotifyDependents;
