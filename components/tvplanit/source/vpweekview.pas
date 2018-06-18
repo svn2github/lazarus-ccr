@@ -1222,13 +1222,9 @@ var
   StartTime: TDateTime;
   EndTime: TDateTime;
 begin
-  if ReadOnly then
-    Exit;
-  if not CheckCreateResource then
-    Exit;
-  if not Assigned(DataStore) then
-    Exit;
-  if not Assigned(DataStore.Resource) then
+  if ReadOnly or (not CheckCreateResource) or
+    (not Assigned(DataStore) ) or (not Assigned(DataStore.Resource))
+  then
     Exit;
 
   StartTime := trunc(Date) + 1 / 2; { default to 12:00 noon }
@@ -1253,6 +1249,11 @@ var
   id: Integer;
   startTime, endTime: TDateTime;
 begin
+  if ReadOnly or (not CheckCreateResource) or
+     (not Assigned(DataStore)) or (not Assigned(DataStore.Resource))
+  then
+    Exit;
+
   dlg := TOpenDialog.Create(nil);
   try
     dlg.Title := RSLoadICalTitle;

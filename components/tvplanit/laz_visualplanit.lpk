@@ -303,7 +303,7 @@ Contributor(s): "/>
       </Item67>
       <Item68>
         <Filename Value="source\vpxmlds.pas"/>
-        <UnitName Value="VpXmlDs"/>
+        <UnitName Value="VpXmlDS"/>
       </Item68>
       <Item69>
         <Filename Value="source\vpxparsr.pas"/>
@@ -319,11 +319,11 @@ Contributor(s): "/>
       </Item71>
       <Item72>
         <Filename Value="source\vpvcard.pas"/>
-        <UnitName Value="vpvcard"/>
+        <UnitName Value="VpVCard"/>
       </Item72>
       <Item73>
         <Filename Value="source\vpbasedatafiles.pas"/>
-        <UnitName Value="vpbasedatafiles"/>
+        <UnitName Value="VpBaseDataFiles"/>
       </Item73>
       <Item74>
         <Filename Value="source\vpical.pas"/>

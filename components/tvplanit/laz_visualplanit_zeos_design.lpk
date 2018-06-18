@@ -14,6 +14,7 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\zeos_design"/>
       </SearchPaths>
     </CompilerOptions>
+    <Description Value="Visual PlanIt datastore for ZEOS database components (Designtime package)"/>
     <Version Major="1" Release="11"/>
     <Files Count="1">
       <Item1>

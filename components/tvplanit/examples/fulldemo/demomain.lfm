@@ -775,7 +775,6 @@ object MainForm: TMainForm
         Tag = 0
       end>
     Images = ImageList1
-    ImagesWidth = 0
     ItemFont.Color = clWhite
     SelectedItem = -1
     SelectedItemFont.Color = clWhite

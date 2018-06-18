@@ -128,7 +128,6 @@ object Form1: TForm1
         ContainerIndex = 0
       end>
     Images = Images
-    ImagesWidth = 0
     ItemFont.Color = clWhite
     ItemSpacing = 5
     SelectedItem = -1

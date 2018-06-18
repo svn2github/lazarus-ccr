@@ -344,7 +344,9 @@ type
     property DrawingStyle: TVpFolderDrawingStyle read FDrawingStyle write SetDrawingStyle;
     property FolderCollection: TVpCollection read FFolders write FFolders;
     property Images: TImageList read FImages write SetImages;
-    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth;
+    {$IF LCL_FullVersion >= 1090000}
+    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth default 0;
+    {$ENDIF}
     property ItemFont: TFont read FItemFont write SetItemFont;
     property ItemSpacing: Integer read FItemSpacing write SetItemSpacing stored IsStoredItemSpacing;
     property ItemTheme: TVpItemTheme read FItemTheme write FItemTheme default itNoTheme;

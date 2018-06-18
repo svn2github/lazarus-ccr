@@ -904,8 +904,10 @@ var
   i: Integer;
   id: Integer;
 begin
-  if ReadOnly or (not CheckCreateResource) then
-    exit;
+  if ReadOnly or (not CheckCreateResource) or
+     (not Assigned(DataStore)) or (not Assigned(DataStore.Resource))
+  then
+    Exit;
 
   dlg := TOpenDialog.Create(nil);
   try

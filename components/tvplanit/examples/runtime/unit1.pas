@@ -64,7 +64,7 @@ begin
   ControlLink := TVpControlLink.Create(self);
   ControlLink.Datastore := Datastore;
   // This establishes the links to all controls that depend on Datastore.
-  // Must be called when all dependent controls are created.
+  // Must be called when all dependent controls have been created.
 
   if Datastore.Resources.Count > 0 then
     Datastore.Resource := Datastore.Resources.Items[0];
