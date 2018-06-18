@@ -740,7 +740,6 @@ begin
   ev.EndTime := t2;
   ev.SnoozeTime := GetDateTimeAttrValue(ANode, 'SnoozeTime', FXmlSettings);
   ev.RepeatRangeEnd := GetDateTimeAttrValue(ANode, 'RepeatRangeEng', FXmlSettings);
-  ev.CustomInterval := GetIntAttrValue(ANode, 'CustomInterval');
 
   s := GetAttrValue(ANode, 'AlarmAdvanceType');
   if s <> '' then begin
@@ -759,6 +758,7 @@ begin
     else
       XMLError(Format('Incorrect RepeatCode value: "%s"', [s]));
   end;
+  ev.CustomInterval := GetIntAttrValue(ANode, 'CustomInterval');
 
   node := ANode.FirstChild;
   while node <> nil do begin
