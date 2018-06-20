@@ -2,6 +2,10 @@ unit Unit1;
 
 {$mode objfpc}{$H+}
 
+// Select one of these
+{$DEFINE MDB}
+{.$DEFINE ACCDB}
+
 interface
 
 uses
@@ -68,8 +72,13 @@ type
     procedure QryGridAfterInsert(DataSet: TDataSet);
     procedure QryGridAfterEdit(DataSet: TDataSet);
     procedure TabControl1Change(Sender: TObject);
+    procedure VpFlexDataStore1CreateTable(Sender: TObject; TableName: String);
   private
     { private declarations }
+    procedure CreateContactsTable;
+    procedure CreateEventsTable;
+    procedure CreateResourceTable;
+    procedure CreateTasksTable;
   public
     { public declarations }
   end;
@@ -82,8 +91,17 @@ implementation
 {$R *.lfm}
 
 uses
-  LazFileUtils;
+  LazFileUtils,
+  VpConst;
 
+
+const
+  {$IFDEF MDB}
+  DB_NAME = '.\data.mdb';            // Access 97 file format
+  {$ENDIF}
+  {$IFDEF ACCDB}
+  DB_NAME = '.\data.accdb';         // Access 2007+ file format
+  {$ENDIF}
 
 { TForm1 }
 
@@ -125,22 +143,175 @@ begin
   QryAllTasks.Open;
 end;
 
+procedure TForm1.CreateContactsTable;
+begin
+  ODBCConnection1.ExecuteDirect(
+    'CREATE TABLE Contacts ('+
+      'RecordID COUNTER, ' +
+      'ResourceID INTEGER,' +
+      'FirstName VARCHAR(50) ,'+
+      'LastName VARCHAR(50) , '+
+      'Birthdate DATE, '+
+      'Anniversary DATE, '+
+      'Title VARCHAR(50), '+
+      'Company VARCHAR(50), '+
+      'Department VARCHAR(50), '+
+      'Job_Position VARCHAR(30), '+
+      'AddressType1 INTEGER, '+
+      'Address1 VARCHAR(100), '+
+      'City1 VARCHAR(50), '+
+      'State1 VARCHAR(25), '+
+      'Zip1 VARCHAR(10), '+
+      'Country1 VARCHAR(25), '+
+      'AddressType2 INTEGER, '+
+      'Address2 VARCHAR(100), '+
+      'City2 VARCHAR(50), '+
+      'State2 VARCHAR(25), '+
+      'Zip2 VARCHAR(10), '+
+      'Country2 VARCHAR(25), '+
+      'Notes VARCHAR, '+
+      'EMail1 VARCHAR(100), '+
+      'EMail2 VARCHAR(100), '+
+      'EMail3 VARCHAR(100), '+
+      'EMailType1 INTEGER, '+
+      'EMailType2 INTEGER, '+
+      'EMailType3 INTEGER, '+
+      'Phone1 VARCHAR(25), '+
+      'Phone2 VARCHAR(25), '+
+      'Phone3 VARCHAR(25), '+
+      'Phone4 VARCHAR(25), '+
+      'Phone5 VARCHAR(25), '+
+      'PhoneType1 INTEGER, '+
+      'PhoneType2 INTEGER, '+
+      'PhoneType3 INTEGER, '+
+      'PhoneType4 INTEGER, '+
+      'PhoneType5 INTEGER, '+
+      'Website1 VARCHAR(100), '+
+      'Website2 VARCHAR(100), '+
+      'WebsiteType1 INTEGER, '+
+      'WebsiteType2 INTEGER, '+
+      'Category INTEGER, '+
+      'Custom1 VARCHAR(100), '+
+      'Custom2 VARCHAR(100),'+
+      'Custom3 VARCHAR(100), '+
+      'Custom4 VARCHAR(100) )'
+    );
+  ODBCConnection1.ExecuteDirect(
+    'CREATE UNIQUE INDEX piCRecordID ON Contacts(RecordID) WITH PRIMARY');
+  ODBCConnection1.ExecuteDirect(
+    'CREATE INDEX siCResourceID ON Contacts(ResourceID)');
+  ODBCConnection1.ExecuteDirect(
+    'CREATE INDEX siCName ON Contacts(LastName, FirstName)' );
+  ODBCConnection1.ExecuteDirect(
+    'CREATE INDEX siCCompany ON Contacts(Company)');
+end;
+
+procedure TForm1.CreateEventsTable;
+begin
+  ODBCConnection1.ExecuteDirect(
+    'CREATE TABLE Events ('+
+      'RecordID COUNTER, ' +
+      'ResourceID INTEGER, '+
+      'StartTime DATETIME, '+
+      'EndTime DATETIME, '+
+      'Description VARCHAR(255), '+
+      'Location VARCHAR(255), '+
+      'Notes VARCHAR, ' +
+      'Category INTEGER, '+
+      'AllDayEvent LOGICAL, '+
+      'DingPath VARCHAR(255), '+
+      'AlarmSet LOGICAL, '+
+      'AlarmAdvance INTEGER, '+
+      'AlarmAdvanceType INTEGER, '+
+      'SnoozeTime DATETIME, '+
+      'RepeatCode INTEGER, '+
+      'RepeatRangeEnd DATETIME, '+
+      'CustomInterval INTEGER)'
+  );
+  ODBCConnection1.ExecuteDirect(
+    'CREATE UNIQUE INDEX piERecordID ON Events(RecordID) WITH PRIMARY');
+  ODBCConnection1.ExecuteDirect(
+    'CREATE INDEX EResourceID ON Events(ResourceID)');
+  ODBCConnection1.ExecuteDirect(
+    'CREATE INDEX EStartTime ON Events(StartTime)');
+  ODBCConnection1.ExecuteDirect(
+    'CREATE INDEX EEndTime ON Events(EndTime)');
+end;
+
+procedure TForm1.CreateResourceTable;
+begin
+  ODBCConnection1.ExecuteDirect(
+    'CREATE TABLE Resources ( '+
+       'ResourceID COUNTER, ' +
+       'Description VARCHAR(255), '+
+       'Notes VARCHAR, '+                           // 1024 --> -
+       'ImageIndex INTEGER, '+
+       'ResourceActive LOGICAL, '+                  // BOOL --> LOGICAL
+       'UserField0 VARCHAR(100), '+
+       'UserField1 VARCHAR(100), '+
+       'UserField2 VARCHAR(100), '+
+       'UserField3 VARCHAR(100), '+
+       'UserField4 VARCHAR(100), '+
+       'UserField5 VARCHAR(100), '+
+       'UserField6 VARCHAR(100), '+
+       'UserField7 VARCHAR(100), '+
+       'UserField8 VARCHAR(100), '+
+       'UserField9 VARCHAR(100) )'
+  );
+  ODBCConnection1.ExecuteDirect(
+    'CREATE UNIQUE INDEX piRResourceID ON Resources(ResourceID) WITH PRIMARY'
+  );
+end;
+
+procedure TForm1.CreateTasksTable;
+begin
+  ODBCConnection1.ExecuteDirect(
+    'CREATE TABLE Tasks ('+
+      'RecordID COUNTER, ' +
+      'ResourceID INTEGER, '+
+      'Complete LOGICAL, '+
+      'Description VARCHAR(255), '+
+      'Details VARCHAR, '+
+      'CreatedOn DATETIME, '+
+      'Priority INTEGER, '+
+      'Category INTEGER, '+
+      'CompletedOn DATETIME, '+
+      'DueDate DATETIME)'
+  );
+  ODBCConnection1.ExecuteDirect(
+    'CREATE UNIQUE INDEX piTRecordID ON Tasks(RecordID) WITH PRIMARY'
+  );
+  ODBCConnection1.ExecuteDirect(
+    'CREATE INDEX siTDueDate ON Tasks(DueDate)'
+  );
+  ODBCConnection1.ExecuteDirect(
+    'CREATE INDEX siTCompletedOn ON Tasks(CompletedOn)'
+  );
+end;
+
 // Setting up the database connection and the datastore. Preselect a resource
 // in the resource combo.
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  if not FileExists('data.mdb') then begin
-    MessageDlg('Database file "data.mdb" does not exist. ' + LineEnding +
-      'Please run "CreateAccessDB" to create an empty Access database file.',
+  if not FileExists(DB_NAME) then begin
+    MessageDlg('Database file "' + DB_NAME + '" does not exist. ' + LineEnding +
+      'Please run "CreateAccessDB" to create an empty Access database file.' + LineEnding +
+      'Or copy an empty database file, data.mdb or data.accdb, from the '+
+      'folder "empty_db" to the current directory.',
       mtError, [mbOK], 0);
     Close;exit;
   end;
 
   try
     // Connection
+    {$IFDEF MDB}
     ODBCConnection1.Driver := 'Microsoft Access Driver (*.mdb)';
+    {$ENDIF}
+    {$IFDEF ACCDB}
+    ODBCConnection1.Driver := 'Microsoft Access Driver (*.mdb, *.accdb)';
+    {$ENDIF}
     ODBCConnection1.Params.Clear;
-    ODBCConnection1.Params.Add('DBQ=.\data.mdb');
+    ODBCConnection1.Params.Add('DBQ=' + DB_NAME);
     ODBCConnection1.Connected := true;
     ODBCConnection1.KeepConnection := true;
 
@@ -225,6 +396,15 @@ begin
   Grid.Datasource.Dataset.Open;
   for i:=0 to Grid.Columns.Count-1 do
     Grid.Columns[i].Width := 100;;
+end;
+
+procedure TForm1.VpFlexDataStore1CreateTable(Sender: TObject; TableName: String
+  );
+begin
+  if TableName = ResourceTableName then CreateResourceTable;
+  if TableName = ContactsTableName then CreateContactsTable;
+  if TableName = EventsTableName then CreateEventsTable;
+  if TableName = TasksTableName then CreateTasksTable;
 end;
 
 end.

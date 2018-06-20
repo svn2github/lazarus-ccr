@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 262
+  Left = 413
   Height = 285
-  Top = 155
+  Top = 171
   Width = 400
   AutoSize = True
   Caption = 'Access database creator'
@@ -9,7 +9,7 @@ object Form1: TForm1
   ClientWidth = 400
   Constraints.MinWidth = 400
   OnCreate = FormCreate
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.9.0.0'
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23
@@ -103,28 +103,13 @@ object Form1: TForm1
       TabOrder = 0
       Text = '.\data.mdb'
     end
-    object Label1: TLabel
-      AnchorSideLeft.Control = FileNameEdit
-      AnchorSideTop.Control = FileNameEdit
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = FileNameEdit
-      AnchorSideRight.Side = asrBottom
-      Left = 16
-      Height = 30
-      Top = 47
-      Width = 368
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 8
-      Caption = 'Use extension .mdb for old Access 97/2000 file format,'#13#10'.accdb for new Access 2007+ file format.'
-      ParentColor = False
-    end
     object CbCreateVPFields: TCheckBox
       AnchorSideLeft.Control = FileNameEdit
-      AnchorSideTop.Control = Label1
+      AnchorSideTop.Control = RgFormat
       AnchorSideTop.Side = asrBottom
       Left = 16
       Height = 19
-      Top = 85
+      Top = 125
       Width = 140
       BorderSpacing.Top = 8
       BorderSpacing.Bottom = 16
@@ -133,13 +118,42 @@ object Form1: TForm1
       State = cbChecked
       TabOrder = 1
     end
+    object RgFormat: TRadioGroup
+      AnchorSideLeft.Control = FileNameEdit
+      AnchorSideTop.Control = FileNameEdit
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 62
+      Top = 55
+      Width = 267
+      AutoFill = True
+      AutoSize = True
+      BorderSpacing.Top = 16
+      Caption = 'Access database format'
+      ChildSizing.LeftRightSpacing = 16
+      ChildSizing.TopBottomSpacing = 2
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 42
+      ClientWidth = 263
+      ItemIndex = 0
+      Items.Strings = (
+        '.mdb (Access 97, 2000, 2003), 32 bit only'
+        '.accdb (Access 2007+), 32 bit and 64 bit'
+      )
+      OnClick = RgFormatClick
+      TabOrder = 2
+    end
   end
   object ODBCConnection1: TODBCConnection
     Connected = False
     LoginPrompt = False
     KeepConnection = False
     Transaction = SQLTransaction1
-    Options = []
     left = 48
     top = 168
   end
@@ -147,7 +161,6 @@ object Form1: TForm1
     Active = False
     Action = caCommit
     Database = ODBCConnection1
-    Options = []
     left = 152
     top = 168
   end

@@ -8,7 +8,7 @@ object Form1: TForm1
   ClientWidth = 980
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.9.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 33
@@ -162,7 +162,6 @@ object Form1: TForm1
           Align = alBottom
           TabStop = True
           TabOrder = 1
-          KBNavigation = True
           DateLabelFormat = 'mmmm yyyy'
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Font.Name = 'Tahoma'
@@ -171,6 +170,7 @@ object Form1: TForm1
           DrawingStyle = dsFlat
           EventDayStyle = []
           HeadAttributes.Color = clBtnFace
+          KBNavigation = True
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
@@ -357,7 +357,7 @@ object Form1: TForm1
     top = 168
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.05'
+    Version = 'v1.12'
     DataStore = VpFlexDataStore1
     Options = []
     Placement.Position = mpCenter
@@ -401,6 +401,7 @@ object Form1: TForm1
     DataSources.ContactsDataSource = DsContacts
     DataSources.TasksDataSource = DsTasks
     ResourceID = 0
+    OnCreateTable = VpFlexDataStore1CreateTable
     left = 136
     top = 101
     ResourceFieldMappings = (
@@ -1294,15 +1295,14 @@ object Form1: TForm1
       ''
     )
     Transaction = SQLTransaction1
-    Options = []
     Driver = 'Microsoft Access Driver (*.mdb)'
     left = 136
     top = 304
   end
   object SQLTransaction1: TSQLTransaction
     Active = False
+    Action = caCommitRetaining
     Database = ODBCConnection1
-    Options = []
     left = 136
     top = 368
   end

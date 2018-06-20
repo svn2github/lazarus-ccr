@@ -18,17 +18,19 @@ type
     BtnClose: TButton;
     CbCreateVPFields: TCheckBox;
     FileNameEdit: TFileNameEdit;
-    Label1: TLabel;
     ODBCConnection1: TODBCConnection;
     Panel1: TPanel;
     Panel2: TPanel;
+    RgFormat: TRadioGroup;
     SQLTransaction1: TSQLTransaction;
     StatusBar1: TStatusBar;
     procedure BtnCreateDBClick(Sender: TObject);
     procedure BtnCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure RgFormatClick(Sender: TObject);
   private
-    function CreateAccessDatabase(DatabaseFile: string): boolean;
+    function CreateAccessDatabase(ADatabaseFile: string;
+      out AErrorMsg: String): boolean;
     procedure CreateContactsTable;
     procedure CreateEventsTable;
     procedure CreateResourceTable;
@@ -48,7 +50,16 @@ implementation
 uses
   LCLType, LazFileUtils;
 
-Const
+const
+   DB_DRIVERS: array[0..1] of String = (
+     'Microsoft Access Driver (*.mdb)',
+     'Microsoft Access Driver (*.mdb, *.accdb)'
+   );
+   EXT: array[0..1] of String = (
+     '.mdb',
+     '.accdb'
+   );
+
    ODBC_ADD_DSN = 1;
    ODBC_CONFIG_DSN = 2;
    ODBC_REMOVE_DSN = 3;
@@ -69,26 +80,34 @@ function SQLInstallerError(iError: integer; pfErrorCode: PInteger;
 procedure TForm1.BtnCreateDBClick(Sender: TObject);
 var
   fn: String;
+  errMsg: String;
 begin
   if FileNameEdit.FileName = '' then
     exit;
-  fn := ExpandFileNameUTF8(FilenameEdit.FileName);
+
+  fn := ChangeFileExt(FilenameEdit.FileName, EXT[RgFormat.ItemIndex]);
+  fn := ExpandFileNameUTF8(fn);
   if FileExistsUTF8(fn) then
     DeleteFileUTF8(fn);
 
   // Create empty database file
-  CreateAccessDatabase(fn);
-  StatusMsg('Database file created');
+  if CreateAccessDatabase(fn, errMsg) then
+    StatusMsg('Database file created')
+  else begin
+    MessageDlg('Database file could not be created:' + LineEnding + errMsg,
+      mtError, [mbOK], 0);
+    exit;
+  end;
 
   if CbCreateVPFields.Checked then begin
     //connection
-    ODBCConnection1.Driver := 'Microsoft Access Driver (*.mdb, *.accdb)';
+    ODBCConnection1.Driver := DB_DRIVERS[RgFormat.ItemIndex];
     ODBCConnection1.Params.Add('DBQ=' + fn);
-    ODBCConnection1.Params.Add('Locale Identifier=1031');
-    ODBCConnection1.Params.Add('ExtendedAnsiSQL=1');
-    ODBCConnection1.Params.Add('CHARSET=ansi');
-    ODBCConnection1.Connected := True;
+//    ODBCConnection1.Params.Add('Locale Identifier=1031');
+//    ODBCConnection1.Params.Add('ExtendedAnsiSQL=1');
+//    ODBCConnection1.Params.Add('CHARSET=ansi');
     ODBCConnection1.KeepConnection := True;
+    ODBCConnection1.Connected := True;
 
     //transaction
     SQLTransaction1.DataBase := ODBCConnection1;
@@ -113,55 +132,64 @@ begin
   Close;
 end;
 
-function TForm1.CreateAccessDatabase(DatabaseFile: string): boolean;
+function TForm1.CreateAccessDatabase(ADatabaseFile: string;
+  out AErrorMsg: String): boolean;
 var
   dbType: string;
   driver: string;
   ErrorCode, ResizeErrorMessage: integer;
   ErrorMessage: PChar;
   retCode: integer;
+  L: TStrings;
 begin
-  driver := 'Microsoft Access Driver (*.mdb, *.accdb)';
+  Result := false;
+  AErrorMsg := '';
 
-  { With this driver,
+  driver := DB_DRIVERS[rgFormat.ItemIndex];
+
+  { With the new accdb driver,
   CREATE_DB/CREATE_DBV12 will create an .accdb format database;
   CREATE_DBV4 will create an mdb
   http://stackoverflow.com/questions/9205633/how-do-i-specify-the-odbc-access-driver-format-when-creating-the-database
   }
 
-  case Lowercase(ExtractFileExt(DatabaseFile)) of
-    '', '.', '.mdb':
-      dbType := 'CREATE_DBV4="' + DatabaseFile + '"';
-    '.accdb':
-      dbtype := 'CREATE_DBV12="' + DatabaseFile + '"';
-    else
-      raise Exception.CreateFmt('File format "%s" not supported.', [ExtractFileExt(DatabaseFile)]);
+  case rgFormat.ItemIndex of
+    0 : dbtype := 'CREATE_DB="' + ADatabaseFile + '"';
+    1 : case Lowercase(ExtractFileExt(ADatabaseFile)) of
+          '', '.', '.mdb': dbType := 'CREATE_DBV4="' + ADatabaseFile + '"';
+          '.accdb'       : dbtype := 'CREATE_DBV12="' + ADatabaseFile + '"';
+        else
+          raise Exception.CreateFmt('File format "%s" not supported.', [ExtractFileExt(ADatabaseFile)]);
+        end;
   end;
 
-//  DBPChar := 'CREATE_DBV4="' + DatabaseFile + '"';
   retCode := SQLConfigDataSource(Hwnd(nil), ODBC_ADD_DSN, PChar(driver), PChar(dbType));
-  if retCode <> 0 then
+  // returns 1 in case of success, 0 in case of failure
+  if retCode <> 0 then begin
+    if not FileExists(ADatabaseFile) then
+      AErrorMsg := 'Successful creation reported, but file not found.'
+    else
+      Result := true
+  end else
   begin
-    //try alternate driver
-    driver := 'Microsoft Access Driver (*.mdb)';
-    dbType := 'CREATE_DB="' + DatabaseFile + '"';
-    retCode := SQLConfigDataSource(Hwnd(nil), ODBC_ADD_DSN, PChar(driver), PChar(dbType));
-  end;
-  if retCode = 0 then
-    result := true
-  else
-  begin
-    result := false;
     ErrorCode := 0;
     ResizeErrorMessage := 0;
     // todo: verify how the DLL is called - use pointers?; has not been tested.
     GetMem(ErrorMessage, 512);
     try
       SQLInstallerError(1, @ErrorCode, ErrorMessage, SizeOf(ErrorMessage), @ResizeErrorMessage);
+      L := TStringList.Create;
+      try
+        L.Delimiter := ';';
+        L.StrictDelimiter := true;
+        L.DelimitedText := ErrorMessage;
+        AErrorMsg := L.Text;
+      finally
+        L.Free;
+      end;
     finally
       FreeMem(ErrorMessage);
     end;
-    raise Exception.CreateFmt('Error creating Access database: %s', [ErrorMessage]);
   end;
 end;
 
@@ -319,6 +347,12 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   FilenameEdit.ButtonWidth := FilenameEdit.Height;
+end;
+
+procedure TForm1.RgFormatClick(Sender: TObject);
+begin
+  if FilenameEdit.Filename <> '' then
+    FilenameEdit.FileName := ChangeFileExt(FileNameEdit.FileName, EXT[RgFormat.ItemIndex]);
 end;
 
 procedure TForm1.StatusMsg(const AText: String);
