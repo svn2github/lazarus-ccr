@@ -675,7 +675,6 @@ object DlgEventEdit: TDlgEventEdit
         OnClick = IntervalUpDownClick
         Position = 0
         TabOrder = 10
-        Wrap = False
       end
       object ImgAlarm: TImage
         AnchorSideLeft.Control = AppointmentGroupBox
@@ -805,7 +804,6 @@ object DlgEventEdit: TDlgEventEdit
         OnClick = AdvanceUpDownClick
         Position = 1
         TabOrder = 14
-        Wrap = False
       end
       object AlarmAdvanceType: TComboBox
         AnchorSideLeft.Control = AdvanceUpDown

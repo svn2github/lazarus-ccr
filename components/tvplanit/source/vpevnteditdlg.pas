@@ -138,6 +138,10 @@ type
     FDatastore: TVpCustomDatastore;
     AAVerifying: Boolean;
     CIVerifying: Boolean;
+   {$IFDEF NEW_TIME_EDIT}
+    procedure AcceptStartTimeHandler(Sender: TObject; var ATime: TDateTime;
+      var AcceptTime: Boolean);
+   {$ENDIF}
     procedure PopLists;
     procedure PositionControls;
     procedure LoadCaptions;
@@ -151,14 +155,14 @@ type
     CatColorMap: TVpCategoryColorMap;
     Resource: TVpResource;
     ReturnCode: TEventEditDlgRtnType;
-    Conflicts : Integer;
+    Conflicts: Integer;
     TimeFormat: TVpTimeFormat;
     AlarmWavPath: string;
-    FLastEndTime : TDateTime;
-
+    FLastEndTime: TDateTime;
     procedure PopulateDialog;
     procedure DePopulateDialog;
   end;
+
 
   TVpEventEditDialog = class(TVpBaseDialog)
   protected {private}
@@ -212,10 +216,25 @@ end;
 
 { TDlgEventEdit }
 
+{$IFDEF NEW_TIME_EDIT}
+procedure TDlgEventEdit.AcceptStartTimeHandler(Sender: TObject;
+  var ATime: TDateTime; var AcceptTime: Boolean);
+var
+  dt: TDateTime;
+  enddt: TDateTime;
+begin
+  dt := EndDate.Date + EndTime.Time - StartDate.Date - StartTime.Time;
+  enddt := StartDate.Date + ATime + dt;
+  EndDate.Date := trunc(enddt);
+  EndTime.Time := frac(enddt);
+end;
+{$ENDIF}
+
 procedure TDlgEventEdit.FormCreate(Sender: TObject);
 begin
  {$IFDEF NEW_TIME_EDIT}
   StartTime := TTimeEdit.Create(self);
+  StartTime.OnAcceptTime := AcceptStartTimeHandler;
  {$ELSE}
   StartTime := TCombobox.Create(self);
   StartTime.ItemIndex := -1;
