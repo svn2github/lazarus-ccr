@@ -359,13 +359,7 @@ type
     procedure SetHint(const AValue: TTranslateString); override;
     procedure SetHintMode(const AValue: TVpHintMode);
 
-    { internal methods }
-    function dvCalcRowHeight(Scale: Extended; UseGran: TVpGranularity): Integer;
-    function dvCalcVisibleLines(RenderHeight, ColHeadHeight, ARowHeight: Integer;
-      Scale: Extended; StartLine, StopLine: Integer): Integer;
-    function dvCalcColHeadHeight(Scale: Extended): Integer;
-    procedure dvEditInPlace(Sender: TObject);
-    procedure dvHookUp;
+    { Popup }
     procedure PopupAddEvent(Sender: TObject);
     procedure PopupAddFromICalFile(Sender: TObject);
     procedure PopupDeleteEvent(Sender: TObject);
@@ -384,29 +378,39 @@ type
     procedure PopupPickResourceGroupEvent(Sender: TObject);
     procedure PopupDropdownEvent(Sender: TObject);
     procedure InitializeDefaultPopup;
-    procedure Paint; override;
-    procedure Loaded; override;
+
+    { internal methods }
+    procedure CreateParams(var Params: TCreateParams); override;
+    procedure CreateWnd; override;
+    function dvCalcRowHeight(Scale: Extended; UseGran: TVpGranularity): Integer;
+    function dvCalcVisibleLines(RenderHeight, ColHeadHeight, ARowHeight: Integer;
+      Scale: Extended; StartLine, StopLine: Integer): Integer;
+    function dvCalcColHeadHeight(Scale: Extended): Integer;
+    procedure dvEditInPlace(Sender: TObject);
+    procedure dvHookUp;
+    procedure dvNavButtonsClick(Sender: TObject);
+    procedure dvPopulate;
+    procedure dvScrollVertical(Lines: Integer);
     procedure dvSpawnEventEditDialog(IsNewEvent: Boolean);
     procedure dvSetActiveRowByCoord(Pnt: TPoint; Sloppy: Boolean);
     procedure dvSetActiveColByCoord(Pnt: TPoint);
-    procedure dvPopulate;
-    procedure dvNavButtonsClick(Sender: TObject);
-    procedure dvScrollVertical(Lines: Integer);
-    procedure CreateParams(var Params: TCreateParams); override;
-    procedure CreateWnd; override;
+    procedure EditEvent;
+    function EditEventAtCoord(APoint: TPoint): Boolean;
+    procedure EndEdit(Sender: TObject);
+    function GetEventAtCoord(APoint: TPoint): TVpEvent;
+    function GetEventRect(AEvent: TVpEvent): TRect;
+    procedure SetActiveEventByCoord(APoint: TPoint);
+    procedure SetTimeIntervals(UseGran: TVpGranularity);
+
+    { inherited methods }
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure Loaded; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
-    procedure SetActiveEventByCoord(APoint: TPoint);
-    function EditEventAtCoord(APoint: TPoint): Boolean;
-    function GetEventAtCoord(APoint: TPoint): TVpEvent;
-    function GetEventRect(AEvent: TVpEvent): TRect;
-    procedure EditEvent;
-    procedure EndEdit(Sender: TObject);
-    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    procedure SetTimeIntervals(UseGran: TVpGranularity);
+    procedure Paint; override;
 
     { message handlers }
     procedure VpDayViewInit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_DayViewInit;

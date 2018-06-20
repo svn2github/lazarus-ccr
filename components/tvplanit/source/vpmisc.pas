@@ -154,6 +154,8 @@ function GetTimeFormatStr(ATimeFormat: TVpTimeFormat): String;
 function HourToAMPM(Hour: TVpHours): string;
 function HourToStr(Hour: TVpHours; Mil: Boolean): string;
 
+function NextFullHour(ADateTime: TDateTime): TDateTime;
+
 function HourToLine(const Value: TVpHours; const Granularity: TVpGranularity): Integer;
 function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;
 function GetEndLine(EndTime: TDateTime; Granularity: TVpGranularity): Integer;
@@ -710,6 +712,20 @@ begin
     Result := '12'
   else
     Result := IntToStr(ord(Hour) mod 12);
+end;
+
+{ Calculates the time of the next full hour }
+function NextFullHour(ADateTime: TDateTime): TDateTime;
+var
+  hr, min, sec, ms: Word;
+  dt: TDate;
+begin
+  dt := Trunc(ADateTime);
+  DecodeTime(ADateTime, hr, min, sec, ms);
+  if hr = 23 then
+    Result := dt + 1
+  else
+    Result := dt + EncodeTime(hr + 1, 0, 0, 0);
 end;
 
 function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;

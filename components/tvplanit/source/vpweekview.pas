@@ -184,9 +184,7 @@ type
     procedure SetActiveDate(Value: TDateTime);
     procedure SetWeekStartsOn(Value: TVpDayType);
 
-    { internal methods }
-    procedure wvEditInPlace(Sender: TObject);
-    procedure wvHookUp;
+    { Popup }
     procedure PopupAddEvent(Sender: TObject);
     procedure PopupAddFromICalFile(Sender: TObject);
     procedure PopupDeleteEvent(Sender: TObject);
@@ -201,6 +199,10 @@ type
     procedure PopupPickResourceGroupEvent(Sender: TObject);
     procedure PopupDropdownEvent(Sender: TObject);
     procedure InitializeDefaultPopup;
+
+    { internal methods }
+    procedure wvEditInPlace(Sender: TObject);
+    procedure wvHookUp;
     procedure wvPopulate;
     procedure wvSpinButtonClick(Sender: TObject; Button: TUDBtnType);
 
@@ -218,9 +220,9 @@ type
     procedure CreateWnd; override;
     procedure Loaded; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure Paint; override;
@@ -1019,7 +1021,7 @@ begin
     Exit;
 
   wvSetDateByCoord(Point(Msg.XPos, Msg.YPos));
-  EventAtCoord(Point (Msg.XPos, Msg.YPos));
+  EventAtCoord(Point(Msg.XPos, Msg.YPos));
 
   // if the mouse was pressed down in the client area, then select the cell.
   if not focused then
@@ -1036,7 +1038,8 @@ begin
     else
     if (DataStore.Resource <> nil) then begin
       { otherwise, we must want to create a new event }
-      StartTime := trunc(Date) + 0.5; { default to 12:00 noon }
+      StartTime := NextFullHour(Now());
+//      StartTime := trunc(Date) + 0.5; { default to 12:00 noon }
       EndTime := StartTime + 30 / MinutesInDay; { StartTime + 30 minutes }
       ActiveEvent := DataStore.Resource.Schedule.AddEvent(
         DataStore.GetNextID('Events'),
@@ -1227,8 +1230,8 @@ begin
   then
     Exit;
 
-  StartTime := trunc(Date) + 1 / 2; { default to 12:00 noon }
-  EndTime := StartTime + (30 / MinutesInDay); { StartTime + 30 minutes }
+  StartTime := NextFullHour(Now());       { Default start time: next full hour }
+  EndTime := StartTime + 30 / MinutesInDay;           { StartTime + 30 minutes }
   ActiveEvent := DataStore.Resource.Schedule.AddEvent(
     DataStore.GetNextID('Events'),
     StartTime,
