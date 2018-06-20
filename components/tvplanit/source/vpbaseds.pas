@@ -657,12 +657,12 @@ begin
   DecodeDate(OldDate, oy, om, Day);
   DecodeDate(FActiveDate, ny, nm, Day);
 
-  { If the date has reached the end of the data buffer }
-  if (FActiveDate >= FTimeRange.EndTime)
-  or (FActiveDate <= FTimeRange.StartTime)
-  { or the month or year has changed... }
-  or (nm <> om) or (ny <> oy) then begin
-  { then load the data that falls into the current time range }
+  { If the date has reached the end of the data buffer ... }
+  if (FActiveDate >= FTimeRange.EndTime) or (FActiveDate <= FTimeRange.StartTime)
+    { ... or the month or year has changed ... }
+    or (nm <> om) or (ny <> oy) then
+  begin
+    { ... then load the data that falls into the current time range }
     SetRange(FActiveDate - FDayBuffer, FActiveDate + FDayBuffer);
     RefreshEvents;
   end;

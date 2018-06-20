@@ -1021,15 +1021,15 @@ procedure TVpMonthView.WMLButtonDown(var Msg: TLMLButtonDown);
 begin
   inherited;
   // if the mouse was pressed down in the client area, then select the cell.
-  if not focused then SetFocus;
+  if not Focused then SetFocus;
 
   if (Msg.YPos > mvDayHeadHeight) then
   begin
     { The mouse click landed inside the client area }
     MvSetDateByCoord(Point(Msg.XPos, Msg.YPos));
     { Did the mouse click land on an event? }
-    if SelectEventAtCoord(Point(Msg.XPos, Msg.YPos))
-    and (Assigned(FOnEventClick)) then
+    if SelectEventAtCoord(Point(Msg.XPos, Msg.YPos)) then
+      if (Assigned(FOnEventClick)) then
         FOnEventClick(self, mvActiveEvent);
   end;
 end;
