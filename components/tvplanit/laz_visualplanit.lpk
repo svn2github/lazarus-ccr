@@ -31,7 +31,7 @@ The Initial Developer of the Original Code is TurboPower Software.
 Portions created by TurboPower Software Inc. are Copyright (C) 2002 TurboPower Software Inc. All Rights Reserved. 
 
 Contributor(s): "/>
-    <Version Major="1" Release="11"/>
+    <Version Major="1" Minor="2"/>
     <Files Count="74">
       <Item1>
         <Filename Value="source\vpbase.pas"/>

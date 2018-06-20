@@ -11,7 +11,7 @@ Table of contents
 4.2   Release 1.0.4
 4.3   Release 1.0.6
 4.4   Releases 1.0.8 and 1.0.10
-4.4   Current development version (1.0.11)
+4.5   Release 1.2.0
 5.  Additional help
 5.1   Original TurboPower documentation
 5.2   Wiki page
@@ -130,11 +130,17 @@ steps:
   - Bug fixes
   - JSON datastore
   - Improved integration of the LCL scaling of Lazarus 1.8
-  - Fix VpNavBar component editor 
+  - VpNavBar component editor working in Lazarus version
   
-4.5 Current development version (1.0.11)
+4.5 Release 1.2.0
+ 
+  - New properties ShowNavButtons, FixedDate, RowHeight, RowLinesStep, 
+    SimpleRowTime of VpDayView
+  - VpContactGrid can import contacts from vCard files (*.vcf)
+  - VpDayView/VpWeekView and VpTaskList can import events and tasks,
+    respectively, from iCalendar files (*.ical, *.ics)
+  - New property CaptionStyle of VpContactButtons.
 
-  - ...
   
 ================================================================================
 

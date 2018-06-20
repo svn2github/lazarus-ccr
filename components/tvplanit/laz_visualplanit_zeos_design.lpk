@@ -15,7 +15,7 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Visual PlanIt datastore for ZEOS database components (Designtime package)"/>
-    <Version Major="1" Release="11"/>
+    <Version Major="1" Minor="2"/>
     <Files Count="1">
       <Item1>
         <Filename Value="source\addons\zeos\vpregzeos.pas"/>
