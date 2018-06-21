@@ -44,6 +44,7 @@ type
 
   TTextPos = (tpNone, tpLeft, tpRight, tpAbove, tpBelow);
   TSwithState = (sw_off, sw_on);
+  TSwithStyle = (swsClassic, swsNewHorizontal, swsNewVertical, swsCustom);
   TSwitchBitmaps = set of TSwithState;
 
   TRxSwitch = class(TCustomControl)
@@ -54,6 +55,7 @@ type
     FOnOn: TNotifyEvent;
     FOnOff: TNotifyEvent;
     FStateOn: TSwithState;
+    FStyle: TSwithStyle;
     FTextPosition: TTextPos;
     FBorderStyle: TBorderStyle;
     FToggleKey: TShortCut;
@@ -63,6 +65,7 @@ type
     function GetSwitchGlyphOn: TBitmap;
     procedure GlyphChanged(Sender: TObject);
     procedure SetStateOn(Value: TSwithState);
+    procedure SetStyle(AValue: TSwithStyle);
     procedure SetSwitchGlyphOff(const AValue: TBitmap);
     procedure SetSwitchGlyphOn(const AValue: TBitmap);
     procedure SetTextPosition(Value: TTextPos);
@@ -105,27 +108,24 @@ type
     property DragCursor;
     property Enabled;
     property Font;
-    property GlyphOff: TBitmap read GetSwitchGlyphOff write SetSwitchGlyphOff
-      stored StoreBitmapOff;
-    property GlyphOn: TBitmap read GetSwitchGlyphOn write SetSwitchGlyphOn
-      stored StoreBitmapOn;
+    property GlyphOff: TBitmap read GetSwitchGlyphOff write SetSwitchGlyphOff stored StoreBitmapOff;
+    property GlyphOn: TBitmap read GetSwitchGlyphOn write SetSwitchGlyphOn stored StoreBitmapOn;
     property ParentColor;
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
     property ShowFocus: Boolean read FShowFocus write SetShowFocus default True;
-    property ToggleKey: TShortCut read FToggleKey write FToggleKey
-      default VK_SPACE;
+    property ToggleKey: TShortCut read FToggleKey write FToggleKey default VK_SPACE;
     property ShowHint;
     property StateOn: TSwithState read FStateOn write SetStateOn default sw_off;
     property TabOrder;
     property TabStop default True;
-    property TextPosition: TTextPos read FTextPosition write SetTextPosition
-      default tpNone;
+    property TextPosition: TTextPos read FTextPosition write SetTextPosition default tpNone;
     property Anchors;
     property Constraints;
     property DragKind;
     property Visible;
+    property Style:TSwithStyle read FStyle write SetStyle;
     property OnClick;
     property OnDblClick;
     property OnEnter;
@@ -498,6 +498,12 @@ begin
     else
       DoOff;
   end;
+end;
+
+procedure TRxSwitch.SetStyle(AValue: TSwithStyle);
+begin
+  if FStyle=AValue then Exit;
+  FStyle:=AValue;
 end;
 
 procedure TRxSwitch.SetSwitchGlyphOff(const AValue: TBitmap);

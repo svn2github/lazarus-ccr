@@ -178,6 +178,14 @@
       </element><element name="TRxDBGridFooterOptions.DrawFullLine"><short>Рисовать линии сетки RxDBGrid полностью</short><descr>Рисовать линии сетки RxDBGrid полностью
 В противнгом случае в область между данными и итогом не будут отображаться линии колонок</descr>
       </element>
+    <element name="TOptionRx.rdgMrOkOnDblClik"><short>Set on owner form property ModalResult to mrOk on mouse doble click</short><descr><p/><p><b>EN</b>
+          </p>
+Set on owner form property ModalResult to mrOk on mouse doble click&lt;/p&gt;
+  <p><p><b>RU</b>
+            </p>
+Если грид находится на модальной форме, то при двойном нажатии мышкой свойство ModalResult формы будет установлено в mrOK</p>
+        </descr>
+      </element>
     </module>
   </package>
 </fpdoc-descriptions>

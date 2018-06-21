@@ -56,6 +56,8 @@ procedure Register;
 implementation
 uses exsortzeos;
 
+{$R RxSortZeos.res}
+
 procedure Register;
 begin
   RegisterComponents('RX DBAware',[TRxSortZeos]);

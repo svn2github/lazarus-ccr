@@ -24,6 +24,8 @@ procedure Register;
 implementation
 uses exsortsql;
 
+{$R RxSortSqlDB.res}
+
 procedure Register;
 begin
   RegisterComponents('RX DBAware',[TRxSortSqlDB]);

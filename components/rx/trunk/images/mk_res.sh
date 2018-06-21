@@ -1,5 +1,18 @@
 rm rx.lrs
 rm rx.res
+
+rm RxSortFBDataSet.lrs
+rm RxSortFBDataSet.res
+
+rm RxSortIBX.lrs
+rm RxSortIBX.res
+
+rm RxSortSqlDB.lrs
+rm RxSortSqlDB.res
+
+rm RxSortZeos.lrs
+rm RxSortZeos.res
+
 /usr/local/share/lazarus/tools/lazres rx.res TRxDateEdit_150.png  TRxDateEdit_200.png TRxDateEdit.png \
   TRxLookupEdit.png TRxLookupEdit_150.png TRxLookupEdit_200.png \
   TRxDBGrid.png TRxDBGrid_150.png TRxDBGrid_200.png \
@@ -50,3 +63,15 @@ rm rx.res
   TRxSystemServices.png TRxSystemServices_150.png TRxSystemServices_200.png \
   TRxVersionInfo.png TRxVersionInfo_150.png TRxVersionInfo_200.png \
   TRxXMLPropStorage.png TRxXMLPropStorage_150.png TRxXMLPropStorage_200.png
+  
+  
+/usr/local/share/lazarus/tools/lazres RxSortFBDataSet.res TRxSortFBDataSet.png TRxSortFBDataSet_150.png TRxSortFBDataSet_200.png
+/usr/local/share/lazarus/tools/lazres RxSortIBX.res TRxSortIBX.png TRxSortIBX_150.png TRxSortIBX_200.png
+/usr/local/share/lazarus/tools/lazres RxSortSqlDB.res TRxSortSqlDB.png TRxSortSqlDB_150.png TRxSortSqlDB_200.png
+/usr/local/share/lazarus/tools/lazres RxSortZeos.res TRxSortZeos.png TRxSortZeos_150.png TRxSortZeos_200.png
+
+cp rx.res ..
+cp RxSortFBDataSet.res ../rx_sort_fbdataset
+cp RxSortIBX.res ../rx_sort_ibx
+cp RxSortSqlDB.res ../rx_sort_sqldb
+cp RxSortZeos.res ../rx_sort_zeos

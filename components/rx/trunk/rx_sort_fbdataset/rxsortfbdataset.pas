@@ -54,6 +54,8 @@ procedure Register;
 implementation
 uses exsortfb;
 
+{$R RxSortFBDataSet.res}
+
 procedure Register;
 begin
   RegisterComponents('RX DBAware',[TRxSortFBDataSet]);

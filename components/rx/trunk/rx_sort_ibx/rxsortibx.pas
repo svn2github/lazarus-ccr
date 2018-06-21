@@ -24,6 +24,8 @@ procedure Register;
 implementation
 uses exsortibx;
 
+{$R RxSortIBX.res}
+
 procedure Register;
 begin
   RegisterComponents('RX DBAware',[TRxSortIBX]);

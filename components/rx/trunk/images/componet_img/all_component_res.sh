@@ -1,8 +1,14 @@
 rm tooledit.lrs
-rm rxdbgrid.lrs
 rm tooledit.res
+
+rm rxdbgrid.lrs
 rm rxdbgrid.res
-rm pickdate.rex
+
+rm pickdate.lrs
+rm pickdate.res
+
+rm rxswitch.lrs
+rm rxswitch.res
 
 /usr/local/share/lazarus/tools/lazres rxdbgrid.res rx_markerdown.png rx_markerup.png rx_DropDown.png  rx_Ellipsis.png  rx_Glyph.png  rx_minus.png  rx_plus.png  rx_UpDown.png rx_menu_grid.png
 
