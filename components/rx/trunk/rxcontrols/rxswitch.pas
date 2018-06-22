@@ -44,7 +44,7 @@ type
 
   TTextPos = (tpNone, tpLeft, tpRight, tpAbove, tpBelow);
   TSwithState = (sw_off, sw_on);
-  TSwithStyle = (swsClassic, swsNewHorizontal, swsNewVertical, swsCustom);
+  TSwithStyle = (swsClassic, swsHorizontal, swsVerticalUD, swsVerticalDU);
   TSwitchBitmaps = set of TSwithState;
 
   TRxSwitch = class(TCustomControl)
@@ -125,7 +125,7 @@ type
     property Constraints;
     property DragKind;
     property Visible;
-    property Style:TSwithStyle read FStyle write SetStyle;
+    property Style:TSwithStyle read FStyle write SetStyle default swsClassic;
     property OnClick;
     property OnDblClick;
     property OnEnter;
@@ -166,8 +166,9 @@ var
   I : TSwithState;
 begin
   inherited Create(AOwner);
-  ControlStyle := [csClickEvents, csSetCaption, csCaptureMouse,
-    csOpaque, csDoubleClicks];
+  ControlStyle := [csClickEvents, csSetCaption, csCaptureMouse, csOpaque, csDoubleClicks];
+  FStyle:=swsClassic;
+
   Width := 50;
   Height := 60;
   for I := sw_off to sw_on do
@@ -293,6 +294,11 @@ begin
   Result:=GetSwitchGlyph(sw_on);
 end;
 
+const
+  s_sw_on : array [TSwithStyle] of string = ('rxswitch_on', 'rx_ButtonOnHor', 'rx_ButtonOnVertDown', 'rx_ButtonOnVertUp');
+  s_sw_off : array [TSwithStyle] of string = ('rxswitch_off', 'rx_ButtonOffHor', 'rx_ButtonOffVertUp', 'rx_ButtonOffVertDown');
+
+
 procedure TRxSwitch.SetSwitchGlyph(Index: TSwithState; Value: TBitmap);
 var
   S: String;
@@ -310,14 +316,19 @@ begin
 {      sw_off: FBitmaps[Index].Handle:=CreatePixmapIndirect(@RXSWITCH_OFF[0], GetSysColor(COLOR_BTNFACE));
       sw_on: FBitmaps[Index].Handle:=CreatePixmapIndirect(@RXSWITCH_ON[0],
                                           GetSysColor(COLOR_BTNFACE));}
-      sw_off:S:='rxswitch_off';
-      sw_on:S:='rxswitch_on';
+      //sw_off:S:='rxswitch_off';
+      //sw_on:S:='rxswitch_on';
+      sw_off:S:=s_sw_off[FStyle];
+      sw_on:S:=s_sw_on[FStyle];
     else
       Exit;
     end;
-    B:=CreateResBitmap(S);
-    FBitmaps[Index].Assign(B);
-    B.Free;
+    if S<>'' then
+    begin
+      B:=CreateResBitmap(S);
+      FBitmaps[Index].Assign(B);
+      B.Free;
+    end;
     Exclude(FUserBitmaps, Index);
   end;
 end;
@@ -504,6 +515,8 @@ procedure TRxSwitch.SetStyle(AValue: TSwithStyle);
 begin
   if FStyle=AValue then Exit;
   FStyle:=AValue;
+  SetSwitchGlyph(sw_off, nil);
+  SetSwitchGlyph(sw_on, nil);
 end;
 
 procedure TRxSwitch.SetSwitchGlyphOff(const AValue: TBitmap);

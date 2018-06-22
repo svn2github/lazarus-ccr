@@ -16,3 +16,5 @@ rm rxswitch.res
 
 /usr/local/share/lazarus/tools/lazres pickdate.res rx_next1.png rx_next2.png rx_prev1.png rx_prev2.png
 /usr/local/share/lazarus/tools/lazres rxswitch.res rxswitch_off.png  rxswitch_on.png rx_ButtonOffHor.png rx_ButtonOffVertDown.png rx_ButtonOffVertUp.png rx_ButtonOnHor.png rx_ButtonOnVertDown.png rx_ButtonOnVertUp.png
+
+cp rxswitch.res ../../rxcontrols
