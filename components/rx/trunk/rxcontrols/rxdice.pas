@@ -28,7 +28,7 @@
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
-unit rxdice;
+unit rxDice;
 
 interface
 
@@ -45,7 +45,7 @@ type
   TRxDice = class(TCustomControl)
   private
     { Private declarations }
-    FActive: Boolean;
+    //FActive: Boolean;
     FAutoSize: Boolean;
     FBitmap: TBitmap;
     FInterval: Cardinal;
@@ -58,7 +58,8 @@ type
     FValue: TRxDiceValue;
     FOnStart: TNotifyEvent;
     FOnStop: TNotifyEvent;
-    procedure CMFocusChanged(var Message: TLMessage); message CM_FOCUSCHANGED;
+    procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
+    procedure WMKillFocus(var Message: TLMKillFocus); message LM_KILLFOCUS;
     procedure WMSize(var Message: TLMSize); message LM_SIZE;
     procedure CreateBitmap;
     procedure SetAutoSize(Value: Boolean);
@@ -69,6 +70,7 @@ type
     procedure TimerExpired(Sender: TObject);
   protected
     { Protected declarations }
+    //procedure FocusChanged(AControl: TWinControl); dynamic;
     function GetPalette: HPALETTE; override;
     procedure AdjustSize; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -131,9 +133,9 @@ type
     property OnStartDock;
   end;
 
-{$I RXDICE.INC}
-
 implementation
+
+{$R rxDice.res}
 
 { TRxDice }
 
@@ -186,17 +188,32 @@ procedure TRxDice.DoStop;
 begin
   if Assigned(FOnStop) then FOnStop(Self);
 end;
-
+(*
 procedure TRxDice.CMFocusChanged(var Message: TLMessage);
 var
   Active: Boolean;
 begin
-{  with Message do Active := (Sender = Self);
-  if Active <> FActive then begin
+  with Message do
+    Active := (Sender = Self);
+  if Active <> FActive then
+  begin
     FActive := Active;
-    if FShowFocus then Invalidate;
-  end;}
+    if FShowFocus then
+      Invalidate;
+  end;
   inherited;
+end;
+*)
+procedure TRxDice.WMSetFocus(var Message: TLMSetFocus);
+begin
+  inherited;
+  Invalidate;
+end;
+
+procedure TRxDice.WMKillFocus(var Message: TLMKillFocus);
+begin
+  inherited;
+  Invalidate;
 end;
 
 procedure TRxDice.WMSize(var Message: TLMSize);
@@ -206,15 +223,17 @@ begin
 end;
 
 procedure TRxDice.CreateBitmap;
+var
+  B: TBitmap;
+  S: String;
 begin
   if FBitmap = nil then FBitmap := TBitmap.Create;
-  case FValue of
-    1:FBitmap.Handle := CreatePixmapIndirect(@DICE1[0], GetSysColor(COLOR_BTNFACE));
-    2:FBitmap.Handle := CreatePixmapIndirect(@DICE2[0], GetSysColor(COLOR_BTNFACE));
-    3:FBitmap.Handle := CreatePixmapIndirect(@DICE3[0], GetSysColor(COLOR_BTNFACE));
-    4:FBitmap.Handle := CreatePixmapIndirect(@DICE4[0], GetSysColor(COLOR_BTNFACE));
-    5:FBitmap.Handle := CreatePixmapIndirect(@DICE5[0], GetSysColor(COLOR_BTNFACE));
-    6:FBitmap.Handle := CreatePixmapIndirect(@DICE6[0], GetSysColor(COLOR_BTNFACE));
+  if FValue in [1..6] then
+  begin
+    S:=Format('rxDice%d', [FValue]);
+    B:=CreateResBitmap(S);
+    FBitmap.Assign(B);
+    B.Free;
   end;
 end;
 
@@ -262,7 +281,7 @@ var
       TmpImage.Width := IWidth;
       TmpImage.Height := IHeight;
       TmpImage.Canvas.Brush.Color := Self.Brush.Color;
-//      TmpImage.Canvas.BrushCopy(IRect, FBitmap, IRect, FBitmap.TransparentColor);
+      TmpImage.Canvas.BrushCopy(IRect, FBitmap, IRect, FBitmap.TransparentColor);
       InflateRect(ARect, -1, -1);
 //      Canvas.StretchDraw(ARect, TmpImage);
       Canvas.StretchDraw(ARect, FBitmap);
@@ -275,10 +294,10 @@ var
 begin
   ARect := ClientRect;
   if FBitmap <> nil then DrawBitmap;
-{  if Focused and FShowFocus and TabStop and not (csDesigning in ComponentState) then
+  if Focused and FShowFocus and TabStop and not (csDesigning in ComponentState) then
   begin
     Canvas.DrawFocusRect(ARect);
-  end;}
+  end;
 end;
 
 procedure TRxDice.TimerExpired(Sender: TObject);
@@ -306,7 +325,21 @@ begin
       Rotate := False;
   end;
 end;
-
+(*
+procedure TRxDice.FocusChanged(AControl: TWinControl);
+var
+  Active: Boolean;
+begin
+  Active := (AControl = Self);
+  if Active <> FActive then
+  begin
+    FActive := Active;
+    if FShowFocus then
+      Invalidate;
+  end;
+  inherited;
+end;
+*)
 procedure TRxDice.Change;
 begin
   if Assigned(FOnChange) then FOnChange(Self);

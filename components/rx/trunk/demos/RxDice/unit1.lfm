@@ -1,0 +1,113 @@
+object Form1: TForm1
+  Left = 319
+  Height = 291
+  Top = 138
+  Width = 409
+  Caption = 'RxDice demo'
+  ClientHeight = 291
+  ClientWidth = 409
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object RxDice1: TRxDice
+    Left = 40
+    Height = 66
+    Top = 24
+    Width = 66
+    AutoStopInterval = 1000
+    Interval = 100
+    Rotate = False
+    ShowFocus = True
+    TabOrder = 0
+    TabStop = True
+    OnStart = RxDice1Start
+    OnStop = RxDice1Stop
+  end
+  object Button1: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = SpinEdit2
+    AnchorSideTop.Side = asrBottom
+    Left = 181
+    Height = 36
+    Top = 144
+    Width = 47
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'Start'
+    OnClick = Button1Click
+    TabOrder = 1
+  end
+  object Label1: TLabel
+    AnchorSideLeft.Control = Label3
+    AnchorSideTop.Control = Owner
+    Left = 210
+    Height = 20
+    Top = 6
+    Width = 85
+    BorderSpacing.Around = 6
+    Caption = 'Rotate speed'
+    ParentColor = False
+  end
+  object SpinEdit1: TSpinEdit
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    Left = 216
+    Height = 37
+    Top = 32
+    Width = 146
+    BorderSpacing.Around = 6
+    MaxValue = 10000
+    TabOrder = 2
+    Value = 110
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = Label3
+    AnchorSideTop.Control = SpinEdit1
+    AnchorSideTop.Side = asrBottom
+    Left = 210
+    Height = 20
+    Top = 75
+    Width = 93
+    BorderSpacing.Around = 6
+    Caption = 'Rotate interval'
+    ParentColor = False
+  end
+  object SpinEdit2: TSpinEdit
+    AnchorSideLeft.Control = Label2
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    Left = 216
+    Height = 37
+    Top = 101
+    Width = 146
+    BorderSpacing.Around = 6
+    MaxValue = 10000
+    TabOrder = 3
+    Value = 200
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    Left = 204
+    Height = 1
+    Top = 0
+    Width = 1
+    ParentColor = False
+  end
+  object Label4: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Button1
+    AnchorSideTop.Side = asrBottom
+    Left = 157
+    Height = 20
+    Top = 186
+    Width = 94
+    BorderSpacing.Around = 6
+    Caption = 'Current value :'
+    ParentColor = False
+  end
+end
