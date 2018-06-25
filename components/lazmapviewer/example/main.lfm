@@ -364,7 +364,7 @@ object MainForm: TMainForm
   end
   object GeoNames: TMVGeoNames
     OnNameFound = GeoNamesNameFound
-    left = 520
-    top = 288
+    left = 416
+    top = 232
   end
 end

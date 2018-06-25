@@ -49,7 +49,7 @@ Type
    public
      Procedure CheckCacheSize(Sender: TObject);
      constructor Create(aOwner: TComponent); override;
-     destructor destroy; override;
+     destructor Destroy; override;
      Procedure Add(MapProvider: TMapProvider; const TileId: TTileId; Stream: TMemoryStream);
      Procedure GetFromCache(MapProvider: TMapProvider; const TileId: TTileId; out img: TLazIntfImage);
      function InCache(MapProvider: TMapProvider; const TileId: TTileId): Boolean;

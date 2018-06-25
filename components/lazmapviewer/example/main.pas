@@ -204,6 +204,7 @@ end;
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   WriteToIni;
+  ClearFoundLocations;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
