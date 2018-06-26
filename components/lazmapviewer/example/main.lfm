@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 258
+  Left = 345
   Height = 545
-  Top = 127
+  Top = 121
   Width = 869
   Caption = 'MainForm'
   ClientHeight = 545
@@ -364,7 +364,7 @@ object MainForm: TMainForm
   end
   object GeoNames: TMVGeoNames
     OnNameFound = GeoNamesNameFound
-    left = 416
-    top = 232
+    left = 328
+    top = 224
   end
 end
