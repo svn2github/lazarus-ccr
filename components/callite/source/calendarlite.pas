@@ -314,6 +314,8 @@ type
     function GetDayName(ADayOfWeek: TDayOfWeek): String;
     function GetMonthName(AMonth: Integer): String;
 
+    procedure AddSelectedDate(ADate: TDate);
+    procedure ClearSelectedDates;
     function IsSelected(ADate: TDate): Boolean;
     function SelectedDates: TCalDateArray;
 
@@ -368,7 +370,8 @@ type
     property DayNames: String read GetDayNames write SetDayNames;
     property DisplayTexts: String read GetDisplaytexts write SetDisplayTexts;
     property MonthNames: String read GetMonthnames write SetMonthNames;
-    property MultiSelect: Boolean read FMultiSelect write SetMultiSelect;
+    property MultiSelect: Boolean read FMultiSelect write SetMultiSelect
+      default false;
     property Options: TCalOptions read FOptions write SetOptions
       default [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays, coShowTodayRow];
     property StartingDayOfWeek: TDayOfWeek read FStartingDayOfWeek
@@ -1324,6 +1327,12 @@ begin
   inherited Destroy;
 end;
 
+procedure TCalendarLite.AddSelectedDate(ADate: TDate);
+begin
+  FSelDates.AddDate(ADate);
+  Invalidate;
+end;
+
 procedure TCalendarLite.ChangeDateTo(ADate: TDate; ASelMode: TCalSelMode);
 var
   d, d1, d2: TDate;
@@ -1403,6 +1412,12 @@ begin
     FCanvas.Brush.Color := Colors.BackgroundColor;
     FCanvas.FillRect(FBoundsRect);
   end;
+  Invalidate;
+end;
+
+procedure TCalendarLite.ClearSelectedDates;
+begin
+  FSelDates.Clear;
   Invalidate;
 end;
 
