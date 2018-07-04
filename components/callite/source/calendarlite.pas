@@ -199,7 +199,7 @@ type
     procedure GotoMonth(AMonth: word);
     procedure GotoToday;
     procedure GotoYear(AYear: word);
-    procedure LeftClick(Shift: TShiftState);
+    procedure LeftClick(APoint: TPoint; Shift: TShiftState);
     procedure RightClick;
   public
     constructor Create(ACanvas: TCanvas);
@@ -1192,16 +1192,15 @@ begin
   FOwner.Date := d;
 end;
 
-procedure TCalDrawer.LeftClick(Shift: TShiftState);
+procedure TCalDrawer.LeftClick(APoint: TPoint; Shift: TShiftState);
 var
-  p, ppopup: TPoint;
+  ppopup: TPoint;
   cell: TSize;
   Rm, Ry: TRect;
   sm: TCalSelMode;
 begin
   sm := FOwner.SelMode(Shift);
-  p := FOwner.ScreenToClient(Mouse.CursorPos);
-  cell := GetCellAt(p);
+  cell := GetCellAt(APoint);
   case cell.cy of
     TopRow:
       case cell.cx of
@@ -1210,12 +1209,12 @@ begin
         3..5:
           begin
             GetMonthYearRects(Rm{%H-}, Ry{%H-});
-            if PtInRect(Rm, p) then begin
+            if PtInRect(Rm, APoint) then begin
               FOwner.PopulateMonthPopupMenu;
               ppopup := FOwner.ClientToScreen(Point(Rm.Left, Rm.Bottom));
               FOwner.FPopupMenu.PopUp(ppopup.x, ppopup.y);
             end;
-            if PtInRect(Ry, p) then begin
+            if PtInRect(Ry, APoint) then begin
               FOwner.PopulateYearPopupMenu;
               ppopup := FOwner.ClientToScreen(Point(Ry.Left, Ry.Bottom));
               FOwner.FPopupMenu.Popup(ppopup.x, ppopup.y);
@@ -1432,7 +1431,7 @@ begin
   FDblClickTimer.Enabled := false;
   inherited;
   case FClickButton of
-    mbLeft  : FCalDrawer.LeftClick(FClickShift + [ssDouble]);
+    mbLeft  : FCalDrawer.LeftClick(FClickPoint, FClickShift + [ssDouble]);
     mbRight : ;
   end;
 end;
@@ -1485,7 +1484,7 @@ end;
 procedure TCalendarLite.InternalClick;
 begin
   case FClickButton of
-    mbLeft  : FCalDrawer.LeftClick(FClickShift);
+    mbLeft  : FCalDrawer.LeftClick(FClickPoint, FClickShift);
     mbRight : FCalDrawer.RightClick;
   end;
 end;
