@@ -111,7 +111,7 @@ implementation
 
 uses
   StrUtils, DateUtils,
-  vpMisc;
+  VPBase, VpMisc;
 
 const
   ITEMS_DELIMITER = ';';

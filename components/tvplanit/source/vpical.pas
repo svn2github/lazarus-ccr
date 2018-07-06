@@ -152,8 +152,6 @@ implementation
 uses
   VpConst, VpBase;
 
-const
-  ITEMS_DELIMITER = ';';
 
 // Examples: 19970702T160000, or T123000, or 20120101
 function iCalDateTime(AText: String; out IsUTC: Boolean): TDateTime;
@@ -163,13 +161,11 @@ type
     month: array[1..2] of char;
     day: array[1..2] of char;
   end;
-  PDateMask = ^TDatemask;
   TTimeMask = packed record
     hour: array[1..2] of char;
     minute: array[1..2] of char;
     second: array[1..2] of char;
   end;
-  PTimeMask = ^TTimeMask;
 var
   shour, smin, ssec: String;
   yr, mon, day, hr, min, sec: Integer;
@@ -217,7 +213,6 @@ var
   inDate: Boolean = true;
   p: PChar;
   s: String;
-  n: Integer;
 begin
   Result := 0;
   if AText = '' then
@@ -302,8 +297,6 @@ procedure TVpICalAlarm.Analyze;
 var
   i: Integer;
   item: TVpICalItem;
-  s: String;
-  isUTC: Boolean;
 begin
   inherited;
   for i := 0 to FItems.Count-1 do begin
@@ -465,10 +458,8 @@ end;
 
 procedure TVpICalToDo.Analyze;
 var
-  i, j: Integer;
+  i: Integer;
   item: TVpICalItem;
-  L: TStrings;
-  s: String;
   isUTC: Boolean;
 begin
   inherited;

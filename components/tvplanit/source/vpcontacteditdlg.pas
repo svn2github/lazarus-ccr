@@ -509,7 +509,7 @@ var
   Comboboxes: TComboboxArray;
   largestLabelWidth: Integer;
   comboArrowWidth: Integer;
-  i, w: Integer;
+  i: Integer;
   OldFont: TFont;
   hlabeldist: Integer = 8;  // min distance from label to edge of owner
   hdist: Integer = 4;    // Horizontal distance between label and edit/combo

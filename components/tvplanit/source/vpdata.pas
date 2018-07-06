@@ -2661,9 +2661,8 @@ end;
 
 procedure TVpTask.LoadFromICalendar(AEntry: TVpICalToDo);
 var
-  dt: Double;
   cat: String;
-  i, j, k: Integer;
+  i: Integer;
   ct: TVpCategoryType;
   catFound: Boolean;
 begin

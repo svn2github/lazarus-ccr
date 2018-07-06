@@ -47,7 +47,6 @@ type
 implementation
 
 uses
-  StrUtils,
   VpCanvasUtils, VpMisc, VpSR;
 
 type

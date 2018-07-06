@@ -8,7 +8,8 @@ unit VpBaseDataFiles;
 interface
 
 uses
-  Classes, SysUtils, Contnrs;
+  Classes, SysUtils, Contnrs,
+  VpBase;
 
 type
   TVpFileItem = class
@@ -57,7 +58,7 @@ const
 implementation
 
 uses
-  VpBase, VpMisc;
+  VpMisc;
 
 {==============================================================================}
 {                              TVpFileItem                                     }

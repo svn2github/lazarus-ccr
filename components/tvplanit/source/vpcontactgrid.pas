@@ -1594,7 +1594,6 @@ end;
 procedure TVpContactGrid.KeyDown(var Key: Word; Shift: TShiftState);
 var
   PopupPoint: TPoint;
-  idx: Integer;
   contactCount: Integer;
 begin
   contactCount := DataStore.Resource.Contacts.Count;

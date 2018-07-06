@@ -52,6 +52,9 @@ const
   Vp_DayViewInit        = Vp_First + 3;   {Initialize the DayView}
 
 type
+ {$IF FPC_FullVersion < 30000}
+  TStringArray = array of string;
+ {$ENDIF}
   TVpRotationAngle = (ra0, ra90, ra180, ra270);
   TVpItemMeasurement = (imAbsolutePixel, imPercent, imInches, imCentimeters);
   TVpItemType = (itDayView, itWeekView, itMonthView, itCalendar,
