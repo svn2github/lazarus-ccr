@@ -30,8 +30,7 @@
 - LED seven-sigment display
 - stop-light lamps
 - analog gauges
-- thermometer-like gauge
-- ampl"/>
+- thermometer-like gauge"/>
     <License Value="MPL  + GPL "/>
     <Version Minor="2"/>
     <Files Count="11">
