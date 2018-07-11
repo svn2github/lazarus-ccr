@@ -1,12 +1,12 @@
 object Form1: TForm1
-  Left = 123
-  Height = 166
-  Top = 95
-  Width = 568
+  Left = 159
+  Height = 223
+  Top = 156
+  Width = 824
   Caption = 'IndustrialStuff Example'
-  ClientHeight = 166
-  ClientWidth = 568
-  LCLVersion = '1.1'
+  ClientHeight = 223
+  ClientWidth = 824
+  LCLVersion = '1.9.0.0'
   object indLed1: TindLed
     Left = 200
     Height = 35
@@ -40,7 +40,6 @@ object Form1: TForm1
     Height = 59
     Top = 24
     Width = 25
-    Center = True
     Picture.Data = {
       1754506F727461626C654E6574776F726B47726170686963EF00000089504E47
       0D0A1A0A0000000D49484452000000150000002B08020000001805541C000000
@@ -55,23 +54,22 @@ object Form1: TForm1
     State = slRED
   end
   object LEDNumber1: TLEDNumber
-    Left = 32
+    Left = 40
     Height = 28
-    Top = 116
+    Top = 128
     Width = 177
     Caption = 'Lazarus'
-    OffColor = 930866
-    OnColor = clLime
   end
   object AnalogSensor1: TAnalogSensor
     Left = 256
-    Height = 136
+    Height = 152
     Top = 8
     Width = 153
+    BevelOuter = bvNone
     BorderWidth = 2
     BorderStyle = bsSingle
     Caption = 'level : '
-    ClientHeight = 132
+    ClientHeight = 148
     ClientWidth = 149
     Font.Height = -16
     Font.Name = 'Arial'
@@ -80,9 +78,9 @@ object Form1: TForm1
     TabOrder = 0
     ShowText = True
     ShowLevel = True
-    ColorFore = clLime
-    ColorBack = clBlack
-    Value = 20
+    ColorRed = clYellow
+    ColorYellow = clRed
+    Value = 70
     ValueMin = 0
     ValueMax = 100
     ValueRed = 30
@@ -91,7 +89,7 @@ object Form1: TForm1
   end
   object indGnouMeter1: TindGnouMeter
     Left = 424
-    Height = 129
+    Height = 143
     Top = 17
     Width = 120
     Caption = 'indGnouMeter1'
@@ -109,7 +107,7 @@ object Form1: TForm1
     Transparent = True
     GapTop = 20
     GapBottom = 10
-    BarThickness = 5
+    BarThickness = 6
     MarkerColor = clBlue
     ShowMarker = True
   end
@@ -129,6 +127,31 @@ object Form1: TForm1
     Kind = lkYellowLight
     State = lsOn
     Blink = False
-    AutoSize = True
+  end
+  object A3nalogGauge1: TA3nalogGauge
+    Left = 568
+    Height = 192
+    Top = 16
+    Width = 241
+    ArrowWidth = 2
+    Caption = 'mV'
+    CaptionFont.Height = -16
+    CaptionFont.Style = [fsBold]
+    CenterColor = clSilver
+    FaceOptions = [foShowMainTicks, foShowSubTicks, foShowIndicatorMin, foShowIndicatorMid, foShowIndicatorMax, foShowValues, foShowCenter, foShowFrame, foShowCaption]
+    IndMaximum = 60
+    IndMinimum = 30
+    Position = 70
+  end
+  object TrackBar1: TTrackBar
+    Left = 32
+    Height = 25
+    Top = 184
+    Width = 504
+    Frequency = 10
+    Max = 100
+    OnChange = TrackBar1Change
+    Position = 70
+    TabOrder = 2
   end
 end

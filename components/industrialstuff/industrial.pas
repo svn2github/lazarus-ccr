@@ -9,7 +9,8 @@ interface
 
 uses
   IndLed, Sensors, AllIndustrialRegister, LedNumber, indGnouMeter, AdvLed, 
-  indcyBaseLed, indcyClasses, indcyGraphics, indcyTypes, LazarusPackageIntf;
+  indcyBaseLed, indcyClasses, indcyGraphics, indcyTypes, A3nalogGauge, 
+  LazarusPackageIntf;
 
 implementation
 

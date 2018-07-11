@@ -1,9 +1,10 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
     <Name Value="industrial"/>
-    <Author Value="Jurassic Pork"/>
+    <Type Value="RunAndDesignTime"/>
+    <Author Value="Jurassic Pork; A3nalogGauge by Irnis Haliullin"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -23,17 +24,11 @@
           <GenerateDebugInfo Value="False"/>
         </Debugging>
       </Linking>
-      <Other>
-        <CompilerMessages>
-          <MsgFileName Value=""/>
-        </CompilerMessages>
-        <CompilerPath Value="$(CompPath)"/>
-      </Other>
     </CompilerOptions>
     <Description Value="Industrial-themed (IPV/PCV) components and gauges (e.g. LEDs)."/>
     <License Value="MPL  + GPL "/>
-    <Version Minor="1"/>
-    <Files Count="10">
+    <Version Minor="2"/>
+    <Files Count="11">
       <Item1>
         <Filename Value="source\indled.pas"/>
         <UnitName Value="IndLed"/>
@@ -53,7 +48,7 @@
       </Item4>
       <Item5>
         <Filename Value="source\indgnoumeter.pas"/>
-        <UnitName Value="IndGnouMeter"/>
+        <UnitName Value="indGnouMeter"/>
       </Item5>
       <Item6>
         <Filename Value="source\AdvLed.pas"/>
@@ -75,8 +70,11 @@
         <Filename Value="source\indcyTypes.pas"/>
         <UnitName Value="indcyTypes"/>
       </Item10>
+      <Item11>
+        <Filename Value="source\a3naloggauge.pas"/>
+        <UnitName Value="A3nalogGauge"/>
+      </Item11>
     </Files>
-    <Type Value="RunAndDesignTime"/>
     <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="IDEIntf"/>

@@ -4,3 +4,4 @@ tindgnoumeter.png
 tindled.png
 tlednumber.png
 tstoplightsensor.png
+ta3naloggauge.bmp

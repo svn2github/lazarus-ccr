@@ -1,0 +1,602 @@
+object MainForm: TMainForm
+  Left = 427
+  Height = 483
+  Top = 104
+  Width = 779
+  Caption = 'AntiAliased Analog Gauge demo'
+  ClientHeight = 483
+  ClientWidth = 779
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  Position = poDefaultPosOnly
+  LCLVersion = '1.9.0.0'
+  Scaled = False
+  object Panel1: TPanel
+    Left = 0
+    Height = 216
+    Top = 224
+    Width = 779
+    Align = alBottom
+    BevelOuter = bvNone
+    ClientHeight = 216
+    ClientWidth = 779
+    TabOrder = 0
+    object MarginLabel: TLabel
+      Left = 8
+      Height = 15
+      Top = 120
+      Width = 38
+      Caption = 'Margin'
+      FocusControl = MarginEdit
+      ParentColor = False
+    end
+    object CenterLabel: TLabel
+      Left = 104
+      Height = 15
+      Top = 120
+      Width = 70
+      Caption = 'Center radius'
+      FocusControl = CenterRadEdit
+      ParentColor = False
+    end
+    object CircleLabel: TLabel
+      Left = 199
+      Height = 15
+      Top = 120
+      Width = 65
+      Caption = 'Circle radius'
+      FocusControl = CircleRadEdit
+      ParentColor = False
+    end
+    object ScaleLabel: TLabel
+      Left = 295
+      Height = 15
+      Top = 120
+      Width = 58
+      Caption = 'Scale value'
+      FocusControl = ScaleEdit
+      ParentColor = False
+    end
+    object AngleLabel: TLabel
+      Left = 393
+      Height = 15
+      Top = 120
+      Width = 59
+      Caption = 'Scale angle'
+      FocusControl = AngleEdit
+      ParentColor = False
+    end
+    object MinimLabel: TLabel
+      Left = 295
+      Height = 15
+      Top = 40
+      Width = 53
+      Caption = 'Minimum'
+      FocusControl = MinimEdit
+      ParentColor = False
+    end
+    object MaximLabel: TLabel
+      Left = 393
+      Height = 15
+      Top = 40
+      Width = 54
+      Caption = 'Maximum'
+      FocusControl = MaximEdit
+      ParentColor = False
+    end
+    object WidthLabel: TLabel
+      Left = 8
+      Height = 15
+      Top = 168
+      Width = 65
+      Caption = 'Arrow width'
+      FocusControl = WidthEdit
+      ParentColor = False
+    end
+    object NumMainLabel: TLabel
+      Left = 104
+      Height = 15
+      Top = 168
+      Width = 54
+      Caption = 'Main ticks'
+      FocusControl = NumMainEdit
+      ParentColor = False
+    end
+    object MainLenLabel: TLabel
+      Left = 199
+      Height = 15
+      Top = 168
+      Width = 67
+      Caption = 'Main length '
+      FocusControl = MainLenEdit
+      ParentColor = False
+    end
+    object SubLenLabel: TLabel
+      Left = 295
+      Height = 15
+      Top = 168
+      Width = 57
+      Caption = 'Sub length'
+      FocusControl = SubLenEdit
+      ParentColor = False
+    end
+    object CaptionLabel: TLabel
+      Left = 393
+      Height = 15
+      Top = 168
+      Width = 42
+      Caption = 'Caption'
+      FocusControl = CaptionEdit
+      ParentColor = False
+    end
+    object FPSLabel: TLabel
+      Left = 498
+      Height = 15
+      Top = 24
+      Width = 22
+      Caption = 'FPS:'
+      ParentColor = False
+    end
+    object FreqLabel: TLabel
+      Left = 393
+      Height = 15
+      Top = 0
+      Width = 89
+      Caption = 'Timer delay (ms)'
+      FocusControl = FreqEdit
+      ParentColor = False
+    end
+    object AAModeLabel: TLabel
+      Left = 295
+      Height = 15
+      Top = 0
+      Width = 62
+      Caption = 'Antialiasing'
+      FocusControl = AAModeBox
+      ParentColor = False
+    end
+    object FaceColorButton: TButton
+      Left = 8
+      Height = 25
+      Top = 56
+      Width = 88
+      Caption = 'Face color'
+      OnClick = FaceColorButtonClick
+      TabOrder = 0
+    end
+    object CenterColorButton: TButton
+      Left = 104
+      Height = 25
+      Top = 56
+      Width = 88
+      Caption = 'Center color'
+      OnClick = CenterColorButtonClick
+      TabOrder = 1
+    end
+    object CenterRadEdit: TSpinEdit
+      Left = 104
+      Height = 23
+      Top = 136
+      Width = 88
+      MaxValue = 0
+      OnChange = CenterRadEditChange
+      TabOrder = 2
+    end
+    object CircleColorButton: TButton
+      Left = 199
+      Height = 25
+      Top = 56
+      Width = 88
+      Caption = 'Circle color'
+      OnClick = CircleColorButtonClick
+      TabOrder = 3
+    end
+    object CircleRadEdit: TSpinEdit
+      Left = 199
+      Height = 23
+      Top = 136
+      Width = 88
+      MaxValue = 0
+      OnChange = CircleRadEditChange
+      TabOrder = 4
+    end
+    object MarginEdit: TSpinEdit
+      Left = 8
+      Height = 23
+      Top = 136
+      Width = 88
+      MaxValue = 0
+      OnChange = MarginEditChange
+      TabOrder = 5
+    end
+    object ScaleEdit: TSpinEdit
+      Left = 295
+      Height = 23
+      Top = 136
+      Width = 88
+      MaxValue = 0
+      OnChange = ScaleEditChange
+      TabOrder = 6
+    end
+    object AngleEdit: TSpinEdit
+      Left = 393
+      Height = 23
+      Top = 136
+      Width = 88
+      MaxValue = 0
+      OnChange = AngleEditChange
+      TabOrder = 7
+    end
+    object MinimEdit: TSpinEdit
+      Left = 295
+      Height = 23
+      Top = 56
+      Width = 88
+      MaxValue = 0
+      OnChange = MinimEditChange
+      TabOrder = 8
+    end
+    object MaximEdit: TSpinEdit
+      Left = 393
+      Height = 23
+      Top = 56
+      Width = 88
+      MaxValue = 0
+      OnChange = MaximEditChange
+      TabOrder = 9
+    end
+    object WidthEdit: TSpinEdit
+      Left = 8
+      Height = 23
+      Top = 184
+      Width = 88
+      MaxValue = 0
+      OnChange = WidthEditChange
+      TabOrder = 10
+    end
+    object NumMainEdit: TSpinEdit
+      Left = 104
+      Height = 23
+      Top = 184
+      Width = 88
+      MaxValue = 0
+      OnChange = NumMainEditChange
+      TabOrder = 11
+    end
+    object MainLenEdit: TSpinEdit
+      Left = 199
+      Height = 23
+      Top = 184
+      Width = 75
+      MaxValue = 0
+      OnChange = MainLenEditChange
+      TabOrder = 12
+    end
+    object SubLenEdit: TSpinEdit
+      Left = 295
+      Height = 23
+      Top = 184
+      Width = 88
+      MaxValue = 0
+      OnChange = SubLenEditChange
+      TabOrder = 13
+    end
+    object MarginBox: TCheckBox
+      Left = 490
+      Height = 19
+      Top = 84
+      Width = 90
+      Caption = 'Show margin'
+      OnClick = MarginBoxClick
+      TabOrder = 14
+    end
+    object CirclesBox: TCheckBox
+      Left = 659
+      Height = 19
+      Top = 84
+      Width = 85
+      Caption = 'Show circles'
+      OnClick = CirclesBoxClick
+      TabOrder = 15
+    end
+    object MainTicksBox: TCheckBox
+      Left = 490
+      Height = 19
+      Top = 100
+      Width = 106
+      Caption = 'Show main ticks'
+      OnClick = MainTicksBoxClick
+      TabOrder = 16
+    end
+    object SubticksBox: TCheckBox
+      Left = 490
+      Height = 19
+      Top = 116
+      Width = 98
+      Caption = 'Show sub ticks'
+      OnClick = SubticksBoxClick
+      TabOrder = 17
+    end
+    object IndMinBox: TCheckBox
+      Left = 490
+      Height = 19
+      Top = 132
+      Width = 155
+      Caption = 'Show indicator minimum'
+      OnClick = IndMinBoxClick
+      TabOrder = 18
+    end
+    object IndMidBox: TCheckBox
+      Left = 490
+      Height = 19
+      Top = 148
+      Width = 123
+      Caption = 'Show indicator mid'
+      OnClick = IndMidBoxClick
+      TabOrder = 19
+    end
+    object IndMaxBox: TCheckBox
+      Left = 490
+      Height = 19
+      Top = 164
+      Width = 156
+      Caption = 'Show indicator maximum'
+      OnClick = IndMaxBoxClick
+      TabOrder = 20
+    end
+    object ValuesBox: TCheckBox
+      Left = 659
+      Height = 19
+      Top = 100
+      Width = 85
+      Caption = 'Show values'
+      OnClick = ValuesBoxClick
+      TabOrder = 21
+    end
+    object CenterBox: TCheckBox
+      Left = 659
+      Height = 19
+      Top = 116
+      Width = 85
+      Caption = 'Show center'
+      OnClick = CenterBoxClick
+      TabOrder = 22
+    end
+    object FrameBox: TCheckBox
+      Left = 659
+      Height = 19
+      Top = 132
+      Width = 83
+      Caption = 'Show frame'
+      OnClick = FrameBoxClick
+      TabOrder = 23
+    end
+    object Draw3DBox: TCheckBox
+      Left = 659
+      Height = 19
+      Top = 148
+      Width = 66
+      Caption = 'Show 3D'
+      OnClick = Draw3DBoxClick
+      TabOrder = 24
+    end
+    object CaptionBox: TCheckBox
+      Left = 659
+      Height = 19
+      Top = 164
+      Width = 92
+      Caption = 'Show caption'
+      OnClick = CaptionBoxClick
+      TabOrder = 25
+    end
+    object CaptionEdit: TEdit
+      Left = 393
+      Height = 23
+      Top = 184
+      Width = 377
+      OnChange = CaptionEditChange
+      TabOrder = 26
+      Text = 'CaptionEdit'
+    end
+    object FreqEdit: TSpinEdit
+      Left = 393
+      Height = 23
+      Top = 16
+      Width = 88
+      MaxValue = 0
+      OnChange = FreqEditChange
+      TabOrder = 27
+    end
+    object TicksColorButton: TButton
+      Left = 8
+      Height = 25
+      Top = 88
+      Width = 88
+      Caption = 'Ticks color'
+      OnClick = TicksColorButtonClick
+      TabOrder = 28
+    end
+    object ValueColorButton: TButton
+      Left = 104
+      Height = 25
+      Top = 88
+      Width = 88
+      Caption = 'Values color'
+      OnClick = ValueColorButtonClick
+      TabOrder = 29
+    end
+    object CaptionColorButton: TButton
+      Left = 199
+      Height = 25
+      Top = 88
+      Width = 88
+      Caption = 'Caption color'
+      OnClick = CaptionColorButtonClick
+      TabOrder = 30
+    end
+    object ArrowColorButton: TButton
+      Left = 295
+      Height = 25
+      Top = 88
+      Width = 88
+      Caption = 'Arrow color'
+      OnClick = ArrowColorButtonClick
+      TabOrder = 31
+    end
+    object MarginColorButton: TButton
+      Left = 393
+      Height = 25
+      Top = 88
+      Width = 88
+      Caption = 'Margin color'
+      OnClick = MarginColorButtonClick
+      TabOrder = 32
+    end
+    object MinColorButton: TButton
+      Left = 490
+      Height = 25
+      Top = 56
+      Width = 88
+      Caption = 'Min color'
+      OnClick = MinColorButtonClick
+      TabOrder = 33
+    end
+    object MidColorButton: TButton
+      Left = 584
+      Height = 25
+      Top = 56
+      Width = 88
+      Caption = 'Mid color'
+      OnClick = MidColorButtonClick
+      TabOrder = 34
+    end
+    object MaxColorButton: TButton
+      Left = 678
+      Height = 25
+      Top = 56
+      Width = 88
+      Caption = 'Max color'
+      OnClick = MaxColorButtonClick
+      TabOrder = 35
+    end
+    object AAModeBox: TComboBox
+      Left = 295
+      Height = 23
+      Top = 16
+      Width = 88
+      ItemHeight = 15
+      Items.Strings = (
+        'None'
+        'Biline'
+        'Triline'
+        'Quadral'
+      )
+      OnChange = AAModeBoxChange
+      Style = csDropDownList
+      TabOrder = 36
+    end
+    object StyleBox: TComboBox
+      Left = 199
+      Height = 23
+      Top = 16
+      Width = 88
+      ItemHeight = 15
+      ItemIndex = 2
+      Items.Strings = (
+        'Left'
+        'Right'
+        'Center'
+      )
+      OnChange = StyleBoxChange
+      Style = csDropDownList
+      TabOrder = 37
+      Text = 'Center'
+    end
+    object AAModeLabel1: TLabel
+      Left = 199
+      Height = 15
+      Top = 0
+      Width = 25
+      Caption = 'Style'
+      FocusControl = StyleBox
+      ParentColor = False
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 43
+    Top = 440
+    Width = 779
+    Align = alBottom
+    BevelOuter = bvNone
+    ClientHeight = 43
+    ClientWidth = 779
+    TabOrder = 1
+    object CloseButton: TButton
+      Left = 8
+      Height = 25
+      Top = 8
+      Width = 88
+      Caption = 'Close'
+      OnClick = CloseButtonClick
+      TabOrder = 0
+    end
+    object AboutLabel: TLabel
+      Left = 96
+      Height = 40
+      Top = 0
+      Width = 682
+      Alignment = taCenter
+      Anchors = [akLeft, akRight, akBottom]
+      AutoSize = False
+      Caption = 'Anti Aliased Analog Gauge component demonstration. '#13#10'(c) Irnis Haliullin, http://www.irnis.net/'
+      Layout = tlCenter
+      ParentColor = False
+      OnClick = AboutLabelClick
+      OnMouseMove = AboutLabelMouseMove
+    end
+  end
+  object Panel3: TPanel
+    Left = 0
+    Height = 224
+    Top = 0
+    Width = 779
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 2
+  end
+  object Timer: TTimer
+    Interval = 10
+    OnTimer = TimerTimer
+    left = 88
+    top = 112
+  end
+  object ColorDialog: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    left = 224
+    top = 120
+  end
+end
