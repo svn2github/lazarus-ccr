@@ -44,6 +44,7 @@
       <Unit2>
         <Filename Value="..\..\source\a3naloggauge.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="A3nalogGauge"/>
       </Unit2>
     </Units>
   </ProjectOptions>

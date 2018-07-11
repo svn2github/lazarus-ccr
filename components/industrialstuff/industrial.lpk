@@ -25,7 +25,13 @@
         </Debugging>
       </Linking>
     </CompilerOptions>
-    <Description Value="Industrial-themed (IPV/PCV) components and gauges (e.g. LEDs)."/>
+    <Description Value="Industrial-themed components and gauges:
+- LED indicators
+- LED seven-sigment display
+- stop-light lamps
+- analog gauges
+- thermometer-like gauge
+- ampl"/>
     <License Value="MPL  + GPL "/>
     <Version Minor="2"/>
     <Files Count="11">

@@ -717,9 +717,8 @@ begin
   end;
 end;
 
-(*
 // This code is faster than the version above, but crashes after a few seconds.
-
+  {
 procedure TA3nalogGauge.FastAntiAliasPicture;
 const
   MaxPixelCount = MaxInt div SizeOf(TRGBTriple);
@@ -800,7 +799,7 @@ begin
     intfImgFace.Free;
   end;
 end;
-  *)
+}
 {$ELSE}
 const
   MaxPixelCount = MaxInt div SizeOf(TRGBTriple);
