@@ -13,11 +13,13 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Database controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code):
-- Search edit
-- Hypertext components "/>
+- Search edit, Calc edit
+- DB treeview
+- Hypertext components 
+"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
-    <Files Count="3">
+    <Files Count="4">
       <Item1>
         <Filename Value="..\run\JvDB\JvDBHTLabel.pas"/>
         <UnitName Value="JvDBHTLabel"/>
@@ -30,17 +32,24 @@
         <Filename Value="..\run\JvDB\JvDBTreeView.pas"/>
         <UnitName Value="JvDBTreeView"/>
       </Item3>
+      <Item4>
+        <Filename Value="..\run\JvDB\JvDBControls.pas"/>
+        <UnitName Value="JvDBControls"/>
+      </Item4>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="4">
       <Item1>
-        <PackageName Value="JvCtrlsLazR"/>
+        <PackageName Value="JvStdCtrlsLazR"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvCoreLazR"/>
+        <PackageName Value="JvCtrlsLazR"/>
       </Item2>
       <Item3>
-        <PackageName Value="FCL"/>
+        <PackageName Value="JvCoreLazR"/>
       </Item3>
+      <Item4>
+        <PackageName Value="FCL"/>
+      </Item4>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

@@ -1059,3 +1059,16 @@ end;
 
 
 end.
+
+[Window Title]
+Ambiguous unit found
+
+[Content]
+The unit JvDBHTLabel exists twice in the unit path of the IDE:
+
+1. "D:\Prog_Lazarus\svn\lazarus-ccr\components\jvcllaz\lib\i386-win32\run\JvDB\JvDBHTLabel.ppu"
+2. "D:\Prog_Lazarus\svn\lazarus-ccr\components\jvcllaz\lib\i386-win32\design\JvDB\JvDBHTLabel.ppu"
+
+Hint: Check if two packages contain a unit with the same name.
+
+[Ignore] [Ignore all] [Abort]

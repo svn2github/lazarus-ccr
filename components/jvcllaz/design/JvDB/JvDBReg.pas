@@ -16,7 +16,7 @@ implementation
 
 uses
   Classes, JvDsgnConsts, //JvDBSearchCombobox,
-  JvDBSearchEdit, JvDBTreeView, JvDBHTLabel;
+  JvDBSearchEdit, JvDBTreeView, JvDBControls, JvDBHTLabel;
 
 procedure Register;
 const
@@ -38,10 +38,11 @@ const
 
 begin
   RegisterComponents(RsPaletteJvclDB, [     // was: TsPaletteDBVisual
+    TJvDBCalcEdit,
     TJvDBSearchEdit,
 //    TJvDBSearchCombobox,
     TJvDBTreeView,
-    TJvDBHtLabel
+    TJvDBHTLabel
   ]);
                 
   RegisterPropertyEditor(TypeInfo(string), TJvDBTreeView, cItemField, TFieldProperty); //TJvDataFieldProperty);

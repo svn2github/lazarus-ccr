@@ -546,13 +546,18 @@ function OemToAnsiStr(const OemStr: string): string;
 function IsEmptyStr(const S: string; const EmptyChars: TSysCharSet): Boolean;
 { EmptyStr returns True if the given string contains only character
   from the EmptyChars. }
+***************** NOT CONVERTED *)
+
 function ReplaceStr(const S, Srch, Replace: string): string;
 { Returns string with every occurrence of Srch string replaced with
   Replace string. }
 function DelSpace(const S: string): string;
 { DelSpace return a string with all white spaces removed. }
+
 function DelChars(const S: string; Chr: Char): string;
 { DelChars return a string with all Chr characters removed. }
+
+(*************** NOT CONVERTED ***********
 function DelBSpace(const S: string): string;
 { DelBSpace trims leading spaces from the given string. }
 function DelESpace(const S: string): string;
@@ -1034,12 +1039,13 @@ procedure CopyRectDIBits(ACanvas: TCanvas; const DestRect: TRect;
   ABitmap: TBitmap; const SourceRect: TRect);
 {$ENDIF !CLR}
 function IsTrueType(const FontName: string): Boolean;
-
+************************ NOT CONVERTED *)
 
 // Removes all non-numeric characters from AValue and returns
 // the resulting string
 function TextToValText(const AValue: string): string;
 
+(******************** NOT CONVERTED
 // VisualCLX compatibility functions
 function DrawText(DC: HDC; const Text: TCaption; Len: Integer; var R: TRect; WinFlags: Integer): Integer; overload;
 ******************** NOT CONVERTED *)
@@ -5606,6 +5612,7 @@ begin
   end;
   Result := True;
 end;
+************************ NOT CONVERTED *)
 
 function ReplaceStr(const S, Srch, Replace: string): string;
 var
@@ -5633,16 +5640,28 @@ end;
 
 function DelChars(const S: string; Chr: Char): string;
 var
-  I: Integer;
+  I, J: Integer;
 begin
   Result := S;
+  J := 0;
+  for I := 1 to Length(S) do
+  begin
+    if S[I] <> Chr then begin
+      inc(J);
+      Result[J] := S[I];
+    end;
+  end;
+  SetLength(Result, J);
+{
   for I := Length(Result) downto 1 do
   begin
     if Result[I] = Chr then
       Delete(Result, I, 1);
   end;
+  }
 end;
 
+(*************************** NOT CONVERTED
 function DelBSpace(const S: string): string;
 var
   I, L: Integer;
@@ -9199,31 +9218,31 @@ begin
     Canvas.Free;
   end;
 end;
-
-
+******************** NOT CONVERTED *)
 
 function TextToValText(const AValue: string): string;
 var
   I, J: Integer;
+  fs: TFormatSettings absolute DefaultFormatSettings;  // less typing...
 begin
-  Result := DelRSpace(AValue);
-  if DecimalSeparator <> ThousandSeparator then
-    Result := DelChars(Result, ThousandSeparator{$IFDEF CLR}[1]{$ENDIF});
+//  Result := DelRSpace(AValue);
+  Result := Trim(AValue);
+  if fs.DecimalSeparator <> fs.ThousandSeparator then
+    Result := DelChars(Result, fs.ThousandSeparator);
 
-  if (DecimalSeparator <> '.') and (ThousandSeparator <> '.') then
-    Result := ReplaceStr(Result, '.', DecimalSeparator);
-  if (DecimalSeparator <> ',') and (ThousandSeparator <> ',') then
-    Result := ReplaceStr(Result, ',', DecimalSeparator);
+  if (fs.DecimalSeparator <> '.') and (fs.ThousandSeparator <> '.') then
+    Result := ReplaceStr(Result, '.', fs.DecimalSeparator);
+  if (fs.DecimalSeparator <> ',') and (fs.ThousandSeparator <> ',') then
+    Result := ReplaceStr(Result, ',', fs.DecimalSeparator);
 
-  J := 1;
+  J := 0;
   for I := 1 to Length(Result) do
-    if Result[I] in ['0'..'9', '-', '+',
-        AnsiChar(DecimalSeparator{$IFDEF CLR}[1]{$ENDIF}), AnsiChar(ThousandSeparator{$IFDEF CLR}[1]{$ENDIF})] then
+    if Result[I] in ['0'..'9', '-', '+', fs.DecimalSeparator, fs.ThousandSeparator] then
     begin
-      Result[J] := Result[I];
       Inc(J);
+      Result[J] := Result[I];
     end;
-  SetLength(Result, J - 1);
+  SetLength(Result, J);
 
   if Result = '' then
     Result := '0'
@@ -9231,8 +9250,6 @@ begin
   if Result = '-' then
     Result := '-0';
 end;
-
-******************** NOT CONVERTED *)
 
 function DrawText(Canvas: TCanvas; const Text: string; Len: Integer; var R: TRect; WinFlags: Integer): Integer; overload;
 begin
