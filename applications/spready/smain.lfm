@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 265
+  Left = 433
   Height = 709
-  Top = 139
+  Top = 190
   Width = 1120
   Caption = 'spready'
   ClientHeight = 689
@@ -416,6 +416,11 @@ object MainForm: TMainForm
       ImageIndex = 73
       Style = tbsDropDown
     end
+    object ToolButton23: TToolButton
+      Left = 961
+      Top = 0
+      Action = AcClearFormat
+    end
   end
   object ToolBar2: TToolBar
     Left = 0
@@ -605,6 +610,7 @@ object MainForm: TMainForm
     Constraints.MinHeight = 28
     EdgeBorders = [ebBottom]
     TabOrder = 5
+    OnResize = ToolBar3Resize
     object Panel2: TPanel
       Left = 1
       Height = 26
@@ -627,10 +633,11 @@ object MainForm: TMainForm
       end
     end
     object CellEdit: TsCellEdit
+      AnchorSideRight.Side = asrBottom
       Left = 144
       Height = 23
       Top = 0
-      Width = 974
+      Width = 852
       Align = alClient
       BorderSpacing.Right = 2
       BorderSpacing.Bottom = 3
@@ -675,15 +682,15 @@ object MainForm: TMainForm
     object AcAddWorksheet: TsWorksheetAddAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Add worksheet'
-      Hint = 'Add empty worksheet'
+      Caption = 'Add...'
+      Hint = 'Add worksheet'
       ImageIndex = 1
       NameMask = 'Sheet%d'
     end
     object AcDeleteWorksheet: TsWorksheetDeleteAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Delete worksheet...'
+      Caption = 'Delete'
       Hint = 'Delete worksheet'
       ImageIndex = 2
     end
@@ -713,23 +720,23 @@ object MainForm: TMainForm
     object AcFontUnderline: TsFontStyleAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Underline'
-      Hint = 'Underline'
+      Caption = 'Underlined'
+      Hint = 'Underlined'
       ImageIndex = 6
       FontStyle = fssUnderline
     end
     object AcFontStrikeout: TsFontStyleAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Strikeout'
-      Hint = 'Strikeout'
+      Caption = 'Strike-through'
+      Hint = 'Strike-through'
       ImageIndex = 7
       FontStyle = fssStrikeOut
     end
     object AcVertAlignTop: TsVertAlignmentAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Top'
+      Caption = 'Top-aligned text'
       Hint = 'Top-aligned text'
       ImageIndex = 11
       VertAlignment = vaTop
@@ -737,7 +744,7 @@ object MainForm: TMainForm
     object AcVertAlignCenter: TsVertAlignmentAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Center'
+      Caption = 'Vertically centered text'
       Hint = 'Vertically centered text'
       ImageIndex = 12
       VertAlignment = vaCenter
@@ -745,7 +752,7 @@ object MainForm: TMainForm
     object AcVertAlignBottom: TsVertAlignmentAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Bottom'
+      Caption = 'Bottom-aligned text'
       Hint = 'Bottom-aligned text'
       ImageIndex = 13
       VertAlignment = vaBottom
@@ -753,24 +760,24 @@ object MainForm: TMainForm
     object AcHorAlignLeft: TsHorAlignmentAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Left'
-      Hint = 'Left-aligned text'
+      Caption = 'Left-justified text'
+      Hint = 'Left-justified text'
       ImageIndex = 8
       HorAlignment = haLeft
     end
     object AcHorAlignCenter: TsHorAlignmentAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Center'
-      Hint = 'Centered text'
+      Caption = 'Horizontally centered text'
+      Hint = 'Horizontally centered text'
       ImageIndex = 9
       HorAlignment = haCenter
     end
     object AcHorAlignRight: TsHorAlignmentAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Right'
-      Hint = 'Right-aligned text'
+      Caption = 'Right-justified text'
+      Hint = 'Right-justified text'
       ImageIndex = 10
       HorAlignment = haRight
     end
@@ -785,33 +792,31 @@ object MainForm: TMainForm
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Horizontal text'
+      Hint = 'Horizontal'
     end
     object AcTextRot90CW: TsTextRotationAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = '90° clockwise'
       Hint = '90ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â° clockwise rotated text'
-      TextRotation = rt90DegreeClockwiseRotation
     end
     object AcTextRot90CCW: TsTextRotationAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = '90° counter-clockwise'
       Hint = '90ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â° counter-clockwise rotated text'
-      TextRotation = rt90DegreeCounterClockwiseRotation
     end
     object AcTextRotStacked: TsTextRotationAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Stacked'
       Hint = 'Vertically stacked horizontal letters'
-      TextRotation = rtStacked
     end
     object AcNumFormatCustom: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Custom...'
-      Hint = 'Custom number format'
+      Hint = 'Custom...'
       NumberFormat = nfCustom
       OnGetNumberFormatString = AcNumFormatCustomGetNumberFormatString
     end
@@ -825,21 +830,21 @@ object MainForm: TMainForm
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Fixed'
-      Hint = 'Fixed decimals format'
+      Hint = 'Fixed'
       NumberFormat = nfFixed
     end
     object AcNumFormatFixedTh: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Fixed w/thousand separator'
-      Hint = 'Fixed decimal count with thousand separator'
+      Hint = 'Fixed w/thousand separator'
       NumberFormat = nfFixedTh
     end
     object AcNumFormatPercentage: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Percent'
-      Hint = 'Percent format'
+      Hint = 'Percent'
       ImageIndex = 16
       NumberFormat = nfPercentage
     end
@@ -847,27 +852,28 @@ object MainForm: TMainForm
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Currency'
-      Hint = 'Currency format'
+      Hint = 'Currency'
       NumberFormat = nfCurrency
     end
     object AcNumFormatCurrencyRed: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Currency (red)'
-      Hint = 'Currency format (negative values in red)'
+      Hint = 'Currency (red)'
       NumberFormat = nfCurrencyRed
     end
     object AcNumFormatExp: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Exponential'
-      Hint = 'Exponential format'
+      Hint = 'Exponential'
       NumberFormat = nfExp
     end
     object AcNumFormatFraction1: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Fraction (1 digit)'
+      Hint = 'Fraction with 1-digit numbers'
       NumberFormat = nfFraction
       NumberFormatString = '# ?/?'
     end
@@ -875,6 +881,7 @@ object MainForm: TMainForm
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Fraction (2 digits)'
+      Hint = 'Fraction with 2-digit numbers'
       NumberFormat = nfFraction
       NumberFormatString = '# ??/??'
     end
@@ -882,13 +889,14 @@ object MainForm: TMainForm
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Fraction (3 digits)'
+      Hint = 'Fraction with 3-digit numbers'
       NumberFormat = nfFraction
       NumberFormatString = '# ???/???'
     end
     object AcNumFormatDateTime: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Date/time'
+      Caption = 'Date and time'
       Hint = 'Date and time'
       NumberFormat = nfShortDateTime
     end
@@ -896,70 +904,70 @@ object MainForm: TMainForm
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Long date'
-      Hint = 'Long date format'
+      Hint = 'Long date'
       NumberFormat = nfLongDate
     end
     object AcNumFormatShortDate: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Short date'
-      Hint = 'Short date format'
+      Hint = 'Short date'
       NumberFormat = nfShortDate
     end
     object AcNumFormatDayMonth: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Day and month'
-      Hint = 'Day and month only'
+      Hint = 'Day and month'
       NumberFormat = nfDayMonth
     end
     object AcNumFormatMonthYear: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Month and year'
-      Hint = 'Month and year only'
+      Hint = 'Month and year'
       NumberFormat = nfMonthYear
     end
     object AcNumFormatLongTime: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Long time'
-      Hint = 'Long time foramt'
+      Hint = 'Long time'
       NumberFormat = nfLongTime
     end
     object AcNumFormatShortTime: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Short time'
-      Hint = 'Short time format'
+      Hint = 'Short time'
       NumberFormat = nfShortTime
     end
     object AcNumFormatLongTimeAM: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Long time AM/PM'
-      Hint = 'Long 12-hour time format'
+      Hint = 'Long time AM/PM'
       NumberFormat = nfLongTimeAM
     end
     object AcNumFormatShortTimeAM: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Short time AM/PM'
-      Hint = 'Short 12-hour time format'
+      Hint = 'Short time AM/PM'
       NumberFormat = nfShortTimeAM
     end
     object AcNumFormatTimeInterval: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Time interval'
-      Hint = 'Time interval format'
+      Hint = 'Time interval'
       NumberFormat = nfTimeInterval
     end
     object AcNumFormatText: TsNumberFormatAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Text'
-      Hint = 'Text format'
+      Hint = 'Text'
       NumberFormat = nfText
     end
     object AcViewInspector: TAction
@@ -1647,8 +1655,8 @@ object MainForm: TMainForm
     object AcMergeCells: TsMergeAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Caption = 'Merge'
-      Hint = 'Merge cells'
+      Caption = 'Merge/unmerge'
+      Hint = 'Merge/unmerge cells'
       ImageIndex = 23
     end
     object AcCopyFormat: TsCopyAction
@@ -1706,7 +1714,6 @@ object MainForm: TMainForm
     object AcCommentNew: TsCellCommentAction
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
-      Mode = ccmNew
       Caption = 'New comment'
       Hint = 'New comment'
       ImageIndex = 54
@@ -1912,12 +1919,19 @@ object MainForm: TMainForm
       Checked = True
       OnExecute = AcSettingsReadFormulasExecute
     end
+    object AcClearFormat: TsClearFormatAction
+      Category = 'FPSpreadsheet'
+      WorkbookSource = WorkbookSource
+      Caption = 'AcClearFormat'
+      Hint = 'Clear format'
+      ImageIndex = 74
+    end
   end
   object ImageList: TImageList
     left = 176
     top = 312
     Bitmap = {
-      4C694A0000001000000010000000003F9300003F9300003F9300003F9424003F
+      4C694B0000001000000010000000003F9300003F9300003F9300003F9424003F
       948A003E93CC004095CC004095CC004095CC004095CC004095CC004095CC0040
       95CC004095CC00409599003F9400003F9300003F9324003F938A0E4B9CD33F76
       C0EC5D90D4FF3365A9FFA0A0A0FFA9A9A9FFA9A9A9FFAAAAAAFFACACACFFAEAE
@@ -4284,6 +4298,38 @@ object MainForm: TMainForm
       FCFF013763A0FFFFFF00FFFFFF00FFFFFF00FFFFFF00002C5695002F5AB30037
       649E0146769301578895016294A2002D57BD002D57BC002D57BC002D58BC002D
       58BC002E598BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00010101000101010001010100414141008686
+      86008B8B8B002502B0002502B2002502B3002602B5372602B47B2502B47C2502
+      B3382502AF002402AC002302A800010101003A3A3A0079797900808080008686
+      86008B8B8B002502B0002502B2002502B3382502B37CC9B8FDFFCAB9FEFF2502
+      B17E2502AF392402AC002302A8006C6C6C007373730079797900808080008686
+      86008B8B8B002502B0002502B2392502B17EC6B5FCFFB6A5ECFFB8A7ECFFCAB9
+      FEFF2402AD812402AC3B2302A8006C6C6C007373730079797900808080008686
+      86008B8B8B002502B0392502B07FC4B3FBFFB3A2EAFFB5A4EBFFB6A5ECFFB8A7
+      ECFFCAB9FEFF2402A9862302A83D6C6C6C007373730079797900808080008686
+      86008A8A8A2F88888866C1B0F9FFB09FE9FFB2A1E9FFB3A2EAFFB5A4EBFFB6A5
+      ECFF9887DCFFAA99EEFF2302A58A6C6C6C007373730079797900808080008585
+      852F83838366F8F8F8FFF5F5F5FFAE9DE8FFB09FE9FFB2A1E9FFB3A2EAFF9584
+      D9FF9786DBFFA998EDFF2202A18D6C6C6C0073737300797979007F7F7F2F7D7D
+      7D66F6F6F6FFF2F2F2FFF2F2F2FFF2F2F2FFAE9DE8FFB09FE9FF9281D6FF9483
+      D8FFA695EAFF22029F9022029F416C6C6C00737373007878782F76767666F4F4
+      F4FFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFF8E7DD2FF907FD4FFA392
+      E7FF21029D9221029C4221029E006C6C6C007272722F70707066F3F3F3FFECEC
+      ECFFECECECFFECECECFFECECECFFECECECFFCECECEFFD0D0D0FF9F8EE3FF2102
+      9B9521029A4321029C0021029E006B6B6B2F69696966F1F1F1FFE9E9E9FFE9E9
+      E9FFE9E9E9FFE9E9E9FFE9E9E9FFCACACAFFCCCCCCFFDCDCDCFF363636662003
+      98452102990021029C0021029E0063636366F0F0F0FFE6E6E6FFE6E6E6FFE6E6
+      E6FFE6E6E6FFE6E6E6FFC6C6C6FFC8C8C8FFD8D8D8FF272727662323232F2003
+      97002102990021029C0021029E0058585866F0F0F0FFE3E3E3FFE3E3E3FFE3E3
+      E3FFE3E3E3FFC2C2C2FFC4C4C4FFD4D4D4FF1A1A1A661616162F202020002003
+      97002102990021029C0021029E004848482F3D3D3D66F0F0F0FFE1E1E1FFE1E1
+      E1FFBFBFBFFFC0C0C0FFD1D1D1FF0F0F0F660C0C0C2F14141400202020002003
+      97002102990021029C0021029E00454545002A2A2A2F20202066DFDFDFFFCECE
+      CEFFCECECEFFCECECEFF050505660303032F0A0A0A0014141400202020002003
+      97002102990021029C0021029E0045454500272727001111112F0A0A0A660505
+      056602020266010101660000002F020202000A0A0A0014141400211844002303
+      A5002302A4002302A4002202A300FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00
     }

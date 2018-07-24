@@ -330,6 +330,7 @@ type
     AcNumFormatText: TsNumberFormatAction;
     AcCellProtection_Cell: TsCellProtectionAction;
     AcCellProtection_HideFormulas: TsCellProtectionAction;
+    AcClearFormat: TsClearFormatAction;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     AcZoom100: TsWorksheetZoomAction;
@@ -367,6 +368,7 @@ type
     ToolButton20: TToolButton;
     ToolButton21: TToolButton;
     ToolButton22: TToolButton;
+    ToolButton23: TToolButton;
     ToolButton24: TToolButton;
     ToolButton25: TToolButton;
     ToolButton26: TToolButton;
@@ -461,6 +463,7 @@ type
     procedure InspectorEnter(Sender: TObject);
     procedure InspectorExit(Sender: TObject);
     procedure InspectorTabControlChange(Sender: TObject);
+    procedure ToolBar3Resize(Sender: TObject);
     procedure TSaveDialogTypeChange(Sender: TObject);
     procedure WorksheetGridClickHyperlink(Sender: TObject;
       const AHyperlink: TsHyperlink);
@@ -1084,6 +1087,11 @@ procedure TMainForm.InspectorTabControlChange(Sender: TObject);
 begin
   Inspector.Mode := TsInspectorMode(InspectorTabControl.TabIndex);
   UpdateInspectorColumns;
+end;
+
+procedure TMainForm.ToolBar3Resize(Sender: TObject);
+begin
+  CellEdit.Width := ToolBar3.ClientWidth - CellEdit.Left - 4;
 end;
 
 procedure TMainForm.LoadFile(const AFileName: String);

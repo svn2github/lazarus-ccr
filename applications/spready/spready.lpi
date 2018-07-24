@@ -20,7 +20,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="7"/>
-      <BuildNr Value="3"/>
+      <BuildNr Value="4"/>
       <StringTable InternalName="Spready" ProductName="Spready" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="2">
