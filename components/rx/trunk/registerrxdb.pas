@@ -63,6 +63,25 @@ type
     procedure FillValues(const Values: TStringList); override;
   end;
 
+  { TRxDBGridComponentEditor }
+
+  TRxDBGridComponentEditor = class(TDBGridComponentEditor)
+    procedure ExecuteVerb({%H-}Index: Integer); override;
+  end;
+
+{ TRxDBGridComponentEditor }
+
+procedure TRxDBGridComponentEditor.ExecuteVerb(Index: Integer);
+var
+  Hook: TPropertyEditorHook;
+  FRxBGrid: TRxDBGrid;
+begin
+  FRxBGrid := GetComponent as TRxDBGrid;
+  GetHook(Hook);
+  EditDBGridColumns( FRxBGrid, FRxBGrid.Columns, 'Columns' );
+  if Assigned(Hook) then Hook.Modified(Self);
+end;
+
 { TRxDBVerticalGridFieldProperty }
 
 procedure TRxDBVerticalGridFieldProperty.FillValues(const Values: TStringList);
@@ -211,6 +230,7 @@ begin
 
   //Component Editors
   RegisterComponentEditor(TRxMemoryData, TMemDataSetEditor);
+  RegisterComponentEditor(TRxDBGrid, TRxDBGridComponentEditor);
 
   //
   RegisterPropertyEditor(TypeInfo(string), TRxColumn, 'FieldName', TRxDBGridFieldProperty);
