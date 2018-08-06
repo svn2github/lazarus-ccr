@@ -1,19 +1,23 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="3">
+  <Package Version="4">
     <Name Value="tponguard"/>
+    <Type Value="RunAndDesignTime"/>
+    <AddToProjectUsesSection Value="True"/>
     <Author Value="Turbo Power Software Company ,Colorado Springs"/>
     <CompilerOptions>
-      <Version Value="8"/>
+      <Version Value="11"/>
       <SearchPaths>
-        <IncludeFiles Value="../source/"/>
-        <OtherUnitFiles Value="../source/"/>
+        <IncludeFiles Value="../source"/>
+        <OtherUnitFiles Value="../source"/>
         <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
-        <SrcPath Value="../source/"/>
+        <SrcPath Value="../source"/>
       </SearchPaths>
-      <Other>
-        <CompilerPath Value="$(CompPath)"/>
-      </Other>
+      <Parsing>
+        <SyntaxOptions>
+          <UseAnsiStrings Value="False"/>
+        </SyntaxOptions>
+      </Parsing>
     </CompilerOptions>
     <Description Value="TurboPower OnGuard is a library to create demo versions of your Borland Delphi &amp; C++Builder applications. Create demo versions that are time-limited, feature-limited, limited to a certain number of uses, or limited to a certain # of concurrent network users.
 Ports :   Andrew Haines (Kylix version), Bogusław Brandys (FPC/Lazarus)"/>
@@ -116,7 +120,6 @@ Ports :   Andrew Haines (Kylix version), Bogusław Brandys (FPC/Lazarus)"/>
         <UnitName Value="ogfirst"/>
       </Item23>
     </Files>
-    <Type Value="DesignTime"/>
     <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="LCL"/>
@@ -127,7 +130,7 @@ Ports :   Andrew Haines (Kylix version), Bogusław Brandys (FPC/Lazarus)"/>
       </Item2>
     </RequiredPkgs>
     <UsageOptions>
-      <UnitPath Value="$(PkgOutDir)/"/>
+      <UnitPath Value="$(PkgOutDir)"/>
     </UsageOptions>
     <PublishOptions>
       <Version Value="2"/>
