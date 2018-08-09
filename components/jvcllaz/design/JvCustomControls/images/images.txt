@@ -7,3 +7,6 @@ tjvtmtimeline.bmp
 tjvthumbnail.bmp
 tjvthumbimage.bmp
 tjvthumbview.bmp
+tjvimagelistviewer.bmp
+tjvimagesviewer.bmp
+tjvownerdrawviewer.bmp

@@ -1,0 +1,85 @@
+object frmImageViewer: TfrmImageViewer
+  Left = 328
+  Height = 454
+  Top = 112
+  Width = 562
+  BorderIcons = [biSystemMenu, biMaximize]
+  Caption = 'Image Viewer'
+  ClientHeight = 454
+  ClientWidth = 562
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Shell Dlg 2'
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  OnMouseWheel = FormMouseWheel
+  OnResize = FormResize
+  OnShow = FormShow
+  LCLVersion = '1.9.0.0'
+  Scaled = False
+  object StatusBar1: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 431
+    Width = 562
+    Panels = <    
+      item
+        Width = 50
+      end>
+    SimplePanel = False
+  end
+  object ScrollBox1: TScrollBox
+    Left = 0
+    Height = 431
+    Top = 0
+    Width = 562
+    HorzScrollBar.Page = 225
+    HorzScrollBar.Tracking = True
+    VertScrollBar.Page = 201
+    VertScrollBar.Tracking = True
+    Align = alClient
+    BorderStyle = bsNone
+    ClientHeight = 431
+    ClientWidth = 562
+    Color = clWindow
+    Font.Color = clWindowText
+    ParentColor = False
+    ParentFont = False
+    PopupMenu = PopupMenu1
+    TabOrder = 1
+    object Image1: TImage
+      Left = 0
+      Height = 201
+      Top = 0
+      Width = 225
+      AutoSize = True
+      Center = True
+    end
+  end
+  object ActionList1: TActionList
+    left = 56
+    top = 32
+    object acFullScreen: TAction
+      Caption = 'Full Screen'
+      OnExecute = acFullScreenExecute
+      ShortCut = 122
+    end
+    object acClose: TAction
+      Caption = 'Close'
+      OnExecute = acCloseExecute
+      ShortCut = 27
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    left = 144
+    top = 32
+    object FullScreen1: TMenuItem
+      Action = acFullScreen
+    end
+    object Close1: TMenuItem
+      Action = acClose
+    end
+  end
+end

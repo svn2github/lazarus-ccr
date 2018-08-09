@@ -19,7 +19,8 @@ uses
   JvOutlookBar, JvOutlookBarEditors,
 //  JvTabBar, JvTabBarXPPainter,
   JvThumbImage, JvThumbnails, JvThumbViews,
-  JvTimeLine, JvTMTimeLine, JvTimeLineEditor;
+  JvTimeLine, JvTMTimeLine, JvTimeLineEditor,
+  JvImagesViewer, JvImageListViewer, JvOwnerDrawViewer;
 
 procedure Register;
 begin
@@ -28,7 +29,8 @@ begin
     TJvOutlookBar,
     TJvThumbView, TJvThumbnail, TJvThumbImage,
     TJvTimeLine,
-    TJvTMTimeLine
+    TJvTMTimeLine,
+    TJvImagesViewer, TJvImageListViewer, TJvOwnerDrawViewer
   ]);
 
   // Timeline
