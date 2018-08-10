@@ -33,7 +33,7 @@ unit MainFrm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Forms, Controls,
+  SysUtils, Classes, Graphics, Forms, Controls,
   Dialogs, StdCtrls, ExtCtrls, ImgList, ComCtrls, Menus,
   // if you have units that supports other image formats, add them here *before* including JvItemViewer
   //  GraphicEx, // http://www.delphi-gems.com/Graphics.php#GraphicEx
@@ -113,8 +113,6 @@ var
 implementation
 
 uses
-  JvConsts, // for clMoneyGreen
-  CommCtrl, //Consts,
   ViewerFrm;
 
 {$R *.lfm}
@@ -126,7 +124,7 @@ procedure TfrmMain.DoITV3DrawItem(Sender: TObject; AIndex: Integer; AState: TCus
 var
   AColor: TColor;
 begin
-  AColor := TColor(ITV3.Items[AIndex].Data);
+  AColor := TColor(PtrInt(ITV3.Items[AIndex].Data));
   ACanvas.Brush.Color := AColor;
   ACanvas.FillRect(ItemRect);
   ACanvas.Pen.Style := psSolid;
@@ -271,7 +269,7 @@ begin
   for I := 0 to $3FFE do
   begin
     J := ($3FFE - I) + 500;
-    ITV3.Items[I].Data := Pointer(RGB(Random(J) mod 256, Random(J) mod 256, Random(J) mod 256));
+    ITV3.Items[I].Data := Pointer(PtrInt(RGBToColor(Random(J) mod 256, Random(J) mod 256, Random(J) mod 256)));
   end;
 end;
 
@@ -414,7 +412,7 @@ end;
 procedure TfrmMain.DoITV3Click(Sender: TObject);
 begin
   if (ITV3.SelectedIndex >= 0) and (ITV3.SelectedIndex < ITV3.Count) then
-    StatusBar1.Panels[0].Text := ColorToString(TColor(ITV3.Items[ITV3.SelectedIndex].Data));
+    StatusBar1.Panels[0].Text := ColorToString(TColor(PtrInt(ITV3.Items[ITV3.SelectedIndex].Data)));
 end;
 
 procedure TfrmMain.DoITV2GetCaption(Sender: TObject; ImageIndex: Integer;
@@ -509,7 +507,7 @@ procedure TfrmMain.DoITV3ItemHint(Sender: TObject; Index: Integer;
 var
   AColor: TColor;
 begin
-  AColor := TColor(ITV3.Items[Index].Data);
+  AColor := TColor(PtrInt(ITV3.Items[Index].Data));
   HintInfo.HintColor := AColor;
   HintInfo.HintStr := ColorToString(AColor);
   Handled := true;

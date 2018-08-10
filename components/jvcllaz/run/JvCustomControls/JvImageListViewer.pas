@@ -140,7 +140,7 @@ type
 implementation
 
 uses
-  CommCtrl, LCLType, LCLProc, LCLIntf,
+  LCLType, LCLProc, LCLIntf,
   Math,
   JvJCLUtils, JvJVCLUtils;
 

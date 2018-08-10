@@ -7079,7 +7079,6 @@ type
     R, G, B, A: byte;
   end;
 var
-  i: Integer;
   c: Int32;
 begin
   if AText[1] = '#' then AText[1] := '$';

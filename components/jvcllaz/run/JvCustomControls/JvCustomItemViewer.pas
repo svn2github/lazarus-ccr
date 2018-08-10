@@ -946,7 +946,7 @@ begin
     BeginUpdate;
     try
       for I := 0 to Count - 1 do
-        if (Integer(Items[I]) <> Msg.LParam) and
+        if (PtrInt(Items[I]) <> Msg.LParam) and
           (cdsSelected in Items[I].State) then
           Items[I].State := Items[I].State - [cdsSelected];
     finally
