@@ -94,7 +94,7 @@ implementation
 {$R *.lfm}
 
 uses
-  LConvEncoding, fpsUtils;
+  LConvEncoding, fpsUtils, sUtils;
 
 resourcestring
   rsLikeSpreadsheet = 'like spreadsheet';
@@ -134,7 +134,7 @@ var
   arr: Array[1..12] of String;
   i: Integer;
 begin
-  fs := UTF8FormatSettings;
+  InitUTF8FormatSettings(fs);
   if CbLongDateFormat.ItemIndex <> 0 then
     fs.LongDateFormat := CbLongDateFormat.Text;
   if CbShortDateFormat.ItemIndex <> 0 then

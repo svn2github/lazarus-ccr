@@ -347,7 +347,7 @@ object MainForm: TMainForm
       Width = 130
       WorkbookSource = WorkbookSource
       DropDownCount = 24
-      ItemIndex = 46
+      ItemIndex = 49
       TabOrder = 0
       Text = 'Arial'
     end
@@ -873,7 +873,7 @@ object MainForm: TMainForm
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Fraction (1 digit)'
-      Hint = 'Fraction with 1-digit numbers'
+      Hint = 'Fraction (1 digit)'
       NumberFormat = nfFraction
       NumberFormatString = '# ?/?'
     end
@@ -881,7 +881,7 @@ object MainForm: TMainForm
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Fraction (2 digits)'
-      Hint = 'Fraction with 2-digit numbers'
+      Hint = 'Fraction (2 digits)'
       NumberFormat = nfFraction
       NumberFormatString = '# ??/??'
     end
@@ -889,7 +889,7 @@ object MainForm: TMainForm
       Category = 'FPSpreadsheet'
       WorkbookSource = WorkbookSource
       Caption = 'Fraction (3 digits)'
-      Hint = 'Fraction with 3-digit numbers'
+      Hint = 'Fraction (3 digits)'
       NumberFormat = nfFraction
       NumberFormatString = '# ???/???'
     end

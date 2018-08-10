@@ -5,18 +5,30 @@ unit sutils;
 interface
 
 uses
+  SysUtils,
   fpstypes, fpspreadsheet;
 
-function GetCellFormatAsString(AWorkbook: TsWorkbook; AIndex: Integer): String;
+var
+  UTF8FormatSettings: TFormatSettings;
+
+//function GetCellFormatAsString(AWorkbook: TsWorkbook; AIndex: Integer): String;
 function GetColorName(AColor: TsColor): String;
 function GetFontAsString(AFont: TsFont): String;
 
 
 implementation
 
+uses
+  fpsstrings, fpsNumFormat;
+
 {@@ ----------------------------------------------------------------------------
   Determines the name of a color from its rgb value
 -------------------------------------------------------------------------------}
+type
+  TRGBA = packed record
+    R, G, B, A: byte;
+  end;
+
 function GetColorName(AColor: TsColor): string;
 var
   rgba: TRGBA absolute AColor;
@@ -29,7 +41,7 @@ begin
     scBlueGray   : Result := rsBlueGray;
     scBrown      : Result := rsBrown;
     scCoral      : Result := rsCoral;
-    scCyan       : Result := rsCyan;
+    //scCyan       : Result := rsCyan;
     scDarkBlue   : Result := rsDarkBlue;
     scDarkGreen  : Result := rsDarkGreen;
     scDarkPurple : Result := rsDarkPurple;
@@ -51,9 +63,9 @@ begin
     scLightOrange: Result := rsLightOrange;
     scLightTurquoise: Result := rsLightTurquoise;
     scLightYellow: Result := rsLightYellow;
-    scLime       : Result := rsLime;
+//    scLime       : Result := rsLime;
     scMagenta    : Result := rsMagenta;
-    scNavy       : Result := rsNavy;
+//    scNavy       : Result := rsNavy;
     scOceanBlue  : Result := rsOceanBlue;
     scOlive      : Result := rsOlive;
     scOliveGreen : Result := rsOliveGreen;
@@ -88,7 +100,7 @@ begin
       end;
   end;
 end;
-
+(*
 {@@ ----------------------------------------------------------------------------
   Returns a string describing the cell format with the specified index.
 -------------------------------------------------------------------------------}
@@ -100,6 +112,7 @@ var
   numFmt: TsNumFormatParams;
 begin
   Result := '';
+
   fmt := GetPointerToCellFormat(AIndex);
   if fmt = nil then
     exit;
@@ -141,6 +154,7 @@ begin
     Result := Format('%s; %s', [Result, GetEnumName(TypeInfo(TsBiDiMode), ord(fmt^.BiDiMode))]);
   if Result <> '' then Delete(Result, 1, 2);
 end;
+*)
 
 {@@ ----------------------------------------------------------------------------
   Returns a string which identifies the font.
@@ -162,5 +176,9 @@ begin
   end else
     Result := '';
 end;
+
+
+initialization
+  InitUTF8FormatSettings(UTF8FormatSettings);
 
 end.

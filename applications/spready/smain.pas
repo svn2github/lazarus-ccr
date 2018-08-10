@@ -502,7 +502,7 @@ uses
   fpsUtils, fpsCSV, fpsReaderWriter,
   sCSVParamsForm, sCurrencyForm, sFormatSettingsForm, sSortParamsForm,
   sHyperlinkForm, sNumFormatForm, sSearchForm, sColWidthForm, sRowHeightForm,
-  sWorksheetProtection, sAbout;
+  sWorksheetProtection, sAbout, sUtils;
 
 var
   SEARCH_DLG_POS: TPoint = (X: -1; Y: -1);
