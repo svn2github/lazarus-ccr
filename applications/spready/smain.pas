@@ -457,6 +457,7 @@ type
     procedure ColorComboboxAddColors(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
+    procedure FormDropFiles(Sender: TObject; const FileNames: array of String);
     procedure FormShow(Sender: TObject);
     procedure HyperlinkHandler(Sender: TObject; ACaption: String;
       var AHyperlink: TsHyperlink);
@@ -1045,6 +1046,14 @@ begin
     Inspector.TitleStyle := tsLazarus;
   end;
  {$ENDIF}
+end;
+
+// Drag and drop files from the explorer onto the main form.
+procedure TMainForm.FormDropFiles(Sender: TObject;
+  const FileNames: array of String);
+begin
+  WorkbookSource.AutoDetectFormat := true;
+  LoadFile(FileNames[0]);
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
