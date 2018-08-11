@@ -38,6 +38,7 @@ type
     AcRowHeight: TAction;
     AcColWidth: TAction;
     AcSettingsReadFormulas: TAction;
+    AcSettingsAutoUpdateRowheights: TAction;
     AcWorksheetProtection: TAction;
     AcWorksheetRTL: TAction;
     AcViewInspector: TAction;
@@ -93,6 +94,7 @@ type
     MenuItem189: TMenuItem;
     MenuItem190: TMenuItem;
     MenuItem191: TMenuItem;
+    MenuItem192: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
@@ -447,6 +449,7 @@ type
     procedure AcRowAddExecute(Sender: TObject);
     procedure AcRowDeleteExecute(Sender: TObject);
     procedure AcRowHeightExecute(Sender: TObject);
+    procedure AcSettingsAutoUpdateRowheightsExecute(Sender: TObject);
     procedure AcSettingsReadFormulasExecute(Sender: TObject);
     procedure AcSortColAscExecute(Sender: TObject);
     procedure AcSortExecute(Sender: TObject);
@@ -493,6 +496,7 @@ type
       AWorksheet: TsWorksheet; ARow, ACol: Cardinal);
     procedure UpdateCaption;
     procedure UpdateInspectorColumns;
+    procedure UpdateRowHeights;
   protected
     procedure ReadFromIni;
     procedure WriteToIni;
@@ -740,6 +744,12 @@ begin
   finally
     F.Free;
   end;
+end;
+
+procedure TMainForm.AcSettingsAutoUpdateRowheightsExecute(Sender: TObject);
+begin
+  if AcSettingsAutoUpdateRowHeights.Checked then
+    UpdateRowHeights;
 end;
 
 procedure TMainForm.AcWorksheetRTLExecute(Sender: TObject);
@@ -1124,6 +1134,8 @@ begin
     WorkbookSource.FileName := UTF8ToAnsi(AFileName);  // this loads the file
     FMRUMenuManager.AddToRecent(AFileName);
     UpdateCaption;
+    if AcSettingsAutoUpdateRowHeights.Checked then
+      UpdateRowHeights;
   finally
     Screen.Cursor := crs;
   end;
@@ -1173,6 +1185,8 @@ begin
 
     AcSettingsReadFormulas.Checked := ini.ReadBool('Settings', 'ReadFormulas', true);
     AcSettingsReadFormulasExecute(nil);
+
+    AcSettingsAutoUpdateRowHeights.Checked := ini.ReadBool('Settings', 'AutoUpdateRowHeights', false);
 
   finally
     ini.Free;
@@ -1233,6 +1247,11 @@ begin
   Inspector.DisplayOptions := Inspector.DisplayOptions - [doAutoColResize];
 end;
 
+procedure TMainForm.UpdateRowHeights;
+begin
+  WorksheetGrid.UpdateRowHeights(-1, true);
+end;
+
 procedure TMainForm.WriteToIni;
 var
   ini: TCustomIniFile;
@@ -1252,6 +1271,7 @@ begin
     ini.WriteBool('Inspector', 'Visible', InspectorTabControl.Visible);
 
     ini.WriteBool('Settings', 'ReadFormulas', AcSettingsReadFormulas.Checked);
+    ini.WriteBool('Settings', 'AutoUpdateRowHeights', AcSettingsAutoUpdateRowHeights.Checked);
   finally
     ini.Free;
   end;

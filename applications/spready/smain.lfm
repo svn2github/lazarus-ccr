@@ -1928,6 +1928,12 @@ object MainForm: TMainForm
       Hint = 'Clear format'
       ImageIndex = 74
     end
+    object AcSettingsAutoUpdateRowheights: TAction
+      Category = 'Settings'
+      AutoCheck = True
+      Caption = 'Update row heights after loading'
+      OnExecute = AcSettingsAutoUpdateRowheightsExecute
+    end
   end
   object ImageList: TImageList
     left = 176
@@ -4801,6 +4807,10 @@ object MainForm: TMainForm
       end
       object MenuItem180: TMenuItem
         Action = AcSettingsReadFormulas
+        AutoCheck = True
+      end
+      object MenuItem192: TMenuItem
+        Action = AcSettingsAutoUpdateRowheights
         AutoCheck = True
       end
     end
