@@ -1934,6 +1934,22 @@ object MainForm: TMainForm
       Caption = 'Update row heights after loading'
       OnExecute = AcSettingsAutoUpdateRowheightsExecute
     end
+    object AcWorksheetShowGrid: TAction
+      Category = 'Worksheet'
+      AutoCheck = True
+      Caption = 'Show grid lines'
+      Checked = True
+      OnExecute = AcWorksheetShowGridExecute
+      OnUpdate = AcWorksheetShowGridUpdate
+    end
+    object AcWorksheetShowHeaders: TAction
+      Category = 'Worksheet'
+      AutoCheck = True
+      Caption = 'Show headers'
+      Checked = True
+      OnExecute = AcWorksheetShowHeadersExecute
+      OnUpdate = AcWorksheetShowHeadersUpdate
+    end
   end
   object ImageList: TImageList
     left = 176
@@ -4423,10 +4439,6 @@ object MainForm: TMainForm
       object MenuItem106: TMenuItem
         Action = AcWorksheetProtection
       end
-      object MenuItem164: TMenuItem
-        Action = AcWorksheetRTL
-        AutoCheck = True
-      end
       object MenuItem165: TMenuItem
         Caption = '-'
       end
@@ -4462,6 +4474,18 @@ object MainForm: TMainForm
         object MenuItem191: TMenuItem
           Action = AcZoom300
         end
+      end
+      object MenuItem193: TMenuItem
+        Action = AcWorksheetShowGrid
+        AutoCheck = True
+      end
+      object MenuItem194: TMenuItem
+        Action = AcWorksheetShowHeaders
+        AutoCheck = True
+      end
+      object MenuItem164: TMenuItem
+        Action = AcWorksheetRTL
+        AutoCheck = True
       end
     end
     object MenuItem166: TMenuItem

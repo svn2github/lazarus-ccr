@@ -39,6 +39,8 @@ type
     AcColWidth: TAction;
     AcSettingsReadFormulas: TAction;
     AcSettingsAutoUpdateRowheights: TAction;
+    AcWorksheetShowHeaders: TAction;
+    AcWorksheetShowGrid: TAction;
     AcWorksheetProtection: TAction;
     AcWorksheetRTL: TAction;
     AcViewInspector: TAction;
@@ -95,6 +97,8 @@ type
     MenuItem190: TMenuItem;
     MenuItem191: TMenuItem;
     MenuItem192: TMenuItem;
+    MenuItem193: TMenuItem;
+    MenuItem194: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
@@ -467,6 +471,10 @@ type
     procedure AcShowHeadersExecute(Sender: TObject);
     procedure AcShowHeadersUpdate(Sender: TObject);
     procedure AcViewInspectorExecute(Sender: TObject);
+    procedure AcWorksheetShowGridExecute(Sender: TObject);
+    procedure AcWorksheetShowGridUpdate(Sender: TObject);
+    procedure AcWorksheetShowHeadersExecute(Sender: TObject);
+    procedure AcWorksheetShowHeadersUpdate(Sender: TObject);
     procedure EditCut1Execute(Sender: TObject);
     procedure ColorComboboxAddColors(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -923,6 +931,32 @@ begin
   InspectorSplitter.Left := 0;
   // Make sure that the splitter is always at the left of the inspector tabcontrol
   UpdateInspectorColumns;
+end;
+
+procedure TMainForm.AcWorksheetShowGridExecute(Sender: TObject);
+begin
+  WorksheetGrid.ShowGridLines := AcWorksheetShowGrid.Checked;
+end;
+
+procedure TMainForm.AcWorksheetShowGridUpdate(Sender: TObject);
+begin
+  with AcWorksheetShowGrid do begin
+    Enabled := WorkbookSource.Worksheet <> nil;
+    Checked := soShowGridLines in WorkbookSource.Worksheet.Options;
+  end;
+end;
+
+procedure TMainForm.AcWorksheetShowHeadersExecute(Sender: TObject);
+begin
+  WorksheetGrid.ShowHeaders := AcWorksheetShowHeaders.Checked;
+end;
+
+procedure TMainForm.AcWorksheetShowHeadersUpdate(Sender: TObject);
+begin
+  with AcWorksheetShowHeaders do begin
+    Enabled := WorkbookSource.Worksheet <> nil;
+    Checked := soShowHeaders in WorkbookSource.Worksheet.Options;
+  end;
 end;
 
 procedure TMainForm.AcWorksheetProtectionExecute(Sender: TObject);
