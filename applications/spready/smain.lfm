@@ -4417,12 +4417,45 @@ object MainForm: TMainForm
       object MenuItem106: TMenuItem
         Action = AcWorksheetProtection
       end
-      object MenuItem165: TMenuItem
-        Caption = '-'
-      end
       object MenuItem164: TMenuItem
         Action = AcWorksheetRTL
         AutoCheck = True
+      end
+      object MenuItem165: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem181: TMenuItem
+        Caption = 'Zoom'
+        object MenuItem184: TMenuItem
+          Action = AcZoom30
+        end
+        object MenuItem185: TMenuItem
+          Action = AcZoom50
+        end
+        object MenuItem186: TMenuItem
+          Action = AcZoom75
+        end
+        object MenuItem188: TMenuItem
+          Action = AcZoom90
+        end
+        object MenuItem183: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem182: TMenuItem
+          Action = AcZoom100
+        end
+        object MenuItem187: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem189: TMenuItem
+          Action = AcZoom150
+        end
+        object MenuItem190: TMenuItem
+          Action = AcZoom200
+        end
+        object MenuItem191: TMenuItem
+          Action = AcZoom300
+        end
       end
     end
     object MenuItem166: TMenuItem

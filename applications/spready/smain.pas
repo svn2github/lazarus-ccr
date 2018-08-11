@@ -82,6 +82,17 @@ type
     MenuItem178: TMenuItem;
     MenuItem179: TMenuItem;
     MenuItem180: TMenuItem;
+    MenuItem181: TMenuItem;
+    MenuItem182: TMenuItem;
+    MenuItem183: TMenuItem;
+    MenuItem184: TMenuItem;
+    MenuItem185: TMenuItem;
+    MenuItem186: TMenuItem;
+    MenuItem187: TMenuItem;
+    MenuItem188: TMenuItem;
+    MenuItem189: TMenuItem;
+    MenuItem190: TMenuItem;
+    MenuItem191: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
