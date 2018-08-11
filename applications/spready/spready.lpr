@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces,  // this includes the LCL widgetset
-  Forms, smain, sColWidthForm, sWorksheetProtection;
+  Forms, smain, sColWidthForm, sWorksheetProtection, sZoomForm;
 
 {$R *.res}
 
@@ -16,6 +16,7 @@ begin
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
   MainForm.BeforeRun;
+  Application.CreateForm(TZoomForm, ZoomForm);
   Application.Run;
 end.
 

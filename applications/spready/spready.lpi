@@ -69,7 +69,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="15">
+    <Units Count="16">
       <Unit0>
         <Filename Value="spready.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -171,6 +171,13 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="sWorksheetProtection"/>
       </Unit14>
+      <Unit15>
+        <Filename Value="szoomform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ZoomForm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="sZoomForm"/>
+      </Unit15>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

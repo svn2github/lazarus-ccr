@@ -99,6 +99,8 @@ type
     MenuItem192: TMenuItem;
     MenuItem193: TMenuItem;
     MenuItem194: TMenuItem;
+    MenuItem195: TMenuItem;
+    MenuItem196: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
@@ -359,6 +361,7 @@ type
     AcZoom200: TsWorksheetZoomAction;
     AcZoom300: TsWorksheetZoomAction;
     AcZoom500: TsWorksheetZoomAction;
+    AcZoomMore: TsWorksheetZoomAction;
     ToolBar2: TToolBar;
     ToolBar3: TToolBar;
     ToolButton1: TToolButton;
@@ -475,6 +478,7 @@ type
     procedure AcWorksheetShowGridUpdate(Sender: TObject);
     procedure AcWorksheetShowHeadersExecute(Sender: TObject);
     procedure AcWorksheetShowHeadersUpdate(Sender: TObject);
+    procedure AcZoomMoreExecute(Sender: TObject);
     procedure EditCut1Execute(Sender: TObject);
     procedure ColorComboboxAddColors(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -526,7 +530,7 @@ uses
   fpsUtils, fpsCSV, fpsReaderWriter,
   sCSVParamsForm, sCurrencyForm, sFormatSettingsForm, sSortParamsForm,
   sHyperlinkForm, sNumFormatForm, sSearchForm, sColWidthForm, sRowHeightForm,
-  sWorksheetProtection, sAbout, sUtils;
+  sWorksheetProtection, sZoomForm, sAbout, sUtils;
 
 var
   SEARCH_DLG_POS: TPoint = (X: -1; Y: -1);
@@ -956,6 +960,20 @@ begin
   with AcWorksheetShowHeaders do begin
     Enabled := WorkbookSource.Worksheet <> nil;
     Checked := soShowHeaders in WorkbookSource.Worksheet.Options;
+  end;
+end;
+
+procedure TMainForm.AcZoomMoreExecute(Sender: TObject);
+var
+  F: TZoomForm;
+begin
+  F := TZoomForm.Create(nil);
+  try
+    F.Worksheet := WorkbookSource.Worksheet;
+    if F.ShowModal = mrOK then
+      AcZoomMore.Zoom := F.ZoomLevel;
+  finally
+    F.Free;
   end;
 end;
 

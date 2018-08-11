@@ -1950,6 +1950,12 @@ object MainForm: TMainForm
       OnExecute = AcWorksheetShowHeadersExecute
       OnUpdate = AcWorksheetShowHeadersUpdate
     end
+    object AcZoomMore: TsWorksheetZoomAction
+      Category = 'FPSpreadsheet'
+      Caption = 'More...'
+      Hint = 'Zoom worksheet'
+      OnExecute = AcZoomMoreExecute
+    end
   end
   object ImageList: TImageList
     left = 176
@@ -4473,6 +4479,12 @@ object MainForm: TMainForm
         end
         object MenuItem191: TMenuItem
           Action = AcZoom300
+        end
+        object MenuItem195: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem196: TMenuItem
+          Action = AcZoomMore
         end
       end
       object MenuItem193: TMenuItem
