@@ -17,6 +17,9 @@ interface
 uses
   Classes, Controls, Forms, LazFileUtils, LazUTF8, IniFiles, Grids;
 
+const
+  SNoMDIForm = 'No MDI form present.';
+
 function GetDefaultSection(Component: TComponent): string;
 procedure GetDefaultIniData(Control: TControl; var IniFileName, Section: string );
 function GetDefaultIniName: string;
