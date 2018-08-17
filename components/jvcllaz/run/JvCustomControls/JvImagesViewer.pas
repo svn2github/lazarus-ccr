@@ -160,6 +160,8 @@ type
     property Anchors;
     //    property BiDiMode;
     property BorderSpacing;
+    property BorderStyle;
+    property BorderWidth;
     property Color;
     property Constraints;
     property DockSite;
@@ -194,10 +196,17 @@ type
     property OnMouseDown;
     property OnMouseMove;
     property OnMouseUp;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
     property OnKeyDown;
     property OnKeyUp;
     property OnKeyPress;
+    property OnResize;
     property OnStartDrag;
+    property OnUTF8KeyPress;
   end;
 
 implementation

@@ -203,7 +203,7 @@ type
     FOnDrawItem: TJvViewerItemDrawEvent;
     FDragImages: TDragImageList;
     FUpdateCount, FCols, FRows, FTempSelected, FSelectedIndex, FLastHotTrack: Integer;
-    FBorderStyle: TBorderStyle;
+    //FBorderStyle: TBorderStyle;
     FTopLeftIndex: Integer;
     FBottomRightIndex: Integer;
     FOnScroll: TNotifyEvent;
@@ -296,7 +296,7 @@ type
     property BottomRightIndex: Integer read FBottomRightIndex;
     property UpdateCount: Integer read FUpdateCount;
 
-    property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsSingle;
+    //property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsSingle;
     property ParentColor default False;
     property SelectedIndex: Integer read FSelectedIndex write SetSelectedIndex;
     property Selected[Item: TJvViewerItem]: Boolean read GetSelected write SetSelected;
@@ -329,6 +329,7 @@ type
     procedure Delete(Index: Integer);
     function IndexOf(Item: TJvViewerItem): Integer;
     function ItemAtPos(X, Y: Integer; Existing: Boolean): Integer; virtual;
+    property BorderStyle default bsSingle;
   end;
 
 // Creates a 8x8 brush pattern with alternate odd and even colors
@@ -823,7 +824,7 @@ begin
   VertScrollBar.Smooth := Options.Smooth;
   VertScrollBar.Tracking := Options.Tracking;
   DoubleBuffered := True;
-  FBorderStyle := bsSingle;
+  BorderStyle := bsSingle;
   Width := 185;
   Height := 150;
   TabStop := True;
@@ -965,15 +966,15 @@ const
   BorderStyles: array [TBorderStyle] of DWORD = (0, WS_BORDER);
 begin
   inherited CreateParams(Params);
-  with Params do
-  begin
-    Style := Style or BorderStyles[BorderStyle];
-    //if Ctl3D and (BorderStyle = bsSingle) then
-    //begin
-    //  Style := Style and not WS_BORDER;
-    //  ExStyle := ExStyle or WS_EX_CLIENTEDGE;
-    //end;
-  end;
+  //with Params do
+  //begin
+  //  Style := Style or BorderStyles[BorderStyle];
+  //  //if Ctl3D and (BorderStyle = bsSingle) then
+  //  //begin
+  //  //  Style := Style and not WS_BORDER;
+  //  //  ExStyle := ExStyle or WS_EX_CLIENTEDGE;
+  //  //end;
+  //end;
   with Params.WindowClass do
     Style := Style or (CS_HREDRAW or CS_VREDRAW); { or CS_SAVEBITS}
 end;
