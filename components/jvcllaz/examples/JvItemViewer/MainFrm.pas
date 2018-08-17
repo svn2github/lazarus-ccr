@@ -235,6 +235,8 @@ begin
   // add colors to TJvOwnerDrawViewer
   BuildColorList;
 
+  edDirectoryChange(nil);
+  {
   if edDirectory.Text = '' then
   begin
     // this triggers the OnChange event
@@ -243,6 +245,7 @@ begin
     //if edDirectory.Text = '' then
       edDirectory.Text := GetCurrentDir;
   end;
+  }
   pgViewersChange(nil);
 end;
 
