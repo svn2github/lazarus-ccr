@@ -292,6 +292,8 @@ type
     function DoItemHint(Index: Integer; var HintInfo: THintInfo): Boolean; virtual;
     procedure CustomSort(Compare:TListSortCompare);virtual;
 
+    function ClientDisplayRect: TRect;
+
     property TopLeftIndex: Integer read FTopLeftIndex;
     property BottomRightIndex: Integer read FBottomRightIndex;
     property UpdateCount: Integer read FUpdateCount;
@@ -926,7 +928,7 @@ begin
   if (I >= 0) and (I < Count) then
   begin
     Delete(I);
-    InvalidateClipRect(ClientRect);
+    InvalidateClipRect(ClientDisplayRect);
   end;
 end;
 
@@ -1205,7 +1207,7 @@ end;
 procedure TJvCustomItemViewer.InvalidateClipRect(R: TRect);
 begin
   if IsRectEmpty(R) then
-    R := Canvas.ClipRect;
+    R := ClientDisplayRect;
   LCLIntf.InvalidateRect(Handle, @R, True);
 end;
 
@@ -1329,9 +1331,9 @@ var
   I: Integer;
   AItemRect, TextRect, AClientRect: TRect;
 
-  function IsRectVisible(const R: TRect): Boolean;
+  function IsRectVisible(const R, TR: TRect): Boolean;
   begin
-    Result := (R.Top + FTopLeft.Y < AClientRect.Bottom) and (R.Bottom + FTopLeft.Y > AClientRect.Top) and
+    Result := (R.Top + FTopLeft.Y < AClientRect.Bottom) and (R.Bottom + FTopLeft.Y + TR.Height > AClientRect.Top) and
       (R.Left + FTopLeft.X < AClientRect.Right) and (R.Right + FTopLeft.X > AClientRect.Left)
   end;
 
@@ -1362,7 +1364,7 @@ begin
   for I := 0 to Count - 1 do
     if not Items[I].Deleting then
     begin
-      if not Options.LazyRead or IsRectVisible(AItemRect) then
+      if not Options.LazyRead or IsRectVisible(AItemRect, TextRect) then
         DrawItem(I, GetItemState(I), Canvas, AItemRect, TextRect);
       if (I + 1) mod FCols = 0 then
       begin
@@ -1451,7 +1453,7 @@ begin
       EndUpdate;
       UpdateAll;
       if HandleAllocated then
-        InvalidateClipRect(Canvas.ClipRect);
+        InvalidateClipRect(ClientDisplayRect);
     end;
   end;
 end;
@@ -1677,7 +1679,7 @@ procedure TJvCustomItemViewer.WMHScroll(var Msg: TLMessage);
 begin
   inherited;
   UpdateAll;
-  InvalidateClipRect(ClientRect);
+  InvalidateClipRect(ClientDisplayRect);
   if Assigned(FOnScroll) then
     FOnScroll(Self);
 end;
@@ -1762,7 +1764,7 @@ procedure TJvCustomItemViewer.WMVScroll(var Msg: TLMessage);
 begin
   inherited;
   UpdateAll;
-  InvalidateClipRect(ClientRect);
+  InvalidateClipRect(ClientDisplayRect);
   if Assigned(FOnScroll) then
     FOnScroll(Self);
 end;
@@ -1787,7 +1789,7 @@ procedure TJvCustomItemViewer.BoundsChanged;
 begin
   UpdateAll;
   if HandleAllocated then
-    InvalidateClipRect(ClientRect);
+    InvalidateClipRect(ClientDisplayRect);
   inherited BoundsChanged;
 end;
 
@@ -1799,7 +1801,7 @@ begin
     UpdateAll;
     if not Options.MultiSelect then
       DoUnSelectItems(SelectedIndex);
-    InvalidateClipRect(ClientRect);
+    InvalidateClipRect(ClientDisplayRect);
   end;
 end;
 
@@ -1997,6 +1999,12 @@ end;
 procedure TJvCustomItemViewer.CustomSort(Compare: TListSortCompare);
 begin
   FItems.Sort(Compare);
+end;
+
+function TJvCustomItemViewer.ClientDisplayRect: TRect;
+begin
+  Result := ClientRect;
+  OffsetRect(Result, HorzScrollBar.Position, VertScrollBar.Position);
 end;
 
 //=== { TViewerDrawImageList } ===============================================
