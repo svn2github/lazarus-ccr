@@ -163,7 +163,7 @@ begin
   {$ENDIF}
   {$IFDEF LINUX}
   if FpStat(FileName, FStat) = 0 then
-    Result:=users.GetUserName(FStat.uid);
+    Result:=users.GetUserName(FStat.st_uid);
   {$ENDIF}
 end;
 
@@ -186,7 +186,7 @@ begin
   {$ENDIF}
   {$IFDEF LINUX}
   FpStat(FileName, SR);
-  UserName:=users.GetUserName(SR.uid);
+  UserName:=users.GetUserName(SR.st_uid);
   if Pos('\', UserName) > 0 then
     DomainName:=Copy2SymbDel(UserName, '\') //for unix samba WinBIND
   else
