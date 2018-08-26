@@ -21,47 +21,47 @@
     <Version Major="1" Release="4"/>
     <Files Count="11">
       <Item1>
-        <Filename Value="..\run\JvCustomControls\JvTimeLine.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvtimeline.pas"/>
         <UnitName Value="JvTimeLine"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvCustomControls\JvTMTimeLine.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvtmtimeline.pas"/>
         <UnitName Value="JvTMTimeLine"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvCustomControls\JvOutlookBar.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvoutlookbar.pas"/>
         <UnitName Value="JvOutlookBar"/>
       </Item3>
       <Item4>
-        <Filename Value="..\run\JvCustomControls\JvBaseThumbnail.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvbasethumbnail.pas"/>
         <UnitName Value="JvBaseThumbnail"/>
       </Item4>
       <Item5>
-        <Filename Value="..\run\JvCustomControls\JvThumbImage.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvthumbimage.pas"/>
         <UnitName Value="JvThumbImage"/>
       </Item5>
       <Item6>
-        <Filename Value="..\run\JvCustomControls\JvThumbnails.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvthumbnails.pas"/>
         <UnitName Value="JvThumbnails"/>
       </Item6>
       <Item7>
-        <Filename Value="..\run\JvCustomControls\JvThumbViews.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvthumbviews.pas"/>
         <UnitName Value="JvThumbViews"/>
       </Item7>
       <Item8>
-        <Filename Value="..\run\JvCustomControls\JvCustomItemViewer.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvcustomitemviewer.pas"/>
         <UnitName Value="JvCustomItemViewer"/>
       </Item8>
       <Item9>
-        <Filename Value="..\run\JvCustomControls\JvImageListViewer.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvimageListviewer.pas"/>
         <UnitName Value="JvImageListViewer"/>
       </Item9>
       <Item10>
-        <Filename Value="..\run\JvCustomControls\JvImagesViewer.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvimagesviewer.pas"/>
         <UnitName Value="JvImagesViewer"/>
       </Item10>
       <Item11>
-        <Filename Value="..\run\JvCustomControls\JvOwnerDrawViewer.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvownerdrawviewer.pas"/>
         <UnitName Value="JvOwnerDrawViewer"/>
       </Item11>
     </Files>

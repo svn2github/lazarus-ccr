@@ -22,16 +22,16 @@
     <Version Major="1" Release="4"/>
     <Files Count="4">
       <Item1>
-        <Filename Value="..\design\JvCustomControls\JvCustomReg.pas"/>
+        <Filename Value="..\design\JvCustomControls\jvcustomreg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="JvCustomReg"/>
       </Item1>
       <Item2>
-        <Filename Value="..\design\JvCustomControls\JvTimeLineEditor.pas"/>
+        <Filename Value="..\design\JvCustomControls\jvtimelineeditor.pas"/>
         <UnitName Value="JvTimeLineEditor"/>
       </Item2>
       <Item3>
-        <Filename Value="..\design\JvCustomControls\JvOutlookBarEditors.pas"/>
+        <Filename Value="..\design\JvCustomControls\jvoutlookbareditors.pas"/>
         <UnitName Value="JvOutlookBarEditors"/>
       </Item3>
       <Item4>

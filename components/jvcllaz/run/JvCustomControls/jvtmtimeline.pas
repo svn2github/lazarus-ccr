@@ -901,7 +901,7 @@ end;
 
 procedure TJvCustomTMTimeline.SetBorderStyle(Value: TBorderStyle);
 begin
-  inherited BorderStyle := Value;
+  inherited;
   if BorderStyle <> Value then
   begin
     FLeftBtn.Flat := (BorderStyle = bsNone);

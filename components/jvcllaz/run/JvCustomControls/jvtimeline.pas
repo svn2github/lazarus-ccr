@@ -2918,7 +2918,7 @@ end;
    }
 procedure TJvCustomTimeLine.SetHint(const Value: TTranslateString);
 begin
-  inherited Hint := Value;
+  inherited;
   FOldHint := Value;
 end;
 
