@@ -32,7 +32,7 @@ unit JvBaseThumbnail;
 interface
 
 uses
-  LclIntf, LCLType, LMessages,
+  LclIntf, LCLType, //LMessages,
   (*
   Windows, // TWin32FindData
   {$IFDEF HAS_UNIT_LIBC}
@@ -40,10 +40,10 @@ uses
   {$ENDIF HAS_UNIT_LIBC}
   Messages,
   *)
-  Classes, Graphics, Controls, Forms, ExtCtrls,
+  Classes, Graphics, Controls, Forms, ExtCtrls;
   //JclBase,
   //JvExForms,
-  JvExExtCtrls;
+//  JvExExtCtrls;
 
 // (rom) TFileName is already declared in SysUtils
 
@@ -94,10 +94,10 @@ type
     procedure SetLength(NewLength: Integer);
     procedure Init;
   public
-    procedure LoadFromStream(AStream: TStream; APos: Integer); //Load From stream
+    procedure LoadFromStream({%H-}AStream: TStream; {%H-}APos: Integer); //Load From stream
     // both of this routines are inserting extract data to the stream its self
     // like a header and data end string;
-    procedure SaveToStream(AStream: TStream; APos: Integer); // Save to a Stream
+    procedure SaveToStream({%H-}AStream: TStream; {%H-}APos: Integer); // Save to a Stream
     { wp -- not used anywhere
     // (rom) moved to public
     property LongName: string read FLongName; // The LongName of this filename
@@ -183,8 +183,10 @@ type
 function BoundByte(Min, Max, Value: Integer): Byte;
 procedure InsertStr(var Str: string; const NewStr: string; Pos: Longint);
 function ProportionalSize(PhysicalSize, NewSize: TPoint): TPoint;
+{
 function ReplaceChar(const AStr: string; const CharToFind, NewChar: Char;
   ReplaceNo: Longint; CaseSensitive: Boolean): string;
+}
 function JkCeil(I: Extended): Longint;
 function ReplaceAllStr(const Str, SearchFor, ReplaceWith: string;
   CaseSensitive: Boolean): string;
@@ -249,7 +251,7 @@ begin
       T := T - 1;
   Result := T;
 end;
-
+                    (*
 function ReplaceChar(const AStr: string; const CharToFind, NewChar: Char;
   ReplaceNo: Longint; CaseSensitive: Boolean): string;
 var
@@ -274,7 +276,7 @@ begin
       Inc(Count, 1);
     until (Count > Length(Res)) or (RepCount >= ReplaceNo);
   Result := Res;
-end;
+end;          *)
 
 function ProportionalSize(PhysicalSize, NewSize: TPoint): TPoint;
 var
@@ -658,13 +660,14 @@ var
   LocalTime: TFileTime;
   DOSTime: Integer;
 begin
-  FileTimeToLocalFileTime(FileTime, LocalTime);
-  FileTimeToDosDateTime(LocalTime, LongRec(DOSTime).Hi, LongRec(DOSTime).Lo);
+  FileTimeToLocalFileTime(FileTime, LocalTime{%H-});
+  FileTimeToDosDateTime(LocalTime, LongRec(DOSTime).Hi, LongRec({%H-}DOSTime).Lo);
   Result := FileDateToDateTime(DOSTime);
 end;
 {$ENDIF}
 
 procedure TJvFileName.Init;
+(*
 var
   {$IFDEF WINDOWS}
   Dft: DWORD;
@@ -674,9 +677,9 @@ var
   {$IFDEF UNIX}
   info: stat;
   {$ENDIF}
+*)
 begin
-  (*  wp: not used anywhere...
-
+  (*
   {$IFDEF WINDOWS}
   if FindFirst(FFileName, faAnyFile or faDirectory, sr) = 0 then
   begin

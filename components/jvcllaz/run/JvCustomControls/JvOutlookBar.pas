@@ -66,15 +66,16 @@ type
     FClient: TJvOutlookBarButton;
   protected
     procedure AssignClient(AClient: TObject); override;
-    function IsCaptionLinked: Boolean; override;
-    function IsImageIndexLinked: Boolean; override;
     function IsOnExecuteLinked: Boolean; override;
-    function IsEnabledLinked: Boolean; override;
     procedure SetCaption(const Value: string); override;
     procedure SetEnabled(Value: Boolean); override;
     procedure SetImageIndex(Value: Integer); override;
     procedure SetOnExecute(Value: TNotifyEvent); override;
     property Client: TJvOutlookBarButton read FClient write FClient;
+  public
+    function IsCaptionLinked: Boolean; override;
+    function IsEnabledLinked: Boolean; override;
+    function IsImageIndexLinked: Boolean; override;
   end;
 
   TJvOutlookBarButtonActionLinkClass = class of TJvOutlookBarButtonActionLink;
@@ -1058,9 +1059,6 @@ begin
     ActionChange(Sender, False);
 end;
 
-type
-  THackOwnedCollection = class(TOwnedCollection);
-
 procedure TJvOutlookBarButton.SetAction(Value: TBasicAction);
 begin
   if (FActionLink <> nil) and (FActionLink.Action <> nil) then
@@ -1603,7 +1601,6 @@ end;
 
 function TJvCustomOutlookBar.CalcPageButtonHeight: Integer;
 var
-  DC: THandle;
   OldFont: HFONT;
 begin
   OldFont := SelectObject(Canvas.Handle, Canvas.Font.Handle);
@@ -1685,7 +1682,7 @@ var
   Flags: Cardinal;
   HasImage: Boolean;
   Details: TThemedElementDetails;
-  margin, w: Integer;
+  margin: Integer;
   {$IF LCL_FullVersion >= 1090000}
   pageImageRes: TScaledImageListResolution;
   f: Double;
@@ -1867,7 +1864,6 @@ var
   SavedDC: Integer;
   flags: Integer;
   Details: TThemedElementDetails;
-  w: Integer;
   dist: Integer;
   {$IF LCL_FullVersion >= 1090000}
   LargeImageRes, SmallImageRes: TScaledImageListResolution;
@@ -2914,7 +2910,7 @@ begin
   OldFont := SelectObject(Canvas.Handle, Canvas.Font.Handle);
   try
     Canvas.Font.Assign(Font);
-    GetTextMetrics(Canvas.Handle, TM);
+    GetTextMetrics(Canvas.Handle, TM{%H-});
     Result := TM.tmHeight + TM.tmExternalLeading;
     if (PageIndex >= 0) and (PageIndex < Pages.Count) then
     begin

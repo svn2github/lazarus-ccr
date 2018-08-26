@@ -116,8 +116,8 @@ type
     function GetTitleBorderStyle: TBorderStyle;
     function IsTitleFontStored: Boolean;
     procedure RefreshFont(Sender: TObject);
-    procedure SetDummyCard(AInt: Longint);
-    procedure SetDummyStr(AStr: string);
+    procedure SetDummyCard({%H-}AInt: Longint);
+    procedure SetDummyStr({%H-}AStr: string);
     procedure SetFileName(const AFile: string);
     procedure SetMargin(AValue: Integer);
     procedure SetMinimizeMemory(Min: Boolean);
@@ -137,7 +137,7 @@ type
     procedure BoundsChanged; override;
     procedure CalculateImageSize; virtual;
     procedure CreateHandle; override;
-    procedure THSizeChanged(var Msg: TLMessage); message TH_IMAGESIZECHANGED;
+    procedure THSizeChanged(var {%H-}Msg: TLMessage); message TH_IMAGESIZECHANGED;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -189,7 +189,7 @@ implementation
 
 uses
   FileUtil, DateUtils,
-  JvThumbViews, JvResources;
+  JvThumbViews; //, JvResources;
 
 constructor TJvThumbnail.Create(AOwner: TComponent);
 begin
@@ -329,7 +329,7 @@ procedure TJvThumbnail.GetFileInfo(AName: String);
 var
   {$IFDEF WINDOWS}
   info: TWin32FindDataW;
-  dft: DWORD;
+  dft: DWORD = 0;
   lft: TFileTime;
   H: THandle;
   ws: WideString;
@@ -340,12 +340,12 @@ var
 begin
   {$IFDEF WINDOWS}
   ws := UTF8Decode(AName);
-  H := Windows.FindFirstFileW(PWideChar(ws), info);
+  H := Windows.FindFirstFileW(PWideChar(ws), info{%H-});
   if H <> INVALID_HANDLE_VALUE then
   begin
     Windows.FindClose(H);
     //fdFileAccessed
-    FileTimeToLocalFileTime(info.ftLastAccessTime, lft);
+    FileTimeToLocalFileTime(info.ftLastAccessTime, lft{%H-});
     FileTimeToDosDateTime(lft, LongRec(dft).Hi, LongRec(dft).Lo);
     try
       FDFileAccessed := FileDateToDateTime(dft);

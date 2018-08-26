@@ -34,7 +34,7 @@ uses
   LCLIntf, LCLType, LMessages, Types,
   Classes, Controls, Forms, ExtCtrls,
   SysUtils, Graphics,
-  JvThumbnails, JvBaseThumbnail, JvExControls;
+  JvThumbnails, JvBaseThumbnail; //, JvExControls;
 
 type
   // (rom) already in JvBaseThumbnail
@@ -820,7 +820,7 @@ end;
 procedure TJvThumbView.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 var
-  SelNo, No: Word;
+  SelNo, No: Integer;
   TempX, TempY: Longint;
   thumb: TJvThumbnail;
 begin
@@ -1007,7 +1007,7 @@ begin
     try
       FFilling := True;
     //    if Assigned(ReadFileList) then FreeAndNil(ReadFileList);
-      FStartTime := GetTickCount;
+      FStartTime := GetTickCount64;
       GetFiles(Value);
       if FSorted then
         ReadFileList.Assign(FFileListSorted)
@@ -1029,7 +1029,7 @@ begin
           AddThumb(ExtractFilename(ReadFileList.Strings[Counter1]), True);
           TJvThumbnail(FThumbList.Objects[Counter1]).FileName := ReadFileList.Strings[Counter1];
           Inc(FDiskSize, TJvThumbnail(FThumbList.Objects[Counter1]).FileSize);
-          if (Cursor <> crHourGlass) and (GetTickCount - FStartTime > 1000) then
+          if (Cursor <> crHourGlass) and (GetTickCount64 - FStartTime > 1000) then
             Cursor := crHourGlass;
         end;
       end;

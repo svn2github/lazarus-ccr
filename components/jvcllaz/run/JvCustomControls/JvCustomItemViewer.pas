@@ -278,7 +278,7 @@ type
     procedure Paint; override;
     //procedure PaintWindow(DC: HDC); override;
     procedure CreateParams(var Params: TCreateParams); override;
-    procedure IndexToColRow(Index: Integer; var ACol, ARow: Integer);
+    procedure IndexToColRow(Index: Integer; out ACol, ARow: Integer);
     procedure DrawItem(Index: Integer; State: TCustomDrawState; ACanvas: TCanvas; AItemRect, TextRect: TRect); virtual;
     function GetItemClass: TJvViewerItemClass; virtual;
     function GetOptionsClass: TJvItemViewerOptionsClass; virtual;
@@ -355,8 +355,9 @@ function CenterRect(InnerRect, OuterRect: TRect): TRect;
 implementation
 
 uses
-  SysUtils, Math,
-  JvJCLUtils, JvJVCLUtils, Themes, LCLIntf;
+  SysUtils, Math, Themes, LCLIntf,
+  JvJCLUtils;
+//  JvJVCLUtils, ;
 
 const
   cScrollDelay = 400;
@@ -880,7 +881,7 @@ end;
 
 procedure TJvCustomItemViewer.CheckHotTrack;
 var
-  P: TPoint;
+  P: TPoint = (X:0; Y:0);
   I: Integer;
 begin
   if Options.HotTrack and GetCursorPos(P) then
@@ -964,8 +965,8 @@ begin
 end;
 
 procedure TJvCustomItemViewer.CreateParams(var Params: TCreateParams);
-const
-  BorderStyles: array [TBorderStyle] of DWORD = (0, WS_BORDER);
+//const
+//  BorderStyles: array [TBorderStyle] of DWORD = (0, WS_BORDER);
 begin
   inherited CreateParams(Params);
   //with Params do
@@ -1067,7 +1068,7 @@ end;
 function TJvCustomItemViewer.GetDragImages: TDragImageList;
 var
   B: TBitmap;
-  P: TPoint;
+  P: TPoint = (X:0; Y:0);
   I: Integer;
   AItemRect, TextRect: TRect;
 begin
@@ -1190,7 +1191,7 @@ begin
   Result := -1;
 end;
 
-procedure TJvCustomItemViewer.IndexToColRow(Index: Integer; var ACol, ARow: Integer);
+procedure TJvCustomItemViewer.IndexToColRow(Index: Integer; out ACol, ARow: Integer);
 begin
   Assert(FCols > 0);
   ACol := Index mod FCols;
@@ -1808,7 +1809,7 @@ end;
 procedure TJvCustomItemViewer.DoScrollTimer(Sender: TObject);
 var
   DoInvalidate: Boolean;
-  P: TPoint;
+  P: TPoint = (X:0; Y:0);
 begin
   FScrollTimer.Enabled := False;
   FScrollTimer.Interval := cScrollIntervall;

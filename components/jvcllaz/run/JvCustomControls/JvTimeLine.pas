@@ -41,7 +41,7 @@ Known Issues:
 unit JvTimeLine;
 
 {$mode objfpc}{$H+}
-
+{$WARN 5024 off : Parameter "$1" not used}
 interface
 
 uses
@@ -189,7 +189,7 @@ type
     FList: TList;
     FBmp: TBitmap;
     FYearWidth: TJvYearWidth;
-    FBorderStyle: TBorderStyle;
+//    FBorderStyle: TBorderStyle;
     FUpdate: Integer;
     FMonthWidth: Extended;
     FTopOffset: Integer;
@@ -218,7 +218,8 @@ type
     FImages: TCustomImageList;
     FYearFont: TFont;
     FSelectedItem: TJvTimeItem;
-    FYearList: TList;
+    //FYearList: TList;
+    FYearList: array of Integer;
     FImageChangeLink: TChangeLink;
     FOnVertScroll: TScrollEvent;
     FOnHorzScroll: TScrollEvent;
@@ -237,7 +238,7 @@ type
     FCanvas: TControlCanvas;
     FAutoDrag: Boolean;// automatic (or allowed) drag start
     FDragImages: TDragImageList;
-    FDragItem: TJvTimeItem;
+//    FDragItem: TJvTimeItem;
     FStartPos: TPoint;
     FStates: TJvTimeLineStates;
     FRangeAnchor: TJvTimeItem;
@@ -248,7 +249,7 @@ type
     procedure SetHelperYears(Value: Boolean);
     procedure SetFlat(Value: Boolean);
     procedure SetScrollArrows(Value: TJvScrollArrows);
-    procedure SetBorderStyle(Value: TBorderStyle);
+//    procedure SetBorderStyle(Value: TBorderStyle);
     procedure SetYearFont(Value: TFont);
     procedure SetYearWidth(Value: TJvYearWidth);
     procedure SetFirstDate(Value: TDate);
@@ -271,7 +272,7 @@ type
 
     procedure CNKeyDown(var Msg: TLMKeyDown); message CN_KEYDOWN;
     procedure WMNCCalcSize(var Msg: TLMNCCalcSize); message LM_NCCALCSIZE;
-    procedure WMNCPaint(var Msg: TLMessage); message LM_NCPAINT;
+//    procedure WMNCPaint(var Msg: TLMessage); message LM_NCPAINT;
     procedure WMCancelMode(var Msg: TLMessage); message LM_CANCELMODE;
     procedure CMEnter(var Msg: TLMessage); message CM_ENTER;
     procedure CMExit(var Msg: TLMessage); message CM_EXIT;
@@ -290,7 +291,7 @@ type
     procedure DrawRightItemHint(ACanvas: TCanvas);
     procedure DrawScrollButtons;
     procedure DoYearFontChange(Sender: TObject);
-    procedure DoDragOver(Source: TDragObject; X, Y: Integer; CanDrop: Boolean);
+    procedure DoDragOver({%H-}Source: TDragObject; X, Y: Integer; {%H-}CanDrop: Boolean);
     function HasItemsToLeft: Boolean;
     function HasItemsToRight: Boolean;
     procedure SetHorzSupport(const Value: Boolean);
@@ -302,8 +303,7 @@ type
     procedure HandleClickSelection(LastFocused, NewItem: TJvTimeItem;
       Shift: TShiftState);
     function HasMoved(P: TPoint): Boolean;
-    function GetHint: string;
-    procedure SetHint(const Value: TTranslateString);
+//    function GetHint: string;
     procedure SetShowSelection(const Value: Boolean);
     procedure SetSupportsColor(const Value: TColor);
   protected
@@ -343,6 +343,7 @@ type
     function GetDragImages: TDragImageList; override;
     property Align default alTop;
     property Color default clWindow;
+    procedure SetHint(const Value: TTranslateString); override;
 
     { new properties }
     property Year: Word read GetYear write SetYear;
@@ -350,15 +351,17 @@ type
     property Selected: TJvTimeItem read FSelectedItem write SetSelectedItem;
     property ShowHiddenItemHints: Boolean read FShowHiddenItemHints write
       SetShowHiddenItemHints default True;
+    {
     property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle
       default bsSingle;
+      }
     property DragLine: Boolean read FDragLine write FDragLine default True;
     property ShowItemHint: Boolean read FShowItemHint write FShowItemHint default False;
     property AutoSize: Boolean read FAutoSize write SetAutoSize default False;
     property HelperYears: Boolean read FHelperYears write SetHelperYears default True;
     property MultiSelect: Boolean read FMultiSelect write SetMultiSelect default False;
     property Flat: Boolean read FFlat write SetFlat default False;
-    property Hint: TTranslateString read GetHint write SetHint;
+//    property Hint: TTranslateString read GetHint write SetHint;
     property YearFont: TFont read FYearFont write SetYearFont;
     property YearWidth: TJvYearWidth read FYearWidth write SetYearWidth default 140;
     property TopOffset: Integer read FTopOffset write SetTopOffset default 21;
@@ -416,73 +419,72 @@ type
     property Selected;
   published
     property Align;
+    property AutoSize;
+    property BorderStyle;
     property Color;
     property Cursor;
-    property DoubleBuffered default True;
+    property DragCursor;
     property DragLine;
+    property DragMode;
+    property DoubleBuffered default True;
     property Enabled;
+    property FirstVisibleDate;
+    property Flat;
+    property Font;
     property Height;
     property HelperYears;
-    property ShowSelection;
     property Hint;
+    property HorzSupports;
+    property Images;
+    //    property ItemAlign;
+    property ItemHeight;
+    property Items;
     property Left;
+    property MultiSelect;
     property PopupMenu;
     property ParentShowHint;
-    property ShowHint;
-    property Top;
-    property Visible;
-    property Width;
-    property Font;
     property ScrollArrows;
-    property TabStop;
+    property ShowDays;
+    property ShowHiddenItemHints;
+    property ShowHint;
+    property ShowItemHint;
+    property ShowMonthNames;
+    property ShowSelection;
+    property Style;
+    property SupportsColor;
     property TabOrder;
+    property TabStop;
+    property Top;
+    property TopLevel;
+    property TopOffset;
+    property Visible;
+    property YearFont;
+    property YearWidth;
+    property VertSupports;
+    property Width;
+    property OnClick;
+    property OnDblClick;
+    property OnDragDrop;
+    property OnDragOver;
+    property OnDrawItem;
+    property OnEndDrag;
+    property OnHorzScroll;
+    property OnItemClick;
+    property OnItemDblClick;
+    property OnItemMouseMove;
+    property OnItemMoved;
+    property OnItemMoving;
+    property OnLoadItem;
+    property OnMeasureItem;
     property OnMouseDown;
     property OnMouseUp;
     property OnMouseMove;
     property OnMouseEnter;
     property OnMouseLeave;
-    property OnDblClick;
-    property OnClick;
-
-    property BorderStyle;
-    property AutoSize;
-    property DragCursor;
-    property DragMode;
-    property OnEndDrag;
-    property OnStartDrag;
-    property OnDragOver;
-    property OnDragDrop;
-    property MultiSelect;
-    property Flat;
-    property YearFont;
-    property YearWidth;
-    property TopOffset;
-    property ShowDays;
-    property ShowHiddenItemHints;
-    property ShowItemHint;
-    property ShowMonthNames;
-    property FirstVisibleDate;
-    property Images;
-    property Items;
-    property ItemHeight;
-    //    property ItemAlign;
-    property VertSupports;
-    property HorzSupports;
-    property SupportsColor;
-    property Style;
-    property TopLevel;
-    property OnItemClick;
-    property OnItemDblClick;
-    property OnSize;
-    property OnHorzScroll;
-    property OnVertScroll;
-    property OnDrawItem;
-    property OnMeasureItem;
     property OnSaveItem;
-    property OnLoadItem;
-    property OnItemMoved;
-    property OnItemMouseMove;
-    property OnItemMoving;
+    property OnSize;
+    property OnStartDrag;
+    property OnVertScroll;
   end;
 
 
@@ -537,7 +539,7 @@ function RectInRect(const Rect1, Rect2: TRect): Boolean;
 var
   R: TRect;
 begin
-  Result := IntersectRect(R, Rect1, Rect2);
+  Result := IntersectRect(R{%H-}, Rect1, Rect2);
 end;
 
 
@@ -1079,9 +1081,10 @@ begin
   FHelperYears := True;
   ControlStyle := [csOpaque, csClickEvents, csDoubleClicks,
     csCaptureMouse, csDisplayDragImage];
-  FBorderStyle := bsSingle;
+//  FBorderStyle := bsSingle;
   Color := clWhite;
-  FYearList := TList.Create;
+  SetLength(FYearList, 0);
+//  FYearList := TList.Create;
   FScrollArrows := [scrollLeft..scrollDown];
   FSupportLines := False;
   FTopOffset := 21;
@@ -1114,9 +1117,10 @@ end;
 
 destructor TJvCustomTimeLine.Destroy;
 begin
+  SetLength(FYearList, 0);
   FDragImages.Free;
   FCanvas.Free;
-  FYearList.Free;
+//  FYearList.Free;
   FBmp.Free;
   FList.Free;
   FTimeItems.Free;
@@ -1201,7 +1205,7 @@ begin
   FArrows[scrollDown].Visible :=
     (scrollDown in ScrollArrows) and (FNewHeight >= Height)  and not AutoSize ;
 end;
-
+                 {
 procedure TJvCustomTimeLine.SetBorderStyle(Value: TBorderStyle);
 begin
   inherited;
@@ -1215,7 +1219,7 @@ begin
 //     RecreateWnd;   -- wp: Invalidate instead of RecreateWnd
   end;
 end;
-
+}
 
 procedure TJvCustomTimeLine.SetTopLevel(Value: Integer);
 begin
@@ -1810,7 +1814,8 @@ var
 begin
   if csDestroying in ComponentState then
     Exit;
-  FYearList.Clear;
+  SetLength(FYearList, 0);
+//  FYearList.Clear;
   UpdateOffset;
   { draw the top horizontal line }
   with ACanvas do
@@ -1850,7 +1855,9 @@ begin
     end
     else
     begin { this is a new year }
-      FYearList.Add(Pointer(I));
+      SetLength(FYearList, Length(FYearList)+1);
+      FYearList[High(FYearList)] := I;
+//      FYearList.Add(Pointer(PtrInt(I)));
       if FirstYear then
       begin
         fYr := Y;
@@ -1884,9 +1891,11 @@ begin
     DrawText(ACanvas.Handle, PChar(aShadowRight), -1, R,
       DT_VCENTER or DT_SINGLELINE);
   end;
-  for I := 0 to FYearList.Count - 1 do
+//  for I := 0 to FYearList.Count - 1 do
+  for I := 0 to High(FYearList)do
   begin
-    DrawYear(ACanvas, Integer(FYearList[I]), IntToStr(fYr));
+    DrawYear(ACanvas, FYearList[i], IntToStr(fYr));
+//    DrawYear(ACanvas, Integer(FYearList[I]), IntToStr(fYr));
     Inc(fYr);
   end;
   if HorzSupports then
@@ -2212,7 +2221,7 @@ end;
 procedure TJvCustomTimeLine.LoadFromStream(Stream: TStream);
 var
   I: Integer;
-  Ch: AnsiChar;
+  Ch: AnsiChar = #0;
   S: string;
   UTF8Str: AnsiString;
   Item: TJvTimeItem;
@@ -2393,7 +2402,7 @@ begin
     inherited;
   end;
 end;
-
+                                  (*
 procedure TJvCustomTimeLine.WMNCPaint(var Msg: TLMessage);
 var
   DC: HDC;
@@ -2405,7 +2414,6 @@ var
 begin
   if csDestroying in ComponentState then
     Exit;
-             (*
   ACanvas := TCanvas.Create;
   { Get window DC that is clipped to the non-client area }
   DC := GetWindowDC(Handle);
@@ -2446,9 +2454,8 @@ begin
     ReleaseDC(Handle, DC);
     ACanvas.Free;
   end;
-  *)
 end;
-
+*)
 procedure TJvCustomTimeLine.WMNCCalcSize(var Msg: TLMNCCalcSize);
 begin
   InflateRect(Msg.CalcSize_Params^.rgrc[0], -2, -2);
@@ -2479,7 +2486,7 @@ begin
   inherited;
 end;
 
-{ -------- FIXME !!!
+(* -------- FIXME !!!
 procedure TJvCustomTimeLine.CMDrag(var Msg: TCMDrag);
 var
   P: TPoint;
@@ -2559,7 +2566,7 @@ begin
         end;
     end;
 end;
-}
+*)
 
 procedure TJvCustomTimeLine.SetAutoSize(Value: Boolean);
 begin
@@ -2694,7 +2701,7 @@ end;
 procedure TJvCustomTimeLine.DblClick;
 var
   Tmp: Boolean;
-  P: TPoint;
+  P: TPoint = (X:0; Y:0);
 begin
   Tmp := DragLine;
   try
@@ -2717,7 +2724,7 @@ end;
 
 procedure TJvCustomTimeLine.Click;
 var
-  P: TPoint;
+  P: TPoint = (X: 0; Y: 0);
 begin
   inherited Click;
   if GetCursorPos(P) then
@@ -2857,9 +2864,9 @@ end;
 function TJvCustomTimeLine.GetDragImages: TDragImageList;
 var
   Bmp: TBitmap;
-  P: TPoint;
+  P: TPoint = (X:0; Y:0);
   R: TRect;
-  H: Integer;
+  H: Integer = 0;
 begin
   GetCursorPos(P);
   P := ScreenToClient(P);
@@ -2903,12 +2910,12 @@ begin
 //      Application.ActivateHint(ClientToScreen(Point(X,Y)));
   end;
 end;
-
+  {
 function TJvCustomTimeLine.GetHint: string;
 begin
   Result := inherited Hint;
 end;
-
+   }
 procedure TJvCustomTimeLine.SetHint(const Value: TTranslateString);
 begin
   inherited Hint := Value;

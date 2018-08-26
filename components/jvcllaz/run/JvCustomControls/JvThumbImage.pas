@@ -128,10 +128,9 @@ uses
   FPImage,
   JvThumbnails, JvTypes, JvResources;
 
-procedure GrayScaleProc(AImg: TLazIntfImage; ARedData, AGreenData, ABlueData: Pointer);
+procedure GrayScaleProc(AImg: TLazIntfImage; {%H-}ARedData, {%H-}AGreenData, {%H-}ABlueData: Pointer);
 var
   r, c: Integer;
-  clr: TColor;
   col: TFPColor;
   intens: Integer;
 begin
@@ -143,7 +142,7 @@ begin
     end;
 end;
 
-procedure InvertProc(AImg: TLazIntfImage; ARedData, AGreenData, ABlueData: Pointer);
+procedure InvertProc(AImg: TLazIntfImage; {%H-}ARedData, {%H-}AGreenData, {%H-}ABlueData: Pointer);
 const
   MX: word = $FFFF;
 var
@@ -159,7 +158,7 @@ begin
     end;
 end;
 
-procedure MirrorHorProc(AImg: TLazIntfImage; ARedData, AGreenData, ABlueData: Pointer);
+procedure MirrorHorProc(AImg: TLazIntfImage; {%H-}ARedData, {%H-}AGreenData, {%H-}ABlueData: Pointer);
 var
   r, c, w, h: Integer;
   col1, col2: TFPColor;
@@ -175,7 +174,7 @@ begin
     end;
 end;
 
-procedure MirrorVertProc(AImg: TLazIntfImage; ARedData, AGreenData, ABlueData: Pointer);
+procedure MirrorVertProc(AImg: TLazIntfImage; {%H-}ARedData, {%H-}AGreenData, {%H-}ABlueData: Pointer);
 var
   r, c, w, h: Integer;
   col1, col2: TFPColor;
@@ -192,7 +191,7 @@ begin
 end;
 
 procedure Rotate90Proc(ASrcImg, ADestImg: TLazIntfImage;
-  ARedData, AGreenData, ABlueData: Pointer);
+  {%H-}ARedData, {%H-}AGreenData, {%H-}ABlueData: Pointer);
 var
   r, c, w, h: Integer;
   col: TFPColor;
@@ -208,7 +207,7 @@ begin
 end;
 
 procedure Rotate180Proc(ASrcImg, ADestImg: TLazIntfImage;
-  ARedData, AGreenData, ABlueData: Pointer);
+  {%H-}ARedData, {%H-}AGreenData, {%H-}ABlueData: Pointer);
 var
   r, c, w, h: Integer;
   col: TFPColor;
@@ -223,7 +222,7 @@ begin
 end;
 
 procedure Rotate270Proc(ASrcImg, ADestImg: TLazIntfImage;
-  ARedData, AGreenData, ABlueData: Pointer);
+  {%H-}ARedData, {%H-}AGreenData, {%H-}ABlueData: Pointer);
 var
   r, c, w, h: Integer;
   col: TFPColor;
@@ -247,9 +246,9 @@ var
   rVal, gVal, bVal: Byte;
   deltaR, deltaG, deltaB: Integer;
 begin
-  deltaR := PtrUInt(ARedData);
-  deltaG := PtrUInt(AGreenData);
-  deltaB := PtrUInt(ABlueData);
+  deltaR := {%H-}PtrUInt(ARedData);
+  deltaG := {%H-}PtrUInt(AGreenData);
+  deltaB := {%H-}PtrUInt(ABlueData);
   for r := 0 to AImg.Height - 1 do
     for c := 0 to AImg.Width - 1 do begin
       a := AImg.Colors[c, r].Alpha;
@@ -478,7 +477,7 @@ end;
 procedure TJvThumbImage.LoadFromFile(AFile: string);
 var
   JpegImage: TJpegImage;
-  Fl: TFileStream;
+//  Fl: TFileStream;
 begin
   try
     if UpperCase(ExtractFileExt(AFile)) = '.JPG' then
@@ -787,7 +786,7 @@ end;
   not preserved or values calculations depending on the current channel values. }
 procedure TJvThumbImage.ChangeRGB(R, G, B: Longint);
 begin
-  Transform(@RGBProc, Pointer(PtrUInt(R)), Pointer(PtrUInt(G)), Pointer(PtrUInt(B)));
+  Transform(@RGBProc, {%H-}Pointer(PtrUInt(R)), {%H-}Pointer(PtrUInt(G)), {%H-}Pointer(PtrUInt(B)));
 end;
 
 { General bitmap transformation method using LazIntfImages. The operation is

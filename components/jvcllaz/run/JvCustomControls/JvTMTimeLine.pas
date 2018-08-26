@@ -105,8 +105,6 @@ type
     procedure SetMonthFont(const Value: TFont);
     procedure SetSelDate(const Value: TDate);
     procedure SetDayWidth(const Value: Integer);
-    function GetBorderStyle: TBorderStyle;
-    procedure SetBorderStyle(const Value: TBorderStyle);
     procedure SetImages(const Value: TImageList);
     procedure DoChange(Sender: TObject);
     function GetImageIndex(ADate: TDate): Integer;
@@ -118,11 +116,11 @@ type
     procedure SetImageCursor(const Value: TCursor);
     procedure SetSelection(const Value: TJvTLSelFrame);
     procedure DoLMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure DoMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+      Shift: TShiftState; {%H-}X, {%H-}Y: Integer);
+    procedure DoMouseUp(Sender: TObject; {%H-}Button: TMouseButton;
+      {%H-}Shift: TShiftState; {%H-}X, {%H-}Y: Integer);
     procedure DoRMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+      Shift: TShiftState; {%H-}X, {%H-}Y: Integer);
     // this is needed so we receive the arrow keys
 
     procedure DrawFrame(ACanvas: TCanvas; AColor: TColor;
@@ -149,21 +147,22 @@ type
   protected
 //    procedure GetDlgCode(var Code: TDlgCodes); override;   <--- wp
 //    procedure CursorChanged; override;   <--- wo
-    procedure EnabledChanged; override;
-    procedure Paint; override;
+    procedure Change; virtual;
     function DoMouseWheelDown(Shift: TShiftState;  MousePos: TPoint): Boolean; override;
     function DoMouseWheelUp(Shift: TShiftState;  MousePos: TPoint): Boolean; override;
+    procedure EnabledChanged; override;
+    function GetBorderStyle: TBorderStyle;
+    function GetLastVisibleDate: TDate;
+    function GetVisibleDays: Integer;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure LoadObject(Stream: TStream; var AObject: TObject); virtual;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-
+    procedure Paint; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    procedure Change; virtual;
-    procedure LoadObject(Stream: TStream; var AObject: TObject); virtual;
     procedure SaveObject(Stream: TStream; const AObject: TObject); virtual;
-    function GetLastVisibleDate: TDate;
-    function GetVisibleDays: Integer;
+    procedure SetBorderStyle(Value: TBorderStyle); override;
 
     property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle;
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default 16;
@@ -198,6 +197,7 @@ type
     property OnReadObject: TJvObjectReadEvent read FOnReadObject write FOnReadObject;
     property OnWriteObject: TJvObjectWriteEvent read FOnWriteObject write FOnWriteObject;
     property Align default alTop;
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -899,13 +899,13 @@ begin
   Result := inherited BorderStyle;
 end;
 
-procedure TJvCustomTMTimeline.SetBorderStyle(const Value: TBorderStyle);
+procedure TJvCustomTMTimeline.SetBorderStyle(Value: TBorderStyle);
 begin
+  inherited BorderStyle := Value;
   if BorderStyle <> Value then
   begin
-    inherited BorderStyle := Value;
-    FLeftBtn.Flat := BorderStyle = bsNone;
-    FRightBtn.Flat := BorderStyle = bsNone;
+    FLeftBtn.Flat := (BorderStyle = bsNone);
+    FRightBtn.Flat := (BorderStyle = bsNone);
   end;
 end;
 
@@ -1187,14 +1187,17 @@ begin
 end;
 
 function ReadInt(Stream: TStream): Integer;
+var
+  n: Integer = 0;
 begin
-  Stream.Read(Result, SizeOf(Result));
+  Stream.Read(n, SizeOf(n));
+  Result := n;
 end;
 
 function ReadStr(Stream: TStream): string;
 var
   I: Integer;
-  UTF8Value: UTF8String;
+  UTF8Value: UTF8String = '';
 begin
   I := ReadInt(Stream);
   SetLength(Result, I);
