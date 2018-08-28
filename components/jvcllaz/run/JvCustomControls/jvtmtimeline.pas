@@ -342,6 +342,15 @@ uses
 const
   cMagic = 'Jv.TMTIMELINE1';
 
+function HighDpi_Suffix: String;
+begin
+  Result := '';
+  if Screen.SystemFont.PixelsPerInch >= 168 then
+    Result := Result + '_200'
+  else
+  if Screen.SystemFont.PixelsPerInch >= 120 then
+    Result := Result + '_150';
+end;
 
 //=== { TJvTLSelFrame } ======================================================
 
@@ -402,6 +411,7 @@ end;
 constructor TJvCustomTMTimeline.Create(AOwner: TComponent);
 var
   png: TPortableNetworkGraphic;
+  resname: String;
 begin
   inherited Create(AOwner);
   DoubleBuffered := True;
@@ -452,7 +462,8 @@ begin
     Layout := blGlyphTop;
     png := TPortableNetworkGraphic.Create;
     try
-      png.LoadFromResourceName(HInstance, 'jvcustomtmtimelinescrollleft');
+      resName := 'jvcustomtmtimelinescrollleft' + HighDPI_Suffix;
+      png.LoadFromResourceName(HInstance, resname);
       Glyph.Assign(png);
     finally
       png.Free;
@@ -473,7 +484,8 @@ begin
     Layout := blGlyphTop;
     png := TPortableNetworkGraphic.Create;
     try
-      png.LoadFromResourceName(HInstance, 'jvcustomtmtimelinescrollright');
+      resname := 'jvcustomtmtimelinescrollright' + HighDPI_Suffix;
+      png.LoadFromResourceName(HInstance, resname);
       Glyph.Assign(png);
     finally
       png.Free;
@@ -594,7 +606,7 @@ end;
 function TJvCustomTMTimeline.GetRectForDate(ADate: TDate): TRect;
 begin
   // all rects are the same size...
-  Result := Classes.Rect(0, 0, DayWidth, ClientHeight + 1);
+  Result := Classes.Rect(0, 0, DayWidth + 1, ClientHeight + 1);
   // ...but we must move the entire rect to the correct date
   OffsetRect(Result, Trunc(ADate - Self.Date) * DayWidth, 0);
   // ...and finally compensate for the inital offset
@@ -621,6 +633,7 @@ var
   png: TPortableNetworkGraphic;
   R: TRect;
   x, y: Integer;
+  resname: String;
 begin
   Tmp := ACanvas.Brush.Color;
   try
@@ -631,7 +644,8 @@ begin
     if ShowTodayIcon then begin
       png := TPortableNetworkGraphic.Create;
       try
-        png.LoadFromResourceName(HInstance, 'jvcustomtmtimelinemilestonelarge');
+        resname := 'jvcustomtmtimelinemilestonelarge' + HighDpi_Suffix;
+        png.LoadFromResourceName(HInstance, resname);
         x := (ARect.Left + ARect.Right - png.Width) div 2;
         y := ARect.Top + CanvasMaxTextHeight(ACanvas) + 4;
         R := Classes.Rect(x, y, x + png.Width, y + png.Height);

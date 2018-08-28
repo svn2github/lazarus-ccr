@@ -508,7 +508,7 @@ uses
   JvThemes,
   JvConsts, JvJVCLUtils;
 
-{$R ..\..\resource\JvOutlookBar.res}
+{$R ..\..\resource\jvoutlookbar.res}
 
 type
   THackOutlookBar = class(TJvCustomOutlookBar);
@@ -610,6 +610,16 @@ begin
         Exit;
       end;
     end;
+end;
+
+function HighDpi_Suffix: String;
+begin
+  Result := '';
+  if Screen.SystemFont.PixelsPerInch >= 168 then
+    Result := Result + '_200'
+  else
+  if Screen.SystemFont.PixelsPerInch >= 120 then
+    Result := Result + '_150';
 end;
 
 
@@ -2050,12 +2060,7 @@ begin
     if (UpButton.Glyph.Width = 0) then begin
       png := TPortableNetworkGraphic.Create;
       try
-        resName := 'jvcustomoutlookbaruparrow';
-        if Screen.SystemFont.PixelsPerInch > 130 then
-          resName := resName + '_200'
-        else
-        if Screen.SystemFont.PixelsPerInch > 105 then
-          resName := resName + '_150';
+        resName := 'jvcustomoutlookbaruparrow' + HighDPI_Suffix;
         png.LoadFromResourceName(HInstance, resName);
         UpButton.Glyph.Assign(png);
       finally
@@ -2071,11 +2076,7 @@ begin
     DownButton.SetBounds(ClientWidth - w - margin, R.Bottom - margin - h, w, h);
     png := TPortableNetworkGraphic.Create;
     try
-      resName := 'jvcustomoutlookbardownarrow';
-      if Screen.SystemFont.PixelsPerInch > 130 then
-        resName := resName + '_200'
-      else if Screen.SystemFont.PixelsPerInch > 105 then
-        resName := resName + '_150';
+      resName := 'jvcustomoutlookbardownarrow' + HighDPI_Suffix;
       png.LoadFromResourceName(HInstance, resName);
       DownButton.Glyph.Assign(png);
     finally

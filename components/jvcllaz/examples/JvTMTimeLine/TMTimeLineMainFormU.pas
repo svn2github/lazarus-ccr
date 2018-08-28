@@ -41,6 +41,9 @@ type
   { TTMTimeLineMainForm }
 
   TTMTimeLineMainForm = class(TForm)
+    Images: TImageList;
+    Images_150: TImageList;
+    Images_200: TImageList;
     LbImages: TListBox;
     Panel1: TPanel;
     LblImages: TLabel;
@@ -52,7 +55,6 @@ type
     mnuEditMemo: TMenuItem;
     mnuGotoDate: TMenuItem;
     StatusBar: TStatusBar;
-    il16: TImageList;
     gbWidths: TGroupBox;
     gbDates: TGroupBox;
     gbAppearance: TGroupBox;
@@ -182,17 +184,30 @@ const
 procedure TTMTimeLineMainForm.FormCreate(Sender: TObject);
 var
   i : integer;
+  sz: TSize;
+  tm: TLCLTextMetric;
+  h: Integer;
 begin
   //ForceCurrentDirectory := true;  // <--- wp
+
+  dtpSelDate.Date := Date;
+  dtpFirstDate.Date := Date-7;
+  dtpImageDate.Date := Date+7;
+
   JvTimeLine1 := TJvTMTimeline.Create(self);
   JvTimeLine1.Parent := self;
   JvTimeLine1.PopUpMenu := popTimeline;
   JvTimeLine1.OnChange := @DoDateChange;
   JvTimeLine1.OnClick := @DoClick;
   JvTimeLine1.OnDblClick := @DoDblClick;
-  JvTimeLine1.Images := il16;
+  if Screen.SystemFont.PixelsPerInch < 120 then
+    JvTimeLine1.Images := Images
+  else if Screen.SystemFont.PixelsPerInch < 168 then
+    JvTimeLine1.Images := Images_150
+  else
+    JvTimeLine1.Images := Images_200;
   JvTimeLine1.Align := alClient;
-  JvTimeLine1.Constraints.MinHeight := 60;
+  JvTimeLine1.Constraints.MinHeight := Scale96ToFont(60);
   JvTimeLine1.Hint :=
     'Double-click a date to edit it''s memo content.' +
     LineEnding +
@@ -200,23 +215,22 @@ begin
   JvTimeLine1.Date := dtpFirstDate.Date;
   JvTimeLine1.SelDate := dtpSelDate.Date;
 
-  dtpSelDate.Date := Date;
-  dtpFirstDate.Date := Date-7;
-  dtpImageDate.Date := Date+7;
   udDayWidth.Position := JvTimeLine1.DayWidth;
   udButtonWidth.Position := JvTimeLine1.ButtonWidth;
   chkReadOnly.Checked := JvTimeLine1.ReadOnly;
   lbObjFontStyle.Checked[2] := true;
-  for i := 0 to il16.Count - 1 do
-    LbImages.Items.Add(IntToStr(i));
+
   LblKeyboardNavigation.Font.Style := [fsBold];
-  LbImages.ItemHeight := Max(il16.Height, abs(LbImages.Font.Height)) + IMAGE_DIST;
-  i := LbImages.Canvas.TextWidth('99');
-  LbImages.Width := Max(
-    il16.Width + 4 * abs(LbImages.Font.Height) + 3 * Scale96ToFont(IMAGE_DIST),
-    LblImages.Width
-  );
-  udDayWidth.Position := jvTimeLine1.DayWidth;
+
+  h := abs(Screen.SystemFont.Height);
+  for i := 0 to JvTimeLine1.Images.Count - 1 do
+    LbImages.Items.Add(IntToStr(i));
+  LbImages.ItemHeight := Max(JvTimeLine1.Images.Height, h + 2 * Scale96ToFont(IMAGE_DIST));
+  LbImages.Width := JvTimeLine1.Images.Width + 2* h + 2 * Scale96ToFont(IMAGE_DIST);
+
+  Statusbar.Panels[0].Width := Scale96ToFont(120);
+  Statusbar.Panels[1].Width := Scale96ToFont(220);
+
   ActiveControl := JvTimeLine1;
 end;
 
@@ -408,13 +422,13 @@ begin
   end;
   LbImages.Canvas.FillRect(ARect);
   InflateRect(ARect, -IMAGE_DIST, 0);
-  il16.Draw(
+  JvTimeLine1.Images.Draw(
     LbImages.Canvas, ARect.Left,
-    (ARect.Top + ARect.Bottom - il16.Height) div 2,
+    (ARect.Top + ARect.Bottom - JvTimeLine1.Images.Height) div 2,
     Index
   );
   LbImages.Canvas.TextOut(
-    ARect.Left + il16.Width + IMAGE_DIST,
+    ARect.Left + JvTimeLine1.Images.Width + IMAGE_DIST,
     (ARect.Top + ARect.Bottom - h) div 2,
     IntToStr(Index)
   );
@@ -526,7 +540,7 @@ begin
   if i > -1 then
   begin
     Ico := TIcon.Create;
-    il16.GetIcon(i,Ico);
+    JvTimeLine1.Images.GetIcon(i,Ico);
   end
   else
     Ico := nil;
@@ -628,6 +642,7 @@ procedure TTMTimeLineMainForm.StatusBarResize(Sender: TObject);
 begin
   StatusBar.Panels[0].Text := Format('Visible days: %d',[JvTimeLine1.VisibleDays]);
   StatusBar.Panels[1].Text := Format('Last visible date: %s',[DateToStr(JvTimeLine1.LastVisibleDate)]);
+  StatusBar.Panels[2].Text := 'Icons used: Fugue icons (http://p.yusukekamiyamane.com)';
 end;
 
 // display options:
