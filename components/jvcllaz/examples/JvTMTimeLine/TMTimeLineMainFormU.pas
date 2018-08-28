@@ -34,7 +34,7 @@ interface
 uses
   LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls, ComCtrls, StdCtrls, Buttons, ImgList, DateTimePicker,
-  Menus, CheckLst, ComboEx, JvTMTimeLine, Types;
+  Menus, CheckLst, JvTMTimeLine, Types;
 
 type
 
@@ -197,13 +197,15 @@ begin
     'Double-click a date to edit it''s memo content.' +
     LineEnding +
     'Right-click to display pop-up menu.';
+  JvTimeLine1.Date := dtpFirstDate.Date;
+  JvTimeLine1.SelDate := dtpSelDate.Date;
+
   dtpSelDate.Date := Date;
   dtpFirstDate.Date := Date-7;
   dtpImageDate.Date := Date+7;
   udDayWidth.Position := JvTimeLine1.DayWidth;
+  udButtonWidth.Position := JvTimeLine1.ButtonWidth;
   chkReadOnly.Checked := JvTimeLine1.ReadOnly;
-  JvTimeLine1.Date := dtpFirstDate.Date;
-  JvTimeLine1.SelDate := dtpSelDate.Date;
   lbObjFontStyle.Checked[2] := true;
   for i := 0 to il16.Count - 1 do
     LbImages.Items.Add(IntToStr(i));
@@ -211,9 +213,10 @@ begin
   LbImages.ItemHeight := Max(il16.Height, abs(LbImages.Font.Height)) + IMAGE_DIST;
   i := LbImages.Canvas.TextWidth('99');
   LbImages.Width := Max(
-    il16.Width + 4 * abs(LbImages.Font.Height) + 3 * IMAGE_DIST,
+    il16.Width + 4 * abs(LbImages.Font.Height) + 3 * Scale96ToFont(IMAGE_DIST),
     LblImages.Width
   );
+  udDayWidth.Position := jvTimeLine1.DayWidth;
   ActiveControl := JvTimeLine1;
 end;
 
@@ -352,7 +355,6 @@ end;
 procedure TTMTimeLineMainForm.udDayWidthClick(Sender: TObject; Button: TUDBtnType);
 begin
   JvTimeLine1.DayWidth := udDayWidth.Position;
-  udDayWidth.Position := JvTimeLine1.DayWidth;
   StatusBarResize(Sender);
 end;
 

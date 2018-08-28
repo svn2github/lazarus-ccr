@@ -1129,11 +1129,11 @@ begin
   FItemHintImageList.Free;
   inherited Destroy;
 end;
+
 procedure TJvCustomTimeLine.DoYearFontChange(Sender: TObject);
 begin
   Invalidate;
 end;
-
 
 procedure TJvCustomTimeLine.CreateWnd;
 var

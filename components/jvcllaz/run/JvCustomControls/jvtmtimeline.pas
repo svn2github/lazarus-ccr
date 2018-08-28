@@ -33,9 +33,12 @@ unit JvTMTimeLine;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Types,
+  LCLIntf, LCLType, LMessages, LCLVersion, Types,
   SysUtils, Classes, Controls, Buttons, Graphics, ExtCtrls, Forms, ImgList,
   JvExControls;
+
+const
+  cTMTimeLineDayWidth = 19;
 
 type
   TJvTLSelFrame = class(TPersistent)
@@ -97,6 +100,8 @@ type
     FLineColor: TColor;
     FShift: TShiftState;
     FShowTodayIcon: Boolean;
+    function DayWidthStored: Boolean;
+    function GetDayWidth: Integer;
     function GetRectForDate(ADate: TDate): TRect;
     function DateFromPos(APos: Integer): TDate;
     procedure DoTimer(Sender: TObject);
@@ -148,6 +153,10 @@ type
 //    procedure GetDlgCode(var Code: TDlgCodes); override;   <--- wp
 //    procedure CursorChanged; override;   <--- wo
     procedure Change; virtual;
+    {$IFDEF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    {$IFEND}
     function DoMouseWheelDown(Shift: TShiftState;  MousePos: TPoint): Boolean; override;
     function DoMouseWheelUp(Shift: TShiftState;  MousePos: TPoint): Boolean; override;
     procedure EnabledChanged; override;
@@ -167,7 +176,7 @@ type
     property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle;
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default 16;
     property Cursor;
-    property DayWidth: Integer read FDayWidth write SetDayWidth default 19;
+    property DayWidth: Integer read GetDayWidth write SetDayWidth stored DayWidthStored;
     property ObjectsFontStyle: TFontStyles read FObjectsFontStyle write SetObjectsFontStyle default [fsUnderline];
     property ImageCursor: TCursor read FImageCursor write SetImageCursor default crHandPoint;
     property Images: TImageList read FImages write SetImages;
@@ -417,7 +426,7 @@ begin
   FButtonWidth := 16;
   FDate := SysUtils.Date - 7;
   FSelDate := FDate - 1;
-  FDayWidth := 19;
+  FDayWidth := -1;
   FImageCursor := crHandPoint;
   FSmallChange := 7;
   FLargeChange := 30;
@@ -600,7 +609,7 @@ begin
     Tmp := APos - ButtonWidth
   else
     Tmp := APos - 1;
-  Result := Self.Date + (Tmp div FDayWidth);
+  Result := Self.Date + (Tmp div DayWidth);
 end;
 
 procedure TJvCustomTMTimeline.DrawToday(ACanvas: TCanvas; const ARect: TRect);
@@ -653,14 +662,14 @@ begin
     FirstOffset := 1;
   // first loop: draw dates, today and images
   FTmpStyle := Font.Style;
-  for I := 0 to Width div FDayWidth do
+  for I := 0 to Width div DayWidth do
   begin
     R := GetRectForDate(Self.Date + I);
     if Self.Date + I = SysUtils.Date then
       DrawToday(ACanvas, R);
 
     DecodeDate(Self.Date + I, Y, M, D);
-    R := Classes.Rect(I * FDayWidth, 8, I * FDayWidth + FDayWidth, Font.Size+8);
+    R := Classes.Rect(I * DayWidth, 8, I * DayWidth + DayWidth, Font.Size+8);
     OffsetRect(R, FirstOffset, 0);
     S := Format('%.2d', [D]);
     SetBkMode(ACanvas.Handle, TRANSPARENT);
@@ -695,8 +704,8 @@ begin
           Pen.Width := 1;
           Pen.Style := psDot;
           Pen.Color := FLineColor;
-          MoveTo(I * FDayWidth + FDayWidth + FirstOffset, 0);
-          LineTo(I * FDayWidth + FDayWidth + FirstOffset, Height);
+          MoveTo(I * DayWidth + DayWidth + FirstOffset, 0);
+          LineTo(I * DayWidth + DayWidth + FirstOffset, Height);
         end;
 
       ACanvas.Font := MonthFont;
@@ -709,8 +718,8 @@ begin
           // draw text for end of this month:
           S := FormatSettings.ShortMonthNames[M];
           Size := ACanvas.TextExtent(S);
-          R := Classes.Rect(I * FDayWidth + FDayWidth - Size.cx - 8,
-            Height - Size.cy - 4, I * FDayWidth + FDayWidth, Height - 4);
+          R := Classes.Rect(I * DayWidth + DayWidth - Size.cx - 8,
+            Height - Size.cy - 4, I * DayWidth + DayWidth, Height - 4);
           OffsetRect(R, FirstOffset, 0);
           SetBkMode(ACanvas.Handle, TRANSPARENT);
           DrawText(ACanvas.Handle, PChar(S), Length(S), R,
@@ -722,7 +731,7 @@ begin
           // draw text for start of this month and the year:
           S := Format('%s %d', [FormatSettings.ShortMonthNames[M], Y]);
           Size := ACanvas.TextExtent(S);
-          R := Classes.Rect(I * FDayWidth + 4, Height - Size.cy - 4, I * FDayWidth + Size.cx + 4, Height - 4);
+          R := Classes.Rect(I * DayWidth + 4, Height - Size.cy - 4, I * DayWidth + Size.cx + 4, Height - 4);
           OffsetRect(R, FirstOffset, 0);
           SetBkMode(ACanvas.Handle, TRANSPARENT);
           DrawText(ACanvas.Handle, PChar(S), Length(S), R,
@@ -734,8 +743,8 @@ begin
             Pen.Width := 1;
             Pen.Style := psSolid;
             Pen.Color := FLineColor;
-            MoveTo(I * FDayWidth + FirstOffset, 0);
-            LineTo(I * FDayWidth + FirstOffset, Height);
+            MoveTo(I * DayWidth + FirstOffset, 0);
+            LineTo(I * DayWidth + FirstOffset, Height);
           end;
         end;
       end;
@@ -781,7 +790,7 @@ begin
   if DateHasImage(ADate) then
   begin
     I := ImageIndex[ADate];
-    X := ARect.Left + (FDayWidth - Images.Width) div 2;
+    X := ARect.Left + (DayWidth - Images.Width) div 2;
     //    Y := Max((Height  - Images.Height) div 4, CanvasMaxTextHeight(ACanvas) + 2);
     Y := CanvasMaxTextHeight(ACanvas) + 2;
     Images.Draw(ACanvas, X, Y, I);
@@ -869,9 +878,22 @@ begin
   end;
 end;
 
+function TJvCustomTMTimeLine.DayWidthStored: Boolean;
+begin
+  Result := FDayWidth >= 0;
+end;
+
+function TJvCustomTMTimeLine.GetDayWidth: Integer;
+begin
+  if DayWidthStored then
+    Result := FDayWidth
+  else
+    Result := Scale96ToFont(cTMTimeLineDayWidth);
+end;
+
 procedure TJvCustomTMTimeline.SetDayWidth(const Value: Integer);
 begin
-  if (FDayWidth <> Value) and (Value > 0) then
+  if (FDayWidth <> Value) and (Value <> 0) and (Value >= -1) then
   begin
     FDayWidth := Value;
     Invalidate;
@@ -978,6 +1000,22 @@ begin
   if Assigned(FOnChange) then
     FOnChange(Self);
 end;
+
+{$IFDEF LCL_FullVersion >= 1080000}
+procedure TCustomTMTimeLine.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
+
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if FDayWidthStored then
+      FDayWidth := Round(FDayWidth * AXProportion);
+    Invalidate;
+  end;
+end;
+{$IFEND}
 
 procedure TJvCustomTMTimeline.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
