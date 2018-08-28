@@ -39,6 +39,7 @@ uses
 
 const
   cTMTimeLineDayWidth = 19;
+  cTMTimeLineButtonWidth = 16;
 
 type
   TJvTLSelFrame = class(TPersistent)
@@ -100,7 +101,9 @@ type
     FLineColor: TColor;
     FShift: TShiftState;
     FShowTodayIcon: Boolean;
+    function ButtonWidthStored: Boolean;
     function DayWidthStored: Boolean;
+    function GetButtonWidth: Integer;
     function GetDayWidth: Integer;
     function GetRectForDate(ADate: TDate): TRect;
     function DateFromPos(APos: Integer): TDate;
@@ -174,7 +177,7 @@ type
     procedure SetBorderStyle(Value: TBorderStyle); override;
 
     property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle;
-    property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default 16;
+    property ButtonWidth: Integer read GetButtonWidth write SetButtonWidth stored ButtonWidthStored;
     property Cursor;
     property DayWidth: Integer read GetDayWidth write SetDayWidth stored DayWidthStored;
     property ObjectsFontStyle: TFontStyles read FObjectsFontStyle write SetObjectsFontStyle default [fsUnderline];
@@ -423,10 +426,10 @@ begin
   FMonthFont.Size := 18;
 
   FObjectsFontStyle := [fsUnderline];
-  FButtonWidth := 16;
+  FButtonWidth := -1;
+  FDayWidth := -1;
   FDate := SysUtils.Date - 7;
   FSelDate := FDate - 1;
-  FDayWidth := -1;
   FImageCursor := crHandPoint;
   FSmallChange := 7;
   FLargeChange := 30;
@@ -443,7 +446,7 @@ begin
   with FLeftBtn do
   begin
     Align := alLeft;
-    Width := FButtonWidth;
+    Width := ButtonWidth;
     Parent := Self;
     Transparent := False;
     Layout := blGlyphTop;
@@ -464,7 +467,7 @@ begin
   with FRightBtn do
   begin
     Align := alRight;
-    Width := FButtonWidth;
+    Width := ButtonWidth;
     Parent := Self;
     Transparent := False;
     Layout := blGlyphTop;
@@ -878,9 +881,22 @@ begin
   end;
 end;
 
+function TJvCustomTMTimeLine.ButtonWidthStored: Boolean;
+begin
+  Result := FButtonWidth >= 0;
+end;
+
 function TJvCustomTMTimeLine.DayWidthStored: Boolean;
 begin
   Result := FDayWidth >= 0;
+end;
+
+function TJvCustomTMTimeLine.GetButtonWidth: Integer;
+begin
+  if ButtonWidthStored then
+    Result := FButtonWidth
+  else
+    Result := Scale96ToFont(cTMTimeLineButtonWidth);
 end;
 
 function TJvCustomTMTimeLine.GetDayWidth: Integer;
@@ -1012,6 +1028,8 @@ begin
   begin
     if FDayWidthStored then
       FDayWidth := Round(FDayWidth * AXProportion);
+    if FButtonWidthStored then
+      FButtonWidth := Round(FButtonWidth * aXProportion);
     Invalidate;
   end;
 end;
@@ -1178,7 +1196,7 @@ var
   Tmp: Integer;
 begin
   if not ReadOnly then
-    Tmp := FButtonWidth * 2
+    Tmp := ButtonWidth * 2
   else
     Tmp := 1;
   Result := FDate + ((Width - Tmp) div DayWidth) - 1;
@@ -1186,11 +1204,11 @@ end;
 
 procedure TJvCustomTMTimeline.SetButtonWidth(const Value: Integer);
 begin
-  if FButtonWidth <> Value then
+  if (FButtonWidth <> Value) and (Value <> 0) and (Value >= -1) then
   begin
     FButtonWidth := Value;
-    FLeftBtn.Width := FButtonWidth;
-    FRightBtn.Width := FButtonWidth;
+    FLeftBtn.Width := ButtonWidth;
+    FRightBtn.Width := ButtonWidth;
     Invalidate;
   end;
 end;
