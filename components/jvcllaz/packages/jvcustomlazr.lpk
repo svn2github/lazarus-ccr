@@ -53,7 +53,7 @@
         <UnitName Value="JvCustomItemViewer"/>
       </Item8>
       <Item9>
-        <Filename Value="..\run\JvCustomControls\jvimageListviewer.pas"/>
+        <Filename Value="..\run\JvCustomControls\jvimagelistviewer.pas"/>
         <UnitName Value="JvImageListViewer"/>
       </Item9>
       <Item10>
