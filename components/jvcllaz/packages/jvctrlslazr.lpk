@@ -21,19 +21,19 @@
     <Version Major="1" Release="4"/>
     <Files Count="4">
       <Item1>
-        <Filename Value="..\run\JvCtrls\JvHint.pas"/>
+        <Filename Value="..\run\JvCtrls\jvhint.pas"/>
         <UnitName Value="JvHint"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvCtrls\JvHtControls.pas"/>
+        <Filename Value="..\run\JvCtrls\jvhtcontrols.pas"/>
         <UnitName Value="JvHtControls"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvCtrls\JvMovableBevel.pas"/>
+        <Filename Value="..\run\JvCtrls\jvmovablebevel.pas"/>
         <UnitName Value="JvMovableBevel"/>
       </Item3>
       <Item4>
-        <Filename Value="..\run\JvCtrls\JvRuler.pas"/>
+        <Filename Value="..\run\JvCtrls\jvruler.pas"/>
         <UnitName Value="JvRuler"/>
       </Item4>
     </Files>

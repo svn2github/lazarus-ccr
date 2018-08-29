@@ -10,7 +10,7 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <IncludeFiles Value="..\design\JvCtrls"/>
-        <OtherUnitFiles Value="..\design\JvCtrls"/>
+        <OtherUnitFiles Value="..\design\vCtrls"/>
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvCtrls"/>
       </SearchPaths>
     </CompilerOptions>
@@ -23,16 +23,16 @@
     <Version Major="1" Release="4"/>
     <Files Count="3">
       <Item1>
-        <Filename Value="..\design\JvCtrls\JvCtrlsReg.pas"/>
+        <Filename Value="..\design\JvCtrls\jvctrlsreg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="JvCtrlsReg"/>
       </Item1>
       <Item2>
-        <Filename Value="..\design\JvCtrls\JvHTHintForm.lfm"/>
+        <Filename Value="..\design\JvCtrls\jvhthintform.lfm"/>
         <Type Value="LFM"/>
       </Item2>
       <Item3>
-        <Filename Value="..\design\JvCtrls\JvHTHintForm.pas"/>
+        <Filename Value="..\design\JvCtrls\jvhthintform.pas"/>
         <UnitName Value="JvHTHintForm"/>
       </Item3>
     </Files>
