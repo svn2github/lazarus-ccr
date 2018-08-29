@@ -40,6 +40,7 @@ uses
 const
   cTMTimeLineDayWidth = 19;
   cTMTimeLineButtonWidth = 16;
+  cTMTimeLineIconDayDist = 4;
 
 type
   TJvTLSelFrame = class(TPersistent)
@@ -81,6 +82,7 @@ type
     FRightClickSelect: Boolean;
     FDayWidth: Integer;
     FButtonWidth: Integer;
+    FIconDayDist: Integer;
     FDate: TDate;
     FSelDate: TDate;
     FMinDate: TDate;
@@ -103,8 +105,10 @@ type
     FShowTodayIcon: Boolean;
     function ButtonWidthStored: Boolean;
     function DayWidthStored: Boolean;
+    function IconDayDistStored: Boolean;
     function GetButtonWidth: Integer;
     function GetDayWidth: Integer;
+    function GetIconDayDist: Integer;
     function GetRectForDate(ADate: TDate): TRect;
     function DateFromPos(APos: Integer): TDate;
     procedure DoTimer(Sender: TObject);
@@ -143,6 +147,7 @@ type
     function GetObjects(ADate: TDate): TObject;
     procedure SetObjects(ADate: TDate; const Value: TObject);
     procedure SetButtonWidth(const Value: Integer);
+    procedure SetIconDayDist(const Value: Integer);
     procedure SetObjectsFontStyle(const Value: TFontStyles);
     procedure SetShowMonths(const Value: Boolean);
     procedure SetShowToday(const Value: Boolean);
@@ -181,6 +186,7 @@ type
     property Cursor;
     property DayWidth: Integer read GetDayWidth write SetDayWidth stored DayWidthStored;
     property ObjectsFontStyle: TFontStyles read FObjectsFontStyle write SetObjectsFontStyle default [fsUnderline];
+    property IconDayDistance: Integer read GetIconDayDist write SetIconDayDist stored IconDayDistStored;
     property ImageCursor: TCursor read FImageCursor write SetImageCursor default crHandPoint;
     property Images: TImageList read FImages write SetImages;
     property LargeChange: Word read FLargeChange write SetLargeChange default 30;
@@ -247,6 +253,8 @@ type
     property SelDate;
     // gets / sets the width of each day
     property DayWidth;
+    // gets / sets the distance between days and associated icons
+    property IconDayDistance;
     // gets / sets the cursor to use when a date has an image associated
     property ImageCursor;
     // sets / gets the imagelist associated with the control
@@ -438,6 +446,7 @@ begin
   FObjectsFontStyle := [fsUnderline];
   FButtonWidth := -1;
   FDayWidth := -1;
+  FIconDayDist := -1;
   FDate := SysUtils.Date - 7;
   FSelDate := FDate - 1;
   FImageCursor := crHandPoint;
@@ -647,7 +656,7 @@ begin
         resname := 'jvcustomtmtimelinemilestonelarge' + HighDpi_Suffix;
         png.LoadFromResourceName(HInstance, resname);
         x := (ARect.Left + ARect.Right - png.Width) div 2;
-        y := ARect.Top + CanvasMaxTextHeight(ACanvas) + 4;
+        y := ARect.Top + CanvasMaxTextHeight(ACanvas) + IconDayDistance;
         R := Classes.Rect(x, y, x + png.Width, y + png.Height);
         ACanvas.Draw(R.Left, R.Top, png);
       finally
@@ -811,8 +820,7 @@ begin
   begin
     I := ImageIndex[ADate];
     X := ARect.Left + (DayWidth - Images.Width) div 2;
-    //    Y := Max((Height  - Images.Height) div 4, CanvasMaxTextHeight(ACanvas) + 2);
-    Y := CanvasMaxTextHeight(ACanvas) + 2;
+    Y := CanvasMaxTextHeight(ACanvas) + IconDayDistance;
     Images.Draw(ACanvas, X, Y, I);
   end;
 end;
@@ -922,6 +930,19 @@ begin
     Result := FDayWidth
   else
     Result := Scale96ToFont(cTMTimeLineDayWidth);
+end;
+
+function TJvCustomTMTimeLine.GetIconDayDist: Integer;
+begin
+  if IconDayDistStored then
+    Result := FIconDayDist
+  else
+    Result := Scale96ToFont(cTMTimelineIconDayDist);
+end;
+
+function TJvCustomTMTimeLine.IconDayDistStored: Boolean;
+begin
+  Result := FIconDayDist >= 0;
 end;
 
 procedure TJvCustomTMTimeline.SetDayWidth(const Value: Integer);
@@ -1226,6 +1247,14 @@ begin
     FButtonWidth := Value;
     FLeftBtn.Width := ButtonWidth;
     FRightBtn.Width := ButtonWidth;
+    Invalidate;
+  end;
+end;
+
+procedure TJvCustomTMTimeLine.SetIconDayDist(const Value: Integer);
+begin
+  if (FIconDayDist <> Value) and (Value >= -1) then begin
+    FIconDayDist := Value;
     Invalidate;
   end;
 end;

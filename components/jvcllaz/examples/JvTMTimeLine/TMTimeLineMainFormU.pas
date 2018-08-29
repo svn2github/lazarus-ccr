@@ -41,9 +41,12 @@ type
   { TTMTimeLineMainForm }
 
   TTMTimeLineMainForm = class(TForm)
+    edIconDayDist: TEdit;
     Images: TImageList;
     Images_150: TImageList;
     Images_200: TImageList;
+    Label21: TLabel;
+    Label22: TLabel;
     LbImages: TListBox;
     Panel1: TPanel;
     LblImages: TLabel;
@@ -74,6 +77,7 @@ type
     Label4: TLabel;
     Label5: TLabel;
     edImageNo: TEdit;
+    udIconDayDist: TUpDown;
     udImageNo: TUpDown;
     dtpImageDate: TDateTimePicker;
     btnAdd: TButton;
@@ -128,6 +132,7 @@ type
     procedure LbImagesDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure LbImagesSelectionChange(Sender: TObject; User: boolean);
+    procedure udIconDayDistClick(Sender: TObject; Button: TUDBtnType);
     procedure udDayWidthClick(Sender: TObject; Button: TUDBtnType);
     procedure btnColorClick(Sender: TObject);
     procedure chkFlatClick(Sender: TObject);
@@ -435,6 +440,12 @@ procedure TTMTimeLineMainForm.LbImagesSelectionChange(Sender: TObject;
 begin
   if User then
     udImageNo.Position := LbImages.ItemIndex;
+end;
+
+procedure TTMTimeLineMainForm.udIconDayDistClick(Sender: TObject;
+  Button: TUDBtnType);
+begin
+  JvTimeLine1.IconDayDistance := udIconDayDist.Position;
 end;
 
 procedure TTMTimeLineMainForm.FormShow(Sender: TObject);
