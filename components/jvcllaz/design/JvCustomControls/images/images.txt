@@ -2,8 +2,12 @@ tjvtabbar.bmp
 tjvmoderntabbarpainter.bmp
 Tjvtabbarxppainter.bmp
 tjvoutlookbar.bmp
-tjvtimeline.bmp
-tjvtmtimeline.bmp
+tjvtimeline.png
+tjvtimeline_150.png
+tjvtimeline_200.png
+tjvtmtimeline.png
+tjvtmtimeline_150.png
+tjvtmtimeline_200.png
 tjvthumbnail.bmp
 tjvthumbimage.bmp
 tjvthumbview.bmp
