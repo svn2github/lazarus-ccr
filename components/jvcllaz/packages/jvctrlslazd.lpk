@@ -10,7 +10,7 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <IncludeFiles Value="..\design\JvCtrls"/>
-        <OtherUnitFiles Value="..\design\vCtrls"/>
+        <OtherUnitFiles Value="..\design\JvCtrls"/>
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvCtrls"/>
       </SearchPaths>
     </CompilerOptions>
