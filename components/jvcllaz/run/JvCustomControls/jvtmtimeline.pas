@@ -1067,7 +1067,9 @@ begin
     if FDayWidthStored then
       FDayWidth := Round(FDayWidth * AXProportion);
     if FButtonWidthStored then
-      FButtonWidth := Round(FButtonWidth * aXProportion);
+      FButtonWidth := Round(FButtonWidth * AXProportion);
+    if FIconDayDistStored then
+      FIconDayDist := Round(FIconDayDist * AYProportion);
     Invalidate;
   end;
 end;
