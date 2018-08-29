@@ -207,7 +207,7 @@ begin
   else
     JvTimeLine1.Images := Images_200;
   JvTimeLine1.Align := alClient;
-  JvTimeLine1.Constraints.MinHeight := Scale96ToFont(60);
+  JvTimeLine1.Constraints.MinHeight := Scale96ToFont(64);
   JvTimeLine1.Hint :=
     'Double-click a date to edit it''s memo content.' +
     LineEnding +
@@ -219,14 +219,10 @@ begin
   udButtonWidth.Position := JvTimeLine1.ButtonWidth;
   chkReadOnly.Checked := JvTimeLine1.ReadOnly;
   lbObjFontStyle.Checked[2] := true;
-
   LblKeyboardNavigation.Font.Style := [fsBold];
 
-  h := abs(Screen.SystemFont.Height);
   for i := 0 to JvTimeLine1.Images.Count - 1 do
     LbImages.Items.Add(IntToStr(i));
-  LbImages.ItemHeight := Max(JvTimeLine1.Images.Height, h + 2 * Scale96ToFont(IMAGE_DIST));
-  LbImages.Width := JvTimeLine1.Images.Width + 2* h + 2 * Scale96ToFont(IMAGE_DIST);
 
   Statusbar.Panels[0].Width := Scale96ToFont(120);
   Statusbar.Panels[1].Width := Scale96ToFont(220);
@@ -412,7 +408,7 @@ var
   h: Integer;
 begin
   LbImages.Canvas.Font.Assign(LbImages.Font);
-  h := LbImages.Canvas.TextHeight('Tg');
+  h := LbImages.Canvas.TextHeight('99');
   if State * [odSelected, odFocused] <> [] then begin
     LbImages.Canvas.Brush.Color := clHighlight;
     LbImages.Canvas.font.Color := clHighlightText;
@@ -421,14 +417,14 @@ begin
     LbImages.Canvas.Font.Color := clWindowText;
   end;
   LbImages.Canvas.FillRect(ARect);
-  InflateRect(ARect, -IMAGE_DIST, 0);
+  InflateRect(ARect, -Scale96ToFont(IMAGE_DIST), 0);
   JvTimeLine1.Images.Draw(
     LbImages.Canvas, ARect.Left,
     (ARect.Top + ARect.Bottom - JvTimeLine1.Images.Height) div 2,
     Index
   );
   LbImages.Canvas.TextOut(
-    ARect.Left + JvTimeLine1.Images.Width + IMAGE_DIST,
+    ARect.Left + JvTimeLine1.Images.Width + Scale96ToFont(IMAGE_DIST),
     (ARect.Top + ARect.Bottom - h) div 2,
     IntToStr(Index)
   );
@@ -442,7 +438,13 @@ begin
 end;
 
 procedure TTMTimeLineMainForm.FormShow(Sender: TObject);
+var
+  ex: TSize;
 begin
+  ex := LbImages.Canvas.TextExtent('99');
+  LbImages.ItemHeight := Max(JvTimeLine1.Images.Height, ex.CY + 2 * Scale96ToFont(IMAGE_DIST));
+  LbImages.ClientWidth := JvTimeLine1.Images.Width + ex.CX + 3 * Scale96ToFont(IMAGE_DIST);
+
   Constraints.MinWidth := GbDates.Left + GbDates.Width;
   AutoSize := true;
   AutoSize := false;

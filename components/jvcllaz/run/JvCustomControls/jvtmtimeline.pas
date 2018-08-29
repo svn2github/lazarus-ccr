@@ -496,7 +496,7 @@ begin
   end;
   FLeftBtn.SetSubComponent(True);
   FRightBtn.SetSubComponent(True);
-  Height := 56;
+  Height := 64;
   BevelInner := bvNone;
   BevelOuter := bvNone;
   Color := clWindow;
@@ -660,6 +660,8 @@ begin
 end;
 
 procedure TJvCustomTMTimeline.DrawDates(ACanvas: TCanvas);
+const
+  TOP_MARGIN = 2;
 var
   I, FirstOffset: Integer;
   Y, M, D: Word;
@@ -668,6 +670,7 @@ var
   S: string;
   FTmpStyle: TFontStyles;
   AContinue: Boolean;
+  h: Integer;
 begin
   AContinue := True;
   // DoBeforeDraw(ACanvas);
@@ -679,15 +682,15 @@ begin
     FirstOffset := 1;
   // first loop: draw dates, today and images
   FTmpStyle := Font.Style;
+  h := Canvas.TextHeight('Tg');
   for I := 0 to Width div DayWidth do
   begin
     R := GetRectForDate(Self.Date + I);
     if Self.Date + I = SysUtils.Date then
       DrawToday(ACanvas, R);
-
     DecodeDate(Self.Date + I, Y, M, D);
-    R := Classes.Rect(I * DayWidth, 8, I * DayWidth + DayWidth, Font.Size+8);
-    OffsetRect(R, FirstOffset, 0);
+    R := Classes.Rect(I * DayWidth, 0, I * DayWidth + DayWidth, h);
+    OffsetRect(R, FirstOffset, TOP_MARGIN);
     S := Format('%.2d', [D]);
     SetBkMode(ACanvas.Handle, TRANSPARENT);
     if Objects[Self.Date + I] <> nil then
