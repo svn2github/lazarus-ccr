@@ -11,6 +11,12 @@ tjvtmtimeline_200.png
 tjvthumbnail.bmp
 tjvthumbimage.bmp
 tjvthumbview.bmp
-tjvimagelistviewer.bmp
-tjvimagesviewer.bmp
-tjvownerdrawviewer.bmp
+tjvimagelistviewer.png
+tjvimagelistviewer_150.png
+tjvimagelistviewer_200.png
+tjvimagesviewer.png
+tjvimagesviewer_150.png
+tjvimagesviewer_200.png
+tjvownerdrawviewer.png
+tjvownerdrawviewer_150.png
+tjvownerdrawviewer_200.png
