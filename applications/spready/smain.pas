@@ -6,9 +6,9 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, mrumanager, Forms, Controls, Graphics, Dialogs,
-  ExtCtrls, ComCtrls, ActnList, Menus, StdActns, Buttons, Grids, types,
-  fpstypes, fpspreadsheet, fpspreadsheetctrls, fpspreadsheetgrid, fpsActions,
-  fpsAllFormats, fpsSYLK, xlsxml, xlsxooxml_crypto;
+  ExtCtrls, ComCtrls, ActnList, Menus, StdActns, Buttons, Grids, StdCtrls,
+  types, fpstypes, fpspreadsheet, fpspreadsheetctrls, fpspreadsheetgrid,
+  fpsActions, fpsAllFormats, fpsSYLK, xlsxml, xlsxooxml_crypto;
   // NOTE:
   // In order to use the decrypting xlsx reader put xlsxooxlm_cryto after
   // xlsxooxml or fpsAllforamts.
@@ -282,6 +282,7 @@ type
     AcNumFormatCurrency: TsNumberFormatAction;
     AcNumFormatCurrencyRed: TsNumberFormatAction;
     Panel2: TPanel;
+    Panel3: TPanel;
     PuCellProtection: TPopupMenu;
     PuRecentFiles: TPopupMenu;
     PuPaste: TPopupMenu;
@@ -363,7 +364,6 @@ type
     AcZoom500: TsWorksheetZoomAction;
     AcZoomMore: TsWorksheetZoomAction;
     ToolBar2: TToolBar;
-    ToolBar3: TToolBar;
     ToolButton1: TToolButton;
     ToolButton11: TToolButton;
     ToolButton12: TToolButton;
@@ -1112,6 +1112,9 @@ begin
   AcFileSaveAs.Dialog.Filter := GetFileFormatFilter('|', ';', faWrite, priorityFormats);
   FSaveFormats := GetSpreadFormats(faWrite, priorityFormats);
 
+  Panel2.Height := CellIndicator.Height + 2;
+  Panel3.Constraints.MinHeight := CellIndicator.Height + 2;
+
  {$IFDEF WINDOWS}
   if Win32MajorVersion >= 10 then begin
     // avoid the ugly themed grid of Win10...
@@ -1173,7 +1176,7 @@ end;
 
 procedure TMainForm.ToolBar3Resize(Sender: TObject);
 begin
-  CellEdit.Width := ToolBar3.ClientWidth - CellEdit.Left - 4;
+ // CellEdit.Width := ToolBar3.ClientWidth - CellEdit.Left - 4;
 end;
 
 procedure TMainForm.LoadFile(const AFileName: String);

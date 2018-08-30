@@ -175,6 +175,7 @@
         <Filename Value="szoomform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ZoomForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="sZoomForm"/>
       </Unit15>

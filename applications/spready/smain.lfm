@@ -16,8 +16,8 @@ object MainForm: TMainForm
   LCLVersion = '1.9.0.0'
   object WorkbookTabControl: TsWorkbookTabControl
     Left = 0
-    Height = 606
-    Top = 83
+    Height = 609
+    Top = 80
     Width = 792
     TabIndex = 0
     Tabs.Strings = (
@@ -28,11 +28,12 @@ object MainForm: TMainForm
     WorkbookSource = WorkbookSource
     object WorksheetGrid: TsWorksheetGrid
       Left = 2
-      Height = 581
+      Height = 584
       Top = 23
       Width = 788
       AutoCalc = True
       EditorLineMode = elmMultiLine
+      FixedColWidth = 57
       FrozenCols = 0
       FrozenRows = 0
       ReadFormulas = True
@@ -59,8 +60,8 @@ object MainForm: TMainForm
   end
   object InspectorTabControl: TTabControl
     Left = 797
-    Height = 606
-    Top = 83
+    Height = 609
+    Top = 80
     Width = 323
     MultiLine = True
     OnChange = InspectorTabControlChange
@@ -78,7 +79,7 @@ object MainForm: TMainForm
     Visible = False
     object Inspector: TsSpreadsheetInspector
       Left = 2
-      Height = 561
+      Height = 564
       Top = 43
       Width = 319
       Align = alClient
@@ -98,11 +99,11 @@ object MainForm: TMainForm
         'Options=boAutoCalc, boCalcBeforeSaving, boReadFormulas'
         '(-) FormatSettings='
         '  ThousandSeparator=.'
-        '  DecimalSeparator=,'
+        '  DecimalSeparator=.'
         '  ListSeparator=;'
         '  DateSeparator=.'
         '  TimeSeparator=:'
-        '  ShortDateFormat=dd.MM.yyyy'
+        '  ShortDateFormat=MM.yy'
         '  LongDateFormat=dddd, d. MMMM yyyy'
         '  ShortTimeFormat=hh:nn'
         '  LongTimeFormat=hh:nn:ss'
@@ -146,8 +147,8 @@ object MainForm: TMainForm
   end
   object InspectorSplitter: TSplitter
     Left = 792
-    Height = 606
-    Top = 83
+    Height = 609
+    Top = 80
     Width = 5
     Align = alRight
     ResizeAnchor = akRight
@@ -602,65 +603,64 @@ object MainForm: TMainForm
       Action = AcFileNew
     end
   end
-  object ToolBar3: TToolBar
+  object Splitter3: TSplitter
+    Cursor = crVSplit
     Left = 0
-    Height = 28
+    Height = 5
+    Top = 75
+    Width = 1120
+    Align = alTop
+    ResizeAnchor = akTop
+  end
+  object Panel3: TPanel
+    Left = 0
+    Height = 25
     Top = 50
     Width = 1120
-    AutoSize = True
-    Caption = 'ToolBar3'
-    Constraints.MinHeight = 28
-    EdgeBorders = [ebBottom]
-    TabOrder = 5
-    OnResize = ToolBar3Resize
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 25
+    ClientWidth = 1120
+    TabOrder = 6
     object Panel2: TPanel
-      Left = 1
-      Height = 26
+      Left = 2
+      Height = 25
       Top = 0
-      Width = 138
+      Width = 150
       Align = alLeft
+      BorderSpacing.Left = 2
       BevelOuter = bvNone
-      ClientHeight = 26
-      ClientWidth = 138
+      ClientHeight = 25
+      ClientWidth = 150
       TabOrder = 0
       object CellIndicator: TsCellIndicator
         Left = 0
         Height = 23
         Top = 0
-        Width = 138
+        Width = 150
         WorkbookSource = WorkbookSource
         Align = alTop
         TabOrder = 0
         Text = 'A1'
       end
     end
-    object CellEdit: TsCellEdit
-      AnchorSideRight.Side = asrBottom
-      Left = 144
-      Height = 23
-      Top = 0
-      Width = 852
-      Align = alClient
-      BorderSpacing.Right = 2
-      BorderSpacing.Bottom = 3
-      TabOrder = 1
-      WorkbookSource = WorkbookSource
-    end
     object Splitter2: TSplitter
-      Left = 139
-      Height = 26
+      Left = 152
+      Height = 25
       Top = 0
       Width = 5
     end
-  end
-  object Splitter3: TSplitter
-    Cursor = crVSplit
-    Left = 0
-    Height = 5
-    Top = 78
-    Width = 1120
-    Align = alTop
-    ResizeAnchor = akTop
+    object CellEdit: TsCellEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 157
+      Height = 23
+      Top = 0
+      Width = 963
+      Align = alClient
+      BorderSpacing.Bottom = 2
+      TabOrder = 2
+      WorkbookSource = WorkbookSource
+    end
   end
   object WorkbookSource: TsWorkbookSource
     AutoDetectFormat = False
