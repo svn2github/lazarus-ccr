@@ -119,7 +119,7 @@ uses FileUtil, resource, resreader, InterfaceBase, rxconst, LazFileUtils,
 {$IFDEF LINUX}
   , elfreader
 {$ENDIF}
-{$IF (lcl_major > 0) and (lcl_minor > 6)}, LCLPlatformDef {$ENDIF};
+  {$IF (lcl_fullversion >= 01070000)}, LCLPlatformDef {$ENDIF};
 
 
 { TRxVersionInfo }
