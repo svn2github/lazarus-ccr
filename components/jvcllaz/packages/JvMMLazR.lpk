@@ -9,7 +9,7 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <OtherUnitFiles Value="..\run\JvMM"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\run\JvMM"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="JVCL Multimedia Components (Runtime)."/>
