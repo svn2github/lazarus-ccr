@@ -15,7 +15,7 @@
     <Description Value="JVCL Multimedia Components (Runtime)."/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
-    <Files Count="7">
+    <Files Count="8">
       <Item1>
         <Filename Value="..\run\JvMM\JvSpecialProgress.pas"/>
         <UnitName Value="JvSpecialProgress"/>
@@ -44,6 +44,10 @@
         <Filename Value="..\run\JvMM\JvId3v2.pas"/>
         <UnitName Value="JvId3v2"/>
       </Item7>
+      <Item8>
+        <Filename Value="..\run\JvMM\jvbmpanimator.pas"/>
+        <UnitName Value="jvbmpanimator"/>
+      </Item8>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

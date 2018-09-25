@@ -17,12 +17,14 @@ uses
   Classes, Controls, PropEdits, ComponentEditors,
   JvDsgnConsts,
   JvId3v1, JvId3v2Base, JvId3v2, JvGradient, JvId3v2EditorForm,
-  JvGradientHeaderPanel, JvSpecialProgress;
+  JvGradientHeaderPanel, JvSpecialProgress,
+  JvBmpAnimator;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
     TJvId3v1, TJvId3v2,
+    TJvBmpAnimator,
     TJvGradient, TJvGradientHeaderPanel,
     TJvSpecialProgress
   ]);
