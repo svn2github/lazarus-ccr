@@ -61,7 +61,7 @@ type
     FBitmap: TBitmap;
     FBitmapRect: TRect;
     FBitmapInvalid: Boolean;
-    FBorderStyle: TBorderStyle;
+//    FBorderStyle: TBorderStyle;
     FButtonEdge: Integer;
     FDefaultPos: Integer;
     FFrequency: Integer;
@@ -73,6 +73,7 @@ type
     FPointerRect: TRect;
     FPointerColor: TColor;
     FPointerColorOff: TColor;
+    FPointerPenWidth: Integer;
     FPointerSize: Integer;
     FPointerShape: TJvDialPointerShape;
     FPosition: Integer;
@@ -93,7 +94,6 @@ type
     function GetAngle: TJvDialAngle;
     function GetCenter: TPoint;
     procedure SetAngle(Value: TJvDialAngle);
-    procedure SetBorderStyle(Value: TBorderStyle);
     procedure SetButtonEdge(Value: Integer);
     procedure SetDefaultPos(Value: Integer);
     procedure SetFrequency(Value: Integer);
@@ -104,6 +104,7 @@ type
     procedure SetMaxAngle(Value: TJvDialAngle);
     procedure SetPointerColor(Value: TColor);
     procedure SetPointerColorOff(Value: TColor);
+    procedure SetPointerPenWidth(Value: Integer);
     procedure SetPointerSize(Value: Integer);
     procedure SetPointerShape(Value: TJvDialPointerShape);
     procedure SetPosition(Value: Integer);
@@ -119,8 +120,8 @@ type
     procedure BitmapNeeded; dynamic;
     procedure Change; dynamic;
     procedure ClearTicks;
-    procedure Click; override;
-    procedure CreateParams(var Params: TCreateParams); override;
+//    procedure Click; override;
+//    procedure CreateParams(var Params: TCreateParams); override;
 //    procedure CMCtl3DChanged(var Msg: TLMessage); message CM_CTL3DCHANGED;
 //    procedure WMSysColorChange(var Msg: TLMessage); message LM_SYSCOLORCHANGE;
 //    procedure WndProc(var Msg: TLMessage); override;
@@ -140,6 +141,7 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Paint; override;
     function PosToAngle(Pos: Integer): TJvDialAngle;
+//    procedure SetBorderStyle(Value: TBorderStyle); override;
     procedure SetTicks(Value: TTickStyle); virtual;
 
     procedure IncPos(Shift: TShiftState); dynamic;
@@ -147,7 +149,7 @@ type
     property Ticks: TList read FTicks write FTicks stored True;
     // to be published later:
     property Angle: TJvDialAngle read GetAngle write SetAngle stored False;   // in decidegrees (use 100 for 10 degrees)
-    property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsNone;
+    property BorderStyle default bsNone;
     property ButtonEdge: Integer read FButtonEdge write SetButtonEdge default 2;
     property DefaultPos: Integer read FDefaultPos write SetDefaultPos;
     property Frequency: Integer read FFrequency write SetFrequency default 10;
@@ -158,6 +160,7 @@ type
     property MinAngle: TJvDialAngle read FMinAngle write SetMinAngle default 300;   // in decidegrees (use 100 for 10 degrees)
     property PointerColorOn: TColor read FPointerColor write SetPointerColor default clBtnText;
     property PointerColorOff: TColor read FPointerColorOff write SetPointerColorOff default clGrayText;
+    property PointerPenWidth: Integer read FPointerPenWidth write SetPointerPenWidth default 3;
     property PointerSize: Integer read FPointerSize write SetPointerSize default 33;
     property PointerShape: TJvDialPointerShape read FPointerShape write SetPointerShape default psLine;
     property Position: Integer read FPosition write SetPosition default 0;
@@ -209,6 +212,7 @@ type
     property ParentShowHint;
     property PointerColorOn;
     property PointerColorOff;
+    property PointerPenWidth;
     property PointerSize;
     property PointerShape;
     property PopupMenu;
@@ -291,7 +295,7 @@ begin
   ControlStyle := ControlStyle + [csClickEvents, csCaptureMouse];
   IncludeThemeStyle(Self, [csParentBackground]);
   FTicks := TList.Create;
-  FBorderStyle := bsNone;
+//  FBorderStyle := bsNone;
   FButtonEdge := 5;
   FDefaultPos := 0;
   FFrequency := 10;
@@ -302,6 +306,7 @@ begin
   FMinAngle := 300;
   FPointerColor := clBtnText;
   FPointerColorOff := clGrayText;
+  FPointerPenWidth := 3;
   FPointerSize := 33;
   FRadius := rcMinRadius;
   FSmallChange := 1;
@@ -385,10 +390,10 @@ begin
 end;
 
 // Set border style. Redraw if necessary.
-
+                        (*
 procedure TJvCustomDialButton.SetBorderStyle(Value: TBorderStyle);
 begin
-  if Value <> FBorderStyle then
+  if Value <> inherited BorderStyle then
   begin
     FBorderStyle := Value;
     if HandleAllocated then
@@ -399,7 +404,7 @@ begin
       DrawBorder;
     end;
   end;
-end;
+end;                      *)
 
 // Set positional (Cartesian) parameters, value checked and invalidate if
 // necessary.
@@ -574,7 +579,7 @@ var
 begin
   Result := False;
   ASize := rcMinRadius + MinBorder + TickBorder;
-  if FBorderStyle = bsSingle then
+  if BorderStyle = bsSingle then
     Inc(ASize, GetSystemMetrics(SM_CXBORDER));
   ASize := 2 * ASize + 1;
   if AWidth < ASize then
@@ -597,7 +602,7 @@ begin
     MaxRadius := (Width - 1) div 2 - MinBorder - TickBorder
   else
     MaxRadius := (Height - 1) div 2 - MinBorder - TickBorder;
-  if FBorderStyle = bsSingle then
+  if BorderStyle = bsSingle then
     Dec(MaxRadius, GetSystemMetrics(SM_CXBORDER));
   if Value > MaxRadius then
     Value := MaxRadius;
@@ -783,10 +788,10 @@ begin
     Exit;
   InnerRadius := (100 - FButtonEdge) * FRadius div 100 - 1;
   if FPointerRect.Left < 0 then
-    FPointerRect := Rect(Center.X - InnerRadius,
-      Center.Y - InnerRadius,
-      Center.X + InnerRadius + 1,
-      Center.Y + InnerRadius + 1);
+    FPointerRect := Rect(Center.X - InnerRadius - FPointerPenWidth,
+      Center.Y - InnerRadius - FPointerPenWidth,
+      Center.X + InnerRadius + 1 + FPointerPenWidth,
+      Center.Y + InnerRadius + 1 + FPointerPenWidth);
   Canvas.CopyRect(FPointerRect, FBitmap.Canvas, FPointerRect);
   // This is for a solid dot. I'd also like to make a Ctl3D type of dot or
   // an open type of dot. We'd also have to make a disabled type of dot.
@@ -800,24 +805,28 @@ begin
     Canvas.Pen.Color := FPointerColorOff;
     Canvas.Brush.Color := FPointerColorOff;
   end;
+
   case FPointerShape of
     psLine:
       begin
         Outer := AngleToPoint(Angle, Center, InnerRadius);
         Canvas.MoveTo(Outer.X, Outer.Y);
         Inner := AngleToPoint(Angle, Center, (101 - FPointerSize) * InnerRadius div 100);
+        Canvas.Pen.Width := FPointerPenWidth;
         Canvas.LineTo(Inner.X, Inner.Y);
         FPointerRect := Rect(Math.Min(Inner.X, Outer.X),
           Math.Min(Inner.Y, Outer.Y),
           Math.Max(Inner.X, Outer.X),
           Math.Max(Inner.Y, Outer.Y));
+        InflateRect(FPointerRect, FPointerPenWidth, FPointerPenWidth);
+        Canvas.Pen.Width := 1;
       end;
     psTriangle:
       begin
         SmallRadius := FPointerSize * InnerRadius div 100;
         Outer := AngleToPoint(Angle, Center, InnerRadius);
-        Inner := AngleToPoint(Angle - 1500, Outer, SmallRadius);
-        Extra := AngleToPoint(Angle + 1500, Outer, SmallRadius);
+        Inner := AngleToPoint(Angle - 150, Center, InnerRadius - SmallRadius);
+        Extra := AngleToPoint(Angle + 150, Center, InnerRadius - SmallRadius);
         Canvas.Polygon([Outer, Inner, Extra]);
         FPointerRect := Rect(Lowest(Outer.X, Inner.X, Extra.X),
           Lowest(Outer.Y, Inner.Y, Extra.Y),
@@ -1157,14 +1166,15 @@ begin
     end;
 end;
 
+{
 procedure TJvCustomDialButton.Click;
 begin
   inherited Click;
   FState := not FState;
   Invalidate;
 end;
-
-
+}
+                                               (*
 procedure TJvCustomDialButton.CreateParams(var Params: TCreateParams);
 const
   BorderStyles: array [TBorderStyle] of Cardinal = (0, WS_BORDER);
@@ -1179,7 +1189,7 @@ begin
   end;
   }
 end;
-
+*)
 
 procedure TJvCustomDialButton.SetPointerColor(Value: TColor);
 begin
@@ -1198,6 +1208,14 @@ begin
     FPointerColorOff := Value;
     if not State then
       DrawPointer;
+  end;
+end;
+
+procedure TJvCustomDialButton.SetPointerPenWidth(Value: Integer);
+begin
+  if (Value <> FPointerPenWidth) and (FPointerShape = psLine) then begin
+    FPointerPenWidth := Value;
+    DrawPointer;
   end;
 end;
 
