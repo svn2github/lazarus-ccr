@@ -1,0 +1,139 @@
+object Form1: TForm1
+  Left = 345
+  Height = 290
+  Top = 131
+  Width = 320
+  Caption = 'Form1'
+  ClientHeight = 290
+  ClientWidth = 320
+  OnCreate = FormCreate
+  LCLVersion = '2.1.0.0'
+  object JvDialButton1: TJvDialButton
+    Left = 40
+    Height = 120
+    Top = 24
+    Width = 120
+    ButtonEdge = 5
+    Color = clMoneyGreen
+    DefaultPos = 0
+    ParentColor = False
+    PointerPenWidth = 3
+    Radius = 48
+    TickStyle = tsAuto
+    TabOrder = 0
+    OnChange = JvDialButton1Change
+  end
+  object JvLED1: TJvLED
+    Left = 197
+    Top = 24
+    ColorOn = clRed
+    ColorOff = clMaroon
+    Status = False
+  end
+  object JvLED2: TJvLED
+    Left = 197
+    Top = 40
+    ColorOn = clRed
+    ColorOff = clMaroon
+    Status = False
+  end
+  object JvLED3: TJvLED
+    Left = 197
+    Top = 56
+    ColorOn = clYellow
+    ColorOff = clOlive
+    Status = False
+  end
+  object JvLED4: TJvLED
+    Left = 197
+    Top = 72
+    ColorOn = clYellow
+    ColorOff = clOlive
+    Status = False
+  end
+  object JvLED5: TJvLED
+    Left = 197
+    Top = 88
+    ColorOff = clGreen
+    Status = False
+  end
+  object JvLED6: TJvLED
+    Left = 197
+    Top = 104
+    ColorOff = clGreen
+    Status = False
+  end
+  object JvLED7: TJvLED
+    Left = 197
+    Top = 120
+    ColorOff = clGreen
+    Status = False
+  end
+  object JvLED8: TJvLED
+    Left = 197
+    Top = 136
+    ColorOff = clGreen
+    Status = False
+  end
+  object JvLED9: TJvLED
+    Left = 197
+    Top = 152
+    ColorOff = clGreen
+    Status = False
+  end
+  object JvLED10: TJvLED
+    Left = 197
+    Top = 168
+    ColorOff = clGreen
+    Status = False
+  end
+  object cmbPointerShape: TComboBox
+    Left = 40
+    Height = 23
+    Top = 202
+    Width = 132
+    ItemHeight = 15
+    ItemIndex = 2
+    Items.Strings = (
+      'psLine'
+      'psTriangle'
+      'psDot'
+    )
+    OnChange = cmbPointerShapeChange
+    Style = csDropDownList
+    TabOrder = 1
+    Text = 'psDot'
+  end
+  object lblPointerShape: TLabel
+    Left = 40
+    Height = 15
+    Top = 184
+    Width = 72
+    Caption = 'Pointer shape'
+    ParentColor = False
+  end
+  object lblBorderStyle: TLabel
+    Left = 40
+    Height = 15
+    Top = 232
+    Width = 62
+    Caption = 'Border style'
+    ParentColor = False
+  end
+  object cmbBorderStyle: TComboBox
+    Left = 40
+    Height = 23
+    Top = 250
+    Width = 132
+    ItemHeight = 15
+    ItemIndex = 0
+    Items.Strings = (
+      'bsNone'
+      'bsSingle'
+    )
+    OnChange = cmbBorderStyleChange
+    Style = csDropDownList
+    TabOrder = 2
+    Text = 'bsNone'
+  end
+end
