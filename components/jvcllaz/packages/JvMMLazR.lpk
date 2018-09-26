@@ -46,7 +46,7 @@
       </Item7>
       <Item8>
         <Filename Value="..\run\JvMM\jvbmpanimator.pas"/>
-        <UnitName Value="jvbmpanimator"/>
+        <UnitName Value="JvBmpAnimator"/>
       </Item8>
     </Files>
     <RequiredPkgs Count="2">

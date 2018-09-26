@@ -1,0 +1,3 @@
+tjvdialbutton.bmp
+tjvled.bmp
+tjvsegmentedleddisplay.bmp

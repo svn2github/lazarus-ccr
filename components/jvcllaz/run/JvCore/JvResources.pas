@@ -686,6 +686,11 @@ resourcestring
 resourcestring
   RsClose = 'Close';
 
+//=== JvDialButton.pas =======================================================
+resourcestring
+  RsPropertyOutOfRange = 'Property %s out of valid range';
+  RsOutOfRange = 'Value must be between %d and %d';
+
 //=== JvDrawImage.pas ========================================================
 resourcestring
   RsImageMustBeSquare = 'image must be square for Spirographs';

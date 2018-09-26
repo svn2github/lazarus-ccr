@@ -3,4 +3,5 @@ tjvid3v2.bmp
 tjvgradient.bmp
 tjvgradientheaderpanel.bmp
 tjvspecialprogress.bmp
+tjvanimatedimage.bmp
 tjvbmpanimator.bmp
