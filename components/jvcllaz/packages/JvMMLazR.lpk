@@ -8,8 +8,9 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
+        <IncludeFiles Value="..\resource"/>
         <OtherUnitFiles Value="..\run\JvMM"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\run\JvMM"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\run\JvMM"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="JVCL Multimedia Components (Runtime)."/>

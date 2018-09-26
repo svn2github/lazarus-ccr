@@ -8,8 +8,9 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
+        <IncludeFiles Value="..\resource"/>
         <OtherUnitFiles Value="..\run\JvHMI"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\run\JvHMI"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\run\JvHMI"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="JVCL Human-Machine-Interface (HMI) Components (run-time) containing these components

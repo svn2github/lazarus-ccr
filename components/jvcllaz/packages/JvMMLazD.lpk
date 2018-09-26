@@ -9,8 +9,9 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
+        <IncludeFiles Value="..\resource"/>
         <OtherUnitFiles Value="..\design\JvMM"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\design\JvMM"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvMM"/>
       </SearchPaths>
     </CompilerOptions>
     <Version Major="1" Release="4"/>

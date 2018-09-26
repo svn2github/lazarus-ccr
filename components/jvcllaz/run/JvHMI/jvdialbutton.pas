@@ -310,8 +310,8 @@ begin
   FTickStyle := tsAuto;
   FBitmapInvalid := True;
   FPointerRect.Left := -1; // Only on start up
-  Width := 51;
-  Height := 51;
+  Width := 120;
+  Height := 120;
   FRepeatDelay := 400;
   FRepeatRate := 100;
   SetTicks(FTickStyle);
@@ -925,6 +925,7 @@ var
   OldOrg: TPoint;
   lCanvas: TCanvas;
   I: Integer;
+  lColor: TColor;
 begin
   Size := 2 * FRadius + 1;
   ButtonRect := Bounds(0, 0, Size, Size);
@@ -942,9 +943,13 @@ begin
       lCanvas.Pen.Style := psClear;
 
       Highlight := ColorToRGB(clBtnHighlight);
-      Face := ColorToRGB(Color);
+      if Color = clDefault then
+        lColor := clGray
+      else
+        lColor := Color;
+      Face := ColorToRGB(lColor);
       // darking the color by halving each color part value
-      Shadow := (ColorToRGB(Color) and $00FEFEFE) shr 1;
+      Shadow := (ColorToRGB(lColor) and $00FEFEFE) shr 1;
 
       for I := 0 to Size do
       begin
@@ -962,8 +967,8 @@ begin
 
       // Draw top of disk.
       lCanvas.Pen.Style := psSolid;
-      lCanvas.Pen.Color := Color;
-      lCanvas.Brush.Color := Color;
+      lCanvas.Pen.Color := lColor;
+      lCanvas.Brush.Color := lColor;
       Edge := FButtonEdge * FRadius div 100 + 1;
       lCanvas.Ellipse(0 + Edge, 0 + Edge, 0 + Size - Edge, 0 + Size - Edge);
 

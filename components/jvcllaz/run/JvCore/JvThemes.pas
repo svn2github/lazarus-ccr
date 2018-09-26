@@ -33,7 +33,9 @@ unit JvThemes;
 interface
 
 uses
-  Types, SysUtils, Classes, Contnrs,
+  LCLType, LCLIntf, LMessages,
+  //Types,
+  SysUtils, Classes, Contnrs,
   {$IFDEF JVCLThemesEnabled}
   Themes,
   {$ENDIF JVCLThemesEnabled}
@@ -80,8 +82,8 @@ type
       out Size: TSize): Boolean; overload;
     function GetElementSize(DC: HDC; Details: TThemedElementDetails; const Rect: TRect;
       ElementSize: TElementSize; out Size: TSize): Boolean; overload;
+      ********************)
     function IsSystemStyle: Boolean;
-    ********************)
     function Enabled: Boolean;
     function Available: Boolean;
     (********************
@@ -119,7 +121,6 @@ procedure IncludeThemeStyle(Control: TControl; Style: TJvThemeStyle);
 procedure ExcludeThemeStyle(Control: TControl; Style: TJvThemeStyle);
 function GetThemeStyle(Control: TControl): TJvThemeStyle;
 
-(***************************** NOT CONVERTED ***
 { DrawThemedBackground fills R with Canvas.Brush.Color/Color. If the control uses
   csParentBackground and the color is that of it's parent the Rect is not filled
   because then it is done by the JvThemes/VCL7. }
@@ -130,9 +131,10 @@ procedure DrawThemedBackground(Control: TControl; Canvas: TCanvas;
 procedure DrawThemedBackground(Control: TControl; DC: HDC; const R: TRect;
   Brush: HBRUSH; NeedsParentBackground: Boolean = True); overload;
 
+(***************************** NOT CONVERTED ***
 { DrawThemesFrameControl draws a themed frame control when theming is enabled. }
 function DrawThemedFrameControl(DC: HDC; const Rect: TRect; uType, uState: UINT): BOOL;
-
+*)
 
 { PerformEraseBackground sends a WM_ERASEBKGND message to the Control's parent. }
 procedure PerformEraseBackground(Control: TControl; DC: HDC; Offset: TPoint); overload;
@@ -141,6 +143,7 @@ procedure PerformEraseBackground(Control: TControl; DC: HDC); overload;
 procedure PerformEraseBackground(Control: TControl; DC: HDC; const R: TRect); overload;
 
 
+(***************************** NOT CONVERTED ***
 { DrawThemedButtonFace draws a themed button when theming is enabled. }
 function DrawThemedButtonFace(Control: TControl; Canvas: TCanvas; const Client: TRect;
   BevelWidth: Integer; Style: TButtonStyle; IsRounded, IsDown,
@@ -179,7 +182,6 @@ uses
   JclSysInfo;
   *)
 
-(************************ NOT CONVERTED ***
 type
   TWinControlThemeInfo = class(TWinControl)
   public
@@ -260,6 +262,7 @@ begin
     FillRect(DC, R, Brush);
 end;
 
+(************************ NOT CONVERTED ***
 function DrawThemedFrameControl(DC: HDC; const Rect: TRect; uType, uState: UINT): BOOL;
 {$IFDEF JVCLThemesEnabled}
 const
@@ -483,6 +486,7 @@ begin
   if not Result then
     Result := DrawFrameControl(DC, Rect, uType, uState);
 end;
+*)
 
 function IsInvalidRect(const R: TRect): Boolean; {$IFDEF SUPPORTS_INLINE} inline; {$ENDIF}
 begin
@@ -552,7 +556,7 @@ begin
         OldBkMode := GetBkMode(DC);
       end;
       {$ENDIF COMPILER16_UP}
-      Control.Parent.Perform(WM_ERASEBKGND, DC, DC); // force redraw
+      Control.Parent.Perform(LM_ERASEBKGND, DC, DC); // force redraw
       {$IFDEF COMPILER16_UP}
       if StyleServices.Enabled and not StyleServices.IsSystemStyle then
       begin
@@ -591,6 +595,7 @@ begin
   PerformEraseBackground(Control, DC, Point(Control.Left, Control.Top), R);
 end;
 
+(***************************** NOT CONVERTED ***
 function DrawThemedButtonFace(Control: TControl; Canvas: TCanvas;
   const Client: TRect; BevelWidth: Integer; Style: TButtonStyle;
   IsRounded, IsDown, IsFocused, IsHot: Boolean): TRect;
@@ -841,12 +846,12 @@ function TThemeServicesEx.GetSystemColor(Color: TColor): TColor;
 begin
   Result := Color;
 end;
+**********************)
 
 function TThemeServicesEx.IsSystemStyle: Boolean;
 begin
   Result := True;
 end;
-**********************)
 
 function TThemeServicesEx.Enabled: Boolean;
 begin

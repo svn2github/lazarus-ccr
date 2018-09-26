@@ -7,6 +7,7 @@ uses
 {$R *.res}
 
 begin
+  Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TLEDDemoMain, LEDDemoMain);
   Application.Run;
