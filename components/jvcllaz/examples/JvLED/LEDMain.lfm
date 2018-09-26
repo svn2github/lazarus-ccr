@@ -422,6 +422,7 @@ object LEDDemoMain: TLEDDemoMain
     Height = 23
     Top = 128
     Width = 25
+    Alignment = taCenter
     MaxLength = 2
     OnChange = HexTextChange
     TabOrder = 0

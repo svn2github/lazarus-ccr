@@ -1,0 +1,263 @@
+object JvHTMLParserMainForm: TJvHTMLParserMainForm
+  Left = 365
+  Height = 530
+  Top = 143
+  Width = 684
+  Caption = 'JvHtmlParser  DEMO'
+  ClientHeight = 530
+  ClientWidth = 684
+  Color = clBtnFace
+  Constraints.MinHeight = 200
+  Constraints.MinWidth = 300
+  DefaultMonitor = dmDesktop
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  Scaled = False
+  object PageControl1: TPageControl
+    Left = 0
+    Height = 507
+    Top = 0
+    Width = 684
+    ActivePage = TabSheet1
+    Align = alClient
+    ParentShowHint = False
+    ShowHint = True
+    TabIndex = 0
+    TabOrder = 0
+    object TabSheet1: TTabSheet
+      Hint = 'Table Demo'
+      Caption = 'Table'
+      ClientHeight = 479
+      ClientWidth = 676
+      object JvSplitter1: TSplitter
+        Cursor = crVSplit
+        Left = 0
+        Height = 4
+        Top = 189
+        Width = 676
+        Align = alTop
+        ResizeAnchor = akTop
+      end
+      object TreeView1: TTreeView
+        Left = 0
+        Height = 189
+        Top = 0
+        Width = 676
+        Align = alTop
+        Indent = 19
+        ReadOnly = True
+        ScrollBars = ssAutoBoth
+        TabOrder = 0
+        Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+      end
+      object DisplayMemo1: TMemo
+        Left = 0
+        Height = 252
+        Top = 193
+        Width = 676
+        Align = alClient
+        ReadOnly = True
+        ScrollBars = ssAutoBoth
+        TabOrder = 1
+        WordWrap = False
+      end
+      object Panel1: TPanel
+        Left = 0
+        Height = 34
+        Top = 445
+        Width = 676
+        Align = alBottom
+        AutoSize = True
+        BevelOuter = bvNone
+        ClientHeight = 34
+        ClientWidth = 676
+        TabOrder = 2
+        object btnProcessTable: TButton
+          AnchorSideTop.Control = Panel1
+          AnchorSideTop.Side = asrCenter
+          AnchorSideRight.Control = Panel1
+          AnchorSideRight.Side = asrBottom
+          Left = 606
+          Height = 25
+          Top = 5
+          Width = 66
+          Anchors = [akTop, akRight]
+          AutoSize = True
+          BorderSpacing.Around = 4
+          Caption = 'Execute'
+          OnClick = btnProcessTableClick
+          TabOrder = 0
+        end
+        object btnOpen: TButton
+          AnchorSideLeft.Control = Panel1
+          AnchorSideTop.Control = Panel1
+          AnchorSideTop.Side = asrCenter
+          Left = 4
+          Height = 25
+          Top = 5
+          Width = 64
+          AutoSize = True
+          BorderSpacing.Around = 4
+          Caption = '&Open...'
+          OnClick = btnOpenClick
+          TabOrder = 1
+        end
+      end
+    end
+    object TabSheet2: TTabSheet
+      Hint = 'HTML to text converter'
+      Caption = 'HTML2Text'
+      ClientHeight = 479
+      ClientWidth = 676
+      ImageIndex = 1
+      object DisplayMemo2: TMemo
+        Left = 0
+        Height = 445
+        Top = 0
+        Width = 676
+        Align = alClient
+        ReadOnly = True
+        ScrollBars = ssAutoBoth
+        TabOrder = 0
+      end
+      object Panel2: TPanel
+        Left = 0
+        Height = 34
+        Top = 445
+        Width = 676
+        Align = alBottom
+        AutoSize = True
+        BevelOuter = bvNone
+        ClientHeight = 34
+        ClientWidth = 676
+        TabOrder = 1
+        object btnProcessHTML2Text: TButton
+          AnchorSideTop.Control = Panel2
+          AnchorSideTop.Side = asrCenter
+          AnchorSideRight.Control = Panel2
+          AnchorSideRight.Side = asrBottom
+          Left = 606
+          Height = 25
+          Top = 5
+          Width = 66
+          Anchors = [akTop, akRight]
+          AutoSize = True
+          BorderSpacing.Around = 4
+          Caption = 'Execute'
+          OnClick = btnProcessHTML2TextClick
+          TabOrder = 0
+        end
+      end
+    end
+    object TabSheet3: TTabSheet
+      Hint = 'Simple URL detector'
+      Caption = 'URL detect'
+      ClientHeight = 479
+      ClientWidth = 676
+      ImageIndex = 2
+      object DisplayMemo3: TMemo
+        Left = 0
+        Height = 445
+        Top = 0
+        Width = 676
+        Align = alClient
+        ReadOnly = True
+        ScrollBars = ssAutoBoth
+        TabOrder = 0
+      end
+      object Panel3: TPanel
+        Left = 0
+        Height = 34
+        Top = 445
+        Width = 676
+        Align = alBottom
+        AutoSize = True
+        BevelOuter = bvNone
+        ClientHeight = 34
+        ClientWidth = 676
+        TabOrder = 1
+        object btnProcessURL: TButton
+          AnchorSideTop.Control = Panel3
+          AnchorSideTop.Side = asrCenter
+          AnchorSideRight.Control = Panel3
+          AnchorSideRight.Side = asrBottom
+          Left = 606
+          Height = 25
+          Top = 5
+          Width = 66
+          Anchors = [akTop, akRight]
+          AutoSize = True
+          BorderSpacing.Around = 4
+          Caption = 'Execute'
+          OnClick = btnProcessURLClick
+          TabOrder = 0
+        end
+      end
+    end
+    object TabSheet4: TTabSheet
+      Hint = 'Tags detector'
+      Caption = 'Tags'
+      ClientHeight = 479
+      ClientWidth = 676
+      ImageIndex = 3
+      object DisplayMemo4: TMemo
+        Left = 0
+        Height = 445
+        Top = 0
+        Width = 676
+        Align = alClient
+        ReadOnly = True
+        ScrollBars = ssAutoBoth
+        TabOrder = 0
+      end
+      object Panel4: TPanel
+        Left = 0
+        Height = 34
+        Top = 445
+        Width = 676
+        Align = alBottom
+        AutoSize = True
+        BevelOuter = bvNone
+        ClientHeight = 34
+        ClientWidth = 676
+        TabOrder = 1
+        object btnProcessTags: TButton
+          AnchorSideTop.Control = Panel4
+          AnchorSideTop.Side = asrCenter
+          AnchorSideRight.Control = Panel4
+          AnchorSideRight.Side = asrBottom
+          Left = 606
+          Height = 25
+          Top = 5
+          Width = 66
+          Anchors = [akTop, akRight]
+          AutoSize = True
+          BorderSpacing.Around = 4
+          Caption = 'Execute'
+          OnClick = btnProcessTagsClick
+          TabOrder = 0
+        end
+      end
+    end
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 507
+    Width = 684
+    Panels = <>
+  end
+  object JvHtmlParser1: TJvHTMLParser
+    FileName = 'data\sample.htm'
+    left = 224
+    top = 72
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 'HTML files|*.htm;*.html;*.htt|All files|*.*'
+    InitialDir = '.'
+    left = 336
+    top = 72
+  end
+end

@@ -6,13 +6,14 @@
     <General>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <Title Value="JvLEDDemo"/>
+      <Title Value="JvHtmlParserProj"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
       </XPManifest>
+      <Icon Value="0"/>
     </General>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -27,7 +28,7 @@
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="jvhmilazr"/>
+        <PackageName Value="JvNetLazR"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>
@@ -35,13 +36,13 @@
     </RequiredPackages>
     <Units Count="2">
       <Unit0>
-        <Filename Value="JvLEDDemo.lpr"/>
+        <Filename Value="JvHtmlParserProj.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="LEDMain.pas"/>
+        <Filename Value="JvHTMLParserMainFormU.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="LEDDemoMain"/>
+        <ComponentName Value="JvHTMLParserMainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit1>
@@ -51,7 +52,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\JvLEDDemo"/>
+      <Filename Value="..\..\bin\JvHtmlParserProj"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
