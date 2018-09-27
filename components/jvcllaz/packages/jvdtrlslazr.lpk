@@ -38,7 +38,7 @@
       </Item4>
       <Item5>
         <Filename Value="..\run\JvCtrls\jvgroupheader.pas"/>
-        <UnitName Value="JvGroupHeader"/>
+        <UnitName Value="jvgroupheader"/>
       </Item5>
     </Files>
     <RequiredPkgs Count="2">

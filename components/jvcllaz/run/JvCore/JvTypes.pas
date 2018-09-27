@@ -322,8 +322,11 @@ type
 
   TJvChangeColorEvent = procedure(Sender: TObject; Foreground, Background: TColor) of object;
 
+***********)
   TJvLayout = (lTop, lCenter, lBottom);
   TJvBevelStyle = (bsShape, bsLowered, bsRaised);
+
+(*********** NOT CONVERTED
 
   {for OnLoseFocus the AFocusControl argument will point at the control that
    receives focus while for OnGetFocus it is the control that lost the focus}
