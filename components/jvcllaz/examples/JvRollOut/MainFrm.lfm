@@ -1,0 +1,1594 @@
+object Form1: TForm1
+  Left = 265
+  Height = 503
+  Top = 125
+  Width = 800
+  Caption = 'JvRollOut Demo'
+  ClientHeight = 483
+  ClientWidth = 800
+  Color = clBtnFace
+  DefaultMonitor = dmDesktop
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Shell Dlg 2'
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  Scaled = False
+  object Splitter1: TSplitter
+    Cursor = crSizeWE
+    Left = 280
+    Height = 395
+    Top = 0
+    Width = 5
+    AutoSnap = False
+    Color = clMaroon
+    MinSize = 200
+    ParentColor = False
+  end
+  object Panel4: TPanel
+    Left = 0
+    Height = 88
+    Top = 395
+    Width = 800
+    Align = alBottom
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 88
+    ClientWidth = 800
+    TabOrder = 0
+    object chkShowFocus: TCheckBox
+      Left = 16
+      Height = 19
+      Top = 16
+      Width = 77
+      Caption = 'Show Focus'
+      Checked = True
+      OnClick = chkShowFocusClick
+      State = cbChecked
+      TabOrder = 0
+    end
+    object chkTabStop: TCheckBox
+      Left = 16
+      Height = 19
+      Top = 40
+      Width = 63
+      Caption = 'Tab Stop'
+      Checked = True
+      OnClick = chkTabStopClick
+      State = cbChecked
+      TabOrder = 1
+    end
+    object chkToggleAnywhere: TCheckBox
+      Left = 128
+      Height = 19
+      Top = 16
+      Width = 104
+      Caption = 'Toggle Anywhere'
+      OnClick = chkToggleAnywhereClick
+      TabOrder = 2
+    end
+    object chkGroupIndex: TCheckBox
+      Left = 128
+      Height = 19
+      Top = 40
+      Width = 49
+      Caption = 'Group'
+      Checked = True
+      OnClick = chkGroupIndexClick
+      State = cbChecked
+      TabOrder = 3
+    end
+    object chkHideButton: TCheckBox
+      Left = 264
+      Height = 19
+      Top = 16
+      Width = 109
+      Caption = 'Hide Button Frame'
+      OnClick = chkHideButtonClick
+      TabOrder = 4
+    end
+    object chkHideFrame: TCheckBox
+      Left = 264
+      Height = 19
+      Top = 40
+      Width = 110
+      Caption = 'Hide Rollout Frame'
+      OnClick = chkHideFrameClick
+      TabOrder = 5
+    end
+    object chkImages: TCheckBox
+      Left = 400
+      Height = 19
+      Top = 16
+      Width = 55
+      Caption = 'Images'
+      Checked = True
+      OnClick = chkImagesClick
+      State = cbChecked
+      TabOrder = 6
+    end
+  end
+  object Panel3: TPanel
+    Left = 285
+    Height = 395
+    Top = 0
+    Width = 515
+    Align = alClient
+    BevelOuter = bvNone
+    ClientHeight = 395
+    ClientWidth = 515
+    TabOrder = 1
+    object Splitter3: TSplitter
+      Cursor = crVSplit
+      Left = 0
+      Height = 5
+      Top = 265
+      Width = 515
+      Align = alTop
+      AutoSnap = False
+      Color = clMaroon
+      MinSize = 200
+      ParentColor = False
+      ResizeAnchor = akTop
+    end
+    object pnlRightAlign: TPanel
+      Left = 0
+      Height = 125
+      Top = 270
+      Width = 515
+      Align = alClient
+      BevelOuter = bvNone
+      ClientHeight = 125
+      ClientWidth = 515
+      Color = clGray
+      ParentColor = False
+      TabOrder = 0
+      object Label3: TLabel
+        Left = 425
+        Height = 125
+        Top = 0
+        Width = 90
+        Align = alRight
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Right Aligned'
+        Color = clGray
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'MS Shell Dlg 2'
+        Font.Style = [fsBold]
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+        Transparent = False
+      end
+      object RO40: TJvRollOut
+        Left = 280
+        Height = 125
+        Top = 0
+        Width = 145
+        Align = alRight
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'T'
+        Placement = plLeft
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 3
+        ImageOptions.IndexExpanded = 2
+        ImageOptions.Images = ImageList1
+        TabOrder = 6
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 152
+        FCWidth = 22
+        FCHeight = 152
+      end
+      object RO39: TJvRollOut
+        Left = 258
+        Height = 125
+        Top = 0
+        Width = 22
+        Align = alRight
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'S'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 3
+        ImageOptions.IndexExpanded = 2
+        ImageOptions.Images = ImageList1
+        TabOrder = 7
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 152
+      end
+      object RO38: TJvRollOut
+        Left = 236
+        Height = 125
+        Top = 0
+        Width = 22
+        Align = alRight
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'R'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 3
+        ImageOptions.IndexExpanded = 2
+        ImageOptions.Images = ImageList1
+        TabOrder = 8
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 152
+      end
+      object RO37: TJvRollOut
+        Left = 214
+        Height = 125
+        Top = 0
+        Width = 22
+        Align = alRight
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'Q'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 3
+        ImageOptions.IndexExpanded = 2
+        ImageOptions.Images = ImageList1
+        TabOrder = 9
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 152
+      end
+      object RO36: TJvRollOut
+        Left = 192
+        Height = 125
+        Top = 0
+        Width = 22
+        Align = alRight
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'P && &Z'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 3
+        ImageOptions.IndexExpanded = 2
+        ImageOptions.Images = ImageList1
+        TabOrder = 5
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 152
+      end
+      object RO35: TJvRollOut
+        Left = 170
+        Height = 125
+        Top = 0
+        Width = 22
+        Align = alRight
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'O && &Y'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 3
+        ImageOptions.IndexExpanded = 2
+        ImageOptions.Images = ImageList1
+        TabOrder = 4
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 152
+      end
+      object RO34: TJvRollOut
+        Left = 148
+        Height = 125
+        Top = 0
+        Width = 22
+        Align = alRight
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'N && &X'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 3
+        ImageOptions.IndexExpanded = 2
+        ImageOptions.Images = ImageList1
+        TabOrder = 3
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 152
+      end
+      object RO33: TJvRollOut
+        Left = 126
+        Height = 125
+        Top = 0
+        Width = 22
+        Align = alRight
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'M && &W'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 3
+        ImageOptions.IndexExpanded = 2
+        ImageOptions.Images = ImageList1
+        TabOrder = 2
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 152
+      end
+      object RO32: TJvRollOut
+        Left = 104
+        Height = 125
+        Top = 0
+        Width = 22
+        Align = alRight
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'L && &V'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 3
+        ImageOptions.IndexExpanded = 2
+        ImageOptions.Images = ImageList1
+        TabOrder = 1
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 152
+      end
+      object RO31: TJvRollOut
+        Left = 82
+        Height = 125
+        Top = 0
+        Width = 22
+        Align = alRight
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'K && &U'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 3
+        ImageOptions.IndexExpanded = 2
+        ImageOptions.Images = ImageList1
+        TabOrder = 0
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 152
+        FCWidth = 22
+        FCHeight = 152
+      end
+    end
+    object pnlLeftAlign: TPanel
+      Left = 0
+      Height = 265
+      Top = 0
+      Width = 515
+      Align = alTop
+      BevelOuter = bvNone
+      ClientHeight = 265
+      ClientWidth = 515
+      Color = clGray
+      ParentColor = False
+      TabOrder = 1
+      object Label4: TLabel
+        Left = 0
+        Height = 265
+        Top = 0
+        Width = 90
+        Align = alLeft
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Left Aligned'
+        Color = clGray
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'MS Shell Dlg 2'
+        Font.Style = [fsBold]
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+        Transparent = False
+      end
+      object RO30: TJvRollOut
+        Left = 515
+        Height = 265
+        Top = 0
+        Width = 22
+        Align = alLeft
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'J && &T'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 7
+        ImageOptions.IndexExpanded = 6
+        ImageOptions.Images = ImageList1
+        TabOrder = 6
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 129
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO29: TJvRollOut
+        Left = 389
+        Height = 265
+        Top = 0
+        Width = 145
+        Align = alLeft
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'I && &S'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 7
+        ImageOptions.IndexExpanded = 6
+        ImageOptions.Images = ImageList1
+        TabOrder = 7
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 145
+        FCHeight = 129
+      end
+      object RO28: TJvRollOut
+        Left = 367
+        Height = 265
+        Top = 0
+        Width = 22
+        Align = alLeft
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'H && &R'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 7
+        ImageOptions.IndexExpanded = 6
+        ImageOptions.Images = ImageList1
+        TabOrder = 8
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 129
+      end
+      object RO27: TJvRollOut
+        Left = 345
+        Height = 265
+        Top = 0
+        Width = 22
+        Align = alLeft
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'G && &Q'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 7
+        ImageOptions.IndexExpanded = 6
+        ImageOptions.Images = ImageList1
+        TabOrder = 9
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 129
+      end
+      object RO26: TJvRollOut
+        Left = 323
+        Height = 265
+        Top = 0
+        Width = 22
+        Align = alLeft
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'F && &P'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 7
+        ImageOptions.IndexExpanded = 6
+        ImageOptions.Images = ImageList1
+        TabOrder = 5
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 129
+      end
+      object RO25: TJvRollOut
+        Left = 301
+        Height = 265
+        Top = 0
+        Width = 22
+        Align = alLeft
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'E && &O'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 7
+        ImageOptions.IndexExpanded = 6
+        ImageOptions.Images = ImageList1
+        TabOrder = 4
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 129
+      end
+      object RO24: TJvRollOut
+        Left = 279
+        Height = 265
+        Top = 0
+        Width = 22
+        Align = alLeft
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'D && &N'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 7
+        ImageOptions.IndexExpanded = 6
+        ImageOptions.Images = ImageList1
+        TabOrder = 3
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 129
+      end
+      object RO23: TJvRollOut
+        Left = 257
+        Height = 265
+        Top = 0
+        Width = 22
+        Align = alLeft
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'C && &M'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 7
+        ImageOptions.IndexExpanded = 6
+        ImageOptions.Images = ImageList1
+        TabOrder = 2
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 129
+      end
+      object RO22: TJvRollOut
+        Left = 235
+        Height = 265
+        Top = 0
+        Width = 22
+        Align = alLeft
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'B && &L'
+        Placement = plLeft
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 7
+        ImageOptions.IndexExpanded = 6
+        ImageOptions.Images = ImageList1
+        TabOrder = 1
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 129
+      end
+      object RO21: TJvRollOut
+        Left = 90
+        Height = 265
+        Top = 0
+        Width = 145
+        Align = alLeft
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = 'A && &K'
+        Placement = plLeft
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 7
+        ImageOptions.IndexExpanded = 6
+        ImageOptions.Images = ImageList1
+        TabOrder = 0
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 129
+      end
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 395
+    Top = 0
+    Width = 280
+    Align = alLeft
+    BevelOuter = bvNone
+    ClientHeight = 395
+    ClientWidth = 280
+    TabOrder = 2
+    object Splitter2: TSplitter
+      Cursor = crSizeWE
+      Left = 144
+      Height = 395
+      Top = 0
+      Width = 5
+      AutoSnap = False
+      Color = clMaroon
+      MinSize = 100
+      ParentColor = False
+    end
+    object pnlTopAlign: TPanel
+      Left = 0
+      Height = 395
+      Top = 0
+      Width = 144
+      Align = alLeft
+      BevelOuter = bvNone
+      ClientHeight = 395
+      ClientWidth = 144
+      Color = clGray
+      ParentColor = False
+      TabOrder = 0
+      object Label1: TLabel
+        Left = 0
+        Height = 40
+        Top = 0
+        Width = 144
+        Align = alTop
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Top Aligned'
+        Color = clGray
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'MS Shell Dlg 2'
+        Font.Style = [fsBold]
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+        Transparent = False
+      end
+      object RO1: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 40
+        Width = 144
+        Action = JvRollOutAction1
+        Align = alTop
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.Images = ImageList1
+        TabOrder = 0
+        TabStop = True
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+        object Edit1: TEdit
+          Left = 8
+          Height = 21
+          Top = 40
+          Width = 121
+          TabOrder = 0
+          Text = 'Edit1'
+        end
+        object Edit2: TEdit
+          Left = 8
+          Height = 21
+          Top = 72
+          Width = 121
+          TabOrder = 1
+          Text = 'Edit2'
+        end
+        object Edit3: TEdit
+          Left = 8
+          Height = 21
+          Top = 104
+          Width = 121
+          TabOrder = 2
+          Text = 'Edit3'
+        end
+        object Edit4: TEdit
+          Left = 8
+          Height = 21
+          Top = 136
+          Width = 121
+          TabOrder = 3
+          Text = 'Edit4'
+        end
+      end
+      object RO2: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 62
+        Width = 144
+        Action = JvRollOutAction2
+        Align = alTop
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.Images = ImageList1
+        TabOrder = 1
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+        object Edit5: TEdit
+          Left = 8
+          Height = 21
+          Top = 40
+          Width = 121
+          Color = clBtnFace
+          TabStop = False
+          TabOrder = 0
+          Text = 'Edit1'
+        end
+        object Edit6: TEdit
+          Left = 8
+          Height = 21
+          Top = 72
+          Width = 121
+          Color = clBtnFace
+          TabStop = False
+          TabOrder = 1
+          Text = 'Edit2'
+        end
+        object Edit7: TEdit
+          Left = 8
+          Height = 21
+          Top = 104
+          Width = 121
+          TabOrder = 2
+          Text = 'Edit3'
+        end
+        object Edit8: TEdit
+          Left = 8
+          Height = 21
+          Top = 136
+          Width = 121
+          TabOrder = 3
+          Text = 'Edit4'
+        end
+      end
+      object RO3: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 84
+        Width = 144
+        Align = alTop
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&3'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.Images = ImageList1
+        TabOrder = 2
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+        object Edit9: TEdit
+          Left = 8
+          Height = 21
+          Top = 40
+          Width = 121
+          TabOrder = 0
+          Text = 'Edit1'
+        end
+        object Edit10: TEdit
+          Left = 8
+          Height = 21
+          Top = 72
+          Width = 121
+          TabOrder = 1
+          Text = 'Edit2'
+        end
+        object Edit11: TEdit
+          Left = 8
+          Height = 21
+          Top = 104
+          Width = 121
+          Color = clBtnFace
+          TabStop = False
+          TabOrder = 2
+          Text = 'Edit3'
+        end
+        object Edit12: TEdit
+          Left = 8
+          Height = 21
+          Top = 136
+          Width = 121
+          Color = clBtnFace
+          TabStop = False
+          TabOrder = 3
+          Text = 'Edit4'
+        end
+      end
+      object RO4: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 106
+        Width = 144
+        Align = alTop
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&4'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.Images = ImageList1
+        TabOrder = 3
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO5: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 128
+        Width = 144
+        Align = alTop
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&5'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.Images = ImageList1
+        TabOrder = 4
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO6: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 150
+        Width = 144
+        Align = alTop
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&6'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.Images = ImageList1
+        TabOrder = 5
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO7: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 172
+        Width = 144
+        Align = alTop
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&7'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.Images = ImageList1
+        TabOrder = 6
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO8: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 194
+        Width = 144
+        Align = alTop
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&8'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.Images = ImageList1
+        TabOrder = 7
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO9: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 216
+        Width = 144
+        Align = alTop
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&9'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.Images = ImageList1
+        TabOrder = 8
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO10: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 238
+        Width = 144
+        Align = alTop
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '1&0'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.Images = ImageList1
+        TabOrder = 9
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+    end
+    object pnlBottomAlign: TPanel
+      Left = 149
+      Height = 395
+      Top = 0
+      Width = 131
+      Align = alClient
+      BevelOuter = bvNone
+      ClientHeight = 395
+      ClientWidth = 131
+      Color = clGray
+      ParentColor = False
+      TabOrder = 1
+      object Label2: TLabel
+        Left = 0
+        Height = 40
+        Top = 355
+        Width = 131
+        Align = alBottom
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Bottom Aligned'
+        Color = clGray
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'MS Shell Dlg 2'
+        Font.Style = [fsBold]
+        Layout = tlCenter
+        ParentColor = False
+        ParentFont = False
+        Transparent = False
+      end
+      object RO20: TJvRollOut
+        Left = 0
+        Height = 170
+        Top = 185
+        Width = 131
+        Align = alBottom
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&J'
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 5
+        ImageOptions.IndexExpanded = 4
+        ImageOptions.Images = ImageList1
+        TabOrder = 6
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO19: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 163
+        Width = 131
+        Align = alBottom
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&I'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 5
+        ImageOptions.IndexExpanded = 4
+        ImageOptions.Images = ImageList1
+        TabOrder = 7
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO18: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 141
+        Width = 131
+        Align = alBottom
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&H'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 5
+        ImageOptions.IndexExpanded = 4
+        ImageOptions.Images = ImageList1
+        TabOrder = 8
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO17: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 119
+        Width = 131
+        Align = alBottom
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&G'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 5
+        ImageOptions.IndexExpanded = 4
+        ImageOptions.Images = ImageList1
+        TabOrder = 9
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO16: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 97
+        Width = 131
+        Align = alBottom
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&F'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 5
+        ImageOptions.IndexExpanded = 4
+        ImageOptions.Images = ImageList1
+        TabOrder = 5
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO15: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 75
+        Width = 131
+        Align = alBottom
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&E'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 5
+        ImageOptions.IndexExpanded = 4
+        ImageOptions.Images = ImageList1
+        TabOrder = 4
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO14: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 53
+        Width = 131
+        Align = alBottom
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&D'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 5
+        ImageOptions.IndexExpanded = 4
+        ImageOptions.Images = ImageList1
+        TabOrder = 3
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO13: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 31
+        Width = 131
+        Align = alBottom
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&C'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 5
+        ImageOptions.IndexExpanded = 4
+        ImageOptions.Images = ImageList1
+        TabOrder = 2
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO12: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = 9
+        Width = 131
+        Align = alBottom
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&B'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 5
+        ImageOptions.IndexExpanded = 4
+        ImageOptions.Images = ImageList1
+        TabOrder = 1
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+      object RO11: TJvRollOut
+        Left = 0
+        Height = 22
+        Top = -13
+        Width = 131
+        Align = alBottom
+        ButtonFont.Color = clWindowText
+        ButtonFont.Style = [fsBold]
+        Caption = '&A'
+        Collapsed = True
+        GroupIndex = 1
+        ImageOptions.IndexCollapsed = 5
+        ImageOptions.IndexExpanded = 4
+        ImageOptions.Images = ImageList1
+        TabOrder = 0
+        TabStop = True
+        ToggleAnywhere = False
+        FAWidth = 145
+        FAHeight = 170
+        FCWidth = 22
+        FCHeight = 22
+      end
+    end
+  end
+  object ImageList1: TImageList
+    left = 584
+    top = 408
+    Bitmap = {
+      4C69090000001000000010000000000000000000000000000000848484FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000848484FFC6C6C6FF8484
+      84FF000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000FF840084FFFFFFFFFFC6C6
+      C6FF848484FF00000000000000000000000000000000848484FF848484FF8484
+      84FF00000000000000000000000000000000000000FF840084FFFFFFFFFFFFFF
+      FFFF848484FF0000000000000000848484FF848484FFFFFFFFFFFFFFFFFF8484
+      84FF00000000000000000000000000000000000000FF840084FFFFFFFFFFFFFF
+      FFFFC6C6C6FF848484FF848484FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFF8484
+      84FF000000FF000000FF0000000000000000000000FF840084FFFFFFFFFFFFFF
+      FFFFFFFFFFFF000000FFC6C6C6FFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFF8484
+      84FFFFFFFFFF840084FF000000FF00000000000000FF840084FFFFFFFFFFFFFF
+      FFFFFFFFFFFF000000FFC6C6C6FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFF8484
+      84FFFFFFFFFF840084FF000000FF00000000000000FF840084FFFFFFFFFFFFFF
+      FFFFFFFFFFFF000000FFC6C6C6FFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFF8484
+      84FFFFFFFFFF840084FF000000FF00000000000000FF840084FFFFFFFFFFFFFF
+      FFFFFFFFFFFF000000FFC6C6C6FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFF8484
+      84FFFFFFFFFF840084FF000000FF00000000000000FF840084FFFFFFFFFFFFFF
+      FFFFFFFFFFFF000000FFC6C6C6FFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFF8484
+      84FFFFFFFFFF840084FF000000FF00000000000000FF840084FF840084FFFFFF
+      FFFFFFFFFFFF000000FFC6C6C6FFFFFFFFFFFFFFFFFFFFFFFFFF848484FFC6C6
+      C6FFFFFFFFFF840084FF000000FF0000000000000000000000FF840084FF8400
+      84FFFFFFFFFF000000FFC6C6C6FFFFFFFFFF848484FF848484FFC6C6C6FFFFFF
+      FFFFFFFFFFFF840084FF000000FF000000000000000000000000000000FF8400
+      84FFFFFFFFFF000000FF848484FF848484FFC6C6C6FFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFF840084FF000000FF000000000000000000000000000000000000
+      00FF840084FF840084FF840084FF840084FF840084FF840084FF840084FF8400
+      84FF840084FF840084FF000000FF000000000000000000000000000000000000
+      0000000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000FF000000FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF000000FF840084FF840084FF000000FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
+      00FF840084FF840084FF840084FF840084FF840084FF000000FF000000000000
+      000000000000000000000000000000000000000000FF000000FF840084FF8400
+      84FF840084FF840084FF840084FF840084FF840084FF840084FF000000FF0000
+      0000000000000000000000000000000000FFC6C6C6FF840084FF840084FF8400
+      84FF840084FF840084FF840084FF840084FF840084FF840084FF840084FF0000
+      00FF000000000000000000000000000000FF840084FFC6C6C6FF840084FF8400
+      84FF840084FF840084FF840084FF840084FF840084FF840084FF840084FF8400
+      84FF000000FF0000000000000000000000FF840084FF840084FFC6C6C6FF8400
+      84FF840084FF840084FF840084FF840084FF840084FF840084FF840084FF8400
+      84FF840084FF000000FF00000000000000FF840084FF840084FF840084FFC6C6
+      C6FF840084FF840084FF840084FF840084FF840084FF840084FF840084FF8400
+      84FF840084FF000000FF000000FF000000FF840084FF840084FF840084FF8400
+      84FFC6C6C6FF840084FF840084FF840084FF840084FF840084FF840084FF0000
+      00FF000000FF848484FF0000000000000000000000FF840084FF840084FF8400
+      84FF840084FFC6C6C6FF840084FF840084FF840084FF000000FF000000FF8484
+      84FFFFFFFFFF848484FF000000000000000000000000000000FF840084FF8400
+      84FF840084FF840084FFC6C6C6FF000000FF000000FF848484FFC6C6C6FFFFFF
+      FFFFC6C6C6FF000000FF000000FF000000000000000000000000000000FF8400
+      84FF840084FF840084FF000000FF848484FFFFFFFFFFC6C6C6FFFFFFFFFFC6C6
+      C6FF000000FF000000FF00000000000000000000000000000000000000000000
+      00FF840084FF840084FF000000FFFFFFFFFFC6C6C6FFFFFFFFFF000000FF0000
+      00FF000000000000000000000000000000000000000000000000000000000000
+      0000000000FF840084FF000000FF848484FF000000FF000000FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000FF000000FF000000FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000000000000000FFFF0000
+      00000000FFFF0000FFFF00000000000000000000000000000000000000000000
+      00000000000000000000000000000000FFFF0000FFFF848484FF0000FFFF0000
+      FFFF0000FFFF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000FFFF0000FFFF0000FFFF0000
+      FFFF0000FFFF0000FFFF0000FFFF0000FFFF00000000848484FF848484FF8484
+      84FF00000000000000000000000000000000000000FF0000FFFF0000FFFFFFFF
+      FFFF0000FFFF0000FFFF00000000848484FF848484FFFFFFFFFFFFFFFFFF8484
+      84FF0000000000000000000000000000FFFF0000FFFF0000FFFF0000FFFF0000
+      FFFF0000FFFF0000FFFF0000FFFFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFF8484
+      84FF000000FF000000FF0000000000000000000000FF840084FF0000FFFF0000
+      FFFF0000FFFF000000FF0000FFFF0000FFFF00FFFFFFFFFFFFFFFFFFFFFF8484
+      84FFFFFFFFFF840084FF000000FF00000000000000FF0000FFFF0000FFFFFFFF
+      FFFF0000FFFF000000FFC6C6C6FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFF8484
+      84FFFFFFFFFF840084FF000000FF00000000000000FF0000FFFFFFFFFFFFFFFF
+      FFFF0000FFFF000000FFC6C6C6FFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFF8484
+      84FFFFFFFFFF840084FF000000FF00000000000000FF840084FFFFFFFFFFFFFF
+      FFFFFFFFFFFF000000FFC6C6C6FFFFFFFFFFFFFFFFFFFFFFFFFF00FFFFFF8484
+      84FFFFFFFFFF840084FF000000FF00000000000000FF840084FFFFFFFFFFFFFF
+      FFFFFFFFFFFF000000FFC6C6C6FFFFFFFFFF00FFFFFFFFFFFFFFFFFFFFFF8484
+      84FFFFFFFFFF840084FF000000FF00000000000000FF840084FF840084FFFFFF
+      FFFFFFFFFFFF000000FFC6C6C6FFFFFFFFFFFFFFFFFFFFFFFFFF848484FFC6C6
+      C6FFFFFFFFFF840084FF000000FF0000000000000000000000FF840084FF8400
+      84FFFFFFFFFF000000FFC6C6C6FFFFFFFFFF848484FF848484FFC6C6C6FFFFFF
+      FFFFFFFFFFFF840084FF000000FF000000000000000000000000000000FF8400
+      84FFFFFFFFFF000000FF848484FF848484FFC6C6C6FFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFF840084FF000000FF000000000000000000000000000000000000
+      00FF840084FF840084FF840084FF840084FF840084FF840084FF840084FF8400
+      84FF840084FF840084FF000000FF000000000000000000000000000000000000
+      0000000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000000000000000FFFF0000
+      00000000FFFF0000FFFF000000FF000000FF0000000000000000000000000000
+      00000000000000000000000000000000FFFF0000FFFF000000000000FFFF0000
+      FFFF0000FFFF000000FF840084FF840084FF000000FF00000000000000000000
+      0000000000000000000000000000000000000000FFFF0000FFFF0000FFFF0000
+      FFFF0000FFFF0000FFFF0000FFFF0000FFFF840084FF000000FF000000000000
+      000000000000000000000000000000000000000000FF0000FFFF0000FFFFFFFF
+      FFFF0000FFFF0000FFFF840084FF840084FF840084FF840084FF000000FF0000
+      00000000000000000000000000000000FFFF0000FFFF0000FFFF0000FFFF0000
+      FFFF0000FFFF0000FFFF0000FFFF840084FF840084FF840084FF840084FF0000
+      00FF000000000000000000000000000000FF840084FFC6C6C6FF0000FFFF0000
+      FFFF0000FFFF840084FF0000FFFF0000FFFF840084FF840084FF840084FF8400
+      84FF000000FF0000000000000000000000FF840084FF0000FFFF0000FFFF8400
+      84FF0000FFFF840084FF840084FF840084FF840084FF840084FF840084FF8400
+      84FF840084FF000000FF00000000000000FF840084FF0000FFFF840084FFC6C6
+      C6FF0000FFFF840084FF840084FF840084FF840084FF840084FF840084FF8400
+      84FF840084FF000000FF000000FF000000FF840084FF840084FF840084FF8400
+      84FFC6C6C6FF840084FF840084FF840084FF840084FF840084FF840084FF0000
+      00FF000000FF848484FF0000000000000000000000FF840084FF840084FF8400
+      84FF840084FFC6C6C6FF840084FF840084FF840084FF000000FF000000FF8484
+      84FFFFFFFFFF848484FF000000000000000000000000000000FF840084FF8400
+      84FF840084FF840084FFC6C6C6FF000000FF000000FF848484FFC6C6C6FFFFFF
+      FFFFC6C6C6FF000000FF000000FF000000000000000000000000000000FF8400
+      84FF840084FF840084FF000000FF848484FFFFFFFFFFC6C6C6FFFFFFFFFFC6C6
+      C6FF000000FF000000FF00000000000000000000000000000000000000000000
+      00FF840084FF840084FF000000FFFFFFFFFFC6C6C6FFFFFFFFFF000000FF0000
+      00FF000000000000000000000000000000000000000000000000000000000000
+      0000000000FF840084FF000000FF848484FF000000FF000000FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000FF000000FF000000FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000848484FF8484
+      84FF848484FF848484FF848484FF000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000848484FFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFF848484FF0000000000000000000000000000
+      000000000000000000000000000000000000848484FFFFFFFFFF00FFFFFFC6C6
+      C6FF00FFFFFFC6C6C6FF00FFFFFFFFFFFFFF848484FF848484FF848484FF8484
+      84FF848484FF848484FF0000000000000000848484FFFFFFFFFFC6C6C6FF00FF
+      FFFFC6C6C6FF00FFFFFFC6C6C6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFF848484FF000000FF00000000848484FFFFFFFFFF00FFFFFFC6C6
+      C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6
+      C6FF00FFFFFF848484FF000000FF848484FF848484FF848484FF848484FF8484
+      84FF848484FF848484FF848484FF848484FF848484FF848484FF848484FF8484
+      84FF00FFFFFF848484FF000000FF848484FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF848484FF8484
+      84FFC6C6C6FF848484FF000000FF848484FFFFFFFFFF00FFFFFFC6C6C6FF00FF
+      FFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFF00FFFFFF0000
+      00FF848484FF848484FF000000FF00000000848484FFFFFFFFFF00FFFFFFC6C6
+      C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6
+      C6FF000000FF848484FF000000FF00000000848484FFFFFFFFFFC6C6C6FF00FF
+      FFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FF
+      FFFF000000FF848484FF000000FF0000000000000000848484FFFFFFFFFFC6C6
+      C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFF00FF
+      FFFF848484FF000000FF000000FF0000000000000000848484FF848484FF8484
+      84FF848484FF848484FF848484FF848484FF848484FF848484FF848484FF8484
+      84FF848484FF848484FF000000FF000000000000000000000000000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000848484FF8484
+      84FF848484FF848484FF848484FF000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000848484FF00FFFFFFC6C6
+      C6FF00FFFFFFC6C6C6FF00FFFFFF848484FF0000000000000000000000000000
+      000000000000000000000000000000000000848484FF00FFFFFFC6C6C6FF00FF
+      FFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFF848484FF848484FF848484FF8484
+      84FF848484FF848484FF0000000000000000848484FFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFF848484FF000000FF00000000848484FFFFFFFFFF00FFFFFFC6C6
+      C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6
+      C6FF00FFFFFF848484FF000000FF00000000848484FFFFFFFFFFC6C6C6FF00FF
+      FFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FF
+      FFFFC6C6C6FF848484FF000000FF00000000848484FFFFFFFFFF00FFFFFFC6C6
+      C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6
+      C6FF00FFFFFF848484FF000000FF00000000848484FFFFFFFFFFC6C6C6FF00FF
+      FFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FF
+      FFFFC6C6C6FF848484FF000000FF00000000848484FFFFFFFFFF00FFFFFFC6C6
+      C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6
+      C6FF00FFFFFF848484FF000000FF00000000848484FFFFFFFFFFC6C6C6FF00FF
+      FFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FF
+      FFFFC6C6C6FF848484FF000000FF00000000848484FFFFFFFFFF00FFFFFFC6C6
+      C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6C6FF00FFFFFFC6C6
+      C6FF00FFFFFF848484FF000000FF00000000848484FF848484FF848484FF8484
+      84FF848484FF848484FF848484FF848484FF848484FF848484FF848484FF8484
+      84FF848484FF848484FF000000FF0000000000000000000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000FF0000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      00000000000000000000000000000000000000000000000000FF000000FF0000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000FF000000000000000000000000000000FF000000FF000000FF0000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000FF000000FF00000000000000FF000000FF000000FF000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000FF000000FF000000FF000000FF000000FF00000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      000000000000000000FF000000FF000000FF0000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      00000000000000000000000000FF000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF0000000000000000000000000000000000000000000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000FF000000000000000000000000000000FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000FF000000000000000000000000000000FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000FF000000000000000000000000000000FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000FF000000FF00000000000000FF000000FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000FF00000000000000FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000FF000000FF000000FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000840000FF000000FF840000FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000840000FF00000000840000FF840000FF840000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000840000FF840000FF840000FF00000000840000FF00000000000000008400
+      00FF000000000000000000000000000000000000000000000000000000008400
+      00FF0000000000000000840000FF00000000840000FF00000000000000008400
+      00FF000000000000000000000000000000000000000000000000000000008400
+      00FF0000000000000000840000FF00000000840000FF00000000000000008400
+      00FF000000000000000000000000000000000000000000000000000000008400
+      00FF0000000000000000840000FF0000000000000000840000FF840000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000840000FF840000FF00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000
+    }
+  end
+  object ActionList1: TActionList
+    Images = ImageList1
+    left = 664
+    top = 408
+    object JvRollOutAction1: TJvRollOutAction
+      Caption = 'Action &1 (Ctrl+1)'
+      OnExecute = JvRollOutAction1Execute
+      ShortCut = 16433
+      RollOut = RO1
+      LinkCheckedToCollapsed = False
+    end
+    object JvRollOutAction2: TJvRollOutAction
+      Caption = 'Action &2 (Ctrl+2)'
+      OnExecute = JvRollOutAction2Execute
+      ShortCut = 16434
+      RollOut = RO2
+      LinkCheckedToCollapsed = True
+    end
+  end
+  object MainMenu1: TMainMenu
+    left = 512
+    top = 408
+    object Actions1: TMenuItem
+      Caption = 'Actions'
+      object Action1Ctrl11: TMenuItem
+        Action = JvRollOutAction1
+      end
+      object Action2Ctrl21: TMenuItem
+        Action = JvRollOutAction2
+      end
+    end
+  end
+end

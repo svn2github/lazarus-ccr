@@ -14,24 +14,19 @@ implementation
 {$R ../../resource/jvctrlsreg.res}
 
 uses
-  Classes, JvDsgnConsts,
-  JvMovableBevel, JvRuler, JvGroupHeader,
+  Classes, ActnList, JvDsgnConsts,
+  JvMovableBevel, JvRuler, JvGroupHeader, JvRollOut,
   JvHtControls, {JvDBHTLabel,} JvHint, JvHTHintForm,
   PropEdits, Controls;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
-    TJvMovableBevel, TJvMovablePanel, TJvRuler, TJvGroupHeader,
+    TJvMovableBevel, TJvMovablePanel, TJvRuler, TJvGroupHeader, TJvRollOut,
     TJvHint, TJvHTLabel, TJvHTListbox, TJvHTCombobox
   ]);
-  {
-  RegisterComponents(RsPaletteBarPanel, [TJvMovableBevel]);
-  RegisterComponents(RsPaletteLabel, [TJvHTLabel]);
-  RegisterComponents(RsPaletteListComboTree, [TJvHTListBox, TJvHTComboBox]);
-  RegisterComponents(RsPaletteNonVisual, [TJvHint]);
-  }
   RegisterPropertyEditor(TypeInfo(TCaption), TJvHTLabel, 'Caption', TJvHintProperty);
+  RegisterActions(RsJVCLActionsCategory, [TJvRollOutAction], nil);
 end;
 
 end.

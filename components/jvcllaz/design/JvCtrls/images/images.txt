@@ -20,3 +20,4 @@ tjvruler.png
 tjvruler_150.png
 tjvruler_200.png
 tjvgroupheader.bmp
+tjvrollout.bmp
