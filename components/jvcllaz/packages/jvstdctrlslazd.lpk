@@ -19,7 +19,7 @@
     <Version Major="1" Release="4"/>
     <Files Count="1">
       <Item1>
-        <Filename Value="..\design\JvStdCtrls\JvStdCtrlsReg.pas"/>
+        <Filename Value="..\design\JvStdCtrls\jvstdctrlsreg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="JvStdCtrlsReg"/>
       </Item1>
