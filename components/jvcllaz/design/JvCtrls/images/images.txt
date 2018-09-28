@@ -19,5 +19,9 @@ tjvmovablepanel_200.png
 tjvruler.png
 tjvruler_150.png
 tjvruler_200.png
-tjvgroupheader.bmp
-tjvrollout.bmp
+tjvgroupheader.png
+tjvgroupheader_150.png
+tjvgroupheader_200.png
+tjvrollout.png
+tjvrollout_150.png
+tjvrollout_200.png
