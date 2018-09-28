@@ -1,7 +1,9 @@
 tjvtabbar.bmp
 tjvmoderntabbarpainter.bmp
 Tjvtabbarxppainter.bmp
-tjvoutlookbar.bmp
+tjvoutlookbar.png
+tjvoutlookbar_150.png
+tjvoutlookbar_200.png
 tjvtimeline.png
 tjvtimeline_150.png
 tjvtimeline_200.png
@@ -26,3 +28,6 @@ tjvimagesviewer_200.png
 tjvownerdrawviewer.png
 tjvownerdrawviewer_150.png
 tjvownerdrawviewer_200.png
+tjvvalidateedit.png
+tjvvalidateedit_150.png
+tjvvalidateedit_200.png

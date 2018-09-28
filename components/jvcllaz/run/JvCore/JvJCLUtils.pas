@@ -46,8 +46,9 @@ interface
 //          the JCL has the same problem with CLX it should not make any difference.
 
 uses
-  Classes, Graphics, LCLIntf, LCLType;
-  
+  LCLIntf, LCLType,
+  SysUtils, Classes, Graphics;
+
 const
 (******************** NOT CONVERTED
   {$IFDEF MSWINDOWS}
@@ -69,14 +70,15 @@ const
   BOM_LSB_FIRST = WideChar($FEFF);
   BOM_MSB_FIRST = WideChar($FFFE);
 
-{$IF FPC_FullVersion < 30000}
+
 type
+{$IF FPC_FullVersion < 30000}
   TSysCharSet = set of AnsiChar;
 {$ENDIF}
+  EJvConvertError = Class(EConvertError);  { subclass EConvertError raised by some non-Def versions of floating point conversion routine }
 
-(******************** NOT CONVERTED
+  (******************** NOT CONVERTED
 {$IFDEF UNIX}
-type
   TFileTime = Integer;
 {$ENDIF UNIX}
 
@@ -90,7 +92,12 @@ const
   DefaultDateOrder = doDMY;
   CenturyOffset: Byte = 60;
   NullDate: TDateTime = {-693594} 0;
+  *)
 
+function JvSafeStrToFloatDef(const Str: string; Def: Extended; aDecimalSeparator: Char): Extended;
+function JvSafeStrToFloat(const Str: string; aDecimalSeparator: Char): Extended;
+
+(******************* NOT CONVERTED ******
 function USToLocalFloatStr(const Text: string): string;
 function StrToFloatUS(const Text: string): Extended;
 // StrToFloatUS uses US '.' as decimal seperator and ',' as thousand separator
@@ -292,6 +299,15 @@ function CopyDir(const SourceDir, DestDir: TFileName): Boolean;
 //function FileTimeToDateTime(const FT: TFileTime): TDateTime;
 procedure FileTimeToDosDateTimeDWord(const FT: TFileTime; out Dft: DWORD);
 function MakeValidFileName(const FileName: TFileName; ReplaceBadChar: Char): TFileName;
+***)
+
+function StrEnsureNoPrefix(const Prefix, Text: string): string;
+function StrEnsureNoSuffix(const Suffix, Text: string): string;
+function IsCharAlpha(Key: Char): Boolean;
+function IsCharAlphaNumeric(Key: Char): Boolean;
+
+
+(******************** NOT CONVERTED ***
 
 {**** Graphic routines }
 
@@ -844,9 +860,10 @@ function IntToExtended(I: Integer): Extended;
   It is not very useful in other contexts,
   but it is in this unit as it is needed in both MemoEx and TypedEdit }
 function GetChangedText(const Text: string; SelStart, SelLength: Integer; Key: Char): string;
-
+*)
 function MakeYear4Digit(Year, Pivot: Integer): Integer;
 
+(********************** NOT CONVERTED ***
 function StrIsInteger(const S: string): Boolean;
 function StrIsFloatMoney(const Ps: string): Boolean;
 function StrIsDateTime(const Ps: string): Boolean;
@@ -1233,7 +1250,7 @@ function FindUnusedFileName(FileName: string; const FileExt: string; NumberPrefi
 implementation
 
 uses
-  Math, SysUtils, LazFileUtils,
+  Math, LazFileUtils, LclStrConsts,
   JvConsts;
 
 (******************** NOT CONVERTED
@@ -1265,12 +1282,15 @@ const
   RC_ShellName = 'Shell_TrayWnd';
   RC_DefaultIcon = 'DefaultIcon';
   {$ENDIF MSWINDOWS}
+********************)
 
 resourcestring
+  RsEPivotLessThanZero = 'JvJCLUtils.MakeYear4Digit: Pivot < 0';
+
+(******************* NOT CONVERTED ****
   // (p3) duplicated from JvConsts since this unit should not rely on JVCL at all
   RsEPropertyNotExists = 'Property "%s" does not exist';
   RsEInvalidPropertyType = 'Property "%s" has invalid type';
-  RsEPivotLessThanZero = 'JvJCLUtils.MakeYear4Digit: Pivot < 0';
 
 {$IFDEF NO_JCL}
 
@@ -1506,7 +1526,56 @@ begin
     Result := StrToFloat(Text); // try it with local settings
   end;
 end;
+**********)
 
+{ JvStrConvertErrorFmt used from JvSafeStrToFloat }
+procedure JvStrConvertErrorFmt(ResString: PResStringRec; const Args: array of const);
+begin
+  raise EJvConvertError.CreateResFmt(ResString, Args); { will be also caught if you catch E:EConvertERror }
+end;
+
+function _JvSafeStrToFloat(const Str: String; aDecimalSeparator: Char; out AValue: Extended): Boolean;
+var
+  LocalFormatSettings: TFormatSettings;
+begin
+  Result := false;
+  if Str = '' then
+    Exit; { how's this for a nice optimization?  WPostma. }
+
+  LocalFormatSettings := FormatSettings;
+  if aDecimalSeparator = ' ' then
+    LocalFormatSettings.DecimalSeparator := FormatSettings.DecimalSeparator
+  else
+    LocalFormatSettings.DecimalSeparator := aDecimalSeparator;
+
+  { Cross-codepage safety feature:  Handed '1.2', a string without a comma,
+    but which is obviously a floating point number, convert it properly also.
+    This functionality is important for JvCsvDataSet and may be important in other
+    places. }
+   if (Pos(USDecimalSeparator, Str) > 0) and (Pos(ADecimalSeparator, Str) = 0) then
+     LocalFormatSettings.DecimalSeparator := USDecimalSeparator;
+
+   Result := TryStrToFloat(Str, AValue, LocalFormatSettings);
+end;
+
+function JvSafeStrToFloatDef(const Str: string; Def: Extended; aDecimalSeparator: Char): Extended;
+begin
+  { one handy dandy api expects a Default value returned instead }
+  if not _JvSafeStrToFloat(Str, aDecimalSeparator, Result) then
+    Result := Def; { failed, use default }
+end;
+
+// New routine, same as JvSafeStrToFloatDef but it will raise a conversion exception,
+// for cases when you actually want to handle an EConvertError yourself and where
+// there is no convenient or possible float value for your case.
+function JvSafeStrToFloat(const Str: string; aDecimalSeparator: Char): Extended;
+begin
+  { the other handy dandy api style expects us to raise an EConvertError. }
+  if not _JvSafeStrToFloat(Str, aDecimalSeparator, Result) then
+    JvStrConvertErrorFmt(@SParInvalidFloat, [Str]); {failed, raise exception }
+end;
+
+(******************** NOT CONVERTED ***
 function StrToFloatUSDef(const Text: string; Default: Extended): Extended;
 begin
   Result := StrToFloatDef(USToLocalFloatStr(Text), Default);
@@ -3162,6 +3231,45 @@ function StrToBool(const S: string): Boolean;
 begin
   Result := (S = '1') or SameText(S, 'True') or SameText(S, 'yes');
 end;
+**********)
+
+function StrEnsureNoPrefix(const Prefix, Text: string): string;
+var
+  PrefixLen: SizeInt;
+begin
+  PrefixLen := Length(Prefix);
+  if Copy(Text, 1, PrefixLen) = Prefix then
+    Result := Copy(Text, PrefixLen + 1, Length(Text))
+  else
+    Result := Text;
+end;
+
+function StrEnsureNoSuffix(const Suffix, Text: string): string;
+var
+  SuffixLen: SizeInt;
+  StrLength: SizeInt;
+begin
+  SuffixLen := Length(Suffix);
+  StrLength := Length(Text);
+  if Copy(Text, StrLength - SuffixLen + 1, SuffixLen) = Suffix then
+    Result := Copy(Text, 1, StrLength - SuffixLen)
+  else
+    Result := Text;
+end;
+
+// Laz workaround for Windows function --- probably not complete...
+function IsCharAlpha(Key: Char): Boolean;
+begin
+  Result := Key in ['a'..'z', 'A'..'Z'];
+end;
+
+// Laz workaround for Windows function --- probably not complete...
+function IsCharAlphaNumeric(Key: Char): Boolean;
+begin
+  Result := Key in ['0'..'9', 'a'..'z', 'A'..'Z'];
+end;
+
+(********************** NOT CONVERTED ***
 
 function RATextOutEx(Canvas: TCanvas; const R, RClip: TRect; const S: string;
   const CalcHeight: Boolean): Integer;
@@ -7921,6 +8029,7 @@ begin
   if Key <> #0 then
     Insert(Key, Result, SelStart + 1);
 end;
+****************)
 
 { "window" technique for years to translate 2 digits to 4 digits.
    The window is 100 years wide
@@ -7974,6 +8083,7 @@ begin
     Result := Year;
 end;
 
+(*********************
 function StrIsInteger(const S: string): Boolean;
 var
   I: Integer;

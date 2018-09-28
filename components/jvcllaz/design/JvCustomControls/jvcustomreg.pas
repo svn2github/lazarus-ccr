@@ -16,6 +16,7 @@ implementation
 uses
   Classes, ImgList, Controls, LResources, PropEdits, GraphPropEdits, ComponentEditors,
   JvDsgnConsts,
+  JvValidateEdit,
   JvOutlookBar, JvOutlookBarEditors,
 //  JvTabBar, JvTabBarXPPainter,
   JvThumbImage, JvThumbnails, JvThumbViews,
@@ -25,6 +26,7 @@ uses
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
+    TJvValidateEdit,
 //    TJvTabBar, TJvModernTabBarPainter, TJvTabBarXPPainter,    // moved to PageComps
     TJvOutlookBar,
     TJvThumbView, TJvThumbnail, TJvThumbImage,
