@@ -14,12 +14,12 @@ implementation
 {$R ../../resource/jvstdctrlsreg.res}
 
 uses
-  Classes, Controls, JvDsgnConsts, JvButton, JvBaseEdits;
+  Classes, Controls, JvDsgnConsts, JvButton, JvCheckbox, JvBaseEdits;
 
 procedure Register;
 begin
   //RegisterComponents(RsPaletteButton, [TJvButton]);
-  RegisterComponents(RsPaletteJvcl, [TJvCalcEdit]);
+  RegisterComponents(RsPaletteJvcl, [TJvCheckbox, TJvCalcEdit]);
 end;
 
 end.
