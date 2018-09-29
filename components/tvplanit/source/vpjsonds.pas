@@ -431,8 +431,8 @@ end;
 procedure TVpJSONDatastore.Loaded;
 begin
   inherited;
-  if not (csDesigning in ComponentState) then
-    Connected := AutoConnect;
+  if not (csDesigning in ComponentState) and AutoConnect then
+    Connected := true;
 end;
 
 procedure TVpJSONDatastore.LoadEvents;
@@ -614,6 +614,9 @@ begin
   { Don't do anything with live data until run time. }
   if (csDesigning in ComponentState) or (csLoading in ComponentState) then
     Exit;
+
+  if Value = Connected then
+    exit;
 
   { Connecting or disconnecting? }
   if Value then

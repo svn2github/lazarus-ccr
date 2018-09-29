@@ -4,7 +4,7 @@ unit Unit1;
 
 { Activate this define to use a JSON string instead of a file }
 
-{$DEFINE USE_JSON_STRING}
+{.$DEFINE USE_JSON_STRING}
 
 interface
 
