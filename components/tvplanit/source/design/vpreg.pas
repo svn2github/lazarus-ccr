@@ -54,7 +54,7 @@ type
   { TVpCategoryInfoImageIndexProperty }
   TVpCategoryInfoImageIndexProperty = class(TImageIndexPropertyEditor)
   protected
-    function GetImageList: TCustomImageList; overload;
+    function GetImageList: TCustomImageList; override; //overload;  -- typo?
   end;
 
   {TDBStringProperty}

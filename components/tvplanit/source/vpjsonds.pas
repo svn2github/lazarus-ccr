@@ -11,11 +11,20 @@ uses
   VpData, VpBaseDS;
 
 type
+  TVpJSONStoreType = (jstFile, jstString);
+
   TVpJSONDataStore = class(TVpCustomDataStore)
   private
     FFileName: String;
+    FJSONString: String;
     FFormatSettings: TFormatSettings;
+    FUseUTF8: Boolean;
+    FStrict: Boolean;
+    FComments: Boolean;
+    FIgnoreTrailingComma: Boolean;
+    FStoreType: TVpJSONStoreType;
     procedure SetFilename(AValue: String);
+    procedure SetJSONString(AValue: String);
 
   protected
     { ancestor methods }
@@ -34,7 +43,12 @@ type
     function JSONToTask(AObj: TJSONObject; AResource: TVpResource): TVpTask;
 
     procedure ReadJSON;
+    procedure ReadJSONFromFile;
+    procedure ReadJSONFromString;
+    procedure ReadJSONFromStream(AStream: TStream);
+
     procedure WriteJSON;
+    procedure WriteJSONToMemoryStream(AStream: TMemoryStream);
 
     { other methods }
     function UniqueID(AValue: Integer): Boolean;
@@ -58,7 +72,20 @@ type
 
   published
     property AutoConnect default false;
+    {Determines whether data are read from/written to file or string}
+    property JSONStoreType: TVpJSONStoreType read FStoreType write FStoreType default jstFile;
+    { Name of the file to be used when JSONStoreType is jstFile }
     property FileName: String read FFileName write SetFilename;
+    { String to be used when TJSONStoreType is jstString }
+    property JSONString: String read FJSONString write SetJSONString;
+    { JSON options }
+    property JSONUseUTF8: Boolean read FUseUTF8 write FUseUTF8 default true;
+    {$IF FPC_FullVersion >= 30000}
+    property JSONStrict: Boolean read FStrict write FStrict default false;
+    property JSONComments: Boolean read FComments write FComments default false;
+    property JSONIgnoreTrailingComma: Boolean read FIgnoreTrailingComma write FIgnoreTrailingComma default false;
+    {$IFEND}
+
   end;
 
 
@@ -84,6 +111,8 @@ begin
   FFormatSettings.TimeSeparator := ':';
 
   FDayBuffer := 1000*365;  // 1000 years, i.e. deactivate daybuffer mechanism
+
+  FUseUTF8 := true;
 end;
 
 destructor TVpJSONDatastore.Destroy;
@@ -467,15 +496,16 @@ begin
 end;
 
 procedure TVpJSONDatastore.ReadJSON;
+begin
+  case FStoreType of
+    jstFile   : ReadJSONFromFile;
+    jstString : ReadJSONFromString;
+  end;
+end;
+
+procedure TVpJSONDatastore.ReadJSONFromFile;
 var
-  p: TJSONParser;
   stream: TFileStream;
-  json: TJSONObject;
-  resObj: TJSONObject;
-  resObjArray: TJSONArray;
-  objArray: TJSONArray;
-  res: TVpResource;
-  i, j: Integer;
 begin
   if (FFileName = '') then
     raise Exception.Create(RSNoFilenameSpecified);
@@ -485,40 +515,78 @@ begin
 
   stream := TFileStream.Create(FFilename, fmOpenRead + fmShareDenyWrite);
   try
-    Resources.ClearResources;
-    {$IF FPC_FullVersion >= 30000}
-    p := TJSONParser.Create(stream, [joUTF8]);
-    {$ELSE}
-    p := TJSONParser.Create(stream, true);
-    {$ENDIF}
-    try
-      json := p.Parse as TJSONObject;
-      resObjArray := json.Find('Resources', jtArray) as TJSONArray;
-      if Assigned(resObjArray) then
-        for i := 0 to resObjArray.Count-1 do begin
-          resObj := resObjArray.Objects[i];
-          res := JSONToResource(resObj);
-          // Extract events
-          objArray := resObj.Find('Events', jtArray) as TJSONArray;
-          if Assigned(objArray) then
-            for j := 0 to objArray.Count-1 do
-              JSONToEvent(objArray.Objects[j], res);
-          // Extract contacts
-          objArray := resObj.Find('Contacts', jtArray) as TJSONArray;
-          if Assigned(objArray) then
-            for j := 0 to  objArray.Count-1 do
-              JSONToContact(objArray.Objects[j], res);
-          // Extract tasks
-          objArray := resObj.Find('Tasks', jtArray) as TJSONArray;
-          if Assigned(objArray) then
-            for j := 0 to objArray.Count - 1 do
-              JSONToTask(objArray.Objects[j], res);
-        end;
-    finally
-      p.Free;
-    end;
+    ReadJSONFromStream(stream);
   finally
     stream.Free;
+  end;
+end;
+
+procedure TVpJSONDatastore.ReadJSONFromString;
+var
+  stream: TStringStream;
+begin
+  if FJSONString = '' then
+    raise Exception.Create(RSNoJSONStringSpecified);
+
+  stream := TStringStream.Create(FJSONString);
+  try
+    ReadJSONFromStream(stream);
+  finally
+    stream.Free;
+  end;
+end;
+
+procedure TVpJSONDatastore.ReadJSONFromStream(AStream: TStream);
+var
+  p: TJSONParser;
+  json: TJSONObject;
+  resObj: TJSONObject;
+  resObjArray: TJSONArray;
+  objArray: TJSONArray;
+  res: TVpResource;
+  i, j: Integer;
+  {$IF FPC_FullVersion >= 30000}
+  options: TJSONOptions;
+  {$IFEND}
+begin
+  Resources.ClearResources;
+  {$IF FPC_FullVersion >= 30000}
+  options := [];
+  if FUseUTF8 then options := options + [joUTF8];
+  if FStrict then options := options + [joStrict];
+  if FComments then options := options + [joComments];
+  if FIgnoreTrailingComma then options := options + [joIgnoreTrailingComma];
+  p := TJSONParser.Create(AStream, options);
+  {$ELSE}
+  p := TJSONParser.Create(AStream, FUseUTF8);
+  {$IFEND}
+  try
+    json := p.Parse as TJSONObject;
+    if json = nil then
+      exit;
+    resObjArray := json.Find('Resources', jtArray) as TJSONArray;
+    if Assigned(resObjArray) then
+      for i := 0 to resObjArray.Count-1 do begin
+        resObj := resObjArray.Objects[i];
+        res := JSONToResource(resObj);
+        // Extract events
+        objArray := resObj.Find('Events', jtArray) as TJSONArray;
+        if Assigned(objArray) then
+          for j := 0 to objArray.Count-1 do
+            JSONToEvent(objArray.Objects[j], res);
+        // Extract contacts
+        objArray := resObj.Find('Contacts', jtArray) as TJSONArray;
+        if Assigned(objArray) then
+          for j := 0 to  objArray.Count-1 do
+            JSONToContact(objArray.Objects[j], res);
+        // Extract tasks
+        objArray := resObj.Find('Tasks', jtArray) as TJSONArray;
+        if Assigned(objArray) then
+          for j := 0 to objArray.Count - 1 do
+            JSONToTask(objArray.Objects[j], res);
+      end;
+  finally
+    p.Free;
   end;
 end;
 
@@ -583,7 +651,17 @@ begin
   if Connected then
     raise Exception.Create('The datastore must not be connected when the filename is set.');
   FFileName := AValue;
-  if AutoConnect then ReadJSON;
+  if AutoConnect then Connected := true;
+end;
+
+procedure TVpJSONDatastore.SetJSONString(AValue: String);
+begin
+  if AValue = FJSONString then
+    exit;
+  if Connected then
+    raise Exception.Create('The datastore must not be connected when the JSON string is set.');
+  FJSONString := AValue;
+  if AutoConnect then Connected := true;
 end;
 
 function TVPJSONDatastore.TaskToJSON(ATask: TVpTask): TJSONObject;
@@ -642,6 +720,31 @@ end;
 
 procedure TVpJSONDatastore.WriteJSON;
 var
+  stream: TMemoryStream;
+begin
+  stream := TMemoryStream.Create;
+  try
+    WriteJSONToMemoryStream(stream);
+    case FStoreType of
+      jstFile:
+        begin
+          stream.Position := 0;
+          stream.SaveToFile(FFileName);
+        end;
+      jstString:
+        begin
+          stream.Position := 0;
+          SetLength(FJSONString, stream.Size);
+          stream.Read(FJSONString[1], Length(FJSONString))
+        end;
+    end;
+  finally
+    stream.Free;
+  end;
+end;
+
+procedure TVpJSONDatastore.WriteJSONToMemoryStream(AStream: TMemoryStream);
+var
   json: TJSONObject;
   resObj: TJSONObject;
   resObjArray, evObjArray, contObjArray, tasksObjArray: TJSONArray;
@@ -650,13 +753,12 @@ var
   cont: TVpContact;
   task: TvpTask;
   i, j: Integer;
-  stream: TStream;
  {$IF FPC_FullVersion < 30000}
   s: TJSONStringType;
  {$ENDIF}
 begin
-  if FFilename = '' then
-    raise Exception.Create(RSNoFilenameSpecified);
+  if AStream = nil then
+    raise Exception.Create('No stream specified');
 
   if not Connected then
     exit;
@@ -714,17 +816,13 @@ begin
       end;
     end;
 
-    stream := TFileStream.Create(FFilename, fmCreate);
-    try
-      {$IF FPC_FULLVERSION < 030000}
-      s := json.FormatJSON;
-      stream.Write(s[1], Length(s));
-      {$ELSE}
-      json.DumpJSON(stream);
-      {$ENDIF}
-    finally
-      stream.Free;
-    end;
+    {$IF FPC_FULLVERSION < 030000}
+    s := json.FormatJSON;
+    AStream.Write(s[1], Length(s));
+    {$ELSE}
+    json.DumpJSON(AStream);
+    {$ENDIF}
+
   finally
     json.Free;
   end;

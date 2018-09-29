@@ -735,6 +735,10 @@ msgstr "Intervall nicht angegeben."
 msgid "Error: No datastore filename specified."
 msgstr "Fehler: Datastore-Dateiname nicht angegeben."
 
+#: vpsr.rsnojsonstringspecified
+msgid "No JSON string specified."
+msgstr ""
+
 #: vpsr.rsnolocalizationfile
 msgid "Localization file not found."
 msgstr "Sprachdatei nicht gefunden."

@@ -414,6 +414,9 @@ resourcestring
   { Ini storage }
   RSIniFileStructure        = 'Incorrect structure of ini file.';
 
+  { JSON storage }
+  RSNoJsonStringSpecified  = 'No JSON string specified.';
+
   { XML }
   sIENotInstalled    = 'Cannot open WININET, Microsoft IE required';
   sOpenFileFailed    = 'Unable to open file ';
