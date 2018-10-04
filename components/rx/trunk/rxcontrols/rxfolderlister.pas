@@ -141,7 +141,7 @@ begin
   AFolderList:=TStringList.Create;
   AFolderList.Sorted:=true;
   AFileList:=TStringList.Create;
-  AFolderList.Sorted:=true;
+  AFileList.Sorted:=true;
   try
     R:=FindFirstUTF8(S+AllMask,faAnyFile, Rec);
     while R=0 do
