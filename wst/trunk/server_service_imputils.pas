@@ -50,11 +50,17 @@ Type
   end;
 
 
-  function IsStrEmpty(Const AStr:String):Boolean;
+  function IsStrEmpty(Const AStr : RawByteString):Boolean;overload;
+  function IsStrEmpty(Const AStr : UnicodeString):Boolean;overload;
 
 implementation
 
-function IsStrEmpty(Const AStr:String):Boolean;
+function IsStrEmpty(Const AStr : RawByteString):Boolean;
+begin
+  Result := ( Length(Trim(AStr)) = 0 );
+end;
+
+function IsStrEmpty(Const AStr : UnicodeString):Boolean;
 begin
   Result := ( Length(Trim(AStr)) = 0 );
 end;
