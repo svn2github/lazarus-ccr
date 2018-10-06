@@ -520,7 +520,7 @@ function AddAlias(
         ATable     : TPasModule
 ) : TPasTypeAliasType;
 begin
-  Result := TPasTypeAliasType(AContainer.CreateElement(TPasAliasType,AName,ATable.InterfaceSection,visPublic,'',0));
+  Result := TPasTypeAliasType(AContainer.CreateElement(TPasTypeAliasType,AName,ATable.InterfaceSection,visPublic,'',0));
   Result.DestType := AContainer.FindElementInModule(ABaseType,ATable) as TPasType;
   if Assigned(Result.DestType) then
     Result.DestType.AddRef();
