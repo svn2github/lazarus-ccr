@@ -1431,7 +1431,7 @@ begin
   FWsdlShortNames := AddNameSpace(s_wsdl);
     ExtractNameSpaceShortNames(locAttCursor,FWsdlShortNames,s_wsdl,nfaRaiseException,True,EXsdParserException);
   FSoapShortNames := AddNameSpace(s_soap);
-    ExtractNameSpaceShortNames(locAttCursor,FSoapShortNames,s_soap,nfaRaiseException,False,EXsdParserException);
+    ExtractNameSpaceShortNames(locAttCursor,FSoapShortNames,s_soap,nfaNone,False,EXsdParserException);
   FXSShortNames := AddNameSpace(s_xs);
     ExtractNameSpaceShortNames(locAttCursor,FXSShortNames,s_xs,nfaNone,True,EXsdParserException);
 
