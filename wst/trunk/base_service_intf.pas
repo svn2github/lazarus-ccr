@@ -5276,6 +5276,11 @@ var
   selfTypeInfo : PTypeInfo;
   srcObj, dstObj : TObject;
   ok : Boolean;
+  currencyA, currencyB : record
+                           case Integer of
+                             0 : (CurrencyValue : Currency;);
+                             1 : (Int64Value    : Int64;);
+                         end;
 begin
   Result := False;
   if not Assigned(ACompareTo) then
@@ -5316,7 +5321,20 @@ begin
                 end;
               end;
             tkFloat :
-              ok := ( GetFloatProp(Self,p^.Name) = GetFloatProp(ACompareTo,p^.Name) );
+              begin
+                case GetTypeData(p^.PropType{$IFDEF WST_DELPHI}^{$ENDIF})^.FloatType of
+                  ftSingle, ftDouble, ftExtended :
+                    ok := (GetFloatProp(Self,p^.Name) = GetFloatProp(ACompareTo,p^.Name));
+                  ftCurr :
+                    begin
+                      currencyA.CurrencyValue := GetFloatProp(Self,p^.Name);
+                      currencyB.CurrencyValue := GetFloatProp(ACompareTo,p^.Name);
+                      ok := (currencyA.Int64Value = currencyB.Int64Value);
+                    end;
+                  else
+                    ok := (GetFloatProp(Self,p^.Name) = GetFloatProp(ACompareTo,p^.Name));
+                end;
+              end;
           end;
           if not ok then
             Break;
