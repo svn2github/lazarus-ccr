@@ -108,6 +108,7 @@ const
   s_WST_collection                = 'wst_collection';
   s_WST_headerBlock               = 'wst_headerBlock';
   s_WST_headerBlockSimpleContent  = 'wst_headerBlockSimpleContent';
+  s_WST_Method                    = 'Method';
   s_WST_record                    = 'wst_record';
   s_WST_storeType                 = 'StoreType';
   s_WST_typeHint                  = 'TypeHint';

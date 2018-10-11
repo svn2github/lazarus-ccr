@@ -910,14 +910,13 @@ begin
   if not ExtractOperationName(mthdName) then
     raise EXsdParserAssertException.CreateFmt('Operation Attribute not found : "%s"',[s_name]);
   DoOnMessage(mtInfo,Format('Parsing operation "%s"',[mthdName]));
-  if SameText(s_document,ASoapBindingStyle) then begin
-    ExtractMethod(mthdName,locMthd);
-    if ( locMthd <> nil ) then begin
-      AOwner.Members.Add(locMthd);
-    end;
-  end else if SameText(s_rpc,ASoapBindingStyle) then begin
-    ExtractMethod(mthdName,locMthd);
-    if ( locMthd <> nil ) then begin
+  if SameText(s_document,ASoapBindingStyle) or
+     SameText(s_rpc,ASoapBindingStyle)
+  then begin   
+    ExtractMethod(mthdName,locMthd);  
+    if (locMthd <> nil) then begin
+      if SameText(locMthd.Name,AOwner.Name) then
+        locMthd.Name := locMthd.Name + s_WST_Method;
       AOwner.Members.Add(locMthd);
     end;
   end;
