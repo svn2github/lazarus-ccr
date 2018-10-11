@@ -13,7 +13,7 @@
    height="16"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
    sodipodi:docname="menu_build_lazarus.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="32"
-     inkscape:cx="8.3192812"
-     inkscape:cy="6.0664842"
+     inkscape:zoom="36.153846"
+     inkscape:cx="7.5954102"
+     inkscape:cy="8.1209732"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -86,9 +86,15 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <path
-       style="fill:#d3d7cf;fill-rule:evenodd;stroke:#888a85;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;fill-opacity:1"
-       d="M 6.75 1.5 L 6.5 3.5 L 5.3789062 3.9648438 L 3.7871094 2.7265625 L 2.7265625 3.7871094 L 3.9648438 5.3789062 L 3.5 6.5 L 1.5 6.75 L 1.5 8.25 L 3.5 8.5 L 3.9648438 9.6210938 L 2.7265625 11.212891 L 3.7871094 12.273438 L 5.3789062 11.035156 L 6.5 11.5 L 6.75 13.5 L 8.25 13.5 L 8.5 11.5 L 9.6210938 11.035156 L 11.212891 12.273438 L 12.273438 11.212891 L 11.035156 9.6210938 L 11.5 8.5 L 13.5 8.25 L 13.5 6.75 L 11.5 6.5 L 11.035156 5.3789062 L 12.273438 3.7871094 L 11.212891 2.7265625 L 9.6210938 3.9648438 L 8.5 3.5 L 8.25 1.5 L 6.75 1.5 z M 7.5 5.5 A 2 2 0 0 1 9.5 7.5 A 2 2 0 0 1 7.5 9.5 A 2 2 0 0 1 5.5 7.5 A 2 2 0 0 1 7.5 5.5 z "
-       id="path1030" />
+    <g
+       id="layer1-6"
+       inkscape:label="Ebene 1"
+       style="fill:#37c837;fill-opacity:1;stroke:#217821;stroke-opacity:1">
+      <path
+         id="path1030-0"
+         d="M 6.75,1.5 6.5,3.5 5.3789062,3.9648438 3.7871094,2.7265625 2.7265625,3.7871094 3.9648438,5.3789062 3.5,6.5 1.5,6.75 v 1.5 L 3.5,8.5 3.9648438,9.6210938 2.7265625,11.212891 3.7871094,12.273438 5.3789062,11.035156 6.5,11.5 l 0.25,2 h 1.5 l 0.25,-2 1.1210938,-0.464844 1.5917972,1.238282 1.060547,-1.060547 L 11.035156,9.6210938 11.5,8.5 13.5,8.25 V 6.75 L 11.5,6.5 11.035156,5.3789062 12.273438,3.7871094 11.212891,2.7265625 9.6210938,3.9648438 8.5,3.5 8.25,1.5 Z m 0.75,4 a 2,2 0 0 1 2,2 2,2 0 0 1 -2,2 2,2 0 0 1 -2,-2 2,2 0 0 1 2,-2 z"
+         style="fill:#37c837;fill-opacity:1;fill-rule:evenodd;stroke:#217821;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         inkscape:connector-curvature="0" />
+    </g>
   </g>
 </svg>

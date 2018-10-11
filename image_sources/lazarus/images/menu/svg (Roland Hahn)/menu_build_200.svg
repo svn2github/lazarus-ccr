@@ -13,7 +13,7 @@
    height="32"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
    sodipodi:docname="menu_build_200.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627418"
-     inkscape:cx="16.865112"
-     inkscape:cy="13.594492"
+     inkscape:zoom="25.56463"
+     inkscape:cx="16.56668"
+     inkscape:cy="15.077273"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -75,8 +75,8 @@
      id="layer1">
     <path
        inkscape:connector-curvature="0"
-       style="fill:#aaccff;fill-opacity:1;fill-rule:evenodd;stroke:#457abe;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 14.5,3.9999999 14,7.9999998 11.757813,8.9296878 8.5742189,6.453124 6.4531251,8.5742181 8.9296877,11.757812 8.0000001,14 l -4,0.5 v 3 l 4,0.500001 0.9296876,2.242187 -2.4765626,3.183594 2.1210938,2.121095 L 11.757813,23.070312 14,24 l 0.5,4 h 3 l 0.500001,-4 2.242187,-0.929688 3.183595,2.476565 2.121094,-2.121095 -2.476564,-3.183594 0.929688,-2.242187 L 28,17.5 v -3 L 24.000001,14 23.070313,11.757812 25.546877,8.5742181 23.425783,6.453124 20.242188,8.9296878 18.000001,7.9999998 17.5,3.9999999 Z M 16,12.000001 A 4,4 0 0 1 20.000001,16 4,4 0 0 1 16,20 4,4 0 0 1 12,16 4,4 0 0 1 16,12.000001 Z"
+       style="fill:#aaccff;fill-opacity:1;fill-rule:evenodd;stroke:#457abe;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 14.46875,3.7500003 13.958333,7.8333334 11.669435,8.7823899 8.4195153,6.2542311 6.2542321,8.4195146 l 2.5281576,3.2499194 -0.949056,2.2889 -4.0833332,0.510416 v 3.0625 l 4.0833332,0.510418 0.949056,2.288899 -2.5281576,3.249919 2.1652832,2.165284 3.2499197,-2.52816 2.288899,0.949057 0.510417,4.083333 h 3.062499 l 0.510418,-4.083333 2.288899,-0.949057 3.24992,2.52816 2.165283,-2.165284 -2.528159,-3.249919 0.949057,-2.288899 L 28.25,17.53125 v -3.0625 L 24.166667,13.958334 23.21761,11.669434 25.745769,8.4195146 23.580486,6.2542311 20.330566,8.7823899 18.041667,7.8333334 17.531249,3.7500003 Z m 1.531249,8.1666677 A 4.0833332,4.0833332 0 0 1 20.083334,16 4.0833332,4.0833332 0 0 1 16,20.083334 4.0833332,4.0833332 0 0 1 11.916667,16 4.0833332,4.0833332 0 0 1 15.999999,11.916668 Z"
        id="path1030" />
   </g>
 </svg>

@@ -13,7 +13,7 @@
    height="24"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
    sodipodi:docname="menu_build_lazarus_150.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627417"
-     inkscape:cx="12.750921"
-     inkscape:cy="9.5822102"
+     inkscape:zoom="33.234019"
+     inkscape:cx="12.035252"
+     inkscape:cy="11.850178"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -88,7 +88,7 @@
      transform="translate(0,-24)">
     <path
        inkscape:connector-curvature="0"
-       style="fill:#d3d7cf;fill-opacity:1;fill-rule:evenodd;stroke:#888a85;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#37c837;fill-opacity:1;fill-rule:evenodd;stroke:#217821;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
        d="m 10.812502,26.5 -0.395834,3.166666 -1.7750661,0.736003 -2.5203458,-1.960614 -1.6791995,1.6792 1.960613,2.520346 -0.7360024,1.775065 -3.1666674,0.395834 v 2.375 l 3.1666674,0.395833 0.7360024,1.775067 -1.960613,2.520345 1.6791995,1.679199 2.5203458,-1.960613 1.7750661,0.736002 L 10.812502,45.5 H 13.1875 l 0.395833,-3.166667 1.775067,-0.736002 2.520346,1.960613 1.6792,-1.679199 L 17.597332,39.3584 18.333333,37.583333 21.5,37.1875 v -2.375 l -3.166667,-0.395834 -0.736002,-1.775065 1.960615,-2.520346 -1.6792,-1.6792 L 15.3584,30.402669 13.583333,29.666666 13.1875,26.5 Z m 1.1875,6.333332 A 3.1666668,3.1666668 0 0 1 15.166668,36 3.1666668,3.1666668 0 0 1 12.000002,39.166667 3.1666668,3.1666668 0 0 1 8.8333335,36 3.1666668,3.1666668 0 0 1 12.000002,32.833332 Z"
        id="path1030" />
   </g>
