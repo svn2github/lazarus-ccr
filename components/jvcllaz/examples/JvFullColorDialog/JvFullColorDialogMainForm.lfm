@@ -1,0 +1,42 @@
+object JvFullColorDialogMainFrm: TJvFullColorDialogMainFrm
+  Left = 419
+  Height = 295
+  Top = 367
+  Width = 723
+  Caption = 'TJvFullColorDialog example'
+  ClientHeight = 295
+  ClientWidth = 723
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  Visible = True
+  object JvFullColorLabel: TJvFullColorLabel
+    Left = 16
+    Height = 17
+    Top = 32
+    Width = 257
+    LabelColor = 67108864
+    Brush.Color = clBlack
+    Caption = 'JvFullColorLabel'
+    Font.Color = clWindowText
+    ParentFont = False
+    OnDblClick = JvFullColorLabelDblClick
+  end
+  object LabelInfo: TLabel
+    Left = 16
+    Height = 15
+    Top = 8
+    Width = 192
+    Caption = 'Double-click on a label to customize'
+    ParentColor = False
+  end
+  object JvFullColorDialog: TJvFullColorDialog
+    FullColor = 83886079
+    OnApply = JvFullColorDialogApply
+    left = 232
+    top = 128
+  end
+end

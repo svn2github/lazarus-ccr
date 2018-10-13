@@ -1,0 +1,72 @@
+object JvFullColorCircleDlgMainFrm: TJvFullColorCircleDlgMainFrm
+  Left = 498
+  Height = 394
+  Top = 236
+  Width = 343
+  BorderStyle = bsDialog
+  Caption = 'JvFullColorCircleDlgMainFrm'
+  ClientHeight = 394
+  ClientWidth = 343
+  Color = clBtnFace
+  Font.Color = clWindowText
+  KeyPreview = True
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  object Bevel: TBevel
+    Left = 16
+    Height = 108
+    Top = 48
+    Width = 108
+    Style = bsRaised
+  end
+  object Image: TImage
+    Left = 20
+    Height = 100
+    Top = 52
+    Width = 100
+    Center = True
+  end
+  object LabelImage: TLabel
+    Left = 24
+    Height = 15
+    Top = 16
+    Width = 39
+    Caption = 'Image :'
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object Memo: TMemo
+    Left = 8
+    Height = 65
+    Top = 160
+    Width = 129
+    Alignment = taCenter
+    BorderStyle = bsNone
+    Lines.Strings = (
+      'Original image'
+    )
+    OnKeyDown = MemoKeyDown
+    OnKeyPress = MemoKeyPress
+    ParentColor = True
+    TabOrder = 0
+  end
+  object ComboBoxFileName: TComboBox
+    Left = 72
+    Height = 23
+    Top = 16
+    Width = 257
+    DropDownCount = 24
+    ItemHeight = 15
+    OnClick = ComboBoxFileNameSelect
+    OnSelect = ComboBoxFileNameSelect
+    Style = csDropDownList
+    TabOrder = 1
+  end
+  object JvFullColorCircleDialog: TJvFullColorCircleDialog
+    HelpContext = 0
+    OnApply = JvFullColorCircleDialogApply
+    left = 184
+    top = 80
+  end
+end
