@@ -18,31 +18,31 @@
     <Version Major="1" Release="4"/>
     <Files Count="15">
       <Item1>
-        <Filename Value="..\run\JvMM\JvSpecialProgress.pas"/>
+        <Filename Value="..\run\JvMM\jvspecialprogress.pas"/>
         <UnitName Value="JvSpecialProgress"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvMM\JvGradient.pas"/>
+        <Filename Value="..\run\JvMM\jvgradient.pas"/>
         <UnitName Value="JvGradient"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvMM\JvGradientHeaderPanel.pas"/>
+        <Filename Value="..\run\JvMM\jvgradientheaderpanel.pas"/>
         <UnitName Value="JvGradientHeaderPanel"/>
       </Item3>
       <Item4>
-        <Filename Value="..\run\JvMM\JvId3v1.pas"/>
+        <Filename Value="..\run\JvMM\jvid3v1.pas"/>
         <UnitName Value="JvId3v1"/>
       </Item4>
       <Item5>
-        <Filename Value="..\run\JvMM\JvId3v2Types.pas"/>
+        <Filename Value="..\run\JvMM\jvid3v2types.pas"/>
         <UnitName Value="JvId3v2Types"/>
       </Item5>
       <Item6>
-        <Filename Value="..\run\JvMM\JvId3v2Base.pas"/>
+        <Filename Value="..\run\JvMM\jvid3v2base.pas"/>
         <UnitName Value="JvID3v2Base"/>
       </Item6>
       <Item7>
-        <Filename Value="..\run\JvMM\JvId3v2.pas"/>
+        <Filename Value="..\run\JvMM\jvid3v2.pas"/>
         <UnitName Value="JvId3v2"/>
       </Item7>
       <Item8>

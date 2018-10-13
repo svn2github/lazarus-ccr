@@ -17,16 +17,16 @@
     <Version Major="1" Release="4"/>
     <Files Count="5">
       <Item1>
-        <Filename Value="..\design\JvMM\JvMMReg.pas"/>
+        <Filename Value="..\design\JvMM\jvmmreg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="JvMMReg"/>
       </Item1>
       <Item2>
-        <Filename Value="..\design\JvMM\JvId3v2EditorForm.pas"/>
+        <Filename Value="..\design\JvMM\jvid3v2editorform.pas"/>
         <UnitName Value="JvId3v2EditorForm"/>
       </Item2>
       <Item3>
-        <Filename Value="..\design\JvMM\JvId3v2DefineForm.pas"/>
+        <Filename Value="..\design\JvMM\jvid3v2defineform.pas"/>
         <UnitName Value="JvId3v2DefineForm"/>
       </Item3>
       <Item4>
