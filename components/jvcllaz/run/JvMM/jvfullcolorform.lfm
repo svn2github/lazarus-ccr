@@ -1,0 +1,464 @@
+object JvFullColorFrm: TJvFullColorFrm
+  Left = 373
+  Height = 388
+  Top = 274
+  Width = 712
+  ActiveControl = ColorBox
+  AutoSize = True
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsDialog
+  Caption = 'Color Spaces Editor, Choose your color'
+  ClientHeight = 388
+  ClientWidth = 712
+  Color = clBtnFace
+  Font.Color = clWindowText
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object LabelColorSpace: TLabel
+    AnchorSideLeft.Control = JvColorSpaceCombo
+    AnchorSideTop.Control = Owner
+    Left = 12
+    Height = 15
+    Top = 8
+    Width = 112
+    BorderSpacing.Top = 8
+    Caption = '&Current Color Space :'
+    ParentColor = False
+  end
+  object LabelDrawOld: TLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = JvColorSpaceCombo
+    AnchorSideRight.Control = LabelDrawNew
+    AnchorSideBottom.Control = JvColorSpaceCombo
+    AnchorSideBottom.Side = asrBottom
+    Left = 270
+    Height = 23
+    Top = 27
+    Width = 61
+    Anchors = [akTop, akRight, akBottom]
+    AutoSize = False
+    BorderSpacing.Left = 16
+    Color = clBlack
+    ParentColor = False
+    Transparent = False
+    OnClick = LabelDrawOldClick
+  end
+  object LabelDrawNew: TLabel
+    AnchorSideLeft.Control = LabelDrawOld
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = LabelDrawOld
+    AnchorSideRight.Control = GroupBoxSettings
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = JvColorSpaceCombo
+    AnchorSideBottom.Side = asrBottom
+    Left = 331
+    Height = 23
+    Top = 27
+    Width = 61
+    Anchors = [akTop, akRight, akBottom]
+    AutoSize = False
+    Color = clWhite
+    ParentColor = False
+    Transparent = False
+  end
+  object LabelOld: TLabel
+    AnchorSideLeft.Control = LabelDrawOld
+    AnchorSideTop.Control = LabelColorSpace
+    Left = 270
+    Height = 15
+    Top = 8
+    Width = 22
+    Caption = 'Old:'
+    ParentColor = False
+  end
+  object LabelNew: TLabel
+    AnchorSideLeft.Control = LabelDrawNew
+    AnchorSideTop.Control = LabelColorSpace
+    Left = 331
+    Height = 15
+    Top = 8
+    Width = 27
+    Caption = 'New:'
+    ParentColor = False
+  end
+  object GroupBoxSettings: TGroupBox
+    AnchorSideLeft.Control = JvColorSpaceCombo
+    AnchorSideTop.Control = JvColorSpaceCombo
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 12
+    Height = 246
+    Top = 62
+    Width = 380
+    BorderSpacing.Top = 12
+    BorderSpacing.Right = 16
+    Caption = ' Settings ... '
+    ClientHeight = 226
+    ClientWidth = 376
+    TabOrder = 1
+    object LabelAxis0: TLabel
+      AnchorSideLeft.Control = GroupBoxSettings
+      AnchorSideTop.Control = GroupBoxSettings
+      Left = 16
+      Height = 15
+      Top = 4
+      Width = 55
+      Alignment = taRightJustify
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 4
+      Caption = 'LabelAxis0'
+      ParentColor = False
+    end
+    object LabelAxis1: TLabel
+      AnchorSideLeft.Control = LabelAxis0
+      AnchorSideTop.Control = ScrollBarAxis0
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 15
+      Top = 59
+      Width = 55
+      Alignment = taRightJustify
+      BorderSpacing.Top = 16
+      Caption = 'LabelAxis1'
+      ParentColor = False
+    end
+    object LabelAxis2: TLabel
+      AnchorSideLeft.Control = LabelAxis0
+      AnchorSideTop.Control = ScrollBarAxis1
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 15
+      Top = 114
+      Width = 55
+      Alignment = taRightJustify
+      BorderSpacing.Top = 16
+      Caption = 'LabelAxis2'
+      ParentColor = False
+    end
+    object LabelPredefined: TLabel
+      AnchorSideLeft.Control = ColorBox
+      AnchorSideTop.Control = ScrollBarAxis2
+      AnchorSideTop.Side = asrBottom
+      Left = 88
+      Height = 15
+      Top = 169
+      Width = 95
+      Alignment = taRightJustify
+      Caption = '&Predefined colors:'
+      FocusControl = ColorBox
+      ParentColor = False
+    end
+    object ScrollBarAxis0: TScrollBar
+      AnchorSideLeft.Control = LabelAxis0
+      AnchorSideTop.Control = LabelAxis0
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = SpinEditAxis0
+      Left = 16
+      Height = 20
+      Top = 23
+      Width = 268
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      BorderSpacing.Right = 16
+      LargeChange = 16
+      Max = 255
+      PageSize = 0
+      TabOrder = 0
+      OnChange = ScrollBarChange
+    end
+    object ScrollBarAxis1: TScrollBar
+      Tag = 1
+      AnchorSideLeft.Control = LabelAxis1
+      AnchorSideTop.Control = LabelAxis1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = ScrollBarAxis0
+      AnchorSideRight.Side = asrBottom
+      Left = 16
+      Height = 20
+      Top = 78
+      Width = 268
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      LargeChange = 16
+      Max = 255
+      PageSize = 0
+      TabOrder = 2
+      OnChange = ScrollBarChange
+    end
+    object ScrollBarAxis2: TScrollBar
+      Tag = 2
+      AnchorSideLeft.Control = LabelAxis2
+      AnchorSideTop.Control = LabelAxis2
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = ScrollBarAxis1
+      AnchorSideRight.Side = asrBottom
+      Left = 16
+      Height = 20
+      Top = 133
+      Width = 268
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      BorderSpacing.Bottom = 16
+      LargeChange = 16
+      Max = 255
+      PageSize = 0
+      TabOrder = 4
+      OnChange = ScrollBarChange
+    end
+    object SpinEditAxis0: TSpinEdit
+      AnchorSideTop.Control = ScrollBarAxis0
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = GroupBoxSettings
+      AnchorSideRight.Side = asrBottom
+      Left = 300
+      Height = 23
+      Top = 22
+      Width = 60
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 16
+      MaxValue = 255
+      OnChange = SpinEditChange
+      TabOrder = 1
+    end
+    object SpinEditAxis1: TSpinEdit
+      Tag = 1
+      AnchorSideLeft.Control = SpinEditAxis0
+      AnchorSideTop.Control = ScrollBarAxis1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = SpinEditAxis0
+      AnchorSideRight.Side = asrBottom
+      Left = 300
+      Height = 23
+      Top = 77
+      Width = 60
+      Anchors = [akTop, akLeft, akRight]
+      MaxValue = 255
+      OnChange = SpinEditChange
+      TabOrder = 3
+    end
+    object SpinEditAxis2: TSpinEdit
+      Tag = 2
+      AnchorSideLeft.Control = SpinEditAxis1
+      AnchorSideTop.Control = ScrollBarAxis2
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = SpinEditAxis0
+      AnchorSideRight.Side = asrBottom
+      Left = 300
+      Height = 23
+      Top = 132
+      Width = 60
+      Anchors = [akTop, akLeft, akRight]
+      MaxValue = 255
+      OnChange = SpinEditChange
+      TabOrder = 5
+    end
+    object ColorBox: TColorBox
+      AnchorSideLeft.Control = GroupBoxSettings
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = LabelPredefined
+      AnchorSideTop.Side = asrBottom
+      Left = 88
+      Height = 22
+      Top = 188
+      Width = 201
+      Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbPrettyNames]
+      BorderSpacing.Top = 4
+      BorderSpacing.Bottom = 16
+      ItemHeight = 16
+      OnSelect = ComboBoxPredefinedSelect
+      TabOrder = 6
+    end
+  end
+  object JvFullColorGroup: TJvFullColorGroup
+    AnchorSideLeft.Control = GroupBoxSettings
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = LabelColorSpace
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ButtonOK
+    AnchorSideBottom.Side = asrBottom
+    Left = 408
+    Height = 341
+    Top = 8
+    Width = 296
+    ColCount = 8
+    SquareSize = 30
+    OnChange = JvFullColorGroupChange
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Right = 8
+    Constraints.MinWidth = 288
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object PanelGraphic: TPanel
+    AnchorSideLeft.Control = GroupBoxSettings
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = LabelColorSpace
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ButtonOK
+    AnchorSideBottom.Side = asrBottom
+    Left = 408
+    Height = 341
+    Top = 8
+    Width = 296
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Right = 8
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 341
+    ClientWidth = 296
+    TabOrder = 2
+    Visible = False
+    object LabelAxis: TLabel
+      AnchorSideLeft.Control = PanelGraphic
+      AnchorSideTop.Control = JvColorAxisConfigCombo
+      AnchorSideTop.Side = asrCenter
+      Left = 10
+      Height = 15
+      Top = 14
+      Width = 24
+      BorderSpacing.Left = 8
+      Caption = '&Axis:'
+      ParentColor = False
+    end
+    object JvColorPanel: TJvFullColorPanel
+      AnchorSideLeft.Control = PanelGraphic
+      AnchorSideTop.Control = JvColorAxisConfigCombo
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = PanelGraphic
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = JvFullColorTrackBar
+      Left = 10
+      Height = 263
+      Top = 37
+      Width = 268
+      Anchors = [akTop, akLeft, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 4
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 4
+      FullColor = 83886079
+      TabOrder = 1
+      OnColorChange = JvColorPanelColorChange
+      CrossSize = 10
+      CrossCenter = 3
+      CrossStyle.Width = 3
+      ColorTrackBar = JvFullColorTrackBar
+    end
+    object JvFullColorTrackBar: TJvFullColorTrackBar
+      AnchorSideLeft.Control = JvColorPanel
+      AnchorSideRight.Control = JvColorPanel
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = PanelGraphic
+      AnchorSideBottom.Side = asrBottom
+      Left = 10
+      Height = 27
+      Top = 304
+      Width = 268
+      BorderSpacing.Bottom = 8
+      FullColor = 83886079
+      TabOrder = 2
+      ArrowWidth = 8
+    end
+    object JvColorAxisConfigCombo: TJvFullColorAxisCombo
+      AnchorSideLeft.Control = LabelAxis
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = PanelGraphic
+      AnchorSideRight.Control = PanelGraphic
+      AnchorSideRight.Side = asrBottom
+      Left = 42
+      Height = 23
+      Top = 10
+      Width = 244
+      Selected = acXYZ
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      ItemHeight = 15
+      TabOrder = 0
+      OnChange = ComboBoxAxisChange
+    end
+  end
+  object ButtonGraphics: TButton
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ButtonOK
+    AnchorSideRight.Control = GroupBoxSettings
+    AnchorSideRight.Side = asrBottom
+    Left = 284
+    Height = 25
+    Top = 324
+    Width = 108
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    Caption = 'ButtonGraphics'
+    Constraints.MinWidth = 75
+    OnClick = ButtonGraphicsClick
+    TabOrder = 6
+  end
+  object ButtonOK: TButton
+    AnchorSideLeft.Control = GroupBoxSettings
+    AnchorSideTop.Control = GroupBoxSettings
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 25
+    Top = 324
+    Width = 75
+    AutoSize = True
+    BorderSpacing.Top = 16
+    BorderSpacing.Bottom = 8
+    Caption = '&OK'
+    Constraints.MinWidth = 75
+    Default = True
+    ModalResult = 1
+    TabOrder = 3
+  end
+  object ButtonCancel: TButton
+    AnchorSideLeft.Control = ButtonOK
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ButtonOK
+    Left = 95
+    Height = 25
+    Top = 324
+    Width = 75
+    BorderSpacing.Left = 8
+    Cancel = True
+    Caption = 'Ca&ncel'
+    ModalResult = 2
+    TabOrder = 4
+  end
+  object ButtonApply: TButton
+    AnchorSideLeft.Control = ButtonCancel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ButtonOK
+    Left = 178
+    Height = 25
+    Top = 324
+    Width = 75
+    AutoSize = True
+    BorderSpacing.Left = 8
+    Caption = '&Apply'
+    Constraints.MinWidth = 75
+    OnClick = ButtonApplyClick
+    TabOrder = 5
+  end
+  object JvColorSpaceCombo: TJvFullColorSpaceCombo
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = LabelColorSpace
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 12
+    Height = 23
+    Top = 27
+    Width = 244
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 4
+    Constraints.MinWidth = 210
+    ItemHeight = 15
+    TabOrder = 0
+    OnSelect = JvComboBoxColorSpaceSelect
+  end
+end

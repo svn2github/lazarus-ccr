@@ -5,3 +5,12 @@ tjvgradientheaderpanel.bmp
 tjvspecialprogress.bmp
 tjvanimatedimage.bmp
 tjvbmpanimator.bmp
+tjvfullcoloraxiscombo.bmp
+tjvfullcolorcircle.bmp
+tjvfullcolorcircledialog.bmp
+tjvfullcolordialog.bmp
+tjvfullcolorgroup.bmp
+tjvfullcolorlabel.bmp
+tjvfullcolorpanel.bmp
+tjvfullcolorspacecombo.bmp
+tjvfullcolortrackbar.bmp

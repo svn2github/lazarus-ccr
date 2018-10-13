@@ -15,7 +15,7 @@
       </SearchPaths>
     </CompilerOptions>
     <Version Major="1" Release="4"/>
-    <Files Count="3">
+    <Files Count="5">
       <Item1>
         <Filename Value="..\design\JvMM\JvMMReg.pas"/>
         <HasRegisterProc Value="True"/>
@@ -29,6 +29,14 @@
         <Filename Value="..\design\JvMM\JvId3v2DefineForm.pas"/>
         <UnitName Value="JvId3v2DefineForm"/>
       </Item3>
+      <Item4>
+        <Filename Value="..\design\JvMM\jvfullcoloreditors.pas"/>
+        <UnitName Value="JvFullColorEditors"/>
+      </Item4>
+      <Item5>
+        <Filename Value="..\design\JvMM\jvfullcolorspaceseditors.pas"/>
+        <UnitName Value="JvFullColorSpacesEditors"/>
+      </Item5>
     </Files>
     <RequiredPkgs Count="4">
       <Item1>

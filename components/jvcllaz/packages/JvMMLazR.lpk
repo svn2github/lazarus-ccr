@@ -16,7 +16,7 @@
     <Description Value="JVCL Multimedia Components (Runtime)."/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
-    <Files Count="8">
+    <Files Count="15">
       <Item1>
         <Filename Value="..\run\JvMM\JvSpecialProgress.pas"/>
         <UnitName Value="JvSpecialProgress"/>
@@ -49,6 +49,34 @@
         <Filename Value="..\run\JvMM\jvbmpanimator.pas"/>
         <UnitName Value="JvBmpAnimator"/>
       </Item8>
+      <Item9>
+        <Filename Value="..\run\JvMM\jvfullcolorspaces.pas"/>
+        <UnitName Value="JvFullColorSpaces"/>
+      </Item9>
+      <Item10>
+        <Filename Value="..\run\JvMM\jvfullcolorrotate.pas"/>
+        <UnitName Value="JvFullColorRotate"/>
+      </Item10>
+      <Item11>
+        <Filename Value="..\run\JvMM\jvfullcolorctrls.pas"/>
+        <UnitName Value="JvFullColorCtrls"/>
+      </Item11>
+      <Item12>
+        <Filename Value="..\run\JvMM\jvfullcolorform.lfm"/>
+        <Type Value="LFM"/>
+      </Item12>
+      <Item13>
+        <Filename Value="..\run\JvMM\jvfullcolorform.pas"/>
+        <UnitName Value="JvFullColorForm"/>
+      </Item13>
+      <Item14>
+        <Filename Value="..\run\JvMM\jvfullcolorcircleform.pas"/>
+        <UnitName Value="JvFullColorCircleForm"/>
+      </Item14>
+      <Item15>
+        <Filename Value="..\run\JvMM\jvfullcolordialogs.pas"/>
+        <UnitName Value="JvFullColorDialogs"/>
+      </Item15>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>
