@@ -13,7 +13,7 @@
    height="24"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
    sodipodi:docname="menu_run_cursor_150.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627417"
-     inkscape:cx="17.163749"
-     inkscape:cy="12.225766"
+     inkscape:zoom="31.65177"
+     inkscape:cx="9.7004016"
+     inkscape:cy="11.908887"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -93,28 +93,28 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 16.499999,27.999999 V 43.999998"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999982px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 16.5,28.75 v 14.5"
        id="path846"
        inkscape:connector-curvature="0" />
     <path
        inkscape:connector-curvature="0"
        id="path848"
-       d="m 17,44.5 h 3"
+       d="m 17,43.5 h 2"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 13,27.5 h 3"
+       d="m 14,28.5 h 2"
        id="path849"
        inkscape:connector-curvature="0" />
     <path
        inkscape:connector-curvature="0"
        id="path851"
-       d="m 17,27.5 h 3"
+       d="m 17,28.5 h 2"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 13,44.5 h 3"
+       d="m 14,43.5 h 2"
        id="path853"
        inkscape:connector-curvature="0" />
   </g>

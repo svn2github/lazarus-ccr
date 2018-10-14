@@ -13,7 +13,7 @@
    height="16"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
    sodipodi:docname="menu_run_file.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627417"
-     inkscape:cx="-2.9795551"
-     inkscape:cy="11.054169"
+     inkscape:zoom="58.75"
+     inkscape:cx="8.499985"
+     inkscape:cy="8"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -118,7 +118,7 @@
          inkscape:connector-curvature="0" />
     </g>
     <path
-       style="fill:#aaccff;fill-opacity:1;fill-rule:evenodd;stroke:#457abe;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#37c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
        d="m 10.5,7.5 v 8 l 5,-4 z"
        id="path820"
        inkscape:connector-curvature="0"

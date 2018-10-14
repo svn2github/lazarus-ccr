@@ -13,7 +13,7 @@
    height="32"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
    sodipodi:docname="menu_pause_200.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627418"
-     inkscape:cx="12.001365"
-     inkscape:cy="18.629654"
+     inkscape:zoom="23.738585"
+     inkscape:cx="17.041345"
+     inkscape:cy="13.983084"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -74,42 +74,35 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       id="g831"
-       transform="matrix(2,0,0,2,33,0)"
-       style="stroke-width:0.5">
+       id="g830">
       <rect
-         y="0"
-         x="-13"
-         height="16"
-         width="4"
+         y="2"
+         x="7"
+         height="28"
+         width="8"
          id="rect825"
-         style="opacity:1;fill:#3465a4;fill-opacity:1;stroke:none;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+         style="opacity:1;fill:#3465a4;fill-opacity:1;stroke:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
       <rect
-         y="1"
-         x="-12"
-         height="14"
-         width="2"
+         y="3"
+         x="8"
+         height="26"
+         width="6"
          id="rect827"
-         style="opacity:1;fill:#aaccff;fill-opacity:1;stroke:none;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
-    </g>
-    <g
-       id="g837"
-       transform="matrix(2,0,0,2,45,0)"
-       style="stroke-width:0.5">
+         style="opacity:1;fill:#aaccff;fill-opacity:1;stroke:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
       <rect
-         style="opacity:1;fill:#3465a4;fill-opacity:1;stroke:none;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         style="opacity:1;fill:#3465a4;fill-opacity:1;stroke:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
          id="rect833"
-         width="4"
-         height="16"
-         x="-13"
-         y="0" />
+         width="8"
+         height="28"
+         x="19"
+         y="2" />
       <rect
-         style="opacity:1;fill:#aaccff;fill-opacity:1;stroke:none;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         style="opacity:1;fill:#aaccff;fill-opacity:1;stroke:none;stroke-width:2.49999976;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
          id="rect835"
-         width="2"
-         height="14"
-         x="-12"
-         y="1" />
+         width="6"
+         height="26"
+         x="20"
+         y="3" />
     </g>
   </g>
 </svg>

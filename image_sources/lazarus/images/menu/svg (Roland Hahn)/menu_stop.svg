@@ -14,7 +14,7 @@
    height="16"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
    sodipodi:docname="menu_stop.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
@@ -43,7 +43,8 @@
        y1="3"
        x2="13"
        y2="13"
-       gradientUnits="userSpaceOnUse" />
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9,0,0,0.9,0.3,0.3)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -52,9 +53,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="32"
-     inkscape:cx="5.0433905"
-     inkscape:cy="6.2995229"
+     inkscape:zoom="60.425489"
+     inkscape:cx="7.732224"
+     inkscape:cy="8.2497093"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -111,15 +112,15 @@
     <rect
        style="opacity:1;fill:#aa0000;fill-opacity:1;stroke:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
        id="rect833"
-       width="12"
-       height="12"
+       width="11"
+       height="11"
        x="2"
        y="2" />
     <rect
        style="opacity:1;fill:url(#linearGradient843);fill-opacity:1;stroke:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
        id="rect835"
-       width="10"
-       height="10"
+       width="9"
+       height="9"
        x="3"
        y="3" />
   </g>

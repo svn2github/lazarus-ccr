@@ -14,7 +14,7 @@
    viewBox="0 0 24 24"
    id="svg4225"
    version="1.1"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="tspeedbutton.svg"
    inkscape:export-filename="tspeedbutton.png"
    inkscape:export-xdpi="96"
@@ -28,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="28.291667"
-     inkscape:cx="11.135231"
-     inkscape:cy="11.871722"
+     inkscape:zoom="52.222222"
+     inkscape:cx="12"
+     inkscape:cy="12.000017"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -77,26 +77,17 @@
      id="layer1"
      transform="translate(0,-1028.3622)">
     <rect
-       style="opacity:1;fill:#3771c8;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       id="rect820"
-       width="24"
-       height="14"
-       x="0"
-       y="1033.3622"
-       rx="1.5"
-       ry="1.5" />
-    <rect
-       style="opacity:1;fill:#ececec;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       id="rect818"
-       width="22"
-       height="12"
-       x="1"
-       y="1034.3622"
-       rx="1"
-       ry="1" />
+       style="opacity:1;fill:#ececec;fill-opacity:1;fill-rule:evenodd;stroke:#3771c8;stroke-width:0.99999994;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       id="rect819"
+       width="17"
+       height="17"
+       x="3.5"
+       y="1031.8622"
+       rx="1.4782609"
+       ry="1.5454546" />
     <path
        style="fill:#ffff00;fill-opacity:1;fill-rule:evenodd;stroke:#f29406;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;paint-order:normal"
-       d="m 11.5,1034.8622 -5.5,5.5 h 5 l -2,5 7,-7 h -5 l 3.504785,-3.5048 z"
+       d="m 12.5,1034.8622 -6,6 h 5 l -2,5 8,-7 h -5 l 4,-4 z"
        id="path829"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccc" />

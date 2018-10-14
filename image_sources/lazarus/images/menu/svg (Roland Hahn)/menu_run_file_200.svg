@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="20.771262"
-     inkscape:cx="16.880421"
-     inkscape:cy="15.605175"
+     inkscape:zoom="29.375"
+     inkscape:cx="17.499985"
+     inkscape:cy="16"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -44,7 +44,17 @@
      inkscape:window-height="1137"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-object-midpoints="true">
     <inkscape:grid
        type="xygrid"
        id="grid2409"
@@ -101,7 +111,7 @@
        id="path832"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:#aaccff;fill-opacity:1;fill-rule:evenodd;stroke:#457abe;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#37c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 21.5,14.500108 V 30.5 l 10,-7.999892 z"
        id="path820"
        inkscape:connector-curvature="0"
