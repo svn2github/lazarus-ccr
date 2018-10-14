@@ -30,10 +30,8 @@ unit JvFullColorSpacesEditors;
 interface
 
 uses
-  //Windows,
-  Classes, Graphics,
-  PropEdits,
-  //DesignIntf, DesignEditors, DesignMenus, VCLEditors,
+  LCLType,
+  Classes, Graphics, StdCtrls, PropEdits,
   JvFullColorSpaces;
 
 type
@@ -53,8 +51,8 @@ type
     procedure EditSpace(AColorID: TJvFullColorSpaceID);
     procedure SetColor(AFullColor: TJvFullColor);
     // ICustomPropertyDrawing
-    procedure PropDrawName(ACanvas: TCanvas; const ARect: TRect; ASelected: Boolean);
-    procedure PropDrawValue(ACanvas: TCanvas; const ARect: TRect; ASelected: Boolean);
+    procedure PropDrawName(ACanvas: TCanvas; const ARect: TRect; {%H-}AState: TPropEditDrawState); override;
+    procedure PropDrawValue(ACanvas: TCanvas; const ARect: TRect; {%H-}AState: TPropEditDrawState); override;
     property IsColorProperty: Boolean read GetIsColorProperty;
   end;
 
@@ -62,12 +60,11 @@ type
   private
     FColorSpace: TJvColorSpace;
     FParent: TJvFullColorProperty;
+//    FIsColorProperty: Boolean;
   public
-    constructor Create(AParent: TJvFullColorProperty; AColorSpace: TJvColorSpace;
-      AIsColorProperty: Boolean);
-    (************* NOT CONVERTED ***
-    function GetName: string; override;
-    *******************************)
+    constructor Create(AParent: TJvFullColorProperty; AColorSpace: TJvColorSpace); reintroduce;
+//      AIsColorProperty: Boolean); reintroduce;
+    function GetName: ShortString; override; //string; override;
     function GetAttributes: TPropertyAttributes; override;
     function GetValue: string; override;
     procedure GetProperties(Proc: TGetPropEditProc); override; //TGetPropProc); override;
@@ -84,21 +81,19 @@ type
     FParent:TJvFullColorSpaceProperty;
   public
     constructor Create(AParent: TJvFullColorSpaceProperty;
-      AAxisIndex: TJvAxisIndex);
-    (**************** NOT CONVERTED ***
-    function GetName: string; override;
-    **********************************)
+      AAxisIndex: TJvAxisIndex); reintroduce;
+    function GetName: ShortString; override;  //string; override;
     function GetAttributes: TPropertyAttributes; override;
     function GetValue: string; override;
     procedure SetValue(const Value: string); override;
     procedure GetValues(Proc: TGetStrProc); override;
     // ICustomPropertyListDrawing
-    procedure ListMeasureHeight(const Value: string; ACanvas: TCanvas;
-      var AHeight: Integer);
-    procedure ListMeasureWidth(const Value: string; ACanvas: TCanvas;
-      var AWidth: Integer); 
-    procedure ListDrawValue(const Value: string; ACanvas: TCanvas;
-      const ARect: TRect; ASelected: Boolean); virtual;
+    procedure ListMeasureHeight(const AValue: ansistring; {%H-}AIndex: Integer;
+      ACanvas: TCanvas; var AHeight: Integer); override;
+    procedure ListMeasureWidth(const AValue: ansistring; {%H-}AIndex: Integer;
+      ACanvas: TCanvas; var AWidth: Integer);  override;
+    procedure ListDrawValue(const AValue: ansistring; {%H-}AIndex: Integer;
+      ACanvas: TCanvas; const ARect: TRect; AState: TPropEditDrawState); override;
     property Parent: TJvFullColorSpaceProperty read FParent;
     property AxisIndex: TJvAxisIndex read FAxisIndex;
   end;
@@ -114,21 +109,19 @@ type
     FParent: TJvDEFColorSpaceProperty;
   public
     constructor Create(AParent: TJvDEFColorSpaceProperty;
-      APredefinedFamily: TJvDEFFamily);
-    (*******NOT CONVERTED ***
-    function GetName: string; override;
-    ************************)
+      APredefinedFamily: TJvDEFFamily); reintroduce;
+    function GetName: ShortString; override;
     function GetAttributes: TPropertyAttributes; override;
     function GetValue: string; override;
     procedure SetValue(const Value: string); override;
     procedure GetValues(Proc: TGetStrProc); override;
     // ICustomPropertyListDrawing
-    procedure ListMeasureHeight(const Value: string; ACanvas: TCanvas;
-      var AHeight: Integer);
-    procedure ListMeasureWidth(const Value: string; ACanvas: TCanvas;
-      var AWidth: Integer); 
-    procedure ListDrawValue(const Value: string; ACanvas: TCanvas;
-      const ARect: TRect; ASelected: Boolean); virtual;
+    procedure ListMeasureHeight(const AValue: ansistring; {%H-}AIndex: Integer;
+      ACanvas: TCanvas; var AHeight: Integer); override;
+    procedure ListMeasureWidth(const AValue: ansistring; {%H-}AIndex: Integer;
+      ACanvas: TCanvas; var AWidth: Integer); override;
+    procedure ListDrawValue(const AValue: ansistring; {%H-}AIndex: Integer;
+      ACanvas: TCanvas; const ARect: TRect; AState: TPropEditDrawState); override;
     property Parent: TJvDEFColorSpaceProperty read FParent;
     property PredefinedFamily: TJvDEFFamily read FPredefinedFamily;
   end;
@@ -162,11 +155,12 @@ function FindFullColorSpaceEditor(AColorSpaceID: TJvFullColorSpaceID): TJvFullCo
 var
   DefaultFullColorSpacePropertyClass: TJvFullColorSpacePropertyClass = TJvFullColorSpaceProperty;
 
+
 implementation
 
 uses
-  Math, SysUtils, {DesignConst, }TypInfo, Forms;
-//  JvFullColorDialogs, JvFullColorCtrls, JvFullColorListForm, JvJCLUtils;
+  Math, SysUtils, TypInfo, Forms,
+  JvFullColorDialogs;
 
 const
   COLOR_PREVIEW_RECT = 16;
@@ -186,7 +180,7 @@ begin
 end;
 
 procedure ColorPropertyListDrawValue(AColor: TColor; AValue: string;
-  ACanvas: TCanvas; ARect: TRect; ASelected: Boolean);
+  ACanvas: TCanvas; ARect: TRect; {%H-}ASelected: Boolean);
 var
   OldBrushColor: TColor;
   OldPenColor: TColor;
@@ -212,6 +206,7 @@ begin
   end;
 end;
 
+
 //=== { TJvFullColorProperty } ===============================================
 
 procedure TJvFullColorProperty.DialogApply(Sender: TObject; AFullColor: TJvFullColor);
@@ -232,7 +227,6 @@ procedure TJvFullColorProperty.EditSpace(AColorID: TJvFullColorSpaceID);
 var
   LColor: TJvFullColor;
 begin
-  (******************** NOT CONVERTED ***
   with ColorSpaceManager, TJvFullColorDialog.Create(nil) do
     try
       if IsColorProperty then
@@ -248,7 +242,7 @@ begin
 
       FullColor := LColor;
       Title := '';
-      OnApply := DialogApply;
+      OnApply := @DialogApply;
       Options := [foFullOpen, foAllowSpaceChange, foShowNewPreview, foShowOldPreview,
         foShowPredefined, foAllowVariable, foNoneAndDefault, foShowApply];
 
@@ -257,7 +251,6 @@ begin
     finally
       Free;
     end;
-  **********************)
 end;
 
 function TJvFullColorProperty.GetAttributes: TPropertyAttributes;
@@ -284,7 +277,7 @@ begin
     for I := 0 to Count - 1 do
     begin
       CS := ColorSpaceByIndex[I];
-      Proc(FindFullColorSpaceEditor(CS.ID).Create(Self, CS, IsColorProperty));
+      Proc(FindFullColorSpaceEditor(CS.ID).Create(Self, CS)); //, IsColorProperty));
     end;
 end;
 
@@ -311,15 +304,14 @@ begin
 end;
 
 procedure TJvFullColorProperty.PropDrawName(ACanvas: TCanvas;
-  const ARect: TRect; ASelected: Boolean);
+  const ARect: TRect; AState: TPropEditDrawState);
 begin
-  (**************** NOT CONVERTED ***
-  DefaultPropertyDrawName(Self, ACanvas, ARect);
-  **********************************)
+  ACanvas.TextOut(ARect.Left, ARect.Top, GetName);
+//  DefaultPropertyDrawName(Self, ACanvas, ARect);
 end;
 
 procedure TJvFullColorProperty.PropDrawValue(ACanvas: TCanvas;
-  const ARect: TRect; ASelected: Boolean);
+  const ARect: TRect; AState: TPropEditDrawState);
 var
   OldPenColor, OldBrushColor: TColor;
   Right: Integer;
@@ -343,9 +335,8 @@ begin
     Pen.Color := OldPenColor;
     Brush.Color := OldBrushColor;
   end;
-  (******************** NOT CONVERTED ***
-  DefaultPropertyDrawValue(Self, ACanvas, Rect(Right, ARect.Top, ARect.Right, ARect.Bottom));
-  **************************************)
+  ACanvas.TextOut(ARect.Left, ARect.Top, GetVisualValue);
+//  DefaultPropertyDrawValue(Self, ACanvas, Rect(Right, ARect.Top, ARect.Right, ARect.Bottom));
 end;
 
 procedure TJvFullColorProperty.SetColor(AFullColor: TJvFullColor);
@@ -380,11 +371,12 @@ end;
 //=== { TJvFullColorSpaceProperty } ==========================================
 
 constructor TJvFullColorSpaceProperty.Create(AParent: TJvFullColorProperty;
-  AColorSpace: TJvColorSpace; AIsColorProperty: Boolean);
+  AColorSpace: TJvColorSpace); //; AIsColorProperty: Boolean);
 begin
   inherited Create(AParent);
   FParent := AParent;
   FColorSpace := AColorSpace;
+//  FIsColorProperty := AIsColorProperty;
 end;
 
 procedure TJvFullColorSpaceProperty.Edit;
@@ -398,12 +390,10 @@ begin
     paRevertable];
 end;
 
-(******************* NOT CONVERTED ***
-function TJvFullColorSpaceProperty.GetName: string;
+function TJvFullColorSpaceProperty.GetName: ShortString;
 begin
   Result := ColorSpace.ShortName;
 end;
-************************************)
 
 procedure TJvFullColorSpaceProperty.GetProperties(Proc: TGetPropEditProc); //TGetPropProc);
 var
@@ -433,12 +423,10 @@ begin
   Result := [paValueList, paMultiSelect, paRevertable];
 end;
 
-(******************* NOT CONVERTED ***
-function TJvFullColorAxisProperty.GetName: string;
+function TJvFullColorAxisProperty.GetName: ShortString;
 begin
   Result := Parent.ColorSpace.AxisName[AxisIndex];
 end;
-************************************)
 
 function TJvFullColorAxisProperty.GetValue: string;
 begin
@@ -455,28 +443,31 @@ begin
       Proc(Format('$%.2x', [I]));
 end;
 
-procedure TJvFullColorAxisProperty.ListDrawValue(const Value: string;
-  ACanvas: TCanvas; const ARect: TRect; ASelected: Boolean);
+procedure TJvFullColorAxisProperty.ListDrawValue(const AValue: ansistring;
+  AIndex: Integer; ACanvas: TCanvas; const ARect: TRect;
+  AState: TPropEditDrawState);
 var
   FullColor: TJvFullColor;
-  LColor: TColor;
+  lColor: TColor;
+  lSelected: Boolean;
 begin
   FullColor := ColorSpaceManager.ConvertToID(GetOrdValue, Parent.ColorSpace.ID);
-  FullColor := SetAxisValue(FullColor, AxisIndex, HexToInt(Value));
-  LColor := Parent.ColorSpace.ConvertToColor(FullColor);
-  ColorPropertyListDrawValue(LColor, Value, ACanvas, ARect, ASelected);
+  FullColor := SetAxisValue(FullColor, AxisIndex, HexToInt(AValue));
+  lColor := Parent.ColorSpace.ConvertToColor(FullColor);
+  lSelected := pedsSelected in AState;
+  ColorPropertyListDrawValue(lColor, AValue, ACanvas, ARect, lSelected);
 end;
 
-procedure TJvFullColorAxisProperty.ListMeasureHeight(const Value: string;
-  ACanvas: TCanvas; var AHeight: Integer);
+procedure TJvFullColorAxisProperty.ListMeasureHeight(const AValue: string;
+  AIndex: Integer; ACanvas: TCanvas; var AHeight: Integer);
 begin
-  AHeight := Max(ACanvas.TextHeight(Value), COLOR_PREVIEW_SIZE);
+  AHeight := Max(ACanvas.TextHeight(AValue), COLOR_PREVIEW_SIZE);
 end;
 
-procedure TJvFullColorAxisProperty.ListMeasureWidth(const Value: string;
-  ACanvas: TCanvas; var AWidth: Integer);
+procedure TJvFullColorAxisProperty.ListMeasureWidth(const AValue: string;
+  AIndex: Integer; ACanvas: TCanvas; var AWidth: Integer);
 begin
-  AWidth := ACanvas.TextWidth(Value) + COLOR_PREVIEW_SIZE;
+  AWidth := ACanvas.TextWidth(AValue) + COLOR_PREVIEW_SIZE;
 end;
 
 procedure TJvFullColorAxisProperty.SetValue(const Value: string);
@@ -519,13 +510,11 @@ begin
   Result := [paValueList, paMultiSelect, paRevertable];
 end;
 
-(*********************** NOT CONVERTED ***
-function TJvDEFColorSpaceIndentProperty.GetName: string;
+function TJvDEFColorSpaceIndentProperty.GetName: Shortstring;
 begin
   Result := GetEnumName(TypeInfo(TJvDEFFamily), Ord(PredefinedFamily));
   Result := Copy(Result, 3, Length(Result) - 2);
 end;
-****************************************)
 
 function TJvDEFColorSpaceIndentProperty.GetValue: string;
 var
@@ -556,22 +545,25 @@ begin
   end;
 end;
 
-procedure TJvDEFColorSpaceIndentProperty.ListDrawValue(const Value: string;
-  ACanvas: TCanvas; const ARect: TRect; ASelected: Boolean);
+procedure TJvDEFColorSpaceIndentProperty.ListDrawValue(const AValue: ansistring;
+  AIndex: Integer; ACanvas: TCanvas; const ARect: TRect; AState: TPropEditDrawState);
+var
+  lSelected: Boolean;
 begin
-  ColorPropertyListDrawValue(PrettyNameToColor(Value), Value, ACanvas, ARect, ASelected);
+  lSelected := pedsSelected in AState;
+  ColorPropertyListDrawValue(PrettyNameToColor(AValue), AValue, ACanvas, ARect, lSelected);
 end;
 
-procedure TJvDEFColorSpaceIndentProperty.ListMeasureHeight(const Value: string;
-  ACanvas: TCanvas; var AHeight: Integer);
+procedure TJvDEFColorSpaceIndentProperty.ListMeasureHeight(const AValue: ansistring;
+  AIndex: Integer; ACanvas: TCanvas; var AHeight: Integer);
 begin
-  AHeight := Max(ACanvas.TextHeight(Value), COLOR_PREVIEW_SIZE);
+  AHeight := Max(ACanvas.TextHeight(AValue), COLOR_PREVIEW_SIZE);
 end;
 
-procedure TJvDEFColorSpaceIndentProperty.ListMeasureWidth(const Value: string;
-  ACanvas: TCanvas; var AWidth: Integer);
+procedure TJvDEFColorSpaceIndentProperty.ListMeasureWidth(const AValue: ansistring;
+  AIndex: Integer; ACanvas: TCanvas; var AWidth: Integer);
 begin
-  AWidth := ACanvas.TextWidth(Value) + COLOR_PREVIEW_SIZE;
+  AWidth := ACanvas.TextWidth(AValue) + COLOR_PREVIEW_SIZE;
 end;
 
 procedure TJvDEFColorSpaceIndentProperty.SetValue(const Value: string);

@@ -57,7 +57,7 @@ type
   protected
     procedure Commit;
     function CreateFramesEditor(ADesigner: TComponentEditorDesigner;
-      AController: TJvID3Controller; var Shared: Boolean): TJvID3FramesEditor;
+      AController: TJvID3Controller; out Shared: Boolean): TJvID3FramesEditor;
     procedure RemoveTag;
     procedure ShowFramesEditor(ADesigner: TComponentEditorDesigner;
       AController: TJvID3Controller);
@@ -75,7 +75,7 @@ type
     function GetFrameDescription(const FrameID: TJvID3FrameID): string;
   public
     destructor Destroy; override;
-    procedure ID3Event(Event: TJvID3Event; Info: Longint); override;
+    procedure ID3Event(Event: TJvID3Event; {%H-}Info: Longint); override;
     property FramesEditor: TJvID3FramesEditor read FFramesEditor;
     property FrameDescription[const FrameID: TJvID3FrameID]: string read GetFrameDescription;
   end;
@@ -572,7 +572,7 @@ begin
 end;
 
 function TJvID3ControllerEditor.CreateFramesEditor(ADesigner: TComponentEditorDesigner;
-  AController: TJvID3Controller; var Shared: Boolean): TJvID3FramesEditor;
+  AController: TJvID3Controller; out Shared: Boolean): TJvID3FramesEditor;
 begin
   Shared := True;
   if AController.Designer <> nil then

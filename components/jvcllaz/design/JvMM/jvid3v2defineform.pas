@@ -46,7 +46,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure OkBtnClick(Sender: TObject);
   private
-    FDesigner: TJvID3ControllerDesigner; //IDesigner;
+    //FDesigner: TJvID3ControllerDesigner; //IDesigner;
     FController: TJvID3Controller;
     FFSDesigner: TJvID3ControllerDesigner;
     FFrame: TJvID3Frame;

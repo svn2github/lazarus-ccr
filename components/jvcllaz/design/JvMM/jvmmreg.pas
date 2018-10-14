@@ -19,7 +19,7 @@ uses
   JvId3v1, JvId3v2Base, JvId3v2, JvGradient, JvId3v2EditorForm,
   JvGradientHeaderPanel, JvSpecialProgress,
   JvFullColorSpaces, JvFullColorCtrls, JvFullColorEditors, JvFullColorSpacesEditors,
-  JvFullColorForm, JvFullColorDialogs,
+  JvFullColorDialogs,
   JvBmpAnimator;
 
 procedure Register;

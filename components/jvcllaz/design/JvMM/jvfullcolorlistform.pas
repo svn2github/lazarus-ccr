@@ -25,16 +25,16 @@ Known Issues:
 
 unit JvFullColorListForm;
 
-{$I jvcl.inc}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
-  Windows, Messages, SysUtils,
-  Variants,
+//  Windows, Messages,
+  SysUtils, //Variants,
   Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ActnList, Buttons, ImgList,
-  JvFullColorForm, JvFullColorSpaces, JvFullColorDialogs, JvFullColorCtrls;
+  JvFullColorSpaces, JvFullColorDialogs, JvFullColorCtrls;
 
 type
   TJvFullColorListFrm = class(TForm)
@@ -261,7 +261,6 @@ begin
   begin
     if odSelected in State then
       Font.Color := clCaptionText;
-
     Pen.Style := psSolid;
     Pen.Color := Brush.Color;
     Brush.Style := bsSolid;

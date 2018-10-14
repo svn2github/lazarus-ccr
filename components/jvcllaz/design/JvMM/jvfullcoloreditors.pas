@@ -30,11 +30,7 @@ unit JvFullColorEditors;
 interface
 
 uses
-  //Windows,
-  Classes, propedits,
-//  DesignIntf, DesignEditors, VCLEditors,
-  ComCtrls,
-  JvFullColorCtrls;
+  Classes, ComCtrls, PropEdits;
 
 type
   TJvColorIDEditor = class(TOrdinalProperty)
