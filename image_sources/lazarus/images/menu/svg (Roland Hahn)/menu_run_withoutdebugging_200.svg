@@ -30,7 +30,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="30.786636"
-     inkscape:cx="17.25825"
+     inkscape:cx="10.161015"
      inkscape:cy="14.733636"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -85,13 +85,13 @@
      id="layer1">
     <path
        style="fill:#37c837;fill-rule:evenodd;stroke:#008000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 2.5,2.4999293 16,16 2.5,29.500071 Z"
+       d="M 12.5,2.4999293 26,16 12.5,29.500071 Z"
        id="path828-7"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc" />
     <g
        id="g877"
-       transform="translate(0.51663008,0.53272876)">
+       transform="translate(-15.48337,0.53272876)">
       <g
          style="stroke-width:3.5;stroke-miterlimit:4;stroke-dasharray:none"
          transform="matrix(1.9955828,0,0,1.9993855,-32.385936,7.4651618)"

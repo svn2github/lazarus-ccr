@@ -9,15 +9,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="24"
-   height="24"
+   width="32"
+   height="32"
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
-   sodipodi:docname="menu_run_withoutdebugging_150.svg"
+   sodipodi:docname="laz_cancel_200.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="menu_run_withoutdebugging_150.png"
+   inkscape:export-filename="laz_cancel_200.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="41.049148"
-     inkscape:cx="7.8702288"
-     inkscape:cy="11.047994"
+     inkscape:zoom="23.738655"
+     inkscape:cx="-2.7648206"
+     inkscape:cy="14.693929"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -52,11 +52,8 @@
      inkscape:snap-bbox-midpoints="true"
      inkscape:object-paths="true"
      inkscape:snap-intersection-paths="true"
-     inkscape:object-nodes="true"
      inkscape:snap-smooth-nodes="true"
-     inkscape:snap-midpoints="true"
-     inkscape:snap-object-midpoints="true"
-     inkscape:snap-center="true">
+     inkscape:snap-midpoints="true">
     <inkscape:grid
        type="xygrid"
        id="grid2409"
@@ -84,37 +81,18 @@
   <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-24)">
-    <path
-       style="fill:#37c837;fill-rule:evenodd;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
-       d="M 9.5,26 20,36 9.5,45.999929 Z"
-       id="path828-7"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccc" />
+     id="layer1">
     <g
-       id="g877"
-       transform="translate(-11.612507,0.3996384)">
-      <g
-         style="stroke-width:3.5;stroke-miterlimit:4;stroke-dasharray:none"
-         transform="matrix(1.4966899,0,0,1.4995167,-24.289551,29.598959)"
-         id="g1000">
-        <path
-           inkscape:connector-curvature="0"
-           d="m 25.496486,10.503514 5,-5.0000004 m 0,5.0000004 -5,-5.0000004"
-           style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="path992" />
-      </g>
-      <g
-         style="stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none"
-         transform="matrix(1.4966899,0,0,1.4995167,-24.289551,29.598959)"
-         id="g996">
-        <path
-           inkscape:connector-curvature="0"
-           d="m 25.496486,10.503514 5,-5.0000004 m 0,5.0000004 -5,-5.0000004"
-           style="fill:none;fill-rule:evenodd;stroke:#dc0000;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="path988" />
-      </g>
+       id="layer1-3"
+       inkscape:label="Ebene 1"
+       transform="matrix(2.0769199,0,0,2.0769199,-0.6153592,-0.6153592)"
+       style="stroke-width:0.48148221">
+      <path
+         sodipodi:nodetypes="ccccccccccccc"
+         inkscape:connector-curvature="0"
+         id="path826"
+         d="m 4,1.5 4,4 4,-4 2.5,2.5 -4,4 4,4 -2.5,2.5 -4,-4 -4,4 -2.5,-2.5 4,-4 -4,-4 z"
+         style="fill:#e60014;fill-opacity:1;fill-rule:evenodd;stroke:#aa0000;stroke-width:0.48148221px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:0.96862745" />
     </g>
   </g>
 </svg>
