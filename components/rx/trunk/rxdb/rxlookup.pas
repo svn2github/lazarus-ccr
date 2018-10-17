@@ -1696,7 +1696,7 @@ begin
     FListActive := True;
     FDisplayField := FLookupDataLink.DataSet.FieldByName(FFieldList[FLookupDisplayIndex]);
   end;
-  FLocateObject.DataSet := DataSet;
+  FLocateObject.DataSet := FLookupDataLink.DataSet;//DataSet;
 
   if not (csDestroying in ComponentState) then
   begin

@@ -17,6 +17,7 @@ type
   TRxDBGridMainForm = class(TForm)
     actCalcTotal: TAction;
     CheckBox5: TCheckBox;
+    DataSource3: TDataSource;
     Label2: TLabel;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
@@ -29,7 +30,12 @@ type
     RxDBGridFooterTools1: TRxDBGridFooterTools;
     RxDBGridPrint1: TRxDBGridPrint;
     RxIniPropStorage1: TRxIniPropStorage;
+    RxMemoryData1ategory_id: TLongintField;
+    RxMemoryData1ategory_name: TStringField;
     RxMemoryData1RAIT: TStringField;
+    RxMemoryData3: TRxMemoryData;
+    RxMemoryData3ategory_id: TLongintField;
+    RxMemoryData3ategory_name: TStringField;
     SpeedButton1: TSpeedButton;
     sysExit: TAction;
     hlpAbout: TAction;
@@ -130,8 +136,12 @@ begin
   RxMemoryData2.AppendRecord([2, 'Borland']);
   RxMemoryData2.AppendRecord([3, 'Microsoft']);
 
+  RxMemoryData3.Open;
+  RxMemoryData3.AppendRecord([1, 'Lite']);
+  RxMemoryData3.AppendRecord([2, 'Full version']);
+
   RxMemoryData1.Open;
-  RxMemoryData1.AppendRecord([1, 'Lazarus', 0, 'Open source', EncodeDate(2006, 1, 1), 1]);
+  RxMemoryData1.AppendRecord([1, 'Lazarus', 0, 'Open source', EncodeDate(2006, 1, 1), 1, 1, 1, 'Lite']);
   RxMemoryData1.AppendRecord([2, 'Delphi 7.0 Prof', 990, 'Borland', EncodeDate(2002, 1, 1), 2]);
   RxMemoryData1.AppendRecord([3, 'Open Office 2.2.0', 0, 'Open source', EncodeDate(2006, 10, 1), 1]);
   RxMemoryData1.AppendRecord([4, 'Microsoft Office', 150, 'Microsoft', EncodeDate(1997, 8, 12), 3]);

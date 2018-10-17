@@ -2961,10 +2961,20 @@ begin
   DataSource := FGrid.DataSource;
   if Assigned(F) then
   begin
+    FLDS.DataSet := nil;
+{    DataField := '';
+    LookupDisplay := '';
+    LookupField := '';
+
+    FLDS.DataSet := F.LookupDataSet; }
     DataField := F.KeyFields;
+
     LookupDisplay := F.LookupResultField;
     LookupField := F.LookupKeyFields;
+
     FLDS.DataSet := F.LookupDataSet;
+
+
     FGrid.GetOnCreateLookup;
   end;
 end;

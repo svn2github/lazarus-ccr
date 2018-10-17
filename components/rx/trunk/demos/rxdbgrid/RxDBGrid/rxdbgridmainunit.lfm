@@ -1,22 +1,22 @@
 object RxDBGridMainForm: TRxDBGridMainForm
-  Left = 279
+  Left = 250
   Height = 732
-  Top = 137
-  Width = 1182
+  Top = 192
+  Width = 1240
   ActiveControl = Panel1
   Caption = 'RxDBGrid Demo'
   ClientHeight = 704
-  ClientWidth = 1182
+  ClientWidth = 1240
   Menu = MainMenu1
   OnCreate = FormCreate
   SessionProperties = 'RxDBGridExportSpreadSheet1.FileName;RxDBGridExportSpreadSheet1.OpenAfterExport;RxDBGridExportSpreadSheet1.Options;RxDBGridExportSpreadSheet1.PageName;RxDBGridPrint1.Options;RxDBGridPrint1.Orientation;RxDBGridPrint1.PageMargin;RxDBGridPrint1.ReportTitle;RxDBGridPrint1.ShowColumnHeaderOnAllPage'
   ShowHint = True
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object RxDBGrid1: TRxDBGrid
     Left = 0
     Height = 627
     Top = 77
-    Width = 1182
+    Width = 1240
     ColumnDefValues.BlobText = '(примечание)'
     TitleButtons = True
     AutoSort = True
@@ -367,6 +367,36 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'сategory_id'
+        Width = 100
+        FieldName = 'сategory_id'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.NotEmptyValue = '(Не пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'сategory_name'
+        Width = 200
+        FieldName = 'сategory_name'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.NotEmptyValue = '(Не пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
       end>
     KeyStrokes = <    
       item
@@ -453,11 +483,11 @@ object RxDBGridMainForm: TRxDBGridMainForm
     Left = 0
     Height = 77
     Top = 0
-    Width = 1182
+    Width = 1240
     Align = alTop
     AutoSize = True
     ClientHeight = 77
-    ClientWidth = 1182
+    ClientWidth = 1240
     TabOrder = 1
     object Label1: TLabel
       AnchorSideLeft.Control = Button2
@@ -664,6 +694,15 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Name = 'RAIT'
         DataType = ftString
         Size = 15
+      end    
+      item
+        Name = 'сategory_id'
+        DataType = ftInteger
+      end    
+      item
+        Name = 'сategory_name'
+        DataType = ftString
+        Size = 100
       end>
     PacketRecords = 0
     Left = 152
@@ -746,6 +785,29 @@ object RxDBGridMainForm: TRxDBGridMainForm
       ReadOnly = False
       Required = False
       Size = 15
+    end
+    object RxMemoryData1ategory_id: TLongintField
+      FieldKind = fkData
+      FieldName = 'сategory_id'
+      Index = 7
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object RxMemoryData1ategory_name: TStringField
+      FieldKind = fkData
+      FieldName = 'сategory_name'
+      Index = 8
+      KeyFields = 'сategory_id'
+      LookupCache = False
+      LookupDataSet = RxMemoryData3
+      LookupKeyFields = 'сategory_id'
+      LookupResultField = 'сategory_name'
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 100
     end
   end
   object Datasource1: TDataSource
@@ -1560,5 +1622,44 @@ object RxDBGridMainForm: TRxDBGridMainForm
     OnTimer = Timer1Timer
     Left = 897
     Top = 164
+  end
+  object RxMemoryData3: TRxMemoryData
+    FieldDefs = <    
+      item
+        Name = 'сategory_id'
+        DataType = ftInteger
+      end    
+      item
+        Name = 'сategory_name'
+        DataType = ftString
+        Size = 100
+      end>
+    PacketRecords = 0
+    Left = 896
+    Top = 384
+    object RxMemoryData3ategory_id: TLongintField
+      FieldKind = fkData
+      FieldName = 'сategory_id'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object RxMemoryData3ategory_name: TStringField
+      FieldKind = fkData
+      FieldName = 'сategory_name'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 100
+    end
+  end
+  object DataSource3: TDataSource
+    DataSet = RxMemoryData3
+    Left = 848
+    Top = 384
   end
 end
