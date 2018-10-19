@@ -30,7 +30,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="23.738655"
-     inkscape:cx="-2.7648206"
+     inkscape:cx="-11.969217"
      inkscape:cy="14.693929"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -83,16 +83,15 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       id="layer1-3"
+       id="layer1-8"
        inkscape:label="Ebene 1"
-       transform="matrix(2.0769199,0,0,2.0769199,-0.6153592,-0.6153592)"
-       style="stroke-width:0.48148221">
+       transform="scale(2)">
       <path
          sodipodi:nodetypes="ccccccccccccc"
          inkscape:connector-curvature="0"
-         id="path826"
-         d="m 4,1.5 4,4 4,-4 2.5,2.5 -4,4 4,4 -2.5,2.5 -4,-4 -4,4 -2.5,-2.5 4,-4 -4,-4 z"
-         style="fill:#e60014;fill-opacity:1;fill-rule:evenodd;stroke:#aa0000;stroke-width:0.48148221px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:0.96862745" />
+         id="path826-3"
+         d="m 4,2.5 4,4 4,-4 1.5,1.5 -4,4 4,4 -1.5,1.5 -4,-4 -4,4 -1.5,-1.5 4,-4 -4,-4 z"
+         style="fill:#e60014;fill-opacity:1;fill-rule:evenodd;stroke:#aa0000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96862745" />
     </g>
   </g>
 </svg>

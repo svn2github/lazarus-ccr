@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="23.371933"
-     inkscape:cx="16.755601"
-     inkscape:cy="13.016344"
+     inkscape:zoom="28.265728"
+     inkscape:cx="10.564375"
+     inkscape:cy="16.228911"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -87,17 +87,41 @@
        style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="text846"
        transform="translate(-79.101442,-1041.1243)" />
-    <path
-       sodipodi:nodetypes="ccccccc"
-       inkscape:connector-curvature="0"
-       id="path847"
-       d="m 2,14.5 4.20203,-4.209513 6.303046,6.31427 L 25.111167,3.9762172 29.313198,8.1857304 12.505076,25.023783 Z"
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.96470588" />
-    <path
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.96470588"
-       d="M 2.494923,20.476218 6.696954,16.266704 13,22.580974 26.656599,8.9000562 30.85863,13.109569 13,31 Z"
-       id="path839"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccc" />
+    <g
+       id="g829"
+       transform="translate(0,2.0000019)">
+      <g
+         id="g821"
+         inkscape:label="Ebene 1"
+         transform="matrix(2,0,0,2,0,-4.500002)">
+        <g
+           transform="translate(-52.393475,-1041.0676)"
+           id="g817"
+           style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           aria-label="7" />
+        <path
+           sodipodi:nodetypes="ccccccc"
+           inkscape:connector-curvature="0"
+           id="path819"
+           d="m 1.5,8.249999 1.75,-1.75 3,3 6.5,-6.5 1.75,1.75 -8.25,8.250002 z"
+           style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96470588" />
+      </g>
+      <g
+         transform="matrix(2,0,0,2,0,0.499998)"
+         inkscape:label="Ebene 1"
+         id="layer1-0">
+        <g
+           aria-label="7"
+           style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="text846-9"
+           transform="translate(-52.393475,-1041.0676)" />
+        <path
+           style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96470588"
+           d="m 1.5,8.249999 1.75,-1.75 3,3 6.5,-6.5 1.75,1.75 -8.25,8.250002 z"
+           id="path839-0"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccccccc" />
+      </g>
+    </g>
   </g>
 </svg>

@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="30.331017"
-     inkscape:cx="5.7941312"
-     inkscape:cy="10.598796"
+     inkscape:zoom="21.447268"
+     inkscape:cx="6.2686078"
+     inkscape:cy="5.9629923"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -86,22 +86,45 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-24)">
-    <path
-       sodipodi:nodetypes="ccccccc"
-       inkscape:connector-curvature="0"
-       id="path847"
-       d="m 1.5,34.5 3,-3 5,5 10,-10 3,3 -13,13 z"
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.96470588" />
     <g
        aria-label="7"
        style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="text846"
        transform="translate(-56.643582,-984.8176)" />
-    <path
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.96470588"
-       d="m 2,39 3,-3 5,5 10,-10 3,3 -13,13 z"
-       id="path839"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccc" />
+    <g
+       id="g833">
+      <g
+         id="g821"
+         inkscape:label="Ebene 1"
+         transform="matrix(1.5,0,0,1.5,0.125,21.999998)">
+        <g
+           transform="translate(-52.393475,-1041.0676)"
+           id="g817"
+           style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           aria-label="7" />
+        <path
+           sodipodi:nodetypes="ccccccc"
+           inkscape:connector-curvature="0"
+           id="path819"
+           d="m 1.5,8.249999 1.75,-1.75 3,3 6.5,-6.5 1.75,1.75 -8.25,8.250002 z"
+           style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96470588" />
+      </g>
+      <g
+         transform="matrix(1.5,0,0,1.5,0.125,25.999998)"
+         inkscape:label="Ebene 1"
+         id="layer1-9">
+        <g
+           aria-label="7"
+           style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="text846-5"
+           transform="translate(-52.393475,-1041.0676)" />
+        <path
+           style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96470588"
+           d="m 1.5,8.249999 1.75,-1.75 3,3 6.5,-6.5 1.75,1.75 -8.25,8.250002 z"
+           id="path839-5"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccccccc" />
+      </g>
+    </g>
   </g>
 </svg>

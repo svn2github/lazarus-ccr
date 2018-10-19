@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="33.232348"
-     inkscape:cx="6.2553119"
-     inkscape:cy="12.087885"
+     inkscape:zoom="23.498819"
+     inkscape:cx="-0.99685443"
+     inkscape:cy="14.385687"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -87,16 +87,15 @@
      id="layer1"
      transform="translate(0,-24)">
     <g
-       id="layer1-1"
+       id="layer1-3"
        inkscape:label="Ebene 1"
-       transform="matrix(1.5384599,0,0,1.5384599,-0.3076792,23.692321)"
-       style="stroke-width:0.65000069">
+       transform="matrix(1.5,0,0,1.5,0,24)">
       <path
          sodipodi:nodetypes="ccccccccccccc"
          inkscape:connector-curvature="0"
-         id="path826"
-         d="M 4.0999958,1.4999929 8,5.3999971 11.900004,1.4999929 14.500007,4.0999957 10.600003,7.9999999 14.500007,11.900004 11.900004,14.500007 8,10.600003 4.0999958,14.500007 1.4999931,11.900004 5.3999972,7.9999999 1.4999931,4.0999957 Z"
-         style="fill:#e60014;fill-opacity:1;fill-rule:evenodd;stroke:#aa0000;stroke-width:0.65000069px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:0.96862745" />
+         id="path826-3"
+         d="m 4,2.5 4,4 4,-4 1.5,1.5 -4,4 4,4 -1.5,1.5 -4,-4 -4,4 -1.5,-1.5 4,-4 -4,-4 z"
+         style="fill:#e60014;fill-opacity:1;fill-rule:evenodd;stroke:#aa0000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96862745" />
     </g>
   </g>
 </svg>

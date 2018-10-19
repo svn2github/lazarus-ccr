@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="44.312147"
-     inkscape:cx="3.1506018"
-     inkscape:cy="7.9757733"
+     inkscape:zoom="22.156074"
+     inkscape:cx="-2.2947764"
+     inkscape:cy="2.9907493"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -87,8 +87,8 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:#e60014;fill-opacity:1;fill-rule:evenodd;stroke:#aa0000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:0.96862745"
-       d="m 4,1.5 4,4 4,-4 2.5,2.5 -4,4 4,4 -2.5,2.5 -4,-4 -4,4 -2.5,-2.5 4,-4 -4,-4 z"
+       style="fill:#e60014;fill-opacity:1;fill-rule:evenodd;stroke:#aa0000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96862745"
+       d="m 4,2.5 4,4 4,-4 1.5,1.5 -4,4 4,4 -1.5,1.5 -4,-4 -4,4 -1.5,-1.5 4,-4 -4,-4 z"
        id="path826"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccccccccccc" />

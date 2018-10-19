@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="44.566907"
-     inkscape:cx="8.159305"
-     inkscape:cy="7.5361489"
+     inkscape:zoom="31.513562"
+     inkscape:cx="18.221167"
+     inkscape:cy="4.9774331"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -86,20 +86,20 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <path
+       sodipodi:nodetypes="ccccccc"
+       inkscape:connector-curvature="0"
+       id="path826"
+       d="m 1.75,6.7499966 1.75,-1.75 3,3 6.5,-6.5 1.75,1.75 L 6.5,11.5 Z"
+       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96470588" />
     <g
        aria-label="7"
        style="font-style:normal;font-weight:normal;font-size:10.66666698px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="text846"
        transform="translate(-52.393475,-1041.0676)" />
     <path
-       sodipodi:nodetypes="ccccccc"
-       inkscape:connector-curvature="0"
-       id="path847"
-       d="m 1.0001068,6.5 2,-2 3,3 6.0000002,-6 2,2 -8.0000002,8 z"
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.96470588" />
-    <path
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.96470588"
-       d="m 1.5001068,10 2,-2 3,3 6.5000002,-6.5 2,2 -8.5000002,8.5 z"
+       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96470588"
+       d="m 1.75,9.749997 1.75,-1.7500004 3,3.0000004 6.5,-6.5000004 1.75,1.75 L 6.5,14.5 Z"
        id="path839"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccccc" />

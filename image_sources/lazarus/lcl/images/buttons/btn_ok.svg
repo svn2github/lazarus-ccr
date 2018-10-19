@@ -30,8 +30,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="44.566907"
-     inkscape:cx="3.256564"
-     inkscape:cy="7.5361489"
+     inkscape:cx="-1.5901547"
+     inkscape:cy="7.5817411"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -92,8 +92,8 @@
        id="text846"
        transform="translate(-52.393475,-1041.0676)" />
     <path
-       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.96470588"
-       d="m 1,8.5 2,-2 3,3 6.5,-6.5 2,2 -8.5,8.5 z"
+       style="fill:#71c837;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96470588"
+       d="m 1.5,8.249999 1.75,-1.75 3,3 6.5,-6.5 1.75,1.75 -8.25,8.250002 z"
        id="path839"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccccc" />
