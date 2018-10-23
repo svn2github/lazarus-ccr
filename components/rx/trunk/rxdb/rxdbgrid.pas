@@ -1068,6 +1068,7 @@ type
     property DataSource;
     property DefaultDrawing;
     property DefaultRowHeight;
+    property DoubleBuffered;
 
     property DefaultColWidth;
 
@@ -1084,9 +1085,11 @@ type
     //property ImeMode;
     //property ImeName;
     property Options;
+    property Options2;
     property OptionsExtra;
     property ParentBiDiMode;
     property ParentColor default false;
+    property ParentDoubleBuffered;
     //property ParentCtl3D;
     property ParentFont;
     property ParentShowHint;
