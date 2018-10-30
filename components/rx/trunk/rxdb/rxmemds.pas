@@ -96,6 +96,7 @@ type
     procedure ClearRecords;
     procedure InitBufferPointers(GetProps: Boolean);
     procedure ParseFilter(const AFilter: string);
+    procedure CopyFieldsFormat(ASource:TDataSet);
   protected
     procedure AssignMemoryRecord(Rec: TMemoryRecord; Buffer: PChar);
     function GetActiveRecBuf(var RecBuf: PChar): Boolean; virtual;
@@ -663,6 +664,33 @@ begin
       FParser.CaseInsensitive := foCaseInsensitive in FilterOptions;
       // parse expression
       FParser.ParseExpression(AFilter);
+    end;
+  end;
+end;
+
+procedure TRxMemoryData.CopyFieldsFormat(ASource: TDataSet);
+var
+  i: Integer;
+  F, F1: TField;
+begin
+  if not Assigned(ASource) then Exit;
+  for i:=0 to Fields.Count-1 do
+  begin
+    F:=Fields[i];
+    F1:=ASource.FindField(F.FieldName);
+    if Assigned(F1) then
+    begin
+      F.EditMask:=F1.EditMask;
+      if (F is TNumericField) and (F1 is TNumericField) then
+      begin
+        TNumericField(F).DisplayFormat:=TNumericField(F1).DisplayFormat;
+        TNumericField(F).EditFormat:=TNumericField(F1).EditFormat;
+      end
+      else
+      if (F is TDateTimeField) and (F1 is TDateTimeField) then
+      begin
+        TDateTimeField(F1).DisplayFormat:=TDateTimeField(F1).DisplayFormat;
+      end;
     end;
   end;
 end;
@@ -1539,6 +1567,7 @@ begin
       
   CheckDataTypes(FieldDefs);
   CreateFields;
+  CopyFieldsFormat(Source);
 end;
 (*
 procedure AssignRecord(Source, Dest: TDataSet; ByName: Boolean);
