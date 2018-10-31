@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Release"/>
+    <Units Count="8">
+      <Unit0>
+        <Filename Value="cmd.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="499"/>
+        <CursorPos X="21" Y="501"/>
+        <UsageCount Value="118"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="D:\lazarustrunk\fpcsrc\rtl\win\sysutils.pp"/>
+        <UnitName Value="SysUtils"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="284"/>
+        <CursorPos X="18" Y="294"/>
+        <UsageCount Value="59"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="D:\lazarustrunk\fpcsrc\packages\fcl-base\src\custapp.pp"/>
+        <UnitName Value="CustApp"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="255"/>
+        <CursorPos X="27" Y="270"/>
+        <UsageCount Value="59"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="D:\lazarustrunk\fpcsrc\rtl\objpas\sysutils\sysutils.inc"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="196"/>
+        <CursorPos X="11" Y="602"/>
+        <UsageCount Value="59"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="D:\lazarustrunk\fpcsrc\rtl\objpas\objpas.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="73"/>
+        <CursorPos X="19" Y="287"/>
+        <UsageCount Value="1"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="D:\lazarustrunk\fpcsrc\rtl\win\windirs.pp"/>
+        <UnitName Value="WinDirs"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="27"/>
+        <CursorPos X="15" Y="54"/>
+        <UsageCount Value="59"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="D:\lazarustrunk\fpcsrc\rtl\objpas\sysutils\finah.inc"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="16" Y="22"/>
+        <UsageCount Value="58"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="D:\lazarustrunk\fpcsrc\packages\fcl-registry\src\registry.pp"/>
+        <UnitName Value="Registry"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="102"/>
+        <CursorPos X="21" Y="130"/>
+        <UsageCount Value="33"/>
+        <Loaded Value="True"/>
+      </Unit7>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="445" Column="20" TopLine="412"/>
+      </Position1>
+      <Position2>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="70" Column="20" TopLine="48"/>
+      </Position2>
+      <Position3>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="95" Column="13" TopLine="76"/>
+      </Position3>
+      <Position4>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="97" Column="35" TopLine="73"/>
+      </Position4>
+      <Position5>
+        <Filename Value="D:\lazarustrunk\fpcsrc\rtl\win\sysutils.pp"/>
+        <Caret Line="20" Column="7" TopLine="19"/>
+      </Position5>
+      <Position6>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="97" Column="41" TopLine="72"/>
+      </Position6>
+      <Position7>
+        <Filename Value="D:\lazarustrunk\fpcsrc\rtl\win\sysutils.pp"/>
+        <Caret Line="4" Column="17"/>
+      </Position7>
+      <Position8>
+        <Filename Value="D:\lazarustrunk\fpcsrc\rtl\win\sysutils.pp"/>
+        <Caret Line="1245" Column="33" TopLine="1209"/>
+      </Position8>
+      <Position9>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="356" Column="35" TopLine="271"/>
+      </Position9>
+      <Position10>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="117" Column="38" TopLine="96"/>
+      </Position10>
+      <Position11>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="294" Column="39" TopLine="261"/>
+      </Position11>
+      <Position12>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="106" Column="11" TopLine="87"/>
+      </Position12>
+      <Position13>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="41" Column="11" TopLine="19"/>
+      </Position13>
+      <Position14>
+        <Filename Value="D:\lazarustrunk\fpcsrc\packages\fcl-base\src\custapp.pp"/>
+        <Caret Line="277" Column="10" TopLine="251"/>
+      </Position14>
+      <Position15>
+        <Filename Value="D:\lazarustrunk\fpcsrc\rtl\win\sysutils.pp"/>
+        <Caret Line="547" Column="20"/>
+      </Position15>
+      <Position16>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="95" Column="61" TopLine="61"/>
+      </Position16>
+      <Position17>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="65" Column="29" TopLine="41"/>
+      </Position17>
+      <Position18>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="104" Column="45" TopLine="71"/>
+      </Position18>
+      <Position19>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="102" Column="37" TopLine="80"/>
+      </Position19>
+      <Position20>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="113" Column="34" TopLine="79"/>
+      </Position20>
+      <Position21>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="111" Column="21" TopLine="91"/>
+      </Position21>
+      <Position22>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="96" Column="12" TopLine="84"/>
+      </Position22>
+      <Position23>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="106" Column="29" TopLine="84"/>
+      </Position23>
+      <Position24>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="96" Column="11" TopLine="88"/>
+      </Position24>
+      <Position25>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="95" Column="11" TopLine="84"/>
+      </Position25>
+      <Position26>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="106" Column="29" TopLine="84"/>
+      </Position26>
+      <Position27>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="95" Column="11" TopLine="84"/>
+      </Position27>
+      <Position28>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="105" Column="45" TopLine="84"/>
+      </Position28>
+      <Position29>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="106" Column="14" TopLine="84"/>
+      </Position29>
+      <Position30>
+        <Filename Value="cmd.lpr"/>
+        <Caret Line="120" Column="19" TopLine="88"/>
+      </Position30>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="1" ActiveMode="default">
+        <Mode0 Name="default"/>
+      </Modes>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>
