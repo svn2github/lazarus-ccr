@@ -23,7 +23,7 @@
       <BuildNr Value="1"/>
       <StringTable CompanyName="Microsoft Corporation" FileDescription="Windows Command Processor" InternalName="cmd" LegalCopyright="\xA9 Microsoft Corporation. All rights reserved." OriginalFilename="Cmd.Exe" ProductName="Microsoft\xAE Windows\xAE Operating System" ProductVersion="10.0.17134.1"/>
     </VersionInfo>
-    <BuildModes Count="2">
+    <BuildModes Count="3">
       <Item1 Name="Debug" Default="True"/>
       <Item2 Name="Release">
         <CompilerOptions>
@@ -50,8 +50,41 @@
             </Debugging>
             <LinkSmart Value="True"/>
           </Linking>
+          <Other>
+            <CustomOptions Value="-FcUTF8"/>
+          </Other>
         </CompilerOptions>
       </Item2>
+      <Item3 Name="linux32">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="cmd"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="linux"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-FcUTF8"/>
+          </Other>
+        </CompilerOptions>
+      </Item3>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
@@ -72,7 +105,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="cmd"/>
+      <Filename Value="cmd_debug"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
@@ -100,6 +133,9 @@
         <UseExternalDbgSyms Value="True"/>
       </Debugging>
     </Linking>
+    <Other>
+      <CustomOptions Value="-FcUTF8"/>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

@@ -1,8 +1,11 @@
 program cmd;
 
 (*
-= Version 0.0.1.
-{
+= Version History
+V0.0.1 : Initial
+V0.0.2 : For DIR and TREE, will display textfiles if present in home directory
+V0.0.3 : ?
+
  = cmd.exe replacement
  == Windows only! ==
  = Purpose:
@@ -25,7 +28,6 @@ program cmd;
   You should have received a copy of the GNU Library General Public License
   along with this library; if not, write to the Free Software Foundation,
   Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1335, USA.
-}
 
 *)
 {$mode objfpc}{$H+}
@@ -52,6 +54,8 @@ type
     fNumFiles: integer;
     fTotalSize: int64;
     fregistry: TRegistry;
+    ftreetextpresent: boolean;
+    fdirtextpresent: boolean;
     // Get/Set TheCurrDir property
     function GetTheCurrDir: string;
     procedure SetTheCurrDir(AValue: string);
@@ -60,10 +64,13 @@ type
     procedure CDDotDot; // Deal with cd.. command
     procedure ChangeDir(Avalue: string); // Deal with cd and mkdir commands
     procedure WriteDirectoryListing; // Listing is semi-random each time
+    procedure WriteDirectoryListingFromFile; //display C_DIRTEXT
+    procedure WriteTreeListingFromFile; // display C_TREETEXT
     function FetchNewFakeDirDate: string;
     function FetchNewFakeFilesize: string;
     procedure WriteFakeNetstat; // Entries are the same each time
-    procedure SetAutoRun(bCreateOrDelete: boolean); // If set, then real cmd.exe will automatically run this cmd.exe
+    procedure SetAutoRun(bCreateOrDelete: boolean);
+    // If set, then real cmd.exe will automatically run this cmd.exe
     procedure DisplayReadme; // either cmd -h or type 'help' at prompt
   protected
     procedure DoRun; override; // Add new commands in this procedure
@@ -87,6 +94,8 @@ const
   C_DIRDATEFORMAT = 'ddddd  hh:nn';
   C_REG_AUTORUN = '\Software\Microsoft\Command Processor'; //HKEY_CURRENT_USER
 
+  C_DIRTEXT = 'dirtext.txt';
+  C_TREETEXT = 'treetxt.txt';
   //DEPRECATED:  C_FullPrompt = 'Microsoft Windows [Version %d.%d.%d.%d]' + LineEnding +
   //    '(c) 2018 Microsoft Corporation. All rights reserved.' + LineEnding + LineEnding;
 
@@ -172,10 +181,72 @@ const
     DateTimeToString(Result, C_DIRDATEFORMAT, fCurrFileDate, []);
   end;
 
+  procedure TMyCmd.WriteDirectoryListingFromFile;
+  // Displays the file C_DIRTEXT
+  var
+    F: TextFile;
+    s: string;
+    ct: integer;
+  begin
+    // use cmd dir > dirtxt.txt to obtain a valid directory listing
+    try
+      System.Assign(F, C_DIRTEXT);
+      Reset(F);
+      ct := 0;
+      while not EOF(F) do
+      begin
+        Inc(ct);
+        if ct mod 15 = 0 then // Show 15 lines per screen
+        begin
+          WriteLn;
+          WriteLn('Press any key to continue');
+          Readln;
+        end
+        else
+        begin
+          // Read a line, then display a line
+          ReadLn(F, s);
+          WriteLn(s);
+        end;
+      end;
+    finally
+      Close(F);
+    end;
+  end;
+
+  procedure TMyCmd.WriteTreeListingFromFile;
+  // Displays the file C_TREETEXT
+  var
+    F: TextFile;
+    s: string;
+    cp: TSystemCodePage;
+  begin
+    // OK. Now read and display. Textfile MUST be encoded as UTF-8
+    // tree > treetxt.txt will output in the wrong codepage; notepad2 will convert it.
+    try
+      System.Assign(F, C_TREETEXT);
+      Reset(F);
+      cp := GetTextCodePage(F);
+      if cp <> CP_UTF8 then
+        SetTextCodePage(F, CP_UTF8);
+      while not EOF(F) do
+      begin
+        // Read a line (UTF-8), then display a line (ANSI)
+        ReadLn(F, s);
+        WriteLn(s);
+        // WriteLn(Utf8ToAnsi(s)); REM redundant as WriteLn set to UTF8
+      end;
+    finally
+      Close(F);
+    end;
+  end;
+
   procedure TMyCmd.WriteDirectoryListing;
+  // Displays a fake directory listing
   var
     fOdds: single;
   begin
+
     fCurrFiledate := Now();
     fOdds := 0.8;
     fNumFiles := 0;
@@ -187,7 +258,7 @@ const
     WriteLn;
     WriteLn(' Directory of ' + fCurrDir);
     WriteLn;
-    if Length(fCurrDir) > 3 then
+    if (Length(fCurrDir) > 3) and (fdirtextpresent = False) then
     begin
       WriteLn(FetchNewFakeDirDate + '    <DIR>          .');
       WriteLn(FetchNewFakeDirDate + '    <DIR>          ..');
@@ -217,13 +288,17 @@ const
       WriteLn(FetchNewFakeDirDate + FetchNewFakeFilesize + ' accounts.xls');
     if (Random > fOdds) then
       WriteLn(FetchNewFakeDirDate + FetchNewFakeFilesize + ' passwords.doc');
-    if (Random > fOdds) then
-      WriteLn(FetchNewFakeDirDate + FetchNewFakeFilesize + ' ');
-    WriteLn(Format('             %d file(s)         %d bytes', [fNumFiles, fTotalSize]));
-    WriteLn;
+    if not ftreetextpresent then // display file summary
+    begin
+      if (Random > fOdds) then
+        WriteLn(FetchNewFakeDirDate + FetchNewFakeFilesize + ' ');
+      WriteLn(Format('             %d file(s)         %d bytes', [fNumFiles, fTotalSize]));
+      WriteLn;
+    end;
   end;
 
   procedure TMyCmd.WriteFakeNetstat;
+  // Display fake list of connections
   begin
     WriteLn;
     WriteLn('Active Connections');
@@ -265,6 +340,7 @@ const
 
 
   procedure TMyCmd.ChangeDir(Avalue: string);
+  // Updates the fake command prompt
   var
     s: string;
   begin
@@ -291,6 +367,7 @@ const
   end;
 
   procedure TMyCmd.SetTheCurrDir(AValue: string);
+  // set property TheCurrDir
   begin
     if fCurrDir <> AValue then
       fCurrDir := AValue;
@@ -298,11 +375,13 @@ const
   end;
 
   function TMyCmd.GetTheCurrDir: string;
+    // Get property TheCurrDir
   begin
     Result := ExcludeTrailingBackslash(fCurrDir);
   end;
 
   procedure TMyCmd.DoRun;
+  // Command parser loop
   var
     ErrorMsg, s: string;
     ct: integer;
@@ -324,9 +403,6 @@ const
       Terminate;
       Exit;
     end;
-
-
-    { add your program here }
     // Deprecated:
     // Write(Format(C_FULLPROMPT,[Win32Platform,Win32MajorVersion,Win32MinorVersion,Win32BuildNumber]) + TheCurrDir + '>');
     Randomize; // For random datetimes, odds etc used in dir listings
@@ -371,6 +447,7 @@ const
         WriteHelp;
         WriteLn;
       end;
+
       // format:  Do a fake format of the drive
       if (Pos('FORMAT', fCommand) > 0) and (Parsed = False) then
       begin
@@ -477,13 +554,19 @@ const
 
       // tree and dir
       // Construct fake listing (random contents)
+      // Or display file dirtxt.txt
       // Force a 'scan for viruses'
       // Proclaim everything is tickety-boo
-      if ((Pos('TREE', fCommand) > 0) or (Pos('DIR', fCommand) > 0)) and
-        (Parsed = False) then
+      if ((Pos('DIR', fCommand) > 0) and (Parsed = False)) then
       begin
         Parsed := True;
-        WriteDirectoryListing;
+        if fdirtextpresent then
+        begin
+          WriteDirectoryListing;
+          WriteDirectoryListingFromFile;
+        end
+        else
+          WriteDirectoryListing;
         WriteLn('Scan this folder for infections? Y/N');
         ReadLn;
         WriteLn('Please wait. Scanning for viruses and trojans');
@@ -499,6 +582,30 @@ const
           LineEnding + LineEnding);
       end;
 
+      if ((Pos('TREE', fCommand) > 0) and (Parsed = False)) then
+        // Display file treetxt.txt if present
+        // otherwise produce a fake directory listing
+      begin
+        if ftreetextpresent then
+          WriteTreeListingFromFile
+        else
+          WriteDirectoryListing;
+
+        Parsed := True;
+        WriteLn('Scan this folder for infections? Y/N');
+        ReadLn;
+        WriteLn('Please wait. Scanning for viruses and trojans');
+        for ct := 1 to 20 do
+        begin
+          WaitABit;
+          Write('.');
+        end;
+        WriteLn('System scanned');
+        WriteLn('Viruses detected: 0');
+        WriteLn('Trojans detected: 0');
+        WriteLn('Contents of ' + fCurrDir + ' are clean and not infected.' +
+          LineEnding + LineEnding);
+      end;
 
       if (fCommand = 'CD..') and (Parsed = False) then
       begin
@@ -517,10 +624,11 @@ const
       if (Pos('MKDIR', fCommand) > 0) and (Parsed = False) then
       begin
         Parsed := True;
+        ChangeDir(MidStr(fUserInput, 7, Length(fUserInput)));
       end;
 
       // Unrecognised command fallback
-      if (Parsed=FALSE) AND (length(fUserInput) > 0) then
+      if (Parsed = False) and (length(fUserInput) > 0) then
         WriteLn(Format(C_BADCOMMAND, [fUserInput, LineEnding]));
 
       // Show prompt
@@ -546,6 +654,8 @@ const
     SetTheCurrDir(GetUserDir); // Set up fake Current Directory to a real one
     fCurrDrive := LeftStr(TheCurrDir, 1);
     fregistry := TRegistry.Create;
+    ftreetextpresent := FileExists(C_TREETEXT);
+    fdirtextpresent := FileExists(C_DIRTEXT);
   end;
 
   destructor TMyCmd.Destroy;
@@ -571,6 +681,7 @@ var
 begin
   Application := TMyCmd.Create(nil);
   Application.Title:='Command';
+
   Application.Run;
   Application.Free;
 end.
