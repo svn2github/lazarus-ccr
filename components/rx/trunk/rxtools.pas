@@ -9,7 +9,7 @@ interface
 
 uses
   rxCRC, rxConfigValues, rxconst, rxdateutil, rxdconst, rxFileUtils, 
-  rxstrutils, rxutils, LazarusPackageIntf;
+  rxstrutils, rxutils, RxTextHolder, LazarusPackageIntf;
 
 implementation
 

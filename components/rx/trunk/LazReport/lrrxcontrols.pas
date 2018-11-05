@@ -559,6 +559,7 @@ function DoFillDone:string;
 var
   i:integer;
 begin
+  Result:='';
   for i:=0 to DualListDialog1.List2.Count-1 do
     Result:=Result + DualListDialog1.List2[i]+';';
   if Result<>'' then

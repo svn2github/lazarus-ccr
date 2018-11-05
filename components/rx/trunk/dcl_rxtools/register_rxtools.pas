@@ -1,4 +1,4 @@
-{ RegisterRxTools unit
+{ register_rxtools
 
   Copyright (C) 2005-2018 Lagunov Aleksey alexs75@yandex.ru and Lazarus team
   original conception from rx library for Delphi (c)
@@ -28,68 +28,70 @@
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
+unit register_rxtools;
 
-unit RegisterRxTools;
-
-{$I rx.inc}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, LResources, LazarusPackageIntf;
+  Classes, SysUtils;
 
 procedure Register;
-
 implementation
-uses RxSystemServices, RxLogin, RxVersInfo, RxCloseFormValidator, RxIniPropStorage, RxXMLPropStorage, RxPopupNotifier;
+uses LazarusPackageIntf, RxTextHolder, ComponentEditors, RxTextHolder_Editor,
+  rxconst;
 
 const
   sRxToolsPage = 'RX Tools';
 
-procedure RegisterRxSystemServices;
-begin
-  RegisterComponents(sRxToolsPage, [TRxSystemServices]);
-end;
+type
 
-procedure RegisterRxLogin;
-begin
-  RegisterComponents(sRxToolsPage, [TRxLoginDialog]);
-end;
+  { TRxTextHolderEditor }
 
-procedure RegisterRxVersInfo;
-begin
-  RegisterComponents(sRxToolsPage, [TRxVersionInfo]);
-end;
+  TRxTextHolderEditor = class(TComponentEditor)
+  public
+    function GetVerbCount:integer;override;
+    function GetVerb(Index:integer):string;override;
+    procedure ExecuteVerb(Index:integer);override;
+  end;
 
-procedure RegisterCloseFormValidator;
+procedure RegisterRxTextHolder;
 begin
-  RegisterComponents(sRxToolsPage,[TRxCloseFormValidator]);
-end;
-
-procedure RegisterRxIniPropStorage;
-begin
-  RegisterComponents(sRxToolsPage,[TRxIniPropStorage]);
-end;
-
-procedure RegisterRxXMLPropStorage;
-begin
-  RegisterComponents(sRxToolsPage,[TRxXMLPropStorage]);
-end;
-
-procedure RegisterRxPopupNotifier;
-begin
-  RegisterComponents(sRxToolsPage,[TRxPopupNotifier]);
+  RegisterComponents(sRxToolsPage,[TRxTextHolder]);
+  RegisterComponentEditor(TRxTextHolder, TRxTextHolderEditor);
 end;
 
 procedure Register;
 begin
-  RegisterUnit('RxLogin', @RegisterRxLogin);
-  RegisterUnit('RxVersInfo', @RegisterRxVersInfo);
-  RegisterUnit('RxSystemServices', @RegisterRxSystemServices);
-  RegisterUnit('RxCloseFormValidator', @RegisterCloseFormValidator);
-  RegisterUnit('RxIniPropStorage', @RegisterRxIniPropStorage);
-  RegisterUnit('RxXMLPropStorage', @RegisterRxXMLPropStorage);
-  RegisterUnit('RxPopupNotifier', @RegisterRxPopupNotifier);
+  RegisterUnit('RxTextHolder', @RegisterRxTextHolder);
+end;
+
+{ TRxTextHolderEditor }
+
+function TRxTextHolderEditor.GetVerbCount: integer;
+begin
+  Result:=1;
+end;
+
+function TRxTextHolderEditor.GetVerb(Index: integer): string;
+begin
+  case Index of
+    0:Result:=sRxTextHolderTextEditor;
+  else
+    Result:='';
+  end;
+end;
+
+procedure TRxTextHolderEditor.ExecuteVerb(Index: integer);
+begin
+  if Index = 0 then
+  begin
+    if ShowRxTextHolderEditorForm(Component as TRxTextHolder) then
+      Modified;
+  end
+  else
+    inherited ExecuteVerb(Index);
 end;
 
 end.

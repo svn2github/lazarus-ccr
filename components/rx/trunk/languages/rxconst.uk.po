@@ -192,6 +192,26 @@ msgstr "Попередній місяць|"
 msgid "Error. Expected value for field %s."
 msgstr "Поле %s. Вимагається значення"
 
+#: rxconst.srxtextholderadd
+msgid "Add"
+msgstr ""
+
+#: rxconst.srxtextholdereditor
+msgid "RxTextHolder editor"
+msgstr ""
+
+#: rxconst.srxtextholderremove
+msgid "Remove"
+msgstr ""
+
+#: rxconst.srxtextholdertextcaption
+msgid "Caption"
+msgstr ""
+
+#: rxconst.srxtextholdertexteditor
+msgid "Rx text holder editor"
+msgstr ""
+
 #: rxconst.ssecondhalfofyear
 msgid "Second half of year"
 msgstr ""

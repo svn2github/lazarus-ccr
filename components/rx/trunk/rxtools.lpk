@@ -14,8 +14,8 @@
     <Description Value="
 "/>
     <License Value="LGPL"/>
-    <Version Minor="3" Build="6"/>
-    <Files Count="9">
+    <Version Minor="4" Build="6"/>
+    <Files Count="10">
       <Item1>
         <Filename Value="rxtools/rxcrc.pas"/>
         <UnitName Value="rxCRC"/>
@@ -51,6 +51,10 @@
         <Filename Value="rxtools/rxutils.pas"/>
         <UnitName Value="rxutils"/>
       </Item9>
+      <Item10>
+        <Filename Value="rxtools/rxtextholder.pas"/>
+        <UnitName Value="RxTextHolder"/>
+      </Item10>
     </Files>
     <LazDoc Paths="docs;/usr/local/share/lazarus/components/rxnew/docs"/>
     <i18n>

@@ -177,6 +177,26 @@ msgstr "Превыдущий год|"
 msgid "Error. Expected value for field %s."
 msgstr "Поле %s. Требуется значение"
 
+#: rxconst.srxtextholderadd
+msgid "Add"
+msgstr "Добавить"
+
+#: rxconst.srxtextholdereditor
+msgid "RxTextHolder editor"
+msgstr "Редактор RxTextHolder"
+
+#: rxconst.srxtextholderremove
+msgid "Remove"
+msgstr "Удалить"
+
+#: rxconst.srxtextholdertextcaption
+msgid "Caption"
+msgstr "Название"
+
+#: rxconst.srxtextholdertexteditor
+msgid "Rx text holder editor"
+msgstr "Редактор RxTextHolder"
+
 #: rxconst.ssecondhalfofyear
 msgid "Second half of year"
 msgstr "Вторая половина года"
