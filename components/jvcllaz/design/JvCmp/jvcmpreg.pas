@@ -15,7 +15,7 @@ implementation
 
 uses
   Classes, PropEdits, ComponentEditors,
-  JvDsgnConsts, //JvDsgnEditors,
+  JvDsgnConsts,
   JvStringHolder, JvSpellChecker,
   JvStrHolderEditor;
 
