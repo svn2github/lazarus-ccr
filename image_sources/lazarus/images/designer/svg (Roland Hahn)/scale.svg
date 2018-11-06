@@ -24,18 +24,6 @@
   <defs
      id="defs4">
     <linearGradient
-       inkscape:collect="always"
-       id="linearGradient903">
-      <stop
-         style="stop-color:#aaccff;stop-opacity:1"
-         offset="0"
-         id="stop899" />
-      <stop
-         style="stop-color:#84a3df;stop-opacity:1"
-         offset="1"
-         id="stop901" />
-    </linearGradient>
-    <linearGradient
        id="linearGradient891"
        inkscape:collect="always">
       <stop
@@ -49,24 +37,36 @@
     </linearGradient>
     <linearGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient903"
-       id="linearGradient875"
+       id="linearGradient903-9">
+      <stop
+         style="stop-color:#b9d6ff;stop-opacity:1"
+         offset="0"
+         id="stop899-3" />
+      <stop
+         style="stop-color:#84a3df;stop-opacity:1"
+         offset="1"
+         id="stop901-6" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient903-9"
+       id="linearGradient875-1"
        gradientUnits="userSpaceOnUse"
-       x1="-13"
-       y1="9"
-       x2="-8"
-       y2="13"
-       gradientTransform="translate(16,-7)" />
+       x1="-12.90909"
+       y1="9.318182"
+       x2="-7.8181815"
+       y2="13.681818"
+       gradientTransform="matrix(1,0,0,1.1666666,16,-8.416667)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient891"
-       id="linearGradient877"
+       id="linearGradient877-7"
        gradientUnits="userSpaceOnUse"
        x1="-7.5"
        y1="14.5"
        x2="-14.5"
        y2="8.5"
-       gradientTransform="translate(16,-7)" />
+       gradientTransform="matrix(1,0,0,1.1666666,16,-8.416667)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -142,17 +142,10 @@
       <path
          inkscape:connector-curvature="0"
          id="path887"
-         d="M 12,12 8.5,8.5"
+         d="M 12,12 9,9"
          style="fill:none;fill-rule:evenodd;stroke:#666666;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          sodipodi:nodetypes="cc" />
     </g>
-    <rect
-       y="1.5"
-       x="1.5"
-       height="6"
-       width="7"
-       id="rect860"
-       style="opacity:1;fill:url(#linearGradient875);fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient877);stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.97647059;paint-order:normal" />
     <g
        id="g976">
       <path
@@ -236,5 +229,12 @@
          d="M 4,8.5 H 5"
          style="fill:none;fill-rule:evenodd;stroke:#808080;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
+    <rect
+       y="1.5"
+       x="1.5"
+       height="7"
+       width="7"
+       id="rect860-0"
+       style="opacity:1;fill:url(#linearGradient875-1);fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient877-7);stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.97647059;paint-order:normal" />
   </g>
 </svg>
