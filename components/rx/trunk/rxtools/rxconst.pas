@@ -140,6 +140,7 @@ resourcestring
   sRxTextHolderTextCaption      = 'Caption';
   sRxTextHolderAdd              = 'Add';
   sRxTextHolderRemove           = 'Remove';
+  sRxTextFolderItem             = 'Item ';
 
 implementation
 

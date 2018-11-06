@@ -12,7 +12,7 @@
       </SearchPaths>
     </CompilerOptions>
     <License Value="LGPL 2"/>
-    <Version Release="1" Build="1"/>
+    <Version Release="1" Build="2"/>
     <Files Count="2">
       <Item1>
         <Filename Value="dcl_rxtools/register_rxtools.pas"/>

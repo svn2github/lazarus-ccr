@@ -192,6 +192,10 @@ msgstr "Попередній місяць|"
 msgid "Error. Expected value for field %s."
 msgstr "Поле %s. Вимагається значення"
 
+#: rxconst.srxtextfolderitem
+msgid "Item "
+msgstr ""
+
 #: rxconst.srxtextholderadd
 msgid "Add"
 msgstr ""

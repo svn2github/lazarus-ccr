@@ -179,6 +179,10 @@ msgstr "Anterior A?o|"
 msgid "Error. Expected value for field %s."
 msgstr ""
 
+#: rxconst.srxtextfolderitem
+msgid "Item "
+msgstr ""
+
 #: rxconst.srxtextholderadd
 msgid "Add"
 msgstr ""

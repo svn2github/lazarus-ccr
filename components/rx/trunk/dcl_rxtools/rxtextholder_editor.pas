@@ -36,7 +36,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ButtonPanel, ExtCtrls,
-  StdCtrls, Menus, Buttons, ActnList, ListFilterEdit, RxTextHolder;
+  StdCtrls, Menus, Buttons, ActnList, RxTextHolder;
 
 type
 
@@ -74,7 +74,7 @@ type
     procedure UpdateTextNames;
     procedure Localize;
     procedure UpdateCtrlState;
-    function MakeItemName:string;
+    function MakeItemName(ABaseName:string):string;
   public
 
   end;
@@ -110,8 +110,14 @@ begin
 end;
 
 procedure TRxTextHolder_EditorForm.itemAddExecute(Sender: TObject);
+var
+  S: String;
 begin
-  FCurrentItem:=FTextHolder.Items.Add(MakeItemName);
+  if Assigned(FCurrentItem) then
+    S:=FCurrentItem.Caption
+  else
+    S:='';
+  FCurrentItem:=FTextHolder.Items.Add(MakeItemName(S));
   ListBox1.Items.Add(FCurrentItem.Caption);
   ListBox1.ItemIndex:=ListBox1.Items.Count-1;
   ListBox1Click(nil);
@@ -216,14 +222,31 @@ begin
   Memo1.Enabled:=Assigned(FCurrentItem);
 end;
 
-function TRxTextHolder_EditorForm.MakeItemName: string;
+function TRxTextHolder_EditorForm.MakeItemName(ABaseName: string): string;
 var
   i: Integer;
+  FBaseName, S: String;
 begin
+  FBaseName:=sRxTextFolderItem;
   i:=0;
+  if ABaseName <> '' then
+  begin
+    S:='';
+    for i:=Length(ABaseName) downto 1 do
+      if ABaseName[i] in ['0'..'9'] then
+        S:=ABaseName[i] + S
+      else
+        Break;
+    if S<>'' then
+    begin
+      i:=StrToIntDef(S, 0);
+      FBaseName:=Copy(ABaseName, 1, Length(ABaseName) - Length(S));
+    end;
+  end;
+
   repeat
     Inc(i);
-    Result:='Item '+IntToStr(i);
+    Result:=FBaseName+IntToStr(i);
   until (FTextHolder.IndexByName(Result) = -1);
 end;
 

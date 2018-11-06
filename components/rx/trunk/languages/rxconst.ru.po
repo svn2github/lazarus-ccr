@@ -55,7 +55,7 @@ msgstr "Закрыть все окна"
 
 #: rxconst.sclosemessagehint
 msgid "Close message"
-msgstr ""
+msgstr "Закрыть сообщение"
 
 #: rxconst.sclosevaliderror
 msgid "Error. Expected values..."
@@ -91,7 +91,7 @@ msgstr "Источник"
 
 #: rxconst.serrorlinkedtaskpanel
 msgid "Not assigned task panel"
-msgstr ""
+msgstr "Не указана панель задач"
 
 #: rxconst.sexptcontrolnotfound
 msgid "Control not found in validate %s."
@@ -177,6 +177,10 @@ msgstr "Превыдущий год|"
 msgid "Error. Expected value for field %s."
 msgstr "Поле %s. Требуется значение"
 
+#: rxconst.srxtextfolderitem
+msgid "Item "
+msgstr "Строка "
+
 #: rxconst.srxtextholderadd
 msgid "Add"
 msgstr "Добавить"
@@ -255,23 +259,23 @@ msgstr "Прозрачно"
 
 #: rxconst.svariableisnotboolean
 msgid "Variable %s is not boolean"
-msgstr ""
+msgstr "Переменная %s не логического типа"
 
 #: rxconst.svariableisnotdt
 msgid "Variable %s is not date/time"
-msgstr ""
+msgstr "Переменная %s не дата/время"
 
 #: rxconst.svariableisnotfloat
 msgid "Variable %s is not float"
-msgstr ""
+msgstr "Переменная %s не число"
 
 #: rxconst.svariableisnotinteger
 msgid "Variable %s is not integer"
-msgstr ""
+msgstr "Переменная %s не целое число"
 
 #: rxconst.svariableisnotstring
 msgid "Variable %s is not string"
-msgstr ""
+msgstr "Переменная %s не строка"
 
 #: rxconst.svisiblebuttons
 msgid "Visible buttons"

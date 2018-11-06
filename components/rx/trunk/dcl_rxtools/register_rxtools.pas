@@ -42,9 +42,6 @@ implementation
 uses LazarusPackageIntf, RxTextHolder, ComponentEditors, RxTextHolder_Editor,
   rxconst;
 
-const
-  sRxToolsPage = 'RX Tools';
-
 type
 
   { TRxTextHolderEditor }
