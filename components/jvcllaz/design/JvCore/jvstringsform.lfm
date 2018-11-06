@@ -84,6 +84,7 @@ object JvStrEditDlg: TJvStrEditDlg
     Top = 245
     Width = 75
     Anchors = [akTop, akRight]
+    AutoSize = True
     BorderSpacing.Right = 4
     Caption = 'OK'
     Constraints.MinWidth = 75
@@ -99,6 +100,7 @@ object JvStrEditDlg: TJvStrEditDlg
     Top = 245
     Width = 75
     Anchors = [akTop, akRight]
+    AutoSize = True
     BorderSpacing.Right = 4
     Cancel = True
     Caption = 'Cancel'
@@ -115,6 +117,7 @@ object JvStrEditDlg: TJvStrEditDlg
     Top = 245
     Width = 75
     Anchors = [akTop, akRight]
+    AutoSize = True
     BorderSpacing.Right = 8
     Caption = '&Help'
     Constraints.MinWidth = 75
@@ -130,6 +133,7 @@ object JvStrEditDlg: TJvStrEditDlg
     Top = 245
     Width = 75
     Anchors = [akLeft, akBottom]
+    AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Bottom = 4
     Caption = '&Load...'
@@ -145,6 +149,7 @@ object JvStrEditDlg: TJvStrEditDlg
     Height = 25
     Top = 245
     Width = 75
+    AutoSize = True
     BorderSpacing.Left = 4
     Caption = '&Save...'
     Constraints.MinWidth = 75
