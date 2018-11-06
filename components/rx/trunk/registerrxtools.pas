@@ -41,7 +41,8 @@ uses
 procedure Register;
 
 implementation
-uses RxSystemServices, RxLogin, RxVersInfo, RxCloseFormValidator, RxIniPropStorage, RxXMLPropStorage, RxPopupNotifier;
+uses RxSystemServices, RxLogin, RxVersInfo, RxCloseFormValidator, RxIniPropStorage, RxXMLPropStorage, RxPopupNotifier,
+  RxTextHolder;
 
 const
   sRxToolsPage = 'RX Tools';
@@ -81,6 +82,11 @@ begin
   RegisterComponents(sRxToolsPage,[TRxPopupNotifier]);
 end;
 
+procedure RegisterRxTextHolder;
+begin
+  RegisterComponents(sRxToolsPage,[TRxTextHolder]);
+end;
+
 procedure Register;
 begin
   RegisterUnit('RxLogin', @RegisterRxLogin);
@@ -90,6 +96,7 @@ begin
   RegisterUnit('RxIniPropStorage', @RegisterRxIniPropStorage);
   RegisterUnit('RxXMLPropStorage', @RegisterRxXMLPropStorage);
   RegisterUnit('RxPopupNotifier', @RegisterRxPopupNotifier);
+  RegisterUnit('RxTextHolder', @RegisterRxTextHolder);
 end;
 
 end.

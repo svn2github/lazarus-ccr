@@ -6,12 +6,14 @@ object RxTextHolder_EditorForm: TRxTextHolder_EditorForm
   Caption = 'RxTextHolder'
   ClientHeight = 592
   ClientWidth = 806
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  Position = poScreenCenter
   LCLVersion = '2.1.0.0'
   object ButtonPanel1: TButtonPanel
     Left = 6
-    Height = 42
-    Top = 544
+    Height = 46
+    Top = 540
     Width = 794
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
@@ -26,11 +28,11 @@ object RxTextHolder_EditorForm: TRxTextHolder_EditorForm
   end
   object Panel1: TPanel
     Left = 0
-    Height = 538
+    Height = 534
     Top = 0
     Width = 170
     Align = alLeft
-    ClientHeight = 538
+    ClientHeight = 534
     ClientWidth = 170
     TabOrder = 1
     object ListBox1: TListBox
@@ -40,7 +42,7 @@ object RxTextHolder_EditorForm: TRxTextHolder_EditorForm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = BitBtn1
       Left = 1
-      Height = 507
+      Height = 496
       Top = 1
       Width = 168
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -58,8 +60,8 @@ object RxTextHolder_EditorForm: TRxTextHolder_EditorForm
       AnchorSideBottom.Control = Panel1
       AnchorSideBottom.Side = asrBottom
       Left = 1
-      Height = 29
-      Top = 508
+      Height = 36
+      Top = 497
       Width = 84
       Action = itemAdd
       Anchors = [akLeft, akRight, akBottom]
@@ -73,11 +75,12 @@ object RxTextHolder_EditorForm: TRxTextHolder_EditorForm
       AnchorSideBottom.Control = Panel1
       AnchorSideBottom.Side = asrBottom
       Left = 85
-      Height = 30
-      Top = 507
+      Height = 36
+      Top = 497
       Width = 84
       Action = itemRemove
       Anchors = [akLeft, akRight, akBottom]
+      AutoSize = True
       TabOrder = 2
     end
     object CLabel1: TLabel
@@ -93,17 +96,17 @@ object RxTextHolder_EditorForm: TRxTextHolder_EditorForm
   end
   object Splitter1: TSplitter
     Left = 170
-    Height = 538
+    Height = 534
     Top = 0
     Width = 5
   end
   object Panel2: TPanel
     Left = 175
-    Height = 538
+    Height = 534
     Top = 0
     Width = 631
     Align = alClient
-    ClientHeight = 538
+    ClientHeight = 534
     ClientWidth = 631
     TabOrder = 3
     object Edit1: TEdit
@@ -112,10 +115,10 @@ object RxTextHolder_EditorForm: TRxTextHolder_EditorForm
       AnchorSideTop.Control = Panel2
       AnchorSideRight.Control = Panel2
       AnchorSideRight.Side = asrBottom
-      Left = 57
-      Height = 27
+      Left = 55
+      Height = 37
       Top = 1
-      Width = 573
+      Width = 575
       Anchors = [akTop, akLeft, akRight]
       OnExit = Edit1Exit
       TabOrder = 0
@@ -125,9 +128,9 @@ object RxTextHolder_EditorForm: TRxTextHolder_EditorForm
       AnchorSideBottom.Control = Edit1
       AnchorSideBottom.Side = asrBottom
       Left = 1
-      Height = 17
-      Top = 11
-      Width = 50
+      Height = 20
+      Top = 18
+      Width = 48
       Anchors = [akLeft, akBottom]
       BorderSpacing.Right = 6
       Caption = 'Caption'
@@ -142,8 +145,8 @@ object RxTextHolder_EditorForm: TRxTextHolder_EditorForm
       AnchorSideBottom.Control = Panel2
       AnchorSideBottom.Side = asrBottom
       Left = 1
-      Height = 509
-      Top = 28
+      Height = 495
+      Top = 38
       Width = 629
       Anchors = [akTop, akLeft, akRight, akBottom]
       Lines.Strings = (

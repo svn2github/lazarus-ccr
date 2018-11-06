@@ -58,7 +58,6 @@ type
 
 procedure RegisterRxTextHolder;
 begin
-  RegisterComponents(sRxToolsPage,[TRxTextHolder]);
   RegisterComponentEditor(TRxTextHolder, TRxTextHolderEditor);
 end;
 

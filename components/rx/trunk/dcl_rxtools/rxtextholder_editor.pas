@@ -61,6 +61,7 @@ type
     PopupMenu1: TPopupMenu;
     Splitter1: TSplitter;
     procedure Edit1Exit(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure itemAddExecute(Sender: TObject);
     procedure itemRemoveExecute(Sender: TObject);
@@ -138,6 +139,16 @@ begin
   begin
     FCurrentItem.Caption:=Edit1.Text;
     ListBox1.Items[ListBox1.ItemIndex]:=Edit1.Text;
+  end;
+end;
+
+procedure TRxTextHolder_EditorForm.FormCloseQuery(Sender: TObject;
+  var CanClose: boolean);
+begin
+  if ModalResult = mrOk then
+  begin
+    Edit1Exit(nil);
+    Memo1Exit(nil);
   end;
 end;
 
