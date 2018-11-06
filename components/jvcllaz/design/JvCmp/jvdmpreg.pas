@@ -14,17 +14,18 @@ implementation
 {$R ../../resource/jvcmpreg.res}
 
 uses
-  Classes, PropEdits,
-  JvDsgnConsts,
-//  JvEnterTab,
-  JvSpellChecker;
+  Classes, PropEdits, ComponentEditors,
+  JvDsgnConsts, //JvDsgnEditors,
+  JvStringHolder, JvSpellChecker,
+  JvStrHolderEditor;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
-//    TJvEnterAsTab,
+    TJvStrHolder, TJvMultiStringHolder,
     TJvSpellChecker
   ]);
+  RegisterComponentEditor(TJvStrHolder, TJvStrHolderEditor);
 end;
 
 end.

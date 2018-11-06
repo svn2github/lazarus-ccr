@@ -1,0 +1,167 @@
+object JvStrEditDlg: TJvStrEditDlg
+  Left = 381
+  Height = 274
+  Top = 76
+  Width = 430
+  ActiveControl = Memo
+  BorderIcons = [biSystemMenu]
+  Caption = 'String list editor'
+  ClientHeight = 274
+  ClientWidth = 430
+  Color = clBtnFace
+  Font.Color = clBlack
+  Icon.Data = {
+    3E01000000000100010010101000010010002801000016000000280000001000
+    0000200000000100040000000000C00000000000000000000000000000000000
+    000000000000000080000080000000808000800000008000800080800000C0C0
+    C000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFF
+    FF00000000000000000000000BBBB0000000000BB000BB000000000BB0000B00
+    0000000BBB000BB00000000BBB000BB00000000000000BB00000000000000BB0
+    0000000000000BB00000000000000BB00000000000000BB00000000000000BB0
+    0000000000000BB0000000000000BBBB00000000000BBBBBB000000000000000
+    0000FFFF0000F87F0000E73F0000E7BF0000E39F0000E39F0000FF9F0000FF9F
+    0000FF9F0000FF9F0000FF9F0000FF9F0000FF9F0000FF0F0000FE070000FFFF
+    0000
+  }
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  object BevelBorder: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = LoadBtn
+    Left = 8
+    Height = 229
+    Top = 8
+    Width = 414
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Shape = bsFrame
+  end
+  object LineCount: TLabel
+    AnchorSideLeft.Control = BevelBorder
+    AnchorSideTop.Control = BevelBorder
+    Left = 16
+    Height = 17
+    Top = 12
+    Width = 169
+    AutoSize = False
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 4
+    Caption = '0 lines'
+    ParentColor = False
+  end
+  object Memo: TMemo
+    AnchorSideLeft.Control = BevelBorder
+    AnchorSideTop.Control = LineCount
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = BevelBorder
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = BevelBorder
+    AnchorSideBottom.Side = asrBottom
+    Left = 16
+    Height = 200
+    Top = 29
+    Width = 398
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    OnChange = UpdateStatus
+    OnKeyDown = MemoKeyDown
+    ScrollBars = ssBoth
+    TabOrder = 0
+  end
+  object OKBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    Left = 189
+    Height = 25
+    Top = 245
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 4
+    Caption = 'OK'
+    Constraints.MinWidth = 75
+    Default = True
+    ModalResult = 1
+    TabOrder = 3
+  end
+  object CancelBtn: TButton
+    AnchorSideTop.Control = LoadBtn
+    AnchorSideRight.Control = HelpBtn
+    Left = 268
+    Height = 25
+    Top = 245
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 4
+    Cancel = True
+    Caption = 'Cancel'
+    Constraints.MinWidth = 75
+    ModalResult = 2
+    TabOrder = 4
+  end
+  object HelpBtn: TButton
+    AnchorSideTop.Control = LoadBtn
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 347
+    Height = 25
+    Top = 245
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = '&Help'
+    Constraints.MinWidth = 75
+    OnClick = HelpBtnClick
+    TabOrder = 5
+  end
+  object LoadBtn: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 25
+    Top = 245
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Bottom = 4
+    Caption = '&Load...'
+    Constraints.MinWidth = 75
+    OnClick = FileOpen
+    TabOrder = 1
+  end
+  object SaveBtn: TButton
+    AnchorSideLeft.Control = LoadBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = LoadBtn
+    Left = 87
+    Height = 25
+    Top = 245
+    Width = 75
+    BorderSpacing.Left = 4
+    Caption = '&Save...'
+    Constraints.MinWidth = 75
+    OnClick = FileSave
+    TabOrder = 2
+  end
+  object OpenDialog: TOpenDialog
+    Title = 'Load string list'
+    DefaultExt = '.TXT'
+    Filter = 'Text files (*.TXT)|*.TXT|Config files (*.SYS;*.INI)|*.SYS;*.INI|Batch files (*.BAT)|*.BAT|All files (*.*)|*.*'
+    Options = [ofHideReadOnly, ofShowHelp, ofPathMustExist, ofFileMustExist]
+    left = 292
+  end
+  object SaveDialog: TSaveDialog
+    Title = 'Save string list'
+    Filter = 'Text files (*.TXT)|*.TXT|Config files (*.SYS;*.INI)|*.SYS;*.INI|Batch files (*.BAT)|*.BAT|All files (*.*)|*.*'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofShowHelp, ofPathMustExist]
+    left = 360
+  end
+end

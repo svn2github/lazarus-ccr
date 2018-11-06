@@ -1,2 +1,3 @@
+tjvstrholder.bmp
+tjvmultistringholder.bmp
 tjvspellchecker.bmp
-tjventerastab.bmp

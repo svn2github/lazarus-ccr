@@ -17,7 +17,7 @@
     <Description Value="JVCL Core Components (Designtime). Must be installed before any of the other JvXXX packages can be installed."/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
-    <Files Count="2">
+    <Files Count="3">
       <Item1>
         <Filename Value="..\design\JvCore\JvCoreReg.pas"/>
         <UnitName Value="JvCoreReg"/>
@@ -26,14 +26,21 @@
         <Filename Value="..\design\JvCore\JvDsgnConsts.pas"/>
         <UnitName Value="JvDsgnConsts"/>
       </Item2>
+      <Item3>
+        <Filename Value="..\design\JvCore\jvstringsform.pas"/>
+        <UnitName Value="JvStringsForm"/>
+      </Item3>
     </Files>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="3">
       <Item1>
-        <PackageName Value="JvCoreLazR"/>
+        <PackageName Value="IDEIntf"/>
       </Item1>
       <Item2>
-        <PackageName Value="FCL"/>
+        <PackageName Value="JvCoreLazR"/>
       </Item2>
+      <Item3>
+        <PackageName Value="FCL"/>
+      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

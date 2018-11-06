@@ -658,10 +658,15 @@ function FindPart(const HelpWilds, InputStr: string): Integer;
 function IsWild(InputStr, Wilds: string; IgnoreCase: Boolean): Boolean;
 { IsWild compares InputString with WildCard string and returns True
   if corresponds. }
-function XorString(const Key, Src: ShortString): ShortString;
-function XorEncode(const Key, Source: string): string;
-function XorDecode(const Key, Source: string): string;
+  *)
 
+function XorString(const Key, Src: ShortString): ShortString;
+function XorEncode(const Key, Source: string): string; deprecated 'use XorEncodeString that has support for non-ASCII chars';
+function XorDecode(const Key, Source: string): string; deprecated 'use XorDecodeString that has support for non-ASCII chars';
+function XorEncodeString(const Key, Source: string): string;
+function XorDecodeString(const Key, Source: string): string;
+
+(*
 { ** Command line routines ** }
 
 function GetCmdLineArg(const Switch: string; ASwitchChars: TSysCharSet): string;
@@ -6546,6 +6551,7 @@ begin
   if (CWild <= MaxWilds) and (Wilds[MaxWilds] <> '*') then
     Result := False;
 end;
+               *)
 
 function XorString(const Key, Src: ShortString): ShortString;
 var
@@ -6592,6 +6598,70 @@ begin
   end;
 end;
 
+function XorEncodeString(const Key, Source: string): string;
+const
+  HexChars: array[0..15] of Char =
+    ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+var
+  I, KeyLen: Integer;
+  C: Byte;
+  Utf8Src, Utf8Key: UTF8String;
+begin
+  Result := '';
+  Utf8Src := UTF8Encode(Source);
+  Utf8Key := UTF8Encode(Key);
+  KeyLen := Length(Utf8Key);
+  SetLength(Result, Length(Utf8Src) * 2);
+  for I := 1 to Length(Utf8Src) do
+  begin
+    if KeyLen > 0 then
+      C := Byte(Utf8Src[I]) xor Byte(Utf8Key[1 + ((I - 1) mod KeyLen)])
+    else
+      C := Byte(Utf8Src[I]);
+    Result[1 + (I - 1) * 2] := HexChars[C shr 4];
+    Result[1 + (I - 1) * 2 + 1] := HexChars[C and $0F];
+  end;
+end;
+
+function XorDecodeString(const Key, Source: string): string;
+var
+  I, KeyLen: Integer;
+  C: Char;
+  B: Byte;
+  Utf8Result, Utf8Key: UTF8String;
+begin
+  Result := '';
+  Utf8Key := UTF8Encode(Key);
+  KeyLen := Length(Utf8Key);
+  SetLength(Utf8Result, Length(Source) div 2);
+  for I := 0 to Length(Source) div 2 - 1 do
+  begin
+    // HexToInt
+    C := Source[1 + I * 2];
+    case C of
+      '0'..'9': B := Ord(C) - Ord('0');
+      'A'..'F': B := Ord(C) - 55;
+      'a'..'f': B := Ord(C) - 87;
+    else
+      B := Ord(' ');
+    end;
+    B := B shl 4;
+    C := Source[1 + I * 2 + 1];
+    case C of
+      '0'..'9': B := B or (Ord(C) - Ord('0'));
+      'A'..'F': B := B or (Ord(C) - 55);
+      'a'..'f': B := B or (Ord(C) - 87);
+    else
+      B := Ord(' ');
+    end;
+    if KeyLen > 0 then
+      B := B xor Byte(Utf8Key[1 + (I mod KeyLen)]);
+    Utf8Result[1 + I] := AnsiChar(B);
+  end;
+  Result := UTF8Decode(Utf8Result);
+end;
+
+(*
 function GetCmdLineArg(const Switch: string; ASwitchChars: TSysCharSet): string;
 var
   I: Integer;
