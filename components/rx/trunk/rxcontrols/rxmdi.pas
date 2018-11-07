@@ -102,7 +102,7 @@ type
     destructor Destroy; override;
     procedure AddButton(Btn:TRxMDIButton);
     procedure ShowWindow(F:TForm);
-    property MainPanel:TRxMDIPanel read FMainPanel write FMainPanel;
+    property MainPanel:TRxMDIPanel read FMainPanel{ write FMainPanel};
     procedure SelectNext;
     procedure SelectPrior;
   published

@@ -36,6 +36,18 @@
     <element name="TRxMDITasks"><short>Панель задач MDI режима</short><descr><p>Панель задач MDI режима</p><p>Содержит список кнопок для управления открытыми MDI окнами</p>
         </descr>
       </element>
+    <element name="TRxMDIPanelOption.rxpoCloseF4"><short>Закрывать дочерние окна наэатием Ctrl+F4</short>
+      </element><element name="TRxMDIPanelOption.rxpoSwithByTab"><short>Переключать дочерние окна нажатием Ctrl+Tab</short><descr>В обратном порядке - переключение Ctrl+Shift+Tab
+</descr>
+      </element><element name="TRxMDIPanel.CurrentChildWindow"><short>Текущее дочернее окно, открытое в системе</short>
+      </element><element name="TRxMDIPanel.Options"><short>Параметры работы с дочерними окнами</short>
+      </element><element name="TRxMDITasks.FlatButton"><short>Плавающие кнопки в панеле задач</short>
+      </element><element name="TRxMDITaskOption.rxtoMidleClickClose"><short>Признак закрытия дочернего окна кликом средней кнопки мышки по кнопке окна</short>
+      </element><element name="TRxMDITasks.Options"><short>Параметры работы панели задач</short>
+      </element><element name="TRxMDITasks.SelectNext"><short>Выбрать следующее дочернее окно</short>
+      </element><element name="TRxMDITasks.SelectPrior"><short>Выбрать предыдущее дочернее окно</short>
+      </element><element name="TRxMDITasks.ShowWindow"><short>Сделать активным указанной дочернее окно</short>
+      </element>
     </module>
   </package>
 </fpdoc-descriptions>
