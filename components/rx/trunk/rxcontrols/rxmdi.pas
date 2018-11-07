@@ -41,6 +41,9 @@ type
   TRxMDITaskOption = (rxtoMidleClickClose);
   TRxMDITaskOptions = set of TRxMDITaskOption;
 
+  TRxMDIPanelOption = (rxpoCloseF4, rxpoSwithByTab);
+  TRxMDIPanelOptions = set of TRxMDIPanelOption;
+
   TRxMDIPanel = class;
   TRxMDITasks = class;
 
@@ -100,6 +103,8 @@ type
     procedure AddButton(Btn:TRxMDIButton);
     procedure ShowWindow(F:TForm);
     property MainPanel:TRxMDIPanel read FMainPanel write FMainPanel;
+    procedure SelectNext;
+    procedure SelectPrior;
   published
     property Align;
     property ShowHint;
@@ -142,6 +147,7 @@ type
     FCloseButton: TRxMDICloseButton;
     FHideCloseButton: boolean;
     FOnChangeCurrentChild: TRxMDIPanelChangeCurrentChild;
+    FOptions: TRxMDIPanelOptions;
     FTaskPanel: TRxMDITasks;
     procedure SetCurrentChildWindow(AValue: TForm);
     procedure navCloseButtonClick(Sender: TObject);
@@ -152,6 +158,7 @@ type
     procedure HideCurrentWindow;
     procedure ScreenEventRemoveForm(Sender: TObject; Form: TCustomForm);
     procedure DoOnChangeCurrentChild(AForm:TForm);
+    procedure DoKeyDownHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure Loaded; override;
@@ -175,12 +182,13 @@ type
     property BevelOuter;
     property ShowHint;
     property ParentShowHint;
+    property Options:TRxMDIPanelOptions read FOptions write FOptions;
     property HideCloseButton:boolean read FHideCloseButton write SetHideCloseButton;
     property OnChangeCurrentChild:TRxMDIPanelChangeCurrentChild read FOnChangeCurrentChild write FOnChangeCurrentChild;
   end;
 
 implementation
-uses LResources, rxlclutils, rxconst;
+uses LResources, rxlclutils, rxconst, LCLType;
 
 
 { TRxMDICloseButton }
@@ -411,18 +419,39 @@ begin
   CurrentChildWindow:=nil;
 end;
 
+procedure TRxMDIPanel.DoKeyDownHandler(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (ssCtrl in Shift) then
+  begin
+    if (rxpoCloseF4 in Options) and (Key = VK_F4) then
+      navCloseButtonClick(nil)
+    else
+    if (rxpoSwithByTab in Options) and (Key = VK_TAB) and Assigned(FTaskPanel) then
+    begin
+      if ssShift in Shift then
+        FTaskPanel.SelectPrior
+      else
+        FTaskPanel.SelectNext;
+    end;
+  end;
+end;
+
 constructor TRxMDIPanel.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
   Caption:='';
   Align:=alClient;
   BevelOuter:=bvLowered;
+  FOptions:=[];
 
   Screen.AddHandlerRemoveForm(@ScreenEventRemoveForm);
+  Application.AddOnKeyDownBeforeHandler(@DoKeyDownHandler);
 end;
 
 destructor TRxMDIPanel.Destroy;
 begin
+  Application.RemoveOnKeyDownBeforeHandler(@DoKeyDownHandler);
   Screen.RemoveHandlerRemoveForm(@ScreenEventRemoveForm);
   inherited Destroy;
 end;
@@ -732,6 +761,73 @@ begin
   end;
 end;
 
+procedure TRxMDITasks.SelectNext;
+var
+  F: TForm;
+  Ind, i: Integer;
+  C: TControl;
+begin
+  if not Assigned(FMainPanel) then Exit;
+  F:=FMainPanel.CurrentChildWindow;
+  if not Assigned(F) then Exit;
+  if FMainPanel.ControlCount = 1 then exit;
+  Ind:=FMainPanel.GetControlIndex(F);
+
+  for i:=Ind+1 to FMainPanel.ControlCount-1 do
+  begin
+    C:=FMainPanel.Controls[i];
+    if C is TCustomForm then
+    begin
+      ShowWindow(TForm(C));
+      Exit;
+    end;
+  end;
+
+  for i:=0 to Ind - 1 do
+  begin
+    C:=FMainPanel.Controls[i];
+    if C is TCustomForm then
+    begin
+      ShowWindow(TForm(C));
+      Exit;
+    end;
+  end;
+end;
+
+procedure TRxMDITasks.SelectPrior;
+var
+  F: TForm;
+  Ind, i: Integer;
+  C: TControl;
+begin
+  if not Assigned(FMainPanel) then Exit;
+
+  F:=FMainPanel.CurrentChildWindow;
+  if not Assigned(F) then Exit;
+  if FMainPanel.ControlCount = 1 then exit;
+  Ind:=FMainPanel.GetControlIndex(F);
+
+  for i:=Ind-1 downto 0 do
+  begin
+    C:=FMainPanel.Controls[i];
+    if C is TCustomForm then
+    begin
+      ShowWindow(TForm(C));
+      Exit;
+    end;
+  end;
+
+  for i:=FMainPanel.ControlCount downto Ind + 1 do
+  begin
+    C:=FMainPanel.Controls[i];
+    if C is TCustomForm then
+    begin
+      ShowWindow(TForm(C));
+      Exit;
+    end;
+  end;
+end;
+
 
 { TRxMDIButton }
 
@@ -876,7 +972,7 @@ begin
   Align:=alLeft;
   NavForm:=AForm;
   AutoSize:=true;
-  Flat:=true;
+  Flat:=AOwner.FlatButton;
   GroupIndex:=1;
 
   FMenu:=TPopupMenu.Create(Self);
