@@ -48,6 +48,7 @@ type
   protected
     function GetIniFileName: string; override;
     procedure FinishPropertyList(List: TStrings); override;
+    function DoReadString(const Section, Ident, DefaultValue: string): string; override;
   public
     procedure StorageNeeded(ReadOnly: Boolean); override;
     { Public declarations }
@@ -56,7 +57,7 @@ type
   end;
 
 implementation
-uses rxapputils, LazUTF8, FileUtil, LazFileUtils, IniFiles, StrUtils;
+uses rxapputils, LazUTF8, FileUtil, LazFileUtils, IniFiles, StrUtils, LCLType;
 
 { TRxIniPropStorage }
 
@@ -83,7 +84,7 @@ begin
 end;
 
 procedure TRxIniPropStorage.FinishPropertyList(List: TStrings);
-{$IFDEF FIX_WIDTH_WIDE_STRING96}
+{$IfDef FIX_WIDTH_WIDE_STRING96}
 var
   S: String;
   i: Integer;
@@ -103,6 +104,31 @@ begin
     end;
   {$ENDIF FIX_WIDTH_WIDE_STRING96}
   inherited FinishPropertyList(List);
+end;
+
+function TRxIniPropStorage.DoReadString(const Section, Ident,
+  DefaultValue: string): string;
+var
+  S: String;
+  ASize: LongInt;
+  ASize1: Integer;
+begin
+  Result := inherited DoReadString(Section, Ident, DefaultValue);
+  {$IfNDef FIX_WIDTH_WIDE_STRING96}
+  S:=UpperCase(Ident);
+  if (Pos('WIDTH', S) > 0) or (Pos('HEIGHT', S) > 0) then
+  begin
+    if Assigned(Screen) then
+    begin
+      ASize:=StrToIntDef(Result, -1);
+      if ASize>-1 then
+      begin
+        ASize1 := MulDiv(ASize, Screen.PixelsPerInch, 96);
+        Result := IntToStr(ASize1);
+      end;
+    end;
+  end;
+  {$EndIf}
 end;
 
 procedure TRxIniPropStorage.StorageNeeded(ReadOnly: Boolean);
