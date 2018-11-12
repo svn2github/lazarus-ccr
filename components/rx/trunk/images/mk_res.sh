@@ -62,7 +62,8 @@ rm RxSortZeos.res
   TRxPopupNotifier.png TRxPopupNotifier_150.png TRxPopupNotifier_200.png \
   TRxSystemServices.png TRxSystemServices_150.png TRxSystemServices_200.png \
   TRxVersionInfo.png TRxVersionInfo_150.png TRxVersionInfo_200.png \
-  TRxXMLPropStorage.png TRxXMLPropStorage_150.png TRxXMLPropStorage_200.png
+  TRxXMLPropStorage.png TRxXMLPropStorage_150.png TRxXMLPropStorage_200.png \
+  TRxTextHolder.png TRxTextHolder_150.png TRxTextHolder_200.png
   
   
 /usr/local/share/lazarus/tools/lazres RxSortFBDataSet.res TRxSortFBDataSet.png TRxSortFBDataSet_150.png TRxSortFBDataSet_200.png

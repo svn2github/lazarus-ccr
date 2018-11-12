@@ -122,11 +122,6 @@ begin
   Items[Index].Assign( AValue );
 end;
 
-{constructor TValidateItems.Create;
-begin
-  inherited Create(TValidateItem);
-end;}
-
 { TValidateItem }
 
 procedure TValidateItem.SetControl(AValue: TWinControl);

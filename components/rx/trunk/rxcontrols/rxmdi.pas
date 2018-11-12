@@ -472,8 +472,10 @@ begin
   F.Parent:=Self;
   F.Visible:=true;
   F.BringToFront;
-  if Assigned(Application) and Assigned(Application.MainForm) then
-    Application.MainForm.ActiveControl:=F;
+//  if Assigned(Application) and Assigned(Application.MainForm) and (Application.MainForm = Owner) then
+//    Application.MainForm.ActiveControl:=F;
+  if Assigned(Owner) and (Owner is TForm) then
+    TForm(Owner).ActiveControl:=F;
 
   B:=TRxMDIButton.CreateButton(TaskPanel, F);
   DoOnChangeCurrentChild(F);
