@@ -39,8 +39,8 @@ uses
 
 procedure Register;
 implementation
-uses LazarusPackageIntf, RxTextHolder, ComponentEditors, RxTextHolder_Editor,
-  rxconst;
+uses Forms, LazarusPackageIntf, RxTextHolder, ComponentEditors, RxTextHolder_Editor,
+  rxconst, StrHolder, PropEdits, StringsPropEditDlg, UITypes;
 
 type
 
@@ -53,14 +53,53 @@ type
     procedure ExecuteVerb(Index:integer);override;
   end;
 
-procedure RegisterRxTextHolder;
+  { TRxStrHolderEditor }
+
+  TRxStrHolderEditor = class(TComponentEditor)
+  public
+    function GetVerbCount:integer;override;
+    function GetVerb(Index:integer):string;override;
+    procedure ExecuteVerb(Index:integer);override;
+  end;
+
+{ TRxStrHolderEditor }
+
+function TRxStrHolderEditor.GetVerbCount: integer;
 begin
-  RegisterComponentEditor(TRxTextHolder, TRxTextHolderEditor);
+  Result:=1;
 end;
 
-procedure Register;
+function TRxStrHolderEditor.GetVerb(Index: integer): string;
 begin
-  RegisterUnit('RxTextHolder', @RegisterRxTextHolder);
+  case Index of
+    0:Result:=sRxStrHolderTextEditor;
+  else
+    Result:='';
+  end;
+end;
+
+procedure TRxStrHolderEditor.ExecuteVerb(Index: integer);
+var
+  C: TStrHolder;
+  F: TStringsPropEditorDlg;
+begin
+  if Index = 0 then
+  begin
+    F:=TStringsPropEditorDlg.Create(Application);
+    try
+      C:=Component as TStrHolder;
+      F.Memo.Lines.Assign(C.Strings);
+      if F.ShowModal = mrOK then
+      begin
+        C.Strings.Assign(F.Memo.Lines);
+        Modified;
+      end;
+    finally
+      F.Free;
+    end;
+  end
+  else
+    inherited ExecuteVerb(Index);
 end;
 
 { TRxTextHolderEditor }
@@ -88,6 +127,12 @@ begin
   end
   else
     inherited ExecuteVerb(Index);
+end;
+
+procedure Register;
+begin
+  RegisterComponentEditor(TRxTextHolder, TRxTextHolderEditor);
+  RegisterComponentEditor(TStrHolder, TRxStrHolderEditor);
 end;
 
 end.

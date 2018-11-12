@@ -177,6 +177,10 @@ msgstr "Превыдущий год|"
 msgid "Error. Expected value for field %s."
 msgstr "Поле %s. Требуется значение"
 
+#: rxconst.srxstrholdertexteditor
+msgid "Rx string holder editor"
+msgstr "Редактор RxStrHolder"
+
 #: rxconst.srxtextfolderitem
 msgid "Item "
 msgstr "Строка "

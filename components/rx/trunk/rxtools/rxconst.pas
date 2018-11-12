@@ -136,6 +136,7 @@ resourcestring
 
   { TRxTextHolder }
   sRxTextHolderTextEditor       = 'Rx text holder editor';
+  sRxStrHolderTextEditor       = 'Rx string holder editor';
   sRxTextHolderEditor           = 'RxTextHolder editor';
   sRxTextHolderTextCaption      = 'Caption';
   sRxTextHolderAdd              = 'Add';
