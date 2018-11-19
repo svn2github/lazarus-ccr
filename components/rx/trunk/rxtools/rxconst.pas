@@ -136,12 +136,20 @@ resourcestring
 
   { TRxTextHolder }
   sRxTextHolderTextEditor       = 'Rx text holder editor';
-  sRxStrHolderTextEditor       = 'Rx string holder editor';
+  sRxStrHolderTextEditor        = 'Rx string holder editor';
   sRxTextHolderEditor           = 'RxTextHolder editor';
   sRxTextHolderTextCaption      = 'Caption';
   sRxTextHolderAdd              = 'Add';
   sRxTextHolderRemove           = 'Remove';
+  sRxTextHolderMoveUp           = 'Up';
+  sRxTextHolderMoveDown         = 'Down';
   sRxTextFolderItem             = 'Item ';
+  sRxTextFolderSynHighlighter   = 'Highlighter';
+  sRxTextFolderSynNone          = 'None';
+  sRxTextFolderSynXML           = 'XML';
+  sRxTextFolderSynHTML          = 'HTML';
+  sRxTextFolderSynSQL           = 'SQL';
+
 
 implementation
 

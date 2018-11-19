@@ -24,6 +24,7 @@
     rtn - from freepascal.ru
     kit - from freepascal.ru
     linux-man
+    Michael Thompson
     
   Component icon images:
     zoltanleo aka Док

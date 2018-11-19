@@ -38,7 +38,7 @@ interface
 uses
   Classes, SysUtils;
 type
-
+  TRxTextHolderHighlighter = (rxSynNone, rxSynXML, rxSynHTML, rxSynSQL);
   { TRxTextHolderItem }
 
   TRxTextHolderItem = class(TCollectionItem)
@@ -70,6 +70,7 @@ type
 
   TRxTextHolder = class(TComponent)
   private
+    FHighlighter: TRxTextHolderHighlighter;
     FItems:TRxTextHolderItems;
     function GetText(ACaption: string): string;
     procedure SetItems(AValue: TRxTextHolderItems);
@@ -82,6 +83,7 @@ type
     function IndexByName(ACaption:string):integer;
     property Text[ACaption:string]:string read GetText write SetText; default;
   published
+    property Highlighter: TRxTextHolderHighlighter read FHighlighter write FHighlighter;
     property Items:TRxTextHolderItems read FItems write SetItems;
   end;
 
@@ -138,6 +140,7 @@ begin
   if (Dest is TRxTextHolder) then
   begin
     TRxTextHolder(Dest).Items.Assign(Items);
+    TRxTextHolder(Dest).Highlighter:=Highlighter;
   end
   else
     inherited AssignTo(Dest);
@@ -147,6 +150,7 @@ constructor TRxTextHolder.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
   FItems:=TRxTextHolderItems.Create(Self, TRxTextHolderItem);
+  FHighlighter:=rxSynNone;
 end;
 
 destructor TRxTextHolder.Destroy;

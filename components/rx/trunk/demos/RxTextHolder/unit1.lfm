@@ -2,18 +2,18 @@ object Form1: TForm1
   Left = 542
   Height = 292
   Top = 225
-  Width = 383
+  Width = 451
   Caption = 'RxTextHolder demo'
   ClientHeight = 292
-  ClientWidth = 383
+  ClientWidth = 451
   LCLVersion = '2.1.0.0'
   object Button1: TButton
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
     Left = 6
-    Height = 29
+    Height = 31
     Top = 6
-    Width = 51
+    Width = 50
     AutoSize = True
     BorderSpacing.Around = 6
     Caption = 'Line 1'
@@ -29,9 +29,9 @@ object Form1: TForm1
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 251
-    Top = 41
-    Width = 383
+    Height = 249
+    Top = 43
+    Width = 451
     Anchors = [akTop, akLeft, akRight, akBottom]
     Lines.Strings = (
       'Memo1'
@@ -43,13 +43,13 @@ object Form1: TForm1
     AnchorSideLeft.Control = Button1
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
-    Left = 63
-    Height = 29
+    Left = 62
+    Height = 31
     Top = 6
     Width = 51
     AutoSize = True
     BorderSpacing.Around = 6
-    Caption = 'Line 1'
+    Caption = 'Line 2'
     OnClick = Button2Click
     TabOrder = 2
   end
@@ -57,13 +57,13 @@ object Form1: TForm1
     AnchorSideLeft.Control = Button2
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
-    Left = 120
-    Height = 29
+    Left = 119
+    Height = 31
     Top = 6
     Width = 51
     AutoSize = True
     BorderSpacing.Around = 6
-    Caption = 'Line 1'
+    Caption = 'Line 3'
     OnClick = Button3Click
     TabOrder = 3
   end
@@ -71,17 +71,60 @@ object Form1: TForm1
     AnchorSideLeft.Control = Button3
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
-    Left = 177
-    Height = 29
+    Left = 176
+    Height = 31
     Top = 6
-    Width = 51
+    Width = 52
     AutoSize = True
     BorderSpacing.Around = 6
-    Caption = 'Line 1'
+    Caption = 'Line 4'
     OnClick = Button4Click
     TabOrder = 4
   end
+  object Button5: TButton
+    AnchorSideLeft.Control = Button4
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 234
+    Height = 31
+    Top = 6
+    Width = 41
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'SQL'
+    OnClick = Button5Click
+    TabOrder = 5
+  end
+  object Button6: TButton
+    AnchorSideLeft.Control = Button5
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 281
+    Height = 31
+    Top = 6
+    Width = 53
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'HTML'
+    OnClick = Button6Click
+    TabOrder = 6
+  end
+  object Button7: TButton
+    AnchorSideLeft.Control = Button6
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 340
+    Height = 31
+    Top = 6
+    Width = 42
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'XML'
+    OnClick = Button7Click
+    TabOrder = 7
+  end
   object RxTextHolder1: TRxTextHolder
+    Highlighter = rxSynNone
     Items = <    
       item
         Caption = 'Line 1'
@@ -119,6 +162,44 @@ object Form1: TForm1
           'Line 4'
           'Line 4'
           'Line 4'
+        )
+      end    
+      item
+        Caption = 'SQL'
+        Lines.Strings = (
+          'select'
+          '   *'
+          'from'
+          '  table123'
+        )
+      end    
+      item
+        Caption = 'HTML'
+        Lines.Strings = (
+          '<html>'
+          '<head>'
+          '<title>Demo page</title>'
+          '</head>'
+          '<body>'
+          'Hello world!'
+          '</body>'
+          '</html>'
+        )
+      end    
+      item
+        Caption = 'XML'
+        Lines.Strings = (
+          '<?xml version="1.0" encoding="UTF-8"?>'
+          '<CONFIG>'
+          '  <Package Version="4">'
+          '    <PublishOptions>'
+          '      <Version Value="2"/>'
+          '      <IgnoreBinaries Value="False"/>'
+          '    </PublishOptions>'
+          '  </Package>'
+          '</CONFIG>'
+          ''
+          ''
         )
       end>
     Left = 16

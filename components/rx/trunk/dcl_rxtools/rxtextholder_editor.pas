@@ -36,13 +36,18 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ButtonPanel, ExtCtrls,
-  StdCtrls, Menus, Buttons, ActnList, RxTextHolder;
+  StdCtrls, Menus, Buttons, ActnList, SynEdit, RxTextHolder, SynEditHighlighter;
 
 type
 
   { TRxTextHolder_EditorForm }
 
   TRxTextHolder_EditorForm = class(TForm)
+    itemUp: TAction;
+    itemDown: TAction;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
+    ComboBox1: TComboBox;
     Edit1: TEdit;
     itemRemove: TAction;
     itemAdd: TAction;
@@ -50,28 +55,38 @@ type
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     ButtonPanel1: TButtonPanel;
-    CLabel1: TLabel;
     Label1: TLabel;
+    Label2: TLabel;
     ListBox1: TListBox;
-    Memo1: TMemo;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    Panel4: TPanel;
+    SynEdit1: TSynEdit;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     Panel1: TPanel;
     Panel2: TPanel;
+    Panel3: TPanel;
     PopupMenu1: TPopupMenu;
     Splitter1: TSplitter;
+    procedure ComboBox1Change(Sender: TObject);
     procedure Edit1Exit(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure itemAddExecute(Sender: TObject);
+    procedure itemDownExecute(Sender: TObject);
     procedure itemRemoveExecute(Sender: TObject);
+    procedure itemUpExecute(Sender: TObject);
     procedure ListBox1Click(Sender: TObject);
     procedure ListBox1SelectionChange(Sender: TObject; User: boolean);
-    procedure Memo1Exit(Sender: TObject);
+    procedure SynEdit1Exit(Sender: TObject);
   private
     FTextHolder:TRxTextHolder;
     FCurrentItem: TRxTextHolderItem;
+    FHighlighter: TSynCustomHighlighter;
     procedure UpdateTextNames;
+    procedure UpdateHighlighter;
     procedure Localize;
     procedure UpdateCtrlState;
     function MakeItemName(ABaseName:string):string;
@@ -79,10 +94,12 @@ type
 
   end;
 
-
 function ShowRxTextHolderEditorForm(ATextHolder:TRxTextHolder):boolean;
+
 implementation
-uses rxconst;
+
+uses
+  rxconst, SynHighlighterSQL, SynHighlighterHTML, SynHighlighterXML;
 
 function ShowRxTextHolderEditorForm(ATextHolder:TRxTextHolder):boolean;
 var
@@ -91,6 +108,7 @@ begin
   RxTextHolder_EditorForm:=TRxTextHolder_EditorForm.Create(Application);
   RxTextHolder_EditorForm.FTextHolder.Assign(ATextHolder);
   RxTextHolder_EditorForm.UpdateTextNames;
+  RxTextHolder_EditorForm.UpdateHighlighter;
   Result:=RxTextHolder_EditorForm.ShowModal = mrOk;
   if Result then
   begin
@@ -106,6 +124,7 @@ end;
 procedure TRxTextHolder_EditorForm.FormCreate(Sender: TObject);
 begin
   FTextHolder:=TRxTextHolder.Create(Self);
+  FHighlighter:=nil;
   Localize;
 end;
 
@@ -121,6 +140,42 @@ begin
   ListBox1.Items.Add(FCurrentItem.Caption);
   ListBox1.ItemIndex:=ListBox1.Items.Count-1;
   ListBox1Click(nil);
+end;
+
+procedure TRxTextHolder_EditorForm.itemUpExecute(Sender: TObject);
+var
+  I: Integer;
+begin
+  if Assigned(FCurrentItem) then
+  begin
+    I:=ListBox1.ItemIndex;
+    if (I>0) then
+    begin
+      FTextHolder.Items.Exchange(I, I-1);
+      ListBox1.Items.Exchange(I, I-1);
+      ListBox1.ItemIndex := I-1;
+
+      UpdateCtrlState;
+    end;
+  end;
+end;
+
+procedure TRxTextHolder_EditorForm.itemDownExecute(Sender: TObject);
+var
+  I: Integer;
+begin
+  if Assigned(FCurrentItem) then
+  begin
+    I:=ListBox1.ItemIndex;
+    if (I>=0) And (I<ListBox1.Items.Count-1) then
+    begin
+      FTextHolder.Items.Exchange(I, I+1);
+      ListBox1.Items.Exchange(I, I+1);
+      ListBox1.ItemIndex := I+1;
+
+      UpdateCtrlState;
+    end;
+  end;
 end;
 
 procedure TRxTextHolder_EditorForm.itemRemoveExecute(Sender: TObject);
@@ -148,13 +203,22 @@ begin
   end;
 end;
 
+procedure TRxTextHolder_EditorForm.ComboBox1Change(Sender: TObject);
+begin
+  if ComboBox1.ItemIndex<>Ord(FTextHolder.Highlighter) Then
+  begin
+    FTextHolder.Highlighter:=TRxTextHolderHighlighter(ComboBox1.ItemIndex);
+    UpdateHighlighter;
+  end;
+end;
+
 procedure TRxTextHolder_EditorForm.FormCloseQuery(Sender: TObject;
   var CanClose: boolean);
 begin
   if ModalResult = mrOk then
   begin
     Edit1Exit(nil);
-    Memo1Exit(nil);
+    SynEdit1Exit(nil);
   end;
 end;
 
@@ -164,19 +228,14 @@ begin
   begin
     FCurrentItem:=FTextHolder.Items[ListBox1.ItemIndex];
     Edit1.Text:=FCurrentItem.Caption;
-    Memo1.Text:=FCurrentItem.Lines.Text;
+    SynEdit1.Text:=FCurrentItem.Lines.Text;
     if Visible then
-    begin
-      Memo1.Enabled:=true;
-      Memo1.SetFocus
-    end
-    else
-      ActiveControl:=Memo1;
+      SynEdit1.Enabled:=true;
   end
   else
   begin
     FCurrentItem:=Nil;
-    Memo1.Lines.Clear;
+    SynEdit1.Lines.Clear;
   end;
   UpdateCtrlState;
 end;
@@ -187,10 +246,10 @@ begin
   //
 end;
 
-procedure TRxTextHolder_EditorForm.Memo1Exit(Sender: TObject);
+procedure TRxTextHolder_EditorForm.SynEdit1Exit(Sender: TObject);
 begin
   if Assigned(FCurrentItem) then
-    FCurrentItem.Lines.Assign(Memo1.Lines);
+    FCurrentItem.Lines.Assign(SynEdit1.Lines);
 end;
 
 procedure TRxTextHolder_EditorForm.UpdateTextNames;
@@ -207,19 +266,53 @@ begin
   ListBox1Click(nil);
 end;
 
+procedure TRxTextHolder_EditorForm.UpdateHighlighter;
+begin
+  if assigned(FHighlighter) then
+  begin
+    SynEdit1.Highlighter:=nil;
+    FreeAndNil(FHighlighter);
+  end;
+
+  case FTextHolder.Highlighter of
+    rxSynXML: FHighlighter := TSynXMLSyn.Create(Self);
+    rxSynHTML: FHighlighter := TSynHTMLSyn.Create(Self);
+    rxSynSQL: FHighlighter := TSynSQLSyn.Create(Self);
+  end;
+
+  if Assigned(FHighlighter) then
+    SynEdit1.Highlighter := FHighlighter;
+
+  if ComboBox1.ItemIndex<>Ord(FTextHolder.Highlighter) Then
+    ComboBox1.ItemIndex := Ord(FTextHolder.Highlighter);
+end;
+
 procedure TRxTextHolder_EditorForm.Localize;
 begin
   Caption:=sRxTextHolderEditor;
   Label1.Caption:=sRxTextHolderTextCaption;
+  Label2.Caption:=sRxTextFolderSynHighlighter;
   itemAdd.Caption:=sRxTextHolderAdd;
   itemRemove.Caption:=sRxTextHolderRemove;
+  itemUp.Caption:=sRxTextHolderMoveUp;
+  itemDown.Caption:=sRxTextHolderMoveDown;
+
+  // contents must be added in order of declaration in TRxTextHolderHighlighter
+  ComboBox1.Items.Clear;
+  ComboBox1.Items.Add(sRxTextFolderSynNone);
+  ComboBox1.Items.Add(sRxTextFolderSynXML);
+  ComboBox1.Items.Add(sRxTextFolderSynHTML);
+  ComboBox1.Items.Add(sRxTextFolderSynSQL);
 end;
 
 procedure TRxTextHolder_EditorForm.UpdateCtrlState;
 begin
   itemRemove.Enabled:=(FTextHolder.Items.Count>0) and Assigned(FCurrentItem);
+  itemUp.Enabled:=itemRemove.Enabled and (ListBox1.ItemIndex>0);
+  itemDown.Enabled:=itemRemove.Enabled and (ListBox1.ItemIndex<ListBox1.Items.Count-1);
   Edit1.Enabled:=Assigned(FCurrentItem);
-  Memo1.Enabled:=Assigned(FCurrentItem);
+  SynEdit1.Enabled:=Assigned(FCurrentItem);
+  ComboBox1.Enabled:=Assigned(FCurrentItem);
 end;
 
 function TRxTextHolder_EditorForm.MakeItemName(ABaseName: string): string;
