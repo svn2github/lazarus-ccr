@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="4">
+      <Unit0>
+        <Filename Value="project1.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="9"/>
+        <CursorPos X="18" Y="39"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\..\..\rxcontrols\rxapputils.pas"/>
+        <UnitName Value="rxAppUtils"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="33"/>
+        <CursorPos X="22" Y="49"/>
+        <UsageCount Value="10"/>
+        <Bookmarks Count="1">
+          <Item0 X="7" Y="302" ID="1"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="Z:\home\install\source\fpcsrc\rtl\win\wininc\defines.inc"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="2201"/>
+        <CursorPos Y="2224"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit3>
+    </Units>
+    <JumpHistory Count="10" HistoryIndex="9">
+      <Position1>
+        <Filename Value="unit1.pas"/>
+      </Position1>
+      <Position2>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="26" Column="6"/>
+      </Position2>
+      <Position3>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="22" Column="20"/>
+      </Position3>
+      <Position4>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="36" Column="43" TopLine="9"/>
+      </Position4>
+      <Position5>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="39" Column="18" TopLine="9"/>
+      </Position5>
+      <Position6>
+        <Filename Value="..\..\..\rxcontrols\rxapputils.pas"/>
+        <Caret Line="100" Column="10" TopLine="84"/>
+      </Position6>
+      <Position7>
+        <Filename Value="..\..\..\rxcontrols\rxapputils.pas"/>
+        <Caret Line="303" TopLine="290"/>
+      </Position7>
+      <Position8>
+        <Filename Value="..\..\..\rxcontrols\rxapputils.pas"/>
+        <Caret Line="302" Column="7" TopLine="290"/>
+      </Position8>
+      <Position9>
+        <Filename Value="..\..\..\rxcontrols\rxapputils.pas"/>
+        <Caret Line="307" Column="11" TopLine="290"/>
+      </Position9>
+      <Position10>
+        <Filename Value="..\..\..\rxcontrols\rxapputils.pas"/>
+        <Caret Line="305" TopLine="290"/>
+      </Position10>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

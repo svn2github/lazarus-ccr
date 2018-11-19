@@ -28,6 +28,10 @@
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
+
+{ TODO : 1. Реализовать отображение открытых окон в элементе меню - с переключением на выбранное окно }
+{ TODO : 2. В элементе меню отображать пункт для открытия диалогового окна со списком всех открытых окон }
+
 unit RxMDI;
 
 {$I rx.inc}

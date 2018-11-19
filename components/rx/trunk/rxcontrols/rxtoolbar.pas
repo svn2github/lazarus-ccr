@@ -378,11 +378,15 @@ begin
     PaintSeparator;
     exit;
   end;
-  inherited Paint;
+
+//  inherited Paint;
 
   UpdateState(false);
   if (not Assigned(Action)) or (TToolbarItems(FOwnerItem.Collection).FToolPanel.FToolBarStyle = tbsNative) then
+  begin
+    inherited Paint;
     exit;
+  end;
 
   PaintRect:=ClientRect;
   if (Action is TCustomAction) and Assigned(FImageList) and
@@ -560,7 +564,8 @@ begin
       and (tpGlyphPopup in TToolbarItems(FOwnerItem.Collection).FToolPanel.Options) and FFullPush then
     begin
 //      FImageList.Draw(Canvas, Offset.X, Offset.Y, TCustomAction(Action).ImageIndex, false);
-      FImageList.Draw(Canvas, Offset.X, Offset.Y, TCustomAction(Action).ImageIndex, gdeShadowed);
+      //FImageList.Draw(Canvas, Offset.X, Offset.Y, TCustomAction(Action).ImageIndex, gdeShadowed);
+      FImageList.Draw(Canvas, Offset.X, Offset.Y, TCustomAction(Action).ImageIndex, gde1Bit);
       Dec(Offset.X, 2);
       Dec(Offset.Y, 2);
     end;

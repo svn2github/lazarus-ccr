@@ -144,8 +144,6 @@ Procedure Register;
 
 implementation
 
-{$R strholder.res}
-
 uses
   RTLConsts;
 
