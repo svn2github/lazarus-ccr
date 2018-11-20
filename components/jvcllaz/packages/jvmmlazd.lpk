@@ -14,7 +14,8 @@
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvMM"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="JVCL Multimedia Components (Design-time package): bmp animator, id3v1 and id3v2 tags,  full color components and dialogs, gradient, gradient header, special progress bar"/>
+    <Description Value="JVCL Multimedia and image components (Design-time package): 
+bmp animator, id3v1 and id3v2 tags,  full color components and dialogs, gradient, gradient header, special progress bar, animated image"/>
     <Version Major="1" Release="4"/>
     <Files Count="5">
       <Item1>

@@ -12,11 +12,8 @@
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\run\JvCustom"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code):
-- TimeLine components
-- OutlookBar component
-- ImagerViewer, ImageListViewer, OwnerDrawViewer
-"/>
+    <Description Value="Custom components of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code):
+TimeLine, OutlookBar, Thumbnail viewer, ImageViewer, ImageListViewer, OwnerDrawViewer"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
     <Files Count="12">
