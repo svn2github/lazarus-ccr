@@ -111,13 +111,13 @@ type
     function CanAutoSize(var NewWidth, NewHeight: Integer): Boolean; override;
     function GetPalette: HPALETTE; override;
     procedure AdjustSize; override;
-    procedure Loaded; override;
     procedure BufferedPaint; override;
+    procedure DefineProperties(Filer: TFiler); override;
     procedure DoPaintImage; override;
     procedure FrameChanged; dynamic;
+    procedure Loaded; override;
     procedure Start; dynamic;
     procedure Stop; dynamic;
-    procedure DefineProperties(Filer: TFiler); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -646,12 +646,14 @@ begin
     else
       DstRect := Rect(0, 0, FImageWidth, FImageHeight);
 
-    {$IFDEF WINDOWS}
+  //  {$IFDEF WINDOWS}
     StretchBitmapRectTransparent(Canvas, DstRect.Left, DstRect.Top, DstRect.Right - DstRect.Left,
       DstRect.Bottom - DstRect.Top, SrcRect, FGlyph, FTransparentColor);
+    (*
     {$ELSE}
     Canvas.CopyRect(DstRect, FGlyph.Canvas, SrcRect);
     {$ENDIF}
+    *)
   end;
 end;
 

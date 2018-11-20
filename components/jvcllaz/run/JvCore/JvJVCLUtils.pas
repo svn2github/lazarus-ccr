@@ -101,7 +101,6 @@ procedure CopyParentImage(Control: TControl; Dest: TCanvas);
 { Windows resources (bitmaps and icons) VCL-oriented routines }
 procedure DrawBitmapTransparent(Dest: TCanvas; DstX, DstY: Integer;
   Bitmap: TBitmap; TransparentColor: TColor);
-//(******************** NOT CONVERTED
 procedure DrawBitmapRectTransparent(Dest: TCanvas; DstX, DstY: Integer;
   SrcRect: TRect; Bitmap: TBitmap; TransparentColor: TColor);
 procedure StretchBitmapRectTransparent(Dest: TCanvas; DstX, DstY, DstW,
@@ -1829,6 +1828,7 @@ begin
 end;
 ******************** NOT CONVERTED*)
 
+{$IFDEF MSWINDOWS}
 procedure StretchBitmapTransparent(Dest: TCanvas; Bitmap: TBitmap;
   TransparentColor: TColor; DstX, DstY, DstW, DstH, SrcX, SrcY,
   SrcW, Srch: Integer);
@@ -1874,6 +1874,27 @@ begin
     Bitmap.Canvas.Unlock;
   end;
 end;
+{$ELSE}
+procedure StretchBitmapTransparent(Dest: TCanvas; Bitmap: TBitmap;
+  TransparentColor: TColor; DstX, DstY, DstW, DstH, SrcX, SrcY,
+  SrcW, Srch: Integer);
+var
+  bmp: TBitmap;
+  dstRect: TRect;
+begin
+  bmp := TBitmap.Create;
+  try
+    bmp.TransparentColor := TransparentColor;
+    bmp.Transparent := true;
+    bmp.SetSize(SrcW, SrcH);
+    bmp.Canvas.Draw(-SrcX, -SrcY, Bitmap);
+    dstRect := Rect(DstX, DstY, DstX + DstW, DstY + DstH);
+    Dest.StretchDraw(dstRect, bmp);
+  finally
+    bmp.Free;
+  end;
+end;
+{$ENDIF}
 
 procedure StretchBitmapRectTransparent(Dest: TCanvas; DstX, DstY,
   DstW, DstH: Integer; SrcRect: TRect; Bitmap: TBitmap;
