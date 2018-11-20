@@ -101,11 +101,12 @@ procedure CopyParentImage(Control: TControl; Dest: TCanvas);
 { Windows resources (bitmaps and icons) VCL-oriented routines }
 procedure DrawBitmapTransparent(Dest: TCanvas; DstX, DstY: Integer;
   Bitmap: TBitmap; TransparentColor: TColor);
-(******************** NOT CONVERTED
+//(******************** NOT CONVERTED
 procedure DrawBitmapRectTransparent(Dest: TCanvas; DstX, DstY: Integer;
   SrcRect: TRect; Bitmap: TBitmap; TransparentColor: TColor);
 procedure StretchBitmapRectTransparent(Dest: TCanvas; DstX, DstY, DstW,
   DstH: Integer; SrcRect: TRect; Bitmap: TBitmap; TransparentColor: TColor);
+(******************** NOT CONVERTED
 {$IFNDEF CLR}
 function MakeBitmap(ResID: PChar): TBitmap;
 function MakeBitmapID(ResID: Word): TBitmap;

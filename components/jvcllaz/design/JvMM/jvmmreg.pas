@@ -20,12 +20,13 @@ uses
   JvGradientHeaderPanel, JvSpecialProgress,
   JvFullColorSpaces, JvFullColorCtrls, JvFullColorEditors, JvFullColorSpacesEditors,
   JvFullColorDialogs,
-  JvBmpAnimator;
+  JvAnimatedImage, JvBmpAnimator;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
     TJvId3v1, TJvId3v2,
+    TJvAnimatedImage,
     TJvBmpAnimator,
     TJvGradient, TJvGradientHeaderPanel,
     TJvSpecialProgress,
