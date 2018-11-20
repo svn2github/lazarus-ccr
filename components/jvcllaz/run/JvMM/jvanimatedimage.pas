@@ -645,12 +645,13 @@ begin
         (ClientHeight - FImageHeight) div 2, FImageWidth, FImageHeight)
     else
       DstRect := Rect(0, 0, FImageWidth, FImageHeight);
-    //Canvas.CopyRect(DstRect, FGlyph.Canvas, SrcRect);
-//    Canvas.StretchDraw(DstRect, FGlyph);
-    //{ original code:
+
+    {$IFDEF WINDOWS}
     StretchBitmapRectTransparent(Canvas, DstRect.Left, DstRect.Top, DstRect.Right - DstRect.Left,
       DstRect.Bottom - DstRect.Top, SrcRect, FGlyph, FTransparentColor);
-    //}
+    {$ELSE}
+    Canvas.CopyRect(DstRect, FGlyph.Canvas, SrcRect);
+    {$ENDIF}
   end;
 end;
 
