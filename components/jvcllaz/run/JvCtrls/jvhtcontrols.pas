@@ -114,7 +114,7 @@ uses
   JvJVCLUtils {JvDataSourceIntf, JvExStdCtrls} ;
 
 const
-  DefaultSuperSubScriptRatio: Double = 2/3;
+  DefaultSuperSubScriptRatio: Double = 0.67;
 
 type
 (*
@@ -337,25 +337,25 @@ type
     FMouseX, FMouseY: Integer;
     FHyperLinkMouseButtons: TJvHTLabelMouseButtons;
     FSuperSubScriptRatio: Double;
-    function ISuperSuperSubScriptRatioStored: Boolean;
-    procedure SetSuperSubScriptRation(const Value: Double);
+    function IsSuperSuperSubScriptRatioStored: Boolean;
+    procedure SetSuperSubScriptRatio(const Value: Double);
   protected
+    procedure CalculatePreferredSize(var PreferredWidth, PreferredHeight: integer;
+      WithThemeSpace: Boolean); override;
+    procedure CalculateSize(MaxWidth: integer; var NeededWidth, NeededHeight: integer);
+    function ComputeLayoutRect: TRect;
+    procedure FontChanged(Sender: TObject); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
-    procedure FontChanged(Sender: TObject); override;
     procedure PrepareCanvas;
-    function ComputeLayoutRect: TRect;
-    procedure SetAutoSize(Value: Boolean); override;
-    procedure Loaded; override;
 
     property HyperLinkMouseButtons: TJvHTLabelMouseButtons read FHyperLinkMouseButtons write FHyperLinkMouseButtons default [mbLeft];
     property OnHyperLinkClick: TJvHyperLinkClickEvent read FOnHyperLinkClick write FOnHyperLinkClick;
-    property SuperSubScriptRatio: Double read FSuperSubScriptRatio write SetSuperSubScriptRation stored ISuperSuperSubScriptRatioStored;
+    property SuperSubScriptRatio: Double read FSuperSubScriptRatio write SetSuperSubScriptRatio stored IsSuperSuperSubScriptRatioStored;
   public
     constructor Create(AOwner: TComponent); override;
     procedure Paint; override;
-    procedure AdjustSize; override;
   end;
 
   TJvHTLabel = class(TJvCustomHTLabel)
@@ -365,8 +365,10 @@ type
     procedure DefineProperties(Filer: TFiler); override; // ignore former published WordWrap
   published
     property Align;
+    property Alignment;
     property Anchors;
     property AutoSize;
+    property BorderSpacing;
     property Caption;
     property Color;
     property DragCursor;
@@ -844,6 +846,7 @@ begin
   end;
 end;}
 
+
 //=== { TJvCustomHTLabel } ===================================================
 
 constructor TJvCustomHTLabel.Create(AOwner: TComponent);
@@ -859,45 +862,9 @@ begin
   AdjustSize;
 end;
 
-function TJvCustomHTLabel.ISuperSuperSubScriptRatioStored: Boolean;
+function TJvCustomHTLabel.IsSuperSuperSubScriptRatioStored: Boolean;
 begin
   Result := FSuperSubScriptRatio <> DefaultSuperSubScriptRatio;
-end;
-
-procedure TJvCustomHTLabel.Loaded;
-begin
-  inherited Loaded;
-  AdjustSize;
-end;
-
-procedure TJvCustomHTLabel.AdjustSize;
-var
-  DC: HDC;
-  X: Integer;
-  Rect: TRect;
-  MaxWidth: Integer;
-begin
-  if not (csReading in ComponentState) and AutoSize then
-  begin
-    Rect := ClientRect;
-    DC := GetDC(0{HWND_DESKTOP});
-    try
-      Canvas.Handle := DC;
-      Canvas.Font.Assign(Font);
-      Rect.Bottom := ItemHTHeight(Canvas, Caption, SuperSubScriptRatio);
-      MaxWidth := ItemHTWidth(Canvas, Bounds(0, 0, 0, 0), [], Caption, SuperSubScriptRatio);
-    finally
-      Canvas.Handle := 0;
-      ReleaseDC(0{HWND_DESKTOP}, DC);
-    end;
-    Rect.Right := Rect.Left + MaxWidth;
-    X := Left;
-    if Alignment = taRightJustify then
-      Inc(X, Width - Rect.Right);
-    SetBounds(X, Top, Rect.Right, Rect.Bottom);
-    //Width := Rect.Right - X;
-    //Height := Rect.Bottom - Top;
-  end;
 end;
 
 procedure TJvCustomHTLabel.PrepareCanvas;
@@ -911,29 +878,56 @@ begin
   end;
 end;
 
+{ This code is copied from TCustomLabel.
+  Could be avoided if CalculateSize were virtual. }
+procedure TJvCustomHTLabel.CalculatePreferredSize(
+  var PreferredWidth, PreferredHeight: integer; WithThemeSpace: Boolean);
+var
+  AWidth: Integer;
+begin
+  if (Parent = nil) or (not Parent.HandleAllocated) then Exit;
+  if WidthIsAnchored and WordWrap then
+    AWidth := Width
+  else
+    AWidth := 10000;
+  AWidth := Constraints.MinMaxWidth(AWidth);
+  CalculateSize(AWidth,PreferredWidth,PreferredHeight);
+end;
+
+procedure TJvCustomHTLabel.CalculateSize(MaxWidth: integer;
+  var NeededWidth, NeededHeight: integer);
+begin
+  Canvas.Handle;
+  Canvas.Font.Assign(Font);
+  NeededHeight := ItemHTHeight(Canvas, Caption, SuperSubScriptRatio);
+  NeededWidth := ItemHTWidth(Canvas, Bounds(0, 0, 0, 0), [], Caption, SuperSubScriptRatio);
+end;
+
 function TJvCustomHTLabel.ComputeLayoutRect: TRect;
+var
+  W, H: Integer;
 begin
   Result := ClientRect;
+  CalculateSize(Width, W, H);
+  case Alignment of
+    taLeftJustify:
+      ;
+    taRightJustify:
+      Result.Left := Result.Right - W;
+    taCenter:
+      Result.Left := (Result.Left + Result.Right - W) div 2;
+  end;
   case Layout of
     tlTop:
       ;
     tlBottom:
-      Result.Top := Result.Bottom - ItemHTHeight(Canvas, Caption, SuperSubScriptRatio);
+      Result.Top := Result.Bottom - H;
     tlCenter:
-      Result.Top := (Result.Bottom - Result.Top - ItemHTHeight(Canvas, Caption, SuperSubScriptRatio)) div 2;
+      Result.Top := (Result.Top + Result.Bottom - H) div 2;
   end;
 end;
 
-procedure TJvCustomHTLabel.SetAutoSize(Value: Boolean);
-begin
-  if AutoSize <> Value then
-  begin
-    inherited SetAutoSize(Value);
-    AdjustSize;
-  end;
-end;
-
-procedure TJvCustomHTLabel.SetSuperSubScriptRation(const Value: Double);
+procedure TJvCustomHTLabel.SetSuperSubScriptRatio(const Value: Double);
 begin
   if FSuperSubScriptRatio <> Value then
   begin
@@ -1043,6 +1037,7 @@ begin
       Paint;
   end;
 end;
+
 
 { TJvHTLabel }
 
