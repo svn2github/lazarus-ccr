@@ -20,6 +20,11 @@
       <descr><p><b>function</b> GetUserName: <b>string</b>;</p><p>Функция <b>GetUserName</b> возвращает имя оператора, зарегистрированного в системе</p>
         </descr>
       </element>
+    <element name="RxGetTempFileName"><short>Функция возвращает уникальное имя фала по заданным параметрам</short><descr>ADir - папка, к которой создаётся временный файла (по умолчанию - tmp)
+APrefix - начало имени файла (по умолчанию - tmp)
+AExt - раширение файла (по умолчанию - tmp)
+</descr>
+      </element>
     </module>
   </package>
 </fpdoc-descriptions>

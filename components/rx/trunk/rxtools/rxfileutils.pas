@@ -45,7 +45,7 @@ function GetUserName:string;
 
 function IsValidFileNameChar(const AChar: Char): Boolean;inline;
 function NormalizeFileName(const FileName:string; AReplaceChar:char = '_'):string; //funtion only for filename - without folder name
-
+function RxGetTempFileName(ADir, APrefix, AExt : string):string;
 const
   {$IFDEF WINDOWS}
   FileNameDisabledChars = [#0 .. #31, '"', '*', '/', ':', '<', '>', '?', '\' , '|'];
@@ -241,6 +241,40 @@ begin
   for i:=1 to Length(Result) do
     if not IsValidFileNameChar(Result[i]) then
       Result[i]:=AReplaceChar;
+end;
+
+function RxGetTempFileName(ADir, APrefix, AExt: string): string;
+var
+  Start: String;
+  i: Integer;
+begin
+  if AExt = '' then
+  begin
+    AExt:=ExtractFileExt(APrefix);
+    if AExt<>'' then
+    begin
+      APrefix:=ExtractFileName(APrefix);
+    end
+    else
+      AExt:='.tmp';
+  end;
+
+  if (APrefix = '') then
+    Start:='TMP'
+  else
+    Start:=APrefix;
+
+
+  if (ADir='') then
+    Start:=GetTempDir + Start
+  else
+    Start:=IncludeTrailingPathDelimiter(ADir) + Start;
+
+  i:=0;
+  repeat
+    Result:=Format('%s%.5d%s',[Start, I , AExt]);
+    Inc(I);
+  until not FileExists(Result);
 end;
 
 end.
