@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
-  JvFormAnimatedIcon, JvBmpAnimator;
+  JvFormAnimatedIcon;
 
 type
 
