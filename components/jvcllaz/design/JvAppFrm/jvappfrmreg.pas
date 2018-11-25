@@ -16,12 +16,12 @@ implementation
 uses
   Classes, //PropEdits, ComponentEditors,
   JvDsgnConsts,
-  JvFormAnimatedIcon;
+  JvFormAnimatedIcon, JvFormWallPaper;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
-    TJvFormAnimatedIcon
+    TJvFormAnimatedIcon, TJvFormWallPaper
   ]);
 end;
 

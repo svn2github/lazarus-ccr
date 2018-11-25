@@ -32,7 +32,6 @@ interface
 uses
   SysUtils, Classes, Controls, Forms, ExtCtrls,
   ImgList, Graphics;
-//  JvComponentBase;
 
 type
   TJvFormAnimatedIcon = class(TComponent)  //JvComponent)
