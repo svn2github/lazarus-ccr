@@ -6,7 +6,7 @@
     <General>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <Title Value="JvFormAnimatedIcon_Demo"/>
+      <Title Value="JvFormAnimations_Demo"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -36,7 +36,7 @@
     </RequiredPackages>
     <Units Count="2">
       <Unit0>
-        <Filename Value="JvFormAnimatedIcon_Demo.lpr"/>
+        <Filename Value="JvFormAnimations_Demo.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
@@ -52,7 +52,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="JvFormAnimatedIcon_Demo"/>
+      <Filename Value="JvFormAnimations_Demo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

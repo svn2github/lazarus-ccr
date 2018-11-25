@@ -42,7 +42,7 @@ implementation
 { TForm1 }
 
 const
-  FORM_CAPTION = 'JvFormAnimation Demo';
+  FORM_CAPTION = 'JvFormAnimations Demo';
 
 procedure TForm1.FormCreate(Sender: TObject);
 

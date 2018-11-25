@@ -1,4 +1,4 @@
-program JvFormAnimatedIcon_Demo;
+program JvFormAnimations_Demo;
 
 {$mode objfpc}{$H+}
 
