@@ -3,17 +3,24 @@ object Form1: TForm1
   Height = 344
   Top = 128
   Width = 937
-  Caption = 'Form1'
+  Caption = 'F'
   ClientHeight = 344
   ClientWidth = 937
   OnCreate = FormCreate
   LCLVersion = '2.1.0.0'
   object ListView1: TListView
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
     Left = 8
     Height = 305
     Top = 31
     Width = 921
-    Align = alClient
+    Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
@@ -27,11 +34,58 @@ object Form1: TForm1
     Left = 8
     Height = 15
     Top = 8
-    Width = 921
-    Align = alTop
+    Width = 233
     BorderSpacing.Around = 8
     Caption = 'See animation in form and application icons'
     ParentColor = False
+  end
+  object CheckBox1: TCheckBox
+    AnchorSideLeft.Control = Label1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrCenter
+    Left = 265
+    Height = 19
+    Top = 6
+    Width = 93
+    BorderSpacing.Left = 24
+    Caption = 'animated title'
+    Checked = True
+    OnChange = CheckBox1Change
+    State = cbChecked
+    TabOrder = 1
+  end
+  object CheckBox2: TCheckBox
+    AnchorSideLeft.Control = CheckBox1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrCenter
+    Left = 382
+    Height = 19
+    Top = 6
+    Width = 127
+    BorderSpacing.Left = 24
+    Caption = 'Animated form icon'
+    Checked = True
+    OnChange = CheckBox2Change
+    State = cbChecked
+    TabOrder = 2
+  end
+  object CheckBox3: TCheckBox
+    AnchorSideLeft.Control = CheckBox2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrCenter
+    Left = 533
+    Height = 19
+    Top = 6
+    Width = 217
+    BorderSpacing.Left = 24
+    Caption = 'Animated application icon in task bar'
+    Checked = True
+    OnChange = CheckBox3Change
+    State = cbChecked
+    TabOrder = 3
   end
   object JvFormAnimatedIcon1: TJvFormAnimatedIcon
     Icons = IconImages
@@ -4149,5 +4203,11 @@ object Form1: TForm1
     Icons = IconImages
     left = 80
     top = 129
+  end
+  object JvAnimTitle1: TJvAnimTitle
+    Title = 'Form1'
+    Delay = 100
+    left = 80
+    top = 192
   end
 end
