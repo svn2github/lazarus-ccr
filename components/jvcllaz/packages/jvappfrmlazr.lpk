@@ -13,11 +13,11 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="JVCL Application Forms (Runtime) containing form enhancement components:
-- TJvFormAnimatedIcon
+- animated icons, form wallpaper
 "/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
-    <Files Count="2">
+    <Files Count="3">
       <Item1>
         <Filename Value="..\run\JvAppFrm\JvFormAnimatedIcon.pas"/>
         <UnitName Value="JvFormAnimatedIcon"/>
@@ -26,6 +26,10 @@
         <Filename Value="..\run\JvAppFrm\JvFormWallpaper.pas"/>
         <UnitName Value="JvFormWallpaper"/>
       </Item2>
+      <Item3>
+        <Filename Value="..\run\JvAppFrm\JvAppAnimatedIcon.pas"/>
+        <UnitName Value="JvAppAnimatedIcon"/>
+      </Item3>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

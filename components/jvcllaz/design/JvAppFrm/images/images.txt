@@ -1,2 +1,3 @@
+tjvappanimatedicon.bmp
 tjvformanimatedicon.bmp
 tjvformwallpaper.bmp

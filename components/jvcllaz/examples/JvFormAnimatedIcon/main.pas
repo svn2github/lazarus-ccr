@@ -6,14 +6,15 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
-  JvFormAnimatedIcon;
+  JvFormAnimatedIcon, JvAppAnimatedIcon;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
-    ImageList1: TImageList;
+    IconImages: TImageList;
+    JvAppAnimatedIcon1: TJvAppAnimatedIcon;
     JvFormAnimatedIcon1: TJvFormAnimatedIcon;
     Label1: TLabel;
     ListView1: TListView;
@@ -46,7 +47,8 @@ procedure TForm1.FormCreate(Sender: TObject);
 var
   i: Integer;
 begin
-  for i:=0 to ImageList1.Count-1 do
+  JvAppAnimatedIcon1.Active := true;
+  for i:=0 to IconImages.Count-1 do
     AddItem(i);
 end;
 
