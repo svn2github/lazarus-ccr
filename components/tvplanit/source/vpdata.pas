@@ -473,7 +473,7 @@ type
     function Count: Integer;
     procedure DeleteContact(Contact: TVpContact);
     function First: TVpContact;
-    function FindContactByName(const Name: string;
+    function FindContactByName(const AName: string;
       CaseInsensitive: Boolean = True): TVpContact;
     function FindContactIndexByName(const Name: string;
       CaseInsensitive: Boolean = True): Integer;
@@ -2567,44 +2567,36 @@ begin
   end;
 end;
 
-{ new function introduced to support the new buttonbar component }
-function TVpContacts.FindContactByName(const Name: string;               
-  CaseInsensitive: Boolean): TVpContact;                                 
+{ new function introduced to support the new buttonbar component. }
+function TVpContacts.FindContactByName(const AName: string;               
+  CaseInsensitive: Boolean): TVpContact;
 var                                                                      
   I: Integer;                                                            
   SearchStr: String;                                                     
-  SearchLength: Integer;                                                 
+  SearchLength: Integer;
+  SearchName: String;
 begin                                                                    
   Result := nil;                                                         
                                                                          
   // To enhance performance, uppercase the input name and get its length only once
   if CaseInsensitive then                                                
-    SearchStr := uppercase(Name)                                         
+    SearchStr := UpperCase(AName)
   else                                                                   
-    SearchStr := Name;                                                   
+    SearchStr := AName;                                                   
   SearchLength := Length(SearchStr);                                     
-                                                                         
+
   // Iterate the contacts looking for a match
-  for I := 0 to FContactsList.Count - 1 do begin                         
-    if CaseInsensitive then begin                                        
-      // not case sensitive
-      if Copy(uppercase(TVpContact(FContactsList[I]).LastName), 1, SearchLength) = SearchStr
-      then begin                                                         
-        // We found a match, so return it and bail out
-        Result := TVpContact(FContactsList[I]);
-        Exit;                                                            
-      end;                                                               
-    end else begin                                                       
-      // case sensitive
-      if Copy(TVpContact(FContactsList[I]).LastName, 1, SearchLength) = SearchStr
-      then begin                                                         
-        // We found a match, so return it and bail out
-        Result := TVpContact(FContactsList[I]);
-        Exit;                                                            
-      end;                                                               
-    end;                                                                 
-  end;                                                                   
-end;                                                                     
+  for I := 0 to FContactsList.Count - 1 do begin
+    SearchName := Copy(TVpContact(FContactsList[I]).LastName, 1, SearchLength);
+    if CaseInsensitive then
+      SearchName := Uppercase(SearchName);
+    // We found a match, so return it and bail out
+    if SearchName = SearchStr then begin
+      Result := TVpContact(FContactsList[I]);
+      exit;
+    end;
+  end;
+end;
 
 { new function introduced to support the new buttonbar component }       
 function TVpContacts.FindContactIndexByName(const Name: string;          

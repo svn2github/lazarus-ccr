@@ -69,6 +69,8 @@ type
     SearchString: String) of object;
 
   TVpContactButtonBar = class(TVPCustomControl)
+  private
+    FOnContactNotFound: TNotifyEvent;
   protected {private}
     FBarOrientation: TVpButtonBarOrientation;
     FBorderWidth: Integer;
@@ -138,8 +140,10 @@ type
       read FShowNumberButton write SetShowNumberButton default True;
     property OnButtonClick: TVpButtonBarClickEvent
       read FOnButtonClick write FOnButtonClick;
+    property OnContactNotFound: TNotifyEvent
+      read FOnContactNotFound write FOnContactNotFound;
     property RadioStyle: Boolean
-      read FRadioStyle write FRadioStyle;
+      read FRadioStyle write FRadioStyle default true;
 
     property Align;
     property Anchors;
@@ -210,6 +214,7 @@ begin
   FButtonWidth := 34;
   FCaptionStyle := csLowercase;
   FDrawingStyle := ds3d;
+  FRadioStyle := true;
   FShowNumberButton := True;
 end;
 {=====}
@@ -379,7 +384,9 @@ begin
     FContactGrid.SetFocus;
     for I := 1 to Length(bbSearchString) do
       if FContactGrid.SelectContactByName(bbSearchString[I]) then
-        Break;
+        Exit;
+    if Assigned(FOnContactNotFound) then
+      FOnContactNotFound(self);
   end;
 end;
 {=====}
@@ -397,14 +404,17 @@ var
   I: Integer;
   P: TPoint;
   R: TRect;
+  found: Boolean;
 begin
   inherited MouseDown(Button, Shift, X, Y);
 
   if Button = mbLeft then begin
+    found := false;
     P := Point(X, Y);
     for I := 0 to pred(FButtonCount) do begin
       R := FButtonsArray[I].Rect;
       if PointInRect(P, R) then begin
+        found := True;
         { if RadioStyle then un-press the last clicked button. }
         if RadioStyle then
           DrawButton(FButtonPressed, False);
@@ -415,10 +425,12 @@ begin
       end;
     end;
 
-    if Assigned(FOnButtonClick) then
-      FOnButtonClick(Self, FButtonPressed, bbSearchString)
-    else
-      SelectContact;
+    if found then begin
+      if Assigned(FOnButtonClick) then
+        FOnButtonClick(Self, FButtonPressed, bbSearchString)
+      else
+        SelectContact;
+    end;
   end;
 end;
 {=====}
