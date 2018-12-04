@@ -1639,6 +1639,7 @@ begin
       end;
     else
       inherited;
+      exit;
   end;
 
   Invalidate;
