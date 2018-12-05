@@ -433,7 +433,6 @@ var
         Result := UTF8CompareStr(S, S1) = 0;
       end;
     end
-//    else Result := false //(Field.Value = Value);
     else Result := (Field.Value = Value);
   end;
 
@@ -443,10 +442,15 @@ var
   begin
     if FieldCount = 1 then
       Result := CompareField(TField(Fields.First), KeyValues)
-    else begin
+    else
+    begin
       Result := True;
       for I := 0 to FieldCount - 1 do
-        Result := Result and CompareField(TField(Fields[I]), KeyValues[I]);
+      begin
+        //Result := Result and CompareField(TField(Fields[I]), KeyValues[I]);
+        if not CompareField(TField(Fields[I]), KeyValues[I]) then
+          Exit(false);
+      end;
     end;
   end;
 

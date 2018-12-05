@@ -1,0 +1,25 @@
+object Form1: TForm1
+  Left = 660
+  Height = 335
+  Top = 285
+  Width = 455
+  Caption = 'RxLogin demo'
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object RxLoginDialog1: TRxLoginDialog
+    DetailItems.Strings = (
+      'Line 1'
+      'Line 2'
+      'Line 3'
+    )
+    DetailItem = 1
+    UpdateCaption = ucAppTitle
+    ShowDetails = False
+    LoginOptions = [rloMoreBtn, rloHelpBtn]
+    AfterLogin = RxLoginDialog1AfterLogin
+    BeforeLogin = RxLoginDialog1BeforeLogin
+    OnUnlockApp = RxLoginDialog1UnlockApp
+    Left = 207
+    Top = 133
+  end
+end

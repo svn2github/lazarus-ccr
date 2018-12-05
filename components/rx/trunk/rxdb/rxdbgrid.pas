@@ -7234,8 +7234,6 @@ end;
 
 function TRxColumn.GetKeyList: TStrings;
 begin
-  if FKeyList = nil then
-    FKeyList := TStringList.Create;
   Result := FKeyList;
 end;
 
@@ -7299,10 +7297,7 @@ end;
 procedure TRxColumn.SetKeyList(const AValue: TStrings);
 begin
   if AValue = nil then
-  begin
-    if FKeyList <> nil then
-      FKeyList.Clear;
-  end
+    FKeyList.Clear
   else
     KeyList.Assign(AValue);
 end;
@@ -7340,6 +7335,7 @@ end;
 constructor TRxColumn.Create(ACollection: TCollection);
 begin
   inherited Create(ACollection);
+  FKeyList := TStringList.Create;
   FNotInKeyListIndex := -1;
   FConstraints:=TRxDBGridCollumnConstraints.Create(Self);
   FFooter := TRxColumnFooterItem.Create(nil);
@@ -7359,11 +7355,7 @@ begin
   FreeAndNil(FGroupParam);
   FreeAndNil(FFooters);
   FreeAndNil(FEditButtons);
-  if FKeyList <> nil then
-  begin
-    FKeyList.Free;
-    FKeyList := nil;
-  end;
+  FreeAndNil(FKeyList);
   FreeAndNil(FFooter);
   FreeAndNil(FFilter);
   FreeAndNil(FConstraints);

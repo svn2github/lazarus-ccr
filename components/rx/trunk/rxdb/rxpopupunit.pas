@@ -104,12 +104,18 @@ type
     FValueChecked: string;
     FValueUnchecked: string;
     FWidth: Integer;
+    FKeyList: TStrings;
+    FPickList: TStrings;
+    function GetKeyList: TStrings;
+    function GetPickList: TStrings;
     procedure SetAlignment(const AValue: TAlignment);
     procedure SetColor(const AValue: TColor);
     procedure SetDisplayFormat(const AValue: string);
     procedure SetFieldName(const AValue: string);
     procedure SetFont(const AValue: TFont);
     procedure SetImageList(const AValue: TImageList);
+    procedure SetKeyList(AValue: TStrings);
+    procedure SetPickList(AValue: TStrings);
     procedure SetSizePriority(AValue: Integer);
     procedure SetTitle(const AValue: TPopUpColumnTitle);
     procedure SetValueChecked(const AValue: string);
@@ -132,6 +138,8 @@ type
     property SizePriority: Integer read FSizePriority write SetSizePriority default 1;
     property Title:TPopUpColumnTitle read FTitle write SetTitle;
     property Width: Integer read FWidth write SetWidth;
+    property KeyList: TStrings read GetKeyList write SetKeyList;
+    property PickList: TStrings read GetPickList write SetPickList;
   end;
   
   { TPopUpFormColumns }
@@ -433,33 +441,35 @@ end;
 
 procedure TPopUpForm.DoSetFieldsFromColList;
 var
-  GK:TRxColumn;
+  GC:TRxColumn;
   i:integer;
   Column:TPopUpColumn;
 begin
   FGrid.BeginUpdate;
   for i:=0 to FPopUpFormOptions.Columns.Count - 1 do
   begin
-    GK:=FGrid.Columns.Add as TRxColumn;
+    GC:=FGrid.Columns.Add as TRxColumn;
     Column:=FPopUpFormOptions.Columns[i];
-    GK.Field:=FGrid.DataSource.DataSet.FieldByName(Column.FieldName);
-    GK.Alignment:=Column.Alignment;
-    GK.Color:=Column.Color;
-    GK.DisplayFormat:=Column.DisplayFormat;
-//    GK.Font:=Column.Font;
-    GK.ImageList:=Column.ImageList;
-    GK.SizePriority:=Column.SizePriority;
-    GK.ValueChecked:=Column.ValueChecked;
-    GK.ValueUnchecked:=Column.ValueUnchecked;
+    GC.Field:=FGrid.DataSource.DataSet.FieldByName(Column.FieldName);
+    GC.Alignment:=Column.Alignment;
+    GC.Color:=Column.Color;
+    GC.DisplayFormat:=Column.DisplayFormat;
+//    GC.Font:=Column.Font;
+    GC.ImageList:=Column.ImageList;
+    GC.SizePriority:=Column.SizePriority;
+    GC.ValueChecked:=Column.ValueChecked;
+    GC.ValueUnchecked:=Column.ValueUnchecked;
 
     if Column.Width<>0 then
-      GK.Width:=Column.Width;
+      GC.Width:=Column.Width;
 
-    GK.Title.Color:=Column.Title.Color;
-    (GK.Title as TRxColumnTitle).Orientation:=Column.Title.Orientation;
-    GK.Title.Alignment:=Column.Title.Alignment;
-    GK.Title.Layout:=Column.Title.Layout;
-    GK.Title.Caption:=Column.Title.Caption;
+    GC.Title.Color:=Column.Title.Color;
+    (GC.Title as TRxColumnTitle).Orientation:=Column.Title.Orientation;
+    GC.Title.Alignment:=Column.Title.Alignment;
+    GC.Title.Layout:=Column.Title.Layout;
+    GC.Title.Caption:=Column.Title.Caption;
+    GC.KeyList.Assign(Column.KeyList);
+    GC.PickList.Assign(Column.PickList);
   end;
   FGrid.EndUpdate;
 end;
@@ -754,6 +764,16 @@ begin
   FAlignment:=AValue;
 end;
 
+function TPopUpColumn.GetKeyList: TStrings;
+begin
+  Result := FKeyList;
+end;
+
+function TPopUpColumn.GetPickList: TStrings;
+begin
+  Result := FPickList;
+end;
+
 procedure TPopUpColumn.SetColor(const AValue: TColor);
 begin
   if FColor=AValue then exit;
@@ -784,6 +804,22 @@ procedure TPopUpColumn.SetImageList(const AValue: TImageList);
 begin
   if FImageList=AValue then exit;
   FImageList:=AValue;
+end;
+
+procedure TPopUpColumn.SetKeyList(AValue: TStrings);
+begin
+  if AValue = nil then
+    FKeyList.Clear
+  else
+    FKeyList.Assign(AValue);
+end;
+
+procedure TPopUpColumn.SetPickList(AValue: TStrings);
+begin
+  if AValue = nil then
+    FPickList.Clear
+  else
+    FPickList.Assign(AValue);
 end;
 
 procedure TPopUpColumn.SetSizePriority(AValue: Integer);
@@ -830,6 +866,8 @@ end;
 constructor TPopUpColumn.Create(ACollection: TCollection);
 begin
   inherited Create(ACollection);
+  FKeyList:=TStringList.Create;
+  FPickList:=TStringList.Create;
   FTitle:=TPopUpColumnTitle.Create;
   FColor:=clWindow;
   FWidth:=65;
@@ -838,6 +876,8 @@ end;
 
 destructor TPopUpColumn.Destroy;
 begin
+  FreeAndNil(FKeyList);
+  FreeAndNil(FPickList);
   FreeAndNil(FTitle);
   inherited Destroy;
 end;
