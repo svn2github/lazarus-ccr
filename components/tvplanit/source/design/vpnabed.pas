@@ -104,12 +104,12 @@ type
     function GetFolderDisplayName(AFolder: TVpNavFolder): String;
     function GetItemDisplayName(AItem: TVpNavBtnItem): String;
     procedure SelectionChanged(AOrderChanged: Boolean = false);
-    procedure SelectList(SelList: TPersistentSelectionList);
     procedure UpdateBtnStates;
 
   private
     FDesigner: TComponentEditorDesigner;
     procedure AddDesignHookHandlers;
+    procedure Modified;
     procedure OnGetSelection(const ASelection: TPersistentSelectionList);
     procedure OnPersistentAdded(APersistent: TPersistent; Select: boolean);
     procedure OnPersistentDeleting(APersistent: TPersistent);
@@ -365,6 +365,8 @@ begin
   Result := IfThen(AItem.Caption <> '', AItem.Caption, AItem.Name);
 end;
 
+{ Is called when the selection has been  changed within the Component Editor
+  in order pass the new selection to the OI designer }
 procedure TfrmNavBarEd.OnGetSelection(const ASelection: TPersistentSelectionList);
 var
   i: Integer;
@@ -389,8 +391,9 @@ end;
 procedure TfrmNavBarEd.OnPersistentAdded(APersistent: TPersistent; Select: boolean);
 var
   i: Integer;
+  selList: TPersistentSelectionList;
 begin
-  if not Assigned(APersistent) then
+  if not Assigned(APersistent) or (FBar = nil) or (GlobalDesignHook = nil) then
     exit;
 
   if (APersistent is TVpNavFolder) then
@@ -399,6 +402,23 @@ begin
     if Select then begin
       i := FindFolderIndex(APersistent);
       lbFolders.ItemIndex := i;
+
+      selList := TPersistentSelectionList.Create;
+      try
+        selList.ForceUpdate := true;
+        for i := 0 to pred(lbFolders.Items.Count) do
+          if lbFolders.Selected[i] then begin
+            SelList.Add(TPersistent(lbFolders.Items.Objects[i]));
+            FBar.FolderCollection.DoOnItemSelected(i);
+          end;
+
+        if (SelList.Count > 0) then begin
+          GlobalDesignHook.SetSelection(SelList);
+          GlobalDesignHook.LookupRoot := GetLookupRootForComponent(FBar);
+        end;
+      finally
+        selList.Free;
+      end;
     end;
   end else
   if (APersistent is TVpNavBtnItem) then
@@ -407,6 +427,23 @@ begin
     if Select then begin
       i := FindBtnIndex(APersistent);
       lbItems.ItemIndex := i;
+
+      selList := TPersistentSelectionList.Create;
+      try
+        selList.ForceUpdate := true;
+        for i:=0 to lbItems.Items.Count-1 do
+          if lbItems.Selected[i] then
+          begin
+            selList.Add(TPersistent(lbItems.Items.Objects[i]));
+            FBar.Folders[FBar.ActiveFolder].ItemCollection.DoOnItemSelected(I);
+          end;
+        if selList.Count > 0 then begin
+          GlobalDesignHook.SetSelection(selList);
+          GlobalDesignHook.LookupRoot := GetLookupRootForComponent(FBar);
+        end;
+      finally
+        selList.Free;
+      end;
     end;
   end;
   UpdateBtnStates;
@@ -419,7 +456,10 @@ begin
   if APersistent is TVpNavFolder then
   begin
     i := FindFolderIndex(APersistent);
-    if i <> -1 then lbFolders.Items.Delete(i);
+    if i <> -1 then begin
+      lbFolders.Items.Delete(i);
+      lbItems.Clear;
+    end;
   end else
   if APersistent is TVpNavBtnItem then
   begin
@@ -432,21 +472,24 @@ end;
 procedure TfrmNavBarEd.OnRefreshPropertyValues;
 var
   selections: TPersistentSelectionList;
-  i: Integer;
+  i, idx: Integer;
 begin
-  if FBar = nil then
+  if (FBar = nil) or (GlobalDesignHook = nil) then
     exit;
 
   selections := TPersistentSelectionList.Create;
   try
-    Assert(Assigned(GlobalDesignHook));
     GlobalDesignHook.GetSelection(selections);
     for i:=0 to selections.Count-1 do begin
-      if selections[i] is TVpNavFolder then
-        lbFolders.Items[i] := GetFolderDisplayName(TVpNavFolder(selections[i]))
-      else if selections[i] is TVpNavBtnItem then
-        lbItems.Items[i] := GetItemDisplayName(TVpNavBtnItem(selections[i]))
-      else if (selections[i] is TCustomImageList) and (TCustomImageList(selections[i]) = FBar.Images) then
+      if selections[i] is TVpNavFolder then begin
+        idx := FindFolderIndex(TVpNavFolder(selections[i]));
+        lbFolders.Items[idx] := GetFolderDisplayName(TVpNavFolder(selections[i]))
+      end else
+      if selections[i] is TVpNavBtnItem then begin
+        idx := FindBtnIndex(TVpNavBtnItem(selections[i]));
+        lbItems.Items[idx] := GetItemDisplayName(TVpNavBtnItem(selections[i]))
+      end else
+      if (selections[i] is TCustomImageList) and (TCustomImageList(selections[i]) = FBar.Images) then
         PopulateImagesList;
     end;
   finally
@@ -454,6 +497,8 @@ begin
   end;
 end;
 
+{ Is called when a new selection has been made in the object tree of the OI.
+  The controls in the component editor must be updated to the new selection. }
 procedure TfrmNavBarEd.OnSetSelection(const ASelection: TPersistentSelectionList);
 var
   i, j: Integer;
@@ -466,7 +511,12 @@ begin
       //select from list
       for i := 0 to ASelection.Count - 1 do begin
         j := FindFolderIndex(ASelection[i]);
-        if j <> -1 then lbFolders.Selected[j] := true;
+        if j <> -1 then begin
+          lbFolders.Selected[j] := true;
+          PopulateItemList;
+          FBar.ActiveFolder := lbFolders.ItemIndex;
+          lbImages.ItemIndex := -1;
+        end;
       end;
     end else
     if ASelection[0] is TVpNavBtnItem then
@@ -558,7 +608,7 @@ var
   SelList: TPersistentSelectionList;
   i: Integer;
 begin
-  if FBar = nil then
+  if (FBar = nil) or (GlobalDesignHook = nil) then
     exit;
 
   PopulateItemList;
@@ -566,16 +616,22 @@ begin
   lbImages.ItemIndex := -1;
 
   SelList := TPersistentSelectionList.Create;
-  SelList.ForceUpdate := true;
+  try
+    SelList.ForceUpdate := true;
 
-  for i := 0 to pred(lbFolders.Items.Count) do
-    if lbFolders.Selected[i] then begin
-      SelList.Add(TPersistent(lbFolders.Items.Objects[i]));
-      FBar.FolderCollection.DoOnItemSelected(i);
+    for i := 0 to pred(lbFolders.Items.Count) do
+      if lbFolders.Selected[i] then begin
+        SelList.Add(TPersistent(lbFolders.Items.Objects[i]));
+        FBar.FolderCollection.DoOnItemSelected(i);
+      end;
+
+    if SelList.Count > 0 then begin
+      GlobalDesignHook.SetSelection(SelList);
+      GlobalDesignHook.LookupRoot := GetLookupRootForComponent(FBar);
     end;
-
-  if SelList.Count > 0 then
-    SelectList(SelList);
+  finally
+    SelList.Free;
+  end;
 
   UpdateBtnStates;
 end;
@@ -666,15 +722,21 @@ begin
     lbImages.ItemIndex := btn.IconIndex;
 
     SelList := TPersistentSelectionList.Create;
-    SelList.ForceUpdate := true;
-    for i:=0 to lbItems.Items.Count-1 do
-      if lbItems.Selected[i] then
-      begin
-        SelList.Add(TPersistent(lbItems.Items.Objects[i]));
-        FBar.Folders[FBar.ActiveFolder].ItemCollection.DoOnItemSelected(I);
+    try
+      SelList.ForceUpdate := true;
+      for i:=0 to lbItems.Items.Count-1 do
+        if lbItems.Selected[i] then
+        begin
+          SelList.Add(TPersistent(lbItems.Items.Objects[i]));
+          FBar.Folders[FBar.ActiveFolder].ItemCollection.DoOnItemSelected(I);
+        end;
+      if SelList.Count > 0 then begin
+        GlobalDesignHook.SetSelection(SelList);
+        GlobalDesignHook.LookupRoot := GetLookupRootForComponent(FBar);
       end;
-    if SelList.Count > 0 then
-      SelectList(SelList);
+    finally
+      SelList.Free;
+    end;
   end;
 
   UpdateBtnStates;
@@ -745,6 +807,7 @@ begin
       GlobalDesignHook.SelectOnlyThis(folder);
       Designer.Modified;
     end;
+    Modified;
   end;
 
   UpdateBtnStates;
@@ -752,52 +815,47 @@ end;
 
 procedure TfrmNavBarEd.btnFolderDownClick(Sender: TObject);
 var
-  Folder: TVpNavFolder;
+  folder: TVpNavFolder;
 begin
   if (lbFolders.ItemIndex > -1) then begin
-    Folder := TVpNavFolder(lbFolders.Items.Objects[lbFolders.ItemIndex]);
+    folder := TVpNavFolder(lbFolders.Items.Objects[lbFolders.ItemIndex]);
 
-    if Folder.Index < pred(lbFolders.Items.Count) then
-      Folder.Index := Folder.Index + 1;
+    if folder.Index < pred(lbFolders.Items.Count) then
+      folder.Index := folder.Index + 1;
 
     PopulateFolderList;
-    lbFolders.ItemIndex := Folder.Index;
+    lbFolders.ItemIndex := folder.Index;
 
     if Assigned(Designer) then begin
       GlobalDesignHook.SelectOnlyThis(nil);
       GlobalDesignHook.SelectOnlyThis(folder);
       Designer.Modified;
     end;
+    Modified;
   end;
 
   UpdateBtnStates;
 end;
 
-procedure TfrmNavBarEd.btnItemDeleteClick(Sender: TObject);
-begin
-  if (lbItems.ItemIndex <> -1) then begin
-    TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]).Free;
-    lbItems.ItemIndex := -1;
-    lbImages.ItemIndex := -1;
-    PopulateItemList;
-    if Assigned(Designer) then
-      Designer.Modified;
-    UpdateBtnStates;
-  end;
-end;
-
 procedure TfrmNavBarEd.btnFolderDeleteClick(Sender: TObject);
+var
+  folder: TVpNavFolder;
+  s: String;
 begin
   if (lbFolders.ItemIndex <> -1) and (FBar <> nil) then begin
-    TVpNavFolder(lbFolders.Items.Objects[lbFolders.ItemIndex]).Free;
+
+    folder := TVpNavFolder(lbFolders.Items.Objects[lbFolders.ItemIndex]);
+    s := folder.Caption;
+    if MessageDlg(Format('Do you really want to delete folder "%s"?', [s]),
+      mtConfirmation, [mbYes, mbNo], 0) <> mrYes
+    then
+      exit;
+
+    FDesigner.DeleteSelection;
     lbFolders.ItemIndex := -1;
-    FBar.Activefolder := -1;
+    FBar.ActiveFolder := -1;
     lbImages.ItemIndex := -1;
-    PopulateFolderList;
     PopulateItemList;
-    if Assigned(Designer) then
-      Designer.Modified;
-    UpdateBtnStates;
   end;
 end;
 
@@ -805,11 +863,10 @@ procedure TfrmNavBarEd.btnFolderAddClick(Sender: TObject);
 var
   folder: TVpNavFolder;
 begin
-  if FBar = nil then
+  if (FBar = nil) or (GlobalDesignHook = nil) then
     exit;
   folder := TVpNavFolder(FBar.FolderCollection.Add);
   GlobalDesignHook.PersistentAdded(folder, true);
-  lbFoldersClick(self);
 end;
 
 procedure TfrmNavBarEd.btnItemAddClick(Sender: TObject);
@@ -817,12 +874,28 @@ var
   folder: TVpNavFolder;
   item: TVpNavBtnItem;
 begin
-  if (lbFolders.ItemIndex <> -1) then begin
-    folder := TVpNavFolder(lbFolders.Items.Objects[lbFolders.ItemIndex]);
-    item := TVpNavBtnItem(folder.ItemCollection.Add);
-    GlobalDesignHook.PersistentAdded(item, true);
+  if (lbFolders.ItemIndex = -1) or (GlobalDesignHook = nil) then
+    exit;
+  folder := TVpNavFolder(lbFolders.Items.Objects[lbFolders.ItemIndex]);
+  item := TVpNavBtnItem(folder.ItemCollection.Add);
+  GlobalDesignHook.PersistentAdded(item, true);
+end;
+
+procedure TfrmNavBarEd.btnItemDeleteClick(Sender: TObject);
+var
+  btn: TVpNavBtnItem;
+  s: String;
+begin
+  if (lbItems.ItemIndex <> -1) then begin
+    btn := TVpNavBtnItem(lbItems.Items.Objects[lbItems.ItemIndex]);
+    s := btn.Caption;
+    if MessageDlg(Format('Do you really want to delete item "%s"?', [s]),
+      mtConfirmation, [mbYes, mbNo], 0) <> mrYes
+    then
+      exit;
+
+    FDesigner.DeleteSelection;
   end;
-  UpdateBtnStates;
 end;
 
 procedure TfrmNavBarEd.btnUseImageClick(Sender: TObject);
@@ -847,6 +920,16 @@ begin
   end;
 end;
 
+procedure TfrmNavBarEd.Modified;
+begin
+  FDesigner.PropertyEditorHook.RefreshPropertyValues;
+  FDesigner.Modified;
+
+  if GlobalDesignHook <> nil then
+    GlobalDesignHook.Modified(self);
+
+end;
+
 procedure TfrmNavBarEd.SelectionChanged(AOrderChanged: Boolean = false);
 var
   SelList: TPersistentSelectionList;
@@ -864,16 +947,6 @@ begin
   finally
     GlobalDesignHook.AddHandlerSetSelection(OnSetSelection);
   end;
-end;
-
-procedure TfrmNavBarEd.Selectlist(SelList: TPersistentSelectionList);
-begin
-  if (GlobalDesignHook <> nil) and (FBar <> nil) then
-  begin
-    GlobalDesignHook.SetSelection(SelList);
-    GlobalDesignHook.LookupRoot := GetLookupRootForComponent(FBar);
-  end;
-  SelList.Free;
 end;
 
 procedure TfrmNavBarEd.UpdateBtnStates;
