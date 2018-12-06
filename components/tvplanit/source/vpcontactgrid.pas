@@ -175,6 +175,7 @@ type
     procedure cgCalcRowHeight;
     procedure cgEditInPlace(Sender: TObject);
     procedure cgHookUp;
+    function ContactIsVisible(AIndex: Integer): Boolean;
     procedure Paint; override;
     procedure Loaded; override;
     procedure cgScrollHorizontal(Rows: Integer);
@@ -681,6 +682,14 @@ begin
 end;
 {=====}
 
+function TVpContactGrid.ContactIsVisible(AIndex: Integer): Boolean;
+var
+  rec: TVpContactRec;
+begin
+  rec := cgContactArray[AIndex];
+  Result := (rec.WholeRect.Left >= 0) and (rec.WholeRect.Right <= ClientWidth);
+end;
+
 procedure TVpContactGrid.Loaded;
 begin
   inherited;
@@ -790,6 +799,9 @@ end;
 
 procedure TVpContactGrid.ScrollIntoView;
 begin
+  if ContactIsVisible(FContactIndex) then
+    exit;
+
   if FContactIndex < FContactsBefore then begin
     FContactsBefore := FContactIndex;
     Invalidate;
@@ -1470,8 +1482,7 @@ end;
 
 procedure TVpContactGrid.InitializeDefaultPopup;
 var
-  NewItem : TMenuItem;
-
+  NewItem: TMenuItem;
 begin
   if RSContactPopupAdd <> '' then begin
     NewItem := TMenuItem.Create(Self);
