@@ -46,7 +46,9 @@ type
      rxpoShowFooterColor,
      rxpoShowReportTitle,
      rxpoHideZeroValues,
-     rxpoColSpanning
+     rxpoColSpanning,
+     rxpoShowPreview
+
      );
   TRxDBGridPrintOptions = set of TRxDBGridPrintOption;
 
@@ -157,6 +159,7 @@ begin
   FView.Font.Size:=12;
 //    FView.Font.Assign(FTitleFont);
   FView.Memo.Add(FReportTitle);
+  FView.AutoSize:=true;
 
 //  FPage.Objects.Add(FView);
 
@@ -473,7 +476,13 @@ begin
 
     frDesigner:=SaveDesign;
 
-    FReport.ShowReport;
+
+    FReport.PrepareReport;
+    if rxpoShowPreview in FOptions then
+      FReport.ShowPreparedReport
+    else
+      FReport.PrintPreparedReport('', 0);
+
     Result:=true;
   finally
     FreeAndNil(FColumnDataSet);
