@@ -81,7 +81,6 @@ type
     FReadOnly: Boolean;
     FRightClickSelect: Boolean;
     FDayWidth: Integer;
-    FButtonWidth: Integer;
     FIconDayDist: Integer;
     FDate: TDate;
     FSelDate: TDate;
@@ -161,7 +160,7 @@ type
 //    procedure GetDlgCode(var Code: TDlgCodes); override;   <--- wp
 //    procedure CursorChanged; override;   <--- wo
     procedure Change; virtual;
-    {$IFDEF LCL_FullVersion >= 1080000}
+    {$IF LCL_FullVersion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
     {$IFEND}
@@ -444,7 +443,6 @@ begin
   FMonthFont.Size := 18;
 
   FObjectsFontStyle := [fsUnderline];
-  FButtonWidth := -1;
   FDayWidth := -1;
   FIconDayDist := -1;
   FDate := SysUtils.Date - 7;
@@ -465,7 +463,7 @@ begin
   with FLeftBtn do
   begin
     Align := alLeft;
-    Width := ButtonWidth;
+    Width := cTMTimeLineButtonWidth;
     Parent := Self;
     Transparent := False;
     Layout := blGlyphTop;
@@ -487,7 +485,7 @@ begin
   with FRightBtn do
   begin
     Align := alRight;
-    Width := ButtonWidth;
+    Width := cTMTimeLineButtonWidth;
     Parent := Self;
     Transparent := False;
     Layout := blGlyphTop;
@@ -908,7 +906,7 @@ end;
 
 function TJvCustomTMTimeLine.ButtonWidthStored: Boolean;
 begin
-  Result := FButtonWidth >= 0;
+  Result := ButtonWidth <> Scale96ToFont(cTMTimeLineButtonWidth);
 end;
 
 function TJvCustomTMTimeLine.DayWidthStored: Boolean;
@@ -918,10 +916,7 @@ end;
 
 function TJvCustomTMTimeLine.GetButtonWidth: Integer;
 begin
-  if ButtonWidthStored then
-    Result := FButtonWidth
-  else
-    Result := Scale96ToFont(cTMTimeLineButtonWidth);
+  Result := FLeftBtn.Width;
 end;
 
 function TJvCustomTMTimeLine.GetDayWidth: Integer;
@@ -1055,8 +1050,8 @@ begin
     FOnChange(Self);
 end;
 
-{$IFDEF LCL_FullVersion >= 1080000}
-procedure TCustomTMTimeLine.DoAutoAdjustLayout(
+{$IF LCL_FullVersion >= 1080000}
+procedure TJvCustomTMTimeLine.DoAutoAdjustLayout(
   const AMode: TLayoutAdjustmentPolicy;
   const AXProportion, AYProportion: Double);
 begin
@@ -1064,11 +1059,9 @@ begin
 
   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
   begin
-    if FDayWidthStored then
+    if DayWidthStored then
       FDayWidth := Round(FDayWidth * AXProportion);
-    if FButtonWidthStored then
-      FButtonWidth := Round(FButtonWidth * AXProportion);
-    if FIconDayDistStored then
+    if IconDayDistStored then
       FIconDayDist := Round(FIconDayDist * AYProportion);
     Invalidate;
   end;
@@ -1244,9 +1237,8 @@ end;
 
 procedure TJvCustomTMTimeline.SetButtonWidth(const Value: Integer);
 begin
-  if (FButtonWidth <> Value) and (Value <> 0) and (Value >= -1) then
+  if (GetButtonWidth <> Value) and (Value > 0) then
   begin
-    FButtonWidth := Value;
     FLeftBtn.Width := ButtonWidth;
     FRightBtn.Width := ButtonWidth;
     Invalidate;
