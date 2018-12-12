@@ -5,13 +5,14 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, rxlogin;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ButtonPanel, rxlogin;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
+    ButtonPanel1: TButtonPanel;
     RxLoginDialog1: TRxLoginDialog;
     procedure RxLoginDialog1AfterLogin(Sender: TObject);
     procedure RxLoginDialog1BeforeLogin(Sender: TObject);

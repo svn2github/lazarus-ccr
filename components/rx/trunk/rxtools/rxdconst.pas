@@ -88,8 +88,6 @@ resourcestring
 
   SDBComboBoxFieldNotAssigned        = '%s:TDBComboBox - DataField not assigned';
 
-  //SPropDefByLookup         = 'PropDefByLookup';
-  //SDataSourceFixed         = 'SDataSourceFixed';
   SCircularDataLink        = 'Circular data link';
   sRxAscendign             = 'Ascendign';
   sRxDescending            = 'Descending';
@@ -130,7 +128,6 @@ resourcestring
   sRxFilterFormOperand     = 'Operand :';
   sRxFilterFormEnd         = 'end.';
   sRxFilterFormClear       = 'Clear filter';
-  sRxFilterFormCancel      = 'Cancel';
   sRxFilterFormApply       = 'Apply';
   sRxFilterFormCaption     = 'Filter conditions';
 

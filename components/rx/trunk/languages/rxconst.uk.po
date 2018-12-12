@@ -193,6 +193,14 @@ msgstr "Попередній місяць|"
 msgid "Error. Expected value for field %s."
 msgstr "Поле %s. Вимагається значення"
 
+#: rxconst.srxlogindlgbtnmore
+msgid "More >>"
+msgstr ""
+
+#: rxconst.srxlogindlgdatabase
+msgid "Database"
+msgstr ""
+
 #: rxconst.srxstrholdertexteditor
 msgid "Rx string holder editor"
 msgstr ""

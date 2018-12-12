@@ -77,14 +77,6 @@ resourcestring
   sButtonAlign1         = 'None';
   sButtonAlign2         = 'Left';
   sButtonAlign3         = 'Right';
-//  sGTKWidgetSet         = 'GTK widget set';
-//  sGTK2WidgetSet        = 'GTK 2 widget set';
-//  sWin32_64WidgetSet    = 'Win32/Win64 widget set';
-//  sWinCEWidgetSet       = 'WinCE widget set';
-//  sCarbonWidgetSet      = 'Carbon widget set';
-//  sQTWidgetSet          = 'QT widget set';
-//  sFpGUIWidgetSet       = 'FpGUI widget set';
-//  sOtherGUIWidgetSet    = 'Other gui';
   sWidget               = 'Widget : ';
   sAppVersion           = 'Version : ';
   sLCLVersion           = 'LCL Version: ';
@@ -150,6 +142,9 @@ resourcestring
   sRxTextFolderSynHTML          = 'HTML';
   sRxTextFolderSynSQL           = 'SQL';
 
+  { TRxLoginDialog }
+  sRxLoginDlgBtnMore            = 'More >>';
+  sRxLoginDlgDatabase           = 'Database';
 
 implementation
 

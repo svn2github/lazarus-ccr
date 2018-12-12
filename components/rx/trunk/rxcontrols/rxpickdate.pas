@@ -264,7 +264,7 @@ const
 
 implementation
 
-uses Messages, RXCtrls, rxconst, rxtooledit, rxlclutils, math, LCLStrConsts, LResources;
+uses Messages, RXCtrls, rxconst, rxtooledit, rxlclutils, math, LResources;
 
 {$R pickdate.res}
 
@@ -1348,7 +1348,7 @@ begin
   begin
     Parent := Control;
     SetBounds(0, 0, 112, 21);
-    Caption := rsmbOK;
+    Caption := GetButtonCaption(idButtonOk);
     ModalResult := mrOk;
   end;
 
@@ -1356,7 +1356,7 @@ begin
   begin
     Parent := Control;
     SetBounds(111, 0, 111, 21);
-    Caption := rsmbCancel;
+    Caption := GetButtonCaption(idButtonCancel);
     ModalResult := mrCancel;
     Cancel := True;
   end;

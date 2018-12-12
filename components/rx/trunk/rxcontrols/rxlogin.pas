@@ -676,11 +676,18 @@ end;
 procedure TRxLoginForm.FormCreate(Sender: TObject);
 begin
   Icon.Assign(Application.Icon);
-//  if Icon.Empty then Icon.Handle := LoadIcon(0, IDI_APPLICATION);
+
   AppIcon.Picture.Assign(Icon);
   AppTitleLabel.Caption := Format(SAppTitleLabel, [Application.Title]);
   PasswordLabel.Caption := SPasswordLabel;
   UserNameLabel.Caption := SUserNameLabel;
+
+  btnOK.Caption := GetButtonCaption(idButtonOk);
+  btnCancel.Caption := GetButtonCaption(idButtonCancel);
+  btnHelp.Caption := GetButtonCaption(idButtonHelp);
+  btnMore.Caption := sRxLoginDlgBtnMore;
+
+  DataBaseLabel.Caption := sRxLoginDlgDatabase;
 end;
 
 procedure TRxLoginForm.btnMoreClick(Sender: TObject);

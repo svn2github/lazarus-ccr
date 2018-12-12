@@ -333,7 +333,7 @@ object RxLoginForm: TRxLoginForm
     BorderSpacing.Around = 6
     BorderSpacing.InnerBorder = 2
     Cancel = True
-    Caption = 'Отмена'
+    Caption = 'Cancel'
     Kind = bkCancel
     ModalResult = 2
     TabOrder = 4
@@ -352,7 +352,7 @@ object RxLoginForm: TRxLoginForm
     AutoSize = True
     BorderSpacing.Right = 6
     BorderSpacing.Bottom = 6
-    Caption = '&Справка'
+    Caption = '&Help'
     Kind = bkHelp
     TabOrder = 5
   end

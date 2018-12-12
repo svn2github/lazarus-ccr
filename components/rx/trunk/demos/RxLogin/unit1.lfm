@@ -4,8 +4,25 @@ object Form1: TForm1
   Top = 285
   Width = 455
   Caption = 'RxLogin demo'
+  ClientHeight = 335
+  ClientWidth = 455
   Position = poScreenCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
+  object ButtonPanel1: TButtonPanel
+    Left = 6
+    Height = 42
+    Top = 287
+    Width = 443
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    TabOrder = 0
+  end
   object RxLoginDialog1: TRxLoginDialog
     DetailItems.Strings = (
       'Line 1'

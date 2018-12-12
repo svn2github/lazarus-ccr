@@ -188,6 +188,14 @@ msgstr "Превыдущий год|"
 msgid "Error. Expected value for field %s."
 msgstr "Поле %s. Требуется значение"
 
+#: rxconst.srxlogindlgbtnmore
+msgid "More >>"
+msgstr "Больше >>"
+
+#: rxconst.srxlogindlgdatabase
+msgid "Database"
+msgstr "База данных"
+
 #: rxconst.srxstrholdertexteditor
 msgid "Rx string holder editor"
 msgstr "Редактор RxStrHolder"
@@ -332,4 +340,3 @@ msgstr "Интерфейс : "
 #: rxconst.swindowsicofiles
 msgid "Windows Ico files (*.ico)|*.ico|All files (*.*)|*.*"
 msgstr "Файлы иконок Windows (*.ico)|*.ico|Все файлы (*.*)|*.*"
-

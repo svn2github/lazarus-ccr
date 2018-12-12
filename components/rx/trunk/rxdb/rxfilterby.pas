@@ -113,7 +113,7 @@ var
   rxFilterByForm: TrxFilterByForm;
 
 implementation
-uses rxdconst, rxstrutils, DBGrids;
+uses rxdconst, rxstrutils, DBGrids, Buttons, LCLType;
 
 {$R *.lfm}
 
@@ -170,7 +170,7 @@ begin
   Label5.Caption:=sRxFilterFormOperand;
   Label6.Caption:=sRxFilterFormEnd;
   Button3.Caption:=sRxFilterFormClear;
-  Button2.Caption:=sRxFilterFormCancel;
+  Button2.Caption:=GetButtonCaption(idButtonCancel);
   Button1.Caption:=sRxFilterFormApply;
 end;
 

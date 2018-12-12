@@ -88,7 +88,7 @@ type
 
 implementation
 
-uses SysUtils, Forms, rxfduallst, LCLStrConsts, rxconst;
+uses SysUtils, Forms, rxfduallst, Buttons, LCLType, rxconst;
 
 { TDualListDialog }
 
@@ -101,9 +101,9 @@ begin
   FList2 := TStringList.Create;
   FLabel1Caption := SDualListSrcCaption;
   FLabel2Caption := SDualListDestCaption;
-  OkBtnCaption := rsmbOK;
-  CancelBtnCaption := rsmbCancel;
-  HelpBtnCaption := rsmbHelp;
+  OkBtnCaption := GetButtonCaption(idButtonOk);
+  CancelBtnCaption := GetButtonCaption(idButtonCancel);
+  HelpBtnCaption := GetButtonCaption(idButtonHelp);
   Title:=SDualListCaption;
 end;
 
@@ -136,17 +136,17 @@ end;
 
 function TDualListDialog.IsOkBtnCustom: Boolean;
 begin
-  Result := CompareStr(OkBtnCaption, rsmbOK) <> 0;
+  Result := CompareStr(OkBtnCaption, GetButtonCaption(idButtonOk)) <> 0;
 end;
 
 function TDualListDialog.IsCancelBtnCustom: Boolean;
 begin
-  Result := CompareStr(CancelBtnCaption, rsmbCancel) <> 0;
+  Result := CompareStr(CancelBtnCaption, GetButtonCaption(idButtonCancel)) <> 0;
 end;
 
 function TDualListDialog.IsHelpBtnCustom: Boolean;
 begin
-  Result := CompareStr(HelpBtnCaption, rsmbHelp) <> 0;
+  Result := CompareStr(HelpBtnCaption, GetButtonCaption(idButtonHelp)) <> 0;
 end;
 
 function TDualListDialog.Execute: Boolean;

@@ -37,7 +37,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, Buttons,
-  StdCtrls, ExtCtrls, rxdbgrid, DB;
+  StdCtrls, ExtCtrls, rxdbgrid, DB, LCLType;
 
 type
 
@@ -69,7 +69,7 @@ type
 procedure ShowRxDBGridFindForm(Grid:TRxDBGrid);
 
 implementation
-uses rxdbutils, DBGrids, rxdconst, LCLStrConsts;
+uses rxdbutils, DBGrids, rxdconst;
 
 {$R *.lfm}
 
@@ -103,7 +103,7 @@ begin
   RadioGroup1.Items.Add(sRxDbGridFindRangeForw);
   RadioGroup1.Items.Add(sRxDbGridFindRangeBack);
   BtnFind.Caption:=sRxFindMore;
-  Button2.Caption:=rsMbClose;
+  Button2.Caption:=GetButtonCaption(idButtonCancel);
 
   RadioGroup1.ItemIndex:=0;
 end;
