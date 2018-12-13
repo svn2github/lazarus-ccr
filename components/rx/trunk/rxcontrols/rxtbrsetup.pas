@@ -44,10 +44,12 @@ type
   { TToolPanelSetupForm }
 
   TToolPanelSetupForm = class(TForm)
-    BitBtn3: TBitBtn;
-    BitBtn4: TBitBtn;
-    BitBtn5: TBitBtn;
-    BitBtn6: TBitBtn;
+    btnLeft2: TBitBtn;
+    btnLeft: TBitBtn;
+    btnRight: TBitBtn;
+    btnRight2: TBitBtn;
+    btnUp: TBitBtn;
+    btnDown: TBitBtn;
     ButtonPanel1: TButtonPanel;
     cbShowHint: TCheckBox;
     cbTransp: TCheckBox;
@@ -64,13 +66,13 @@ type
     RadioGroup2: TRadioGroup;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
-    procedure BitBtn3Click(Sender: TObject);
-    procedure BitBtn4Click(Sender: TObject);
-    procedure BitBtn5Click(Sender: TObject);
-    procedure BitBtn6Click(Sender: TObject);
+    procedure btnLeft2Click(Sender: TObject);
+    procedure btnLeftClick(Sender: TObject);
+    procedure btnRightClick(Sender: TObject);
+    procedure btnRight2Click(Sender: TObject);
+    procedure btnUpClick(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure ListBox1DrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
@@ -81,6 +83,7 @@ type
     procedure FillItems(List:TStrings; AVisible:boolean);
     procedure UpdateStates;
     procedure Localize;
+    procedure UpdateToolbarOrder;
   public
     FToolPanel:TToolPanel;
     constructor CreateSetupForm(AToolPanel:TToolPanel);
@@ -94,23 +97,12 @@ uses rxlclutils, ActnList, rxboxprocs, rxconst, LCLProc, rxShortCutUnit;
 
 {$R *.lfm}
 
-type
-  THackToolPanel = class(TToolPanel);
 { TToolPanelSetupForm }
-
-procedure TToolPanelSetupForm.FormDestroy(Sender: TObject);
-begin
-  if Assigned(FToolPanel) then
-  begin
-    THackToolPanel(FToolPanel).SetCustomizing(false);
-    THackToolPanel(FToolPanel).FCustomizer:=nil;
-  end;
-end;
 
 procedure TToolPanelSetupForm.FormResize(Sender: TObject);
 begin
-  ListBtnVisible.Width:=BitBtn6.Left - 4 - ListBtnVisible.Left;
-  ListBtnAvaliable.Left:=BitBtn6.Left + BitBtn6.Width + 4;
+  ListBtnVisible.Width:=btnRight2.Left - 4 - ListBtnVisible.Left;
+  ListBtnAvaliable.Left:=btnRight2.Left + btnRight2.Width + 4;
   ListBtnAvaliable.Width:=Width - ListBtnAvaliable.Left - 4;
   Label1.Left:=ListBtnAvaliable.Left;
 end;
@@ -118,17 +110,20 @@ end;
 procedure TToolPanelSetupForm.ListBox1DrawItem(Control: TWinControl;
   Index: Integer; ARect: TRect; State: TOwnerDrawState);
 var
-  Offset:integer;
+  Offset, TW:integer;
   P:TToolbarItem;
   BtnRect:TRect;
   Cnv:TCanvas;
   C: TColor;
-  S: String;
+  S, SText: String;
 begin
   Cnv:=(Control as TListBox).Canvas;
   C:=Cnv.Brush.Color;
+  TW:=Cnv.TextHeight('Wg');
+
   Cnv.FillRect(ARect);       { clear the rectangle }
   P:=TToolbarItem((Control as TListBox).Items.Objects[Index]);
+  SText:=(Control as TListBox).Items[Index];
   if Assigned(P) then
   begin
     if Assigned(FToolPanel.ImageList) and Assigned(P.Action) then
@@ -140,27 +135,28 @@ begin
         Offset := 2;
         BtnRect.Top:=ARect.Top + 2;
         BtnRect.Left:=ARect.Left + Offset;
-        BtnRect.Right:=BtnRect.Left + FToolPanel.BtnWidth;
-        BtnRect.Bottom:=BtnRect.Top + FToolPanel.BtnHeight;
+        BtnRect.Right:=BtnRect.Left + FToolPanel.DefImgWidth * 2;
+        BtnRect.Bottom:=BtnRect.Top + FToolPanel.DefImgHeight * 2;
         Cnv.Brush.Color := clBtnFace;
         Cnv.FillRect(BtnRect);
         DrawButtonFrame(Cnv, BtnRect, false, false);
-        FToolPanel.ImageList.Draw(Cnv, BtnRect.Left + (FToolPanel.BtnWidth - FToolPanel.ImageList.Width) div 2,
-                                       BtnRect.Top + (FToolPanel.BtnHeight - FToolPanel.ImageList.Height) div 2,
+        FToolPanel.ImageList.Draw(Cnv, BtnRect.Left + FToolPanel.DefImgWidth div 2,
+                                       BtnRect.Top + FToolPanel.DefImgHeight div 2,
                                        TCustomAction(P.Action).ImageIndex, True);
         Offset:=BtnRect.Right;
       end;
-      Offset := Offset + 6;
-      Cnv.Brush.Color:=C;
-      Cnv.TextOut(ARect.Left + Offset, (ARect.Top + ARect.Bottom  - Cnv.TextHeight('Wg')) div 2, TCustomAction(P.Action).Caption);  { display the text }
-      if (P.Action is TAction) then
-        if TAction(P.Action).ShortCut <> 0 then
-        begin
-          S:=ShortCutToText(TAction(P.Action).ShortCut);
-          if S<> '' then
-            Cnv.TextOut(ARect.Right - Cnv.TextWidth(S) - 2, (ARect.Top + ARect.Bottom  - Cnv.TextHeight('Wg')) div 2, S);  { display the shortut caption }
-        end;
     end;
+
+    Offset := Offset + 6;
+    Cnv.Brush.Color:=C;
+    Cnv.TextOut(ARect.Left + Offset, (ARect.Top + ARect.Bottom  - TW) div 2, SText);  { display the text }
+    if (P.Action is TAction) then
+      if TAction(P.Action).ShortCut <> 0 then
+      begin
+        S:=ShortCutToText(TAction(P.Action).ShortCut);
+        if S<> '' then
+          Cnv.TextOut(ARect.Right - Cnv.TextWidth(S) - 2, (ARect.Top + ARect.Bottom  - TW) div 2, S);  { display the shortut caption }
+      end;
   end;
 end;
 
@@ -170,7 +166,10 @@ begin
   begin
     if (ItemIndex>-1) and (ItemIndex<Items.Count) then
     begin
-      Panel1.Caption:=TCustomAction(TToolbarItem(Items.Objects[ItemIndex]).Action).Hint;
+      if Assigned(TToolbarItem(Items.Objects[ItemIndex]).Action) then
+        Panel1.Caption:=TCustomAction(TToolbarItem(Items.Objects[ItemIndex]).Action).Hint
+      else
+        Panel1.Caption:='';
       if Sender = ListBtnVisible then
         cbShowCaption.Checked:=TToolbarItem(Items.Objects[ItemIndex]).ShowCaption;
     end;
@@ -196,30 +195,28 @@ begin
     if Act is TCustomAction then
     begin
       A:=TCustomAction(Act).ShortCut;
-      Hide;
+//      Hide;
       if RxSelectShortCut(A) then
       begin
         TCustomAction(Act).ShortCut:=A;
         TListBox(Sender).Invalidate;
       end;
-      Show;
+//      Show;
     end;
   end;
 end;
 
 procedure TToolPanelSetupForm.FillItems(List: TStrings; AVisible: boolean);
 var
-  i, p:integer;
+  TI: TToolbarItem;
 begin
   List.Clear;
-  for i:=0 to FToolPanel.Items.Count - 1 do
-  begin
-    if (FToolPanel.Items[i].Visible = AVisible) and Assigned(FToolPanel.Items[i].Action) then
-    begin
-      P:=List.Add(FToolPanel.Items[i].Action.Name);
-      List.Objects[P]:=FToolPanel.Items[i];
-    end;
-  end;
+  for TI in FToolPanel.Items do
+    if (TI.Visible = AVisible) then
+      if Assigned(TI.Action) then
+        List.AddObject(TI.Action.Name, TI)
+      else
+        List.AddObject('Separator', TI);
 end;
 
 procedure TToolPanelSetupForm.UpdateStates;
@@ -232,14 +229,21 @@ begin
   for I:=0 to ListBtnAvaliable.Items.Count - 1 do
     TToolbarItem(ListBtnAvaliable.Items.Objects[i]).Visible:=false;
     
-  BitBtn6.Enabled:=ListBtnVisible.Items.Count>0;
-  BitBtn5.Enabled:=ListBtnVisible.Items.Count>0;
-  cbShowCaption.Enabled:=(ListBtnVisible.Items.Count>0) and (ListBtnVisible.ItemIndex>=0);
+  btnRight2.Enabled:=ListBtnVisible.Items.Count>0;
+  btnRight.Enabled:=ListBtnVisible.Items.Count>0;
 
-  BitBtn4.Enabled:=ListBtnAvaliable.Items.Count>0;
-  BitBtn3.Enabled:=ListBtnAvaliable.Items.Count>0;
+  btnLeft.Enabled:=ListBtnAvaliable.Items.Count>0;
+  btnLeft2.Enabled:=ListBtnAvaliable.Items.Count>0;
 
   cbFlatBtn.Checked:=tpFlatBtns in FToolPanel.Options;
+
+  btnUp.Enabled:=(ListBtnVisible.Items.Count>0) and (ListBtnVisible.ItemIndex>0);
+  btnDown.Enabled:=(ListBtnVisible.Items.Count>0) and (ListBtnVisible.ItemIndex < ListBtnVisible.Items.Count-1);
+
+  if (ListBtnVisible.ItemIndex>=0) and (ListBtnVisible.ItemIndex<ListBtnVisible.Items.Count) then
+    cbShowCaption.Enabled:=not (TToolbarItem(ListBtnVisible.Items.Objects[ListBtnVisible.ItemIndex]).ButtonStyle in [tbrSeparator, tbrDivider])
+  else
+    cbShowCaption.Enabled:=false;
 end;
 
 procedure TToolPanelSetupForm.Localize;
@@ -264,6 +268,29 @@ begin
   RadioGroup1.Items.Add(sButtonAlign1);
   RadioGroup1.Items.Add(sButtonAlign2);
   RadioGroup1.Items.Add(sButtonAlign3);
+end;
+
+procedure TToolPanelSetupForm.UpdateToolbarOrder;
+var
+  P, P1: TToolbarItem;
+  i, j: Integer;
+begin
+  FToolPanel.DisableAlign;
+  FToolPanel.Items.BeginUpdate;
+  for i:=0 to ListBtnVisible.Count-1 do
+  begin
+    P:=ListBtnVisible.Items.Objects[i] as TToolbarItem;
+    P1:=FToolPanel.Items[i];
+    if P <> P1 then
+    begin
+      j:=FToolPanel.Items.IndexOf(P);
+      if j>-1 then
+        FToolPanel.Items.Exchange(i, j);
+    end;
+  end;
+  FToolPanel.Items.EndUpdate;
+  FToolPanel.ReAlign;
+  FToolPanel.EnableAlign;
 end;
 
 procedure TToolPanelSetupForm.FormClose(Sender: TObject;
@@ -296,31 +323,63 @@ begin
   cbFlatBtn.Checked:=tpFlatBtns in FToolPanel.Options;
 end;
 
-procedure TToolPanelSetupForm.BitBtn4Click(Sender: TObject);
+procedure TToolPanelSetupForm.btnLeftClick(Sender: TObject);
 begin
   BoxMoveSelectedItems(ListBtnAvaliable, ListBtnVisible);
   UpdateStates;
+  UpdateToolbarOrder;
 end;
 
-procedure TToolPanelSetupForm.BitBtn3Click(Sender: TObject);
+procedure TToolPanelSetupForm.btnLeft2Click(Sender: TObject);
 begin
   BoxMoveAllItems(ListBtnAvaliable, ListBtnVisible);
   UpdateStates;
+  UpdateToolbarOrder;
 end;
 
-procedure TToolPanelSetupForm.BitBtn5Click(Sender: TObject);
+procedure TToolPanelSetupForm.btnRightClick(Sender: TObject);
 begin
   BoxMoveSelectedItems(ListBtnVisible, ListBtnAvaliable);
   UpdateStates;
+  UpdateToolbarOrder;
 end;
 
-procedure TToolPanelSetupForm.BitBtn6Click(Sender: TObject);
+procedure TToolPanelSetupForm.btnRight2Click(Sender: TObject);
 begin
   BoxMoveAllItems(ListBtnVisible, ListBtnAvaliable);
   UpdateStates;
+  UpdateToolbarOrder;
+end;
+
+procedure TToolPanelSetupForm.btnUpClick(Sender: TObject);
+var
+  I, J: Integer;
+  S: String;
+  P: TObject;
+begin
+  ListBtnVisible.Items.BeginUpdate;
+  I:=ListBtnVisible.ItemIndex;
+  J:=I + TComponent(Sender).Tag;
+
+  S:=ListBtnVisible.Items[I];
+  P:=ListBtnVisible.Items.Objects[I];
+
+  ListBtnVisible.Items[I]:=ListBtnVisible.Items[J];
+  ListBtnVisible.Items.Objects[I]:=ListBtnVisible.Items.Objects[J];
+
+  ListBtnVisible.Items[J]:=S;
+  ListBtnVisible.Items.Objects[J]:=P;
+
+  ListBtnVisible.ItemIndex:=J;
+  ListBtnVisible.Items.EndUpdate;
+
+  UpdateStates;
+  UpdateToolbarOrder;
 end;
 
 constructor TToolPanelSetupForm.CreateSetupForm(AToolPanel: TToolPanel);
+var
+  C: TCustomBitmap;
 begin
   inherited Create(AToolPanel);
   Localize;
@@ -328,13 +387,19 @@ begin
   FormResize(nil);
   FToolPanel:=AToolPanel;
 
+  RxAssignBitmap(btnUp.Glyph, 'rx_up');
+  RxAssignBitmap(btnDown.Glyph, 'rx_down');
+  RxAssignBitmap(btnRight.Glyph, 'rx_right');
+  RxAssignBitmap(btnRight2.Glyph, 'rx_right2');
+  RxAssignBitmap(btnLeft.Glyph, 'rx_left');
+  RxAssignBitmap(btnLeft2.Glyph, 'rx_left2');
 
   cbFlatBtn.Checked:=tpFlatBtns in FToolPanel.Options;
   cbTransp.Checked:=tpTransparentBtns in FToolPanel.Options;
   cbShowHint.Checked:=FToolPanel.ShowHint;
 
-  ListBtnAvaliable.ItemHeight:=FToolPanel.BtnHeight + 4;
-  ListBtnVisible.ItemHeight:=FToolPanel.BtnHeight + 4;
+  ListBtnAvaliable.ItemHeight:=FToolPanel.DefImgHeight*2 + 4;
+  ListBtnVisible.ItemHeight:=FToolPanel.DefImgHeight*2 + 4;
 
   FillItems(ListBtnVisible.Items, true);
   FillItems(ListBtnAvaliable.Items, false);

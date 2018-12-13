@@ -257,8 +257,9 @@ const
   sVisible      = '.Visible';
   sItem         = '.Item';
   sWidth        = '.Width';
-  sTop          = '.Top';
+//  sTop          = '.Top';
   sVersion      = '.Version';
+  sVersion2     = '.Version2';
   sLeft         = '.Left';
   sShowHint     = '.ShowHint';
   sShowCaption  = '.ShowCaption';

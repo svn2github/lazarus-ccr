@@ -302,7 +302,6 @@ const
 procedure TRxSwitch.SetSwitchGlyph(Index: TSwithState; Value: TBitmap);
 var
   S: String;
-  B: TBitmap;
 begin
   FBitmaps[Index].Clear;
   if Value <> nil then
@@ -324,11 +323,7 @@ begin
       Exit;
     end;
     if S<>'' then
-    begin
-      B:=CreateResBitmap(S);
-      FBitmaps[Index].Assign(B);
-      B.Free;
-    end;
+      RxAssignBitmap(FBitmaps[Index], S);
     Exclude(FUserBitmaps, Index);
   end;
 end;

@@ -140,6 +140,10 @@ msgstr "Версия FPC : "
 msgid "General"
 msgstr "Общее"
 
+#: rxconst.sgrabkey
+msgid "Grab key"
+msgstr ""
+
 #: rxconst.shistorydesc
 msgid "History - \"%s\""
 msgstr "История - \"%s\""
@@ -175,6 +179,10 @@ msgstr "Параметры"
 #: rxconst.soutofrange
 msgid "Out of range %d %d %d %d"
 msgstr "За границами диапазона %d %d %d %d"
+
+#: rxconst.spressthekey
+msgid "Press the key"
+msgstr ""
 
 #: rxconst.sprevmonth
 msgid "Previous Month|"
@@ -261,6 +269,10 @@ msgstr "Вторая половина года"
 msgid "Second quarter"
 msgstr "Второй квартал"
 
+#: rxconst.sshortcut
+msgid "ShortCut"
+msgstr ""
+
 #: rxconst.sshowcaption
 msgid "Show caption"
 msgstr "Отображать заголовок"
@@ -340,3 +352,4 @@ msgstr "Интерфейс : "
 #: rxconst.swindowsicofiles
 msgid "Windows Ico files (*.ico)|*.ico|All files (*.*)|*.*"
 msgstr "Файлы иконок Windows (*.ico)|*.ico|Все файлы (*.*)|*.*"
+

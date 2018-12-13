@@ -40,7 +40,8 @@
       <element name="TToolPanel.ToolBarStyle"/>
       <element name="TToolPanel.Options">
         <descr>Свойство определяет поведение панели инструментов согласно типа 
-<link id="TToolPanelOption">TToolPanelOption</link>.</descr>
+<link id="TToolPanelOption">TToolPanelOption</link>.
+</descr>
       </element>
       <element name="TToolPanel.Version"/>
       <element name="TToolPanel.ButtonAllign">
@@ -150,29 +151,14 @@
       </element>
       <element name="TToolButtonAllign">
         <short>Выравнивание кнопок на панели инструментов</short>
-        <descr>
-          <p>Выравнивание кнопок на панели инструментов</p>
-          <table>
-            <th>
-              <td>Выравнивание</td>
-              <td>Описание</td>
-            </th>
-            <tr>
-              <td>tbaNone</td>
-              <td>Нет автоматического выравнивания кнопок</td>
-            </tr>
-            <tr>
-              <td>tbaLeft</td>
-              <td>Выравнивани по левому краю</td>
-            </tr>
-            <tr>
-              <td>tbaRignt</td>
-              <td>Выравнивание по правому краю</td>
+        <descr><p>Выравнивание кнопок на панели инструментов</p><table><th><td>Выравнивание</td><td>Описание</td>
+            </th><tr><td>tbaNone</td><td>Нет автоматического выравнивания кнопок</td>
+            </tr><tr><td>tbaLeft</td><td>Выравнивани по левому краю</td>
+            </tr><tr><td>tbaRignt</td><td>Выравнивание по правому краю</td>
             </tr>
           </table>
         </descr>
-        <seealso>
-          <link id="TToolPanel.ButtonAllign"/>
+        <seealso><link id="TToolPanel.ButtonAllign"/>
         </seealso>
       </element>
       <element name="TToolPanelOption">
@@ -211,7 +197,8 @@
         </descr>
       </element>
       <element name="TToolPanelOptions">
-        <descr>Комплексное тип, содержащий в себе множество элементов типа <link id="TToolPanelOption">TToolPanelOption</link>.</descr>
+        <descr>Комплексное тип, содержащий в себе множество элементов типа <link id="TToolPanelOption">TToolPanelOption</link>.
+</descr>
       </element>
       <element name="DefButtonWidth">
         <short>Ширина кнопки по умолчанию</short>

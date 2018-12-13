@@ -223,18 +223,10 @@ begin
 end;
 
 procedure TRxDice.CreateBitmap;
-var
-  B: TBitmap;
-  S: String;
 begin
   if FBitmap = nil then FBitmap := TBitmap.Create;
   if FValue in [1..6] then
-  begin
-    S:=Format('rxDice%d', [FValue]);
-    B:=CreateResBitmap(S);
-    FBitmap.Assign(B);
-    B.Free;
-  end;
+    RxAssignBitmap(FBitmap, Format('rxDice%d', [FValue]));
 end;
 
 procedure TRxDice.AdjustSize;

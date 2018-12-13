@@ -146,6 +146,12 @@ resourcestring
   sRxLoginDlgBtnMore            = 'More >>';
   sRxLoginDlgDatabase           = 'Database';
 
+
+  { rxShortCutUnit }
+  sGrabKey                      = 'Grab key';
+  sPressTheKey                  = 'Press the key';
+  sShortCut                     = 'ShortCut';
+
 implementation
 
 end.

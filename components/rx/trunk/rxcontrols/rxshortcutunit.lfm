@@ -8,11 +8,11 @@ object rxShortCutForm: TrxShortCutForm
   ClientWidth = 463
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.7'
+  LCLVersion = '2.1.0.0'
   object ButtonPanel1: TButtonPanel
     Left = 6
-    Height = 42
-    Top = 56
+    Height = 46
+    Top = 52
     Width = 451
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
@@ -30,8 +30,8 @@ object rxShortCutForm: TrxShortCutForm
     AnchorSideTop.Control = ComboBox1
     AnchorSideTop.Side = asrCenter
     Left = 6
-    Height = 24
-    Top = 10
+    Height = 23
+    Top = 12
     Width = 55
     BorderSpacing.Left = 6
     BorderSpacing.Right = 6
@@ -44,9 +44,9 @@ object rxShortCutForm: TrxShortCutForm
     AnchorSideTop.Control = ComboBox1
     AnchorSideTop.Side = asrCenter
     Left = 67
-    Height = 24
-    Top = 10
-    Width = 43
+    Height = 23
+    Top = 12
+    Width = 44
     BorderSpacing.Left = 6
     BorderSpacing.Right = 6
     Caption = 'Alt'
@@ -57,9 +57,9 @@ object rxShortCutForm: TrxShortCutForm
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = ComboBox1
     AnchorSideTop.Side = asrCenter
-    Left = 116
-    Height = 24
-    Top = 10
+    Left = 117
+    Height = 23
+    Top = 12
     Width = 49
     BorderSpacing.Left = 6
     BorderSpacing.Right = 6
@@ -71,10 +71,10 @@ object rxShortCutForm: TrxShortCutForm
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Button1
-    Left = 171
-    Height = 32
+    Left = 172
+    Height = 34
     Top = 6
-    Width = 211
+    Width = 210
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 6
     ItemHeight = 0
@@ -86,7 +86,7 @@ object rxShortCutForm: TrxShortCutForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 388
-    Height = 32
+    Height = 33
     Top = 6
     Width = 69
     Anchors = [akTop, akRight]

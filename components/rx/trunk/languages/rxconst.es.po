@@ -132,6 +132,10 @@ msgstr ""
 msgid "General"
 msgstr ""
 
+#: rxconst.sgrabkey
+msgid "Grab key"
+msgstr ""
+
 #: rxconst.shistorydesc
 msgid "History - \"%s\""
 msgstr ""
@@ -166,6 +170,10 @@ msgstr "Opciones"
 
 #: rxconst.soutofrange
 msgid "Out of range %d %d %d %d"
+msgstr ""
+
+#: rxconst.spressthekey
+msgid "Press the key"
 msgstr ""
 
 #: rxconst.sprevmonth
@@ -252,6 +260,10 @@ msgstr ""
 
 #: rxconst.ssecondquarter
 msgid "Second quarter"
+msgstr ""
+
+#: rxconst.sshortcut
+msgid "ShortCut"
 msgstr ""
 
 #: rxconst.sshowcaption

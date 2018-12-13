@@ -238,8 +238,6 @@ end;
 { TRxNotifierForm }
 
 procedure TRxNotifierForm.CreateCloseButton;
-var
-  D: TBitmap;
 begin
   FCloseButton:=TSpeedButton.Create(Self);
   FCloseButton.Parent:=Self;
@@ -247,9 +245,7 @@ begin
 
   FCloseButton.Width:=26;
   FCloseButton.Height:=26;
-  D:=LoadLazResBitmapImage('RxMDICloseIcon');
-  FCloseButton.Glyph:=D;
-  D.Free;
+  RxAssignBitmap(FCloseButton.Glyph, 'RxMDICloseIcon');
   FCloseButton.Hint:=FOwnerItem.CloseButton.Hint;
   FCloseButton.Flat:=FOwnerItem.CloseButton.Flat;
 

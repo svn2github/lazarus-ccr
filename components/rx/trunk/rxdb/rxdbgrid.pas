@@ -7038,8 +7038,8 @@ begin
 
   FSortColumns:=TRxDbGridColumnsSortList.Create;
   FGroupItems:=TColumnGroupItems.Create(Self);
-
-  F_MenuBMP := CreateResBitmap('rx_menu_grid');
+  F_MenuBMP := TBitmap.Create;
+  RxAssignBitmap(F_MenuBMP, 'rx_menu_grid');
 
   Options := Options - [dgTabs];
 
@@ -7787,13 +7787,21 @@ initialization
   RxDBGridSortEngineList := TStringList.Create;
   RxDBGridSortEngineList.Sorted := True;
 
-  FMarkerUp := CreateResBitmap('rx_markerup');
-  FMarkerDown := CreateResBitmap('rx_markerdown');
-  FEllipsisRxBMP:=CreateResBitmap('rx_Ellipsis');
-  FGlyphRxBMP:=CreateResBitmap('rx_Glyph');
-  FUpDownRxBMP:=CreateResBitmap('rx_UpDown');
-  FPlusRxBMP:=CreateResBitmap('rx_plus');
-  FMinusRxBMP:=CreateResBitmap('rx_minus');
+  FMarkerUp := TBitmap.Create;
+  FMarkerDown := TBitmap.Create;
+  FEllipsisRxBMP:=TBitmap.Create;
+  FGlyphRxBMP:=TBitmap.Create;
+  FUpDownRxBMP:=TBitmap.Create;
+  FPlusRxBMP:=TBitmap.Create;
+  FMinusRxBMP:=TBitmap.Create;
+
+  RxAssignBitmap(FMarkerUp, 'rx_markerup');
+  RxAssignBitmap(FMarkerDown, 'rx_markerdown');
+  RxAssignBitmap(FEllipsisRxBMP, 'rx_Ellipsis');
+  RxAssignBitmap(FGlyphRxBMP, 'rx_Glyph');
+  RxAssignBitmap(FUpDownRxBMP, 'rx_UpDown');
+  RxAssignBitmap(FPlusRxBMP, 'rx_plus');
+  RxAssignBitmap(FMinusRxBMP, 'rx_minus');
 
 finalization
 

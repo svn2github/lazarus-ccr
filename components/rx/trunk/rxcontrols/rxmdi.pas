@@ -274,17 +274,12 @@ begin
 end;
 
 constructor TRxMDICloseButton.Create(AOwner: TComponent);
-var
-  D: TBitmap;
 begin
   inherited Create(AOwner);
-//  FLabelPosition := lpAbove;
   FLabelSpacing := 6;
   FShowInfoLabel:=true;
   CreateInternalLabel;
-  D:=LoadLazResBitmapImage('RxMDICloseIcon');
-  Glyph:=D;
-  D.Free;
+  RxAssignBitmap(Glyph, 'RxMDICloseIcon');
 end;
 
 { TRxMDIPanel }

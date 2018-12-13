@@ -15,7 +15,7 @@ type
 
   TMainForm = class(TForm)
     actExit: TAction;
-    actSysMenu: TAction;
+    actOpen: TAction;
     BitBtn1: TBitBtn;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;

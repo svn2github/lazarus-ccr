@@ -467,19 +467,17 @@ procedure TRxCustomRangeSelector.InitImages(AOrient: TTrackBarOrientation);
 begin
   if AOrient = trHorizontal then
   begin
-    FSelectedGlyph := CreateResBitmap(sRX_RANGE_H_SEL);
-    FBackgroudGlyph := CreateResBitmap(sRX_RANGE_H_BACK);
-
-    FThumbTopGlyph:=CreateResBitmap(sRX_SLADER_TOP);
-    FThumbBottomGlyph:=CreateResBitmap(sRX_SLADER_BOTTOM);
+    RxAssignBitmap(FSelectedGlyph, sRX_RANGE_H_SEL);
+    RxAssignBitmap(FBackgroudGlyph, sRX_RANGE_H_BACK);
+    RxAssignBitmap(FThumbTopGlyph, sRX_SLADER_TOP);
+    RxAssignBitmap(FThumbBottomGlyph, sRX_SLADER_BOTTOM);
   end
   else
   begin
-    FSelectedGlyph := CreateResBitmap(sRX_RANGE_V_SEL);
-    FBackgroudGlyph := CreateResBitmap(sRX_RANGE_V_BACK);
-
-    FThumbTopGlyph:=CreateResBitmap(sRX_SLADER_LEFT);
-    FThumbBottomGlyph:=CreateResBitmap(sRX_SLADER_RIGHT);
+    RxAssignBitmap(FSelectedGlyph, sRX_RANGE_V_SEL);
+    RxAssignBitmap(FBackgroudGlyph, sRX_RANGE_V_BACK);
+    RxAssignBitmap(FThumbTopGlyph, sRX_SLADER_LEFT);
+    RxAssignBitmap(FThumbBottomGlyph, sRX_SLADER_RIGHT);
   end;
 end;
 
@@ -690,11 +688,11 @@ constructor TRxCustomRangeSelector.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
-//  FThumbTopGlyph:=TBitmap.Create;
-//  FThumbBottomGlyph:=TBitmap.Create;
+  FThumbTopGlyph:=TBitmap.Create;
+  FThumbBottomGlyph:=TBitmap.Create;
+  FSelectedGlyph:=TBitmap.Create;
+  FBackgroudGlyph:=TBitmap.Create;
 
-//  FSelectedGlyph:=TBitmap.Create;
-//  FBackgroudGlyph:=TBitmap.Create;
   InitImages(trHorizontal);
 
   with GetControlClassDefaultSize do

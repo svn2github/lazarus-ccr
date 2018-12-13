@@ -936,7 +936,6 @@ var
   BackPanel: TWinControl;
   MI:TMenuItem;
   i:integer;
-  TmpBitmap:TBitmap;
 begin
   inherited CreateNew(AOwner);
 
@@ -1008,64 +1007,36 @@ begin
   BackPanel.Height:=Height - 4;
 
   FBtns[0] := TRxTimerSpeedButton.Create(Self);
-  with FBtns[0] do
-  begin
-    Parent := FControlPanel;
-    SetBounds(-1, -1, BtnSide, BtnSide);
-    //loaded bitmap should be freed as Glyph just takes a copy of it
-    //TmpBitmap:=LoadBitmapFromLazarusResource('prev2');
-    TmpBitmap:=CreateResBitmap('rx_prev2');
-    Glyph := TmpBitmap;
-    FreeAndNil(TmpBitmap);
-
-    OnClick := @PrevYearBtnClick;
-    Hint := sPrevYear;
-    Align:=alLeft;
-  end;
+  FBtns[0].Parent := FControlPanel;
+  FBtns[0].SetBounds(-1, -1, BtnSide, BtnSide);
+  FBtns[0].OnClick := @PrevYearBtnClick;
+  FBtns[0].Hint := sPrevYear;
+  FBtns[0].Align:=alLeft;
+  RxAssignBitmap(FBtns[0].Glyph, 'rx_prev2');
 
   FBtns[1] := TRxTimerSpeedButton.Create(Self);
-  with FBtns[1] do
-  begin
-    Parent := FControlPanel;
-    SetBounds(BtnSide - 2, -1, BtnSide, BtnSide);
-
-    //TmpBitmap:=LoadBitmapFromLazarusResource('prev1');
-    TmpBitmap:=CreateResBitmap('rx_prev1');
-    Glyph := TmpBitmap;
-    FreeAndNil(TmpBitmap);
-
-    OnClick := @PrevMonthBtnClick;
-    Hint := sPrevMonth;
-    Align:=alLeft;
-  end;
+  FBtns[1].Parent := FControlPanel;
+  FBtns[1].SetBounds(BtnSide - 2, -1, BtnSide, BtnSide);
+  FBtns[1].OnClick := @PrevMonthBtnClick;
+  FBtns[1].Hint := sPrevMonth;
+  FBtns[1].Align:=alLeft;
+  RxAssignBitmap(FBtns[1].Glyph, 'rx_prev1');
 
   FBtns[2] := TRxTimerSpeedButton.Create(Self);
-  with FBtns[2] do
-  begin
-    Parent := FControlPanel;
-    SetBounds(FControlPanel.Width - 2 * BtnSide + 2, -1, BtnSide, BtnSide);
-    //TmpBitmap:=LoadBitmapFromLazarusResource('next1');
-    TmpBitmap:=CreateResBitmap('rx_next1');
-    Glyph := TmpBitmap;
-    FreeAndNil(TmpBitmap);
-    OnClick := @NextMonthBtnClick;
-    Hint := sNextMonth;
-    Align:=alRight;
-  end;
+  FBtns[2].Parent := FControlPanel;
+  FBtns[2].SetBounds(FControlPanel.Width - 2 * BtnSide + 2, -1, BtnSide, BtnSide);
+  FBtns[2].OnClick := @NextMonthBtnClick;
+  FBtns[2].Hint := sNextMonth;
+  FBtns[2].Align:=alRight;
+  RxAssignBitmap(FBtns[2].Glyph, 'rx_next1');
 
   FBtns[3] := TRxTimerSpeedButton.Create(Self);
-  with FBtns[3] do
-  begin
-    Parent := FControlPanel;
-    SetBounds(FControlPanel.Width - BtnSide + 1, -1, BtnSide, BtnSide);
-    //TmpBitmap:=LoadBitmapFromLazarusResource('next2');
-    TmpBitmap:=CreateResBitmap('rx_next2');
-    Glyph := TmpBitmap;
-    FreeAndNil(TmpBitmap);
-    OnClick := @NextYearBtnClick;
-    Hint := sNextYear;
-    Align:=alRight;
-  end;
+  FBtns[3].Parent := FControlPanel;
+  FBtns[3].SetBounds(FControlPanel.Width - BtnSide + 1, -1, BtnSide, BtnSide);
+  FBtns[3].OnClick := @NextYearBtnClick;
+  FBtns[3].Hint := sNextYear;
+  FBtns[3].Align:=alRight;
+  RxAssignBitmap(FBtns[3].Glyph, 'rx_next2');
 
   FTitleLabel := TLabel.Create(Self);
   with FTitleLabel do

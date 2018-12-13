@@ -31,7 +31,7 @@
 
 unit rxShortCutUnit;
 
-{$mode objfpc}{$H+}
+{$I rx.inc}
 
 interface
 
@@ -55,6 +55,7 @@ type
   private
     function GetShortCut: TShortCut;
     procedure SetShortCut(AValue: TShortCut);
+    procedure Localize;
   public
     property ShortCut:TShortCut read GetShortCut write SetShortCut;
   end;
@@ -63,7 +64,7 @@ type
 function RxSelectShortCut(var AShortCut:TShortCut):boolean;
 
 implementation
-uses LCLProc, LCLType, LCLStrConsts;
+uses LCLProc, LCLType, LCLStrConsts, rxconst;
 
 {$R *.lfm}
 
@@ -73,7 +74,8 @@ var
 begin
   rxShortCutForm:=TrxShortCutForm.Create(Application);
   rxShortCutForm.ShortCut:=AShortCut;
-  if rxShortCutForm.ShowModal = mrOk then
+  Result:=rxShortCutForm.ShowModal = mrOk;
+  if Result then
     AShortCut:=rxShortCutForm.ShortCut;
   rxShortCutForm.Free;
 end;
@@ -113,9 +115,11 @@ var
 begin
   inherited CreateNew(AOwner, Num);
   Position:=poScreenCenter;
+
+  { TODO -oalexs : add code for alow scaling }
   Width:=200;
   Height:=80;
-  Caption:='Press the key';
+  Caption:=sPressTheKey;
   BorderStyle:=bsDialog;
   KeyPreview:=true;
 
@@ -136,6 +140,7 @@ var
   S: String;
   i:Word;
 begin
+  Localize;
   for i:=0 to $FF do
   begin
     S:=ShortCutToText(i);
@@ -161,6 +166,12 @@ begin
   CheckBox2.Checked:=AValue and scAlt <> 0;
   CheckBox3.Checked:=AValue and scCtrl <> 0;
   ///if ShortCut and scMeta <> 0 then Result := Result + MenuKeyCaps[mkcMeta];
+end;
+
+procedure TrxShortCutForm.Localize;
+begin
+  Button1.Caption:=sGrabKey;
+  Caption:=sShortCut;
 end;
 
 function TrxShortCutForm.GetShortCut: TShortCut;

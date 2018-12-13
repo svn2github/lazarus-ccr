@@ -53,14 +53,15 @@ function BoxCanDropItem(List: TWinControl; X, Y: Integer;
 
 implementation
 
-uses LCLIntf, Graphics;
+uses LCLIntf, Graphics, CheckLst;
 
 function BoxItems(List: TWinControl): TStrings;
 begin
   if List is TCustomListBox then
     Result := TCustomListBox(List).Items
-{  else if List is TRxCustomListBox then
-    Result := TRxCustomListBox(List).Items}
+  else
+  if List is TCheckListBox then
+    Result := TCheckListBox(List).Items
   else Result := nil;
 end;
 
@@ -73,63 +74,73 @@ begin
     else
       Result := TCustomListBox(List).ItemIndex = Index
   end
-{  else if List is TRxCustomListBox then
-    Result := TRxCustomListBox(List).Selected[Index]}
-  else Result := False;
+  else
+  if List is TCheckListBox then
+    Result := TCheckListBox(List).Selected[Index]
+  else
+    Result := False;
 end;
 
 procedure BoxSetSelected(List: TWinControl; Index: Integer; Value: Boolean);
 begin
   if List is TCustomListBox then
     TCustomListBox(List).Selected[Index] := Value
-{  else if List is TRxCustomListBox then
-    TRxCustomListBox(List).Selected[Index] := Value;}
+  else
+  if List is TCheckListBox then
+    TCheckListBox(List).Selected[Index] := Value;
 end;
 
 function BoxGetItemIndex(List: TWinControl): Integer;
 begin
   if List is TCustomListBox then
     Result := TCustomListBox(List).ItemIndex
-{  else if List is TRxCustomListBox then
-    Result := TRxCustomListBox(List).ItemIndex}
-  else Result := -1;
+  else
+  if List is TCheckListBox then
+    Result := TCheckListBox(List).ItemIndex
+  else
+    Result := -1;
 end;
 
-{.$IFNDEF WIN32}
 function BoxGetCanvas(List: TWinControl): TCanvas;
 begin
   if List is TCustomListBox then
     Result := TCustomListBox(List).Canvas
-{  else if List is TRxCustomListBox then
-    Result := TRxCustomListBox(List).Canvas }
+  else
+  if List is TCheckListBox then
+    Result := TCheckListBox(List).Canvas
   else Result := nil;
 end;
-{.$ENDIF}
+
 
 procedure BoxSetItemIndex(List: TWinControl; Index: Integer);
 begin
   if List is TCustomListBox then
     TCustomListBox(List).ItemIndex := Index
-{  else if List is TRxCustomListBox then
-    TRxCustomListBox(List).ItemIndex := Index;}
+  else
+  if List is TCheckListBox then
+    TCheckListBox(List).ItemIndex := Index;
 end;
 
 function BoxMultiSelect(List: TWinControl): Boolean;
 begin
   if List is TCustomListBox then
     Result := TListBox(List).MultiSelect
-{  else if List is TRxCustomListBox then
-    Result := TRxCheckListBox(List).MultiSelect}
-  else Result := False;
+  else
+  if List is TCheckListBox then
+    Result := TCheckListBox(List).MultiSelect
+  else
+    Result := False;
 end;
 
 function BoxSelCount(List: TWinControl): Integer;
 begin
   if List is TCustomListBox then
     Result := TCustomListBox(List).SelCount
-{  else if List is TRxCustomListBox then
-    Result := TRxCustomListBox(List).SelCount}
-  else Result := 0;
+  else
+  if List is TCheckListBox then
+    Result := TCheckListBox(List).SelCount
+  else
+    Result := 0;
 end;
 
 function BoxItemAtPos(List: TWinControl; Pos: TPoint;
@@ -137,18 +148,22 @@ function BoxItemAtPos(List: TWinControl; Pos: TPoint;
 begin
   if List is TCustomListBox then
     Result := TCustomListBox(List).ItemAtPos(Pos, Existing)
-{  else if List is TRxCustomListBox then
-    Result := TRxCustomListBox(List).ItemAtPos(Pos, Existing)}
-  else Result := LB_ERR;
+  else
+  if List is TCheckListBox then
+    Result := TCheckListBox(List).ItemAtPos(Pos, Existing)
+  else
+    Result := LB_ERR;
 end;
 
 function BoxItemRect(List: TWinControl; Index: Integer): TRect;
 begin
   if List is TCustomListBox then
     Result := TCustomListBox(List).ItemRect(Index)
-{  else if List is TRxCustomListBox then
-    Result := TRxCustomListBox(List).ItemRect(Index)}
-  else FillChar(Result, SizeOf(Result), 0);
+  else
+  if List is TCheckListBox then
+    Result := TCheckListBox(List).ItemRect(Index)
+  else
+    FillChar(Result, SizeOf(Result), 0);
 end;
 
 procedure BoxMoveSelected(List: TWinControl; Items: TStrings);
@@ -157,12 +172,15 @@ var
 begin
   if BoxItems(List) = nil then Exit;
   I := 0;
-  while I < BoxItems(List).Count do begin
-    if BoxGetSelected(List, I) then begin
+  while I < BoxItems(List).Count do
+  begin
+    if BoxGetSelected(List, I) then
+    begin
       Items.AddObject(BoxItems(List).Strings[I], BoxItems(List).Objects[I]);
       BoxItems(List).Delete(I);
     end
-    else Inc(I);
+    else
+      Inc(I);
   end;
 end;
 
@@ -213,16 +231,13 @@ begin
       begin
         if BoxGetSelected(SrcList, I) then
         begin
-          NewIndex := BoxItems(DstList).AddObject(BoxItems(SrcList).Strings[I],
-            BoxItems(SrcList).Objects[I]);
-{          if (SrcList is TRxCheckListBox) and (DstList is TRxCheckListBox) then
-          begin
-            TRxCheckListBox(DstList).State[NewIndex] :=
-              TRxCheckListBox(SrcList).State[I];
-          end;}
+          NewIndex := BoxItems(DstList).AddObject(BoxItems(SrcList).Strings[I], BoxItems(SrcList).Objects[I]);
+          if (SrcList is TCheckListBox) and (DstList is TCheckListBox) then
+            TCheckListBox(DstList).State[NewIndex] := TCheckListBox(SrcList).State[I];
           BoxItems(SrcList).Delete(I);
         end
-        else Inc(I);
+        else
+          Inc(I);
       end;
       BoxSetItem(SrcList, Index);
     finally
@@ -236,14 +251,11 @@ procedure BoxMoveAllItems(SrcList, DstList: TWinControl);
 var
   I, NewIndex: Integer;
 begin
-  for I := 0 to BoxItems(SrcList).Count - 1 do begin
-    NewIndex := BoxItems(DstList).AddObject(BoxItems(SrcList)[I],
-      BoxItems(SrcList).Objects[I]);
-{    if (SrcList is TRxCheckListBox) and (DstList is TRxCheckListBox) then
-    begin
-      TRxCheckListBox(DstList).State[NewIndex] :=
-        TRxCheckListBox(SrcList).State[I];
-    end;}
+  for I := 0 to BoxItems(SrcList).Count - 1 do
+  begin
+    NewIndex := BoxItems(DstList).AddObject(BoxItems(SrcList)[I], BoxItems(SrcList).Objects[I]);
+    if (SrcList is TCheckListBox) and (DstList is TCheckListBox) then
+      TCheckListBox(DstList).State[NewIndex] := TCheckListBox(SrcList).State[I];
   end;
   BoxItems(SrcList).Clear;
   BoxSetItem(SrcList, 0);

@@ -87,18 +87,14 @@ procedure OutTextXY90(Canvas:TCanvas; X,Y:integer; Text:string; Orientation:TTex
 function IsForegroundTask: Boolean;
 function ValidParentForm(Control: TControl): TCustomForm;
 function CreateArrowBitmap:TBitmap;
-function CreateResBitmap(const AResName:string):TBitmap;
-function  LoadLazResBitmapImage(const ResName: string): TBitmap;
+function RxCreateResBitmap(const AResName:string):TCustomBitmap;
+procedure RxAssignBitmap(const AGlyph: TBitmap; const AResName:string);
+//function  LoadLazResBitmapImage(const ResName: string): TBitmap;
 
 {functions from DBGrid}
 function  GetWorkingCanvas(const Canvas: TCanvas): TCanvas;
 procedure FreeWorkingCanvas(canvas: TCanvas);
 
-{
-function AllocMemo(Size: Longint): Pointer;
-function ReallocMemo(fpBlock: Pointer; Size: Longint): Pointer;
-procedure FreeMemo(var fpBlock: Pointer);
-}
 
 procedure RaiseIndexOutOfBounds(Control: TControl; Items:TStrings; Index: integer);
 
@@ -381,28 +377,7 @@ begin
 end;
 {$ENDIF}
 
-{
-function AllocMemo(Size: Longint): Pointer;
-begin
-  if Size > 0 then
-    Result := GlobalAllocPtr(HeapAllocFlags or GMEM_ZEROINIT, Size)
-  else Result := nil;
-end;
 
-function ReallocMemo(fpBlock: Pointer; Size: Longint): Pointer;
-begin
-  Result := GlobalReallocPtr(fpBlock, Size,
-    HeapAllocFlags or GMEM_ZEROINIT);
-end;
-
-procedure FreeMemo(var fpBlock: Pointer);
-begin
-  if fpBlock <> nil then begin
-    GlobalFreePtr(fpBlock);
-    fpBlock := nil;
-  end;
-end;
-}
 {$IFDEF WIN32}
 function CreateIcon(hInstance: HINST; nWidth, nHeight: Integer;
   cPlanes, cBitsPixel: Byte; lpbANDbits, lpbXORbits: Pointer): HICON; stdcall; external user32 name 'CreateIcon';
@@ -657,60 +632,33 @@ end;
 {$ENDIF}
 
 function CreateArrowBitmap:TBitmap;
-begin
-  {$IFNDEF RX_USE_LAZARUS_RESOURCE}
-  Result:=CreateResBitmap('rxbtn_downarrow');
-(*  Result := TBitmap.Create;
-  try
-    try
-      C := TPortableNetworkGraphic.Create;
-      C.LoadFromResourceName(hInstance, 'rxbtn_downarrow');
-      Result.Assign(C);
-    finally
-      C.Free;
-    end;
-  except
-    Result.Free;
-    raise;
-  end; *)
-  {$ELSE}
-  Result:=LoadLazResBitmapImage('rxbtn_downarrow')
-  {$ENDIF}
-end;
-
-function CreateResBitmap(const AResName: string): TBitmap;
-var
-  C : TCustomBitmap;
-begin
-  Result := TBitmap.Create;
-  try
-    try
-      C := TPortableNetworkGraphic.Create;
-      C.LoadFromResourceName(hInstance, AResName);
-      Result.Assign(C);
-    finally
-      C.Free;
-    end;
-  except
-    Result.Free;
-    raise;
-  end;
-end;
-
-//Code from DBGrid
-function LoadLazResBitmapImage(const ResName: string): TBitmap;
 var
   C: TCustomBitmap;
 begin
-  C := CreateBitmapFromLazarusResource(ResName);
-  if C<>nil then
-  begin
-    Result := TBitmap.Create;
-    Result.Assign(C);
-    C.Free;
-  end
+  Result:=TBitmap.Create;
+  C:=RxCreateResBitmap('rxbtn_downarrow');
+  Result.Assign(C);
+  C.Free;
+end;
+
+function RxCreateResBitmap(const AResName: string): TCustomBitmap;
+var
+  ResHandle: TLResource;
+begin
+  ResHandle := LazarusResources.Find(AResName);
+  if ResHandle <> nil then
+    Result := CreateBitmapFromLazarusResource(ResHandle)
   else
-    Result:=nil;
+    Result := CreateBitmapFromResourceName(HInstance, AResName);
+end;
+
+procedure RxAssignBitmap(const AGlyph: TBitmap; const AResName: string);
+var
+  C: TCustomBitmap;
+begin
+  C:=RxCreateResBitmap(AResName);
+  AGlyph.Assign(C);
+  C.Free;
 end;
 
 function GetWorkingCanvas(const Canvas: TCanvas): TCanvas;
