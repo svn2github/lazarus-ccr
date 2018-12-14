@@ -935,6 +935,7 @@ begin
     begin
       S1:=S + sItem + IntToStr(i);
       FPropertyStorageLink.Storage.WriteString(S1+sOptions, GetEnumProp(IT, 'ButtonStyle'));
+      FPropertyStorageLink.Storage.WriteInteger(S1+sIndex, IT.Index);
       if Assigned(IT.Action) then
       begin
         FPropertyStorageLink.Storage.WriteString(S1+sAction, IT.Action.Name);
@@ -1070,6 +1071,9 @@ begin
         St.AddObject('S', P);
       end;
     end;
+
+    if Assigned(P) then
+      P.Index:= FPropertyStorageLink.Storage.ReadInteger(S1+sIndex, I);
   end;
   for i:=0 to St.Count-1 do
   begin
@@ -1284,6 +1288,7 @@ function TToolPanel.DoAlignChildControls(TheAlign: TAlign; AControl: TControl;
 var
   TI: TToolbarItem;
   I, L: Integer;
+  S: String;
 begin
   if TheAlign = alCustom then
   begin
@@ -1295,6 +1300,7 @@ begin
       for i:=0 to FToolbarItems.Count-1 do
       begin
         TI:=FToolbarItems[i];
+        S:=TI.GetDisplayName;
         if TI.Visible and Assigned(TI.FButton) then
         begin
           TI.FButton.SetBounds(L, FInternalSpacing, TI.FIntWidth, TI.FIntHeight);
@@ -1400,7 +1406,7 @@ end;
 
 procedure TToolbarItem.SetAction(const AValue: TBasicAction);
 begin
-  if FButton.Action<>AValue then
+  if Assigned(FButton) and (FButton.Action<>AValue) then
   begin
     FButton.Action:=AValue;
     if not (csLoading in TToolbarItems(Collection).FToolPanel.ComponentState) then
@@ -1411,7 +1417,7 @@ end;
 
 procedure TToolbarItem.SetButtonStyle(const AValue: TToolbarButtonStyle);
 begin
-  if FButton.FToolbarButtonStyle<>AValue then
+  if Assigned(FButton) and (FButton.FToolbarButtonStyle<>AValue) then
   begin
     FButton.FToolbarButtonStyle:=AValue;
     TToolbarItems(Collection).FToolPanel.ReAlignToolBtn;
@@ -1420,7 +1426,7 @@ end;
 
 procedure TToolbarItem.SetDropDownMenu(const AValue: TPopupMenu);
 begin
-  if FButton.FDropDownMenu<>AValue then
+  if Assigned(FButton) and (FButton.FDropDownMenu<>AValue) then
   begin
     FButton.FDropDownMenu:=AValue;
     FButton.Invalidate;
@@ -1429,31 +1435,25 @@ end;
 
 procedure TToolbarItem.SetGroupIndex(const AValue: Integer);
 begin
-  FButton.GroupIndex:=AValue;
+  if Assigned(FButton) and (FButton.GroupIndex <> AValue) then
+  begin
+    FButton.GroupIndex:=AValue;
+    FButton.Invalidate;
+  end;
 end;
-(*
-procedure TToolbarItem.SetHeight(const AValue: Integer);
-begin
-  FButton.Height:=AValue;
-end;
-*)
+
 procedure TToolbarItem.SetLayout(const AValue: TButtonLayout);
 begin
-  FButton.Layout:=AValue;
-  TToolbarItems(Collection).FToolPanel.ReAlignToolBtn;
+  if Assigned(FButton) and (FButton.Layout<>AValue) then
+  begin
+    FButton.Layout:=AValue;
+    TToolbarItems(Collection).FToolPanel.ReAlignToolBtn;
+  end;
 end;
-(*
-procedure TToolbarItem.SetLeft(const AValue: Integer);
-begin
-  if csLoading in TToolbarItems(Collection).FToolPanel.ComponentState then
-    FSaveLeft:=AValue
-  else
-    FButton.Left:=AValue;
-end;
-*)
+
 procedure TToolbarItem.SetShowCaption(const AValue: boolean);
 begin
-  if FButton.ShowCaption<>AValue then
+  if Assigned(FButton) and (FButton.ShowCaption<>AValue) then
   begin
     FButton.ShowCaption:=AValue;
     if not (csLoading in TToolbarItems(Collection).FToolPanel.ComponentState) then
@@ -1463,89 +1463,83 @@ end;
 
 procedure TToolbarItem.SetTag(const AValue: Longint);
 begin
-  FButton.Tag:=AValue;
-end;
-(*
-procedure TToolbarItem.SetTop(const AValue: Integer);
-begin
-  FButton.Top:=AValue;
-end;
-*)
-function TToolbarItem.GetAction: TBasicAction;
-begin
-  Result:=FButton.Action;
+  if Assigned(FButton) and (FButton.Tag<>AValue) then
+    FButton.Tag:=AValue;
 end;
 
-{
-function TToolbarItem.GetAutoSize: boolean;
+function TToolbarItem.GetAction: TBasicAction;
 begin
-  Result:=FButton.FAutoSize;
+  if Assigned(FButton) then
+    Result:=FButton.Action
+  else
+    Result:=nil;
 end;
-}
+
+
 function TToolbarItem.GetButtonStyle: TToolbarButtonStyle;
 begin
-  Result:=FButton.FToolbarButtonStyle;
+  if Assigned(FButton) then
+    Result:=FButton.FToolbarButtonStyle
+  else
+    Result:=tbrButton;
 end;
 
 function TToolbarItem.GetDropDownMenu: TPopupMenu;
 begin
-  Result:=FButton.FDropDownMenu;
+  if Assigned(FButton) then
+    Result:=FButton.FDropDownMenu
+  else
+    Result:=nil;
 end;
 
 function TToolbarItem.GetGroupIndex: Integer;
 begin
-  Result:=FButton.GroupIndex;
+  if Assigned(FButton) then
+    Result:=FButton.GroupIndex
+  else
+    Result:=0;
 end;
 
 function TToolbarItem.GetLayout: TButtonLayout;
 begin
-  Result:=FButton.Layout;
+  if Assigned(FButton) then
+    Result:=FButton.Layout
+  else
+    Result:=blGlyphLeft;
 end;
 
 function TToolbarItem.GetShowCaption: boolean;
 begin
-  Result:=FButton.ShowCaption;
+  if Assigned(FButton) then
+    Result:=FButton.ShowCaption
+  else
+    Result:=false;
 end;
 
 function TToolbarItem.GetTag: Longint;
 begin
-  Result:=FButton.Tag;
+  if Assigned(FButton) then
+    Result:=FButton.Tag
+  else
+    Result:=0;
 end;
-(*
-function TToolbarItem.GetTop: Integer;
-begin
-  Result:=FButton.Top;
-end;
-*)
+
 function TToolbarItem.GetVisible: boolean;
 begin
-  Result:=FButton.Visible;
+  if Assigned(FButton) then
+    Result:=FButton.Visible
+  else
+    Result:=false;
 end;
-(*
-function TToolbarItem.GetWidth: Integer;
-begin
-  Result:=FButton.Width;
-end;
-*)
+
 procedure TToolbarItem.SetVisible(const AValue: boolean);
 begin
-  if FButton.Visible<>AValue then
+  if Assigned(FButton) and (FButton.Visible<>AValue) then
   begin
     FButton.Visible:=AValue;
     FButton.Invalidate;
   end;
 end;
-(*
-procedure TToolbarItem.SetWidth(const AValue: Integer);
-begin
-  FButton.Width:=AValue;
-end;
-
-procedure TToolbarItem.UpdateLeftAfterLoad;
-begin
-  FButton.Left:=FSaveLeft;
-end;
-*)
 
 procedure TToolbarItem.InternalCalcSize;
 begin
@@ -1603,6 +1597,7 @@ var
   TB:TToolPanel;
 begin
   inherited Create(ACollection);
+
   TB:=TToolbarItems(ACollection).FToolPanel;
 
   TB.DisableAlign;
@@ -1616,6 +1611,7 @@ begin
   FButton.FOwnerItem:=Self;
   FButton.FFullPush:=true;
   FButton.ParentColor:=true;
+
   TB.EnableAlign;
 end;
 

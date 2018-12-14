@@ -352,6 +352,7 @@ begin
 
   UpdateStates;
   FToolPanel.ReAlign;
+  FToolPanel.ReAlign;
 end;
 
 constructor TToolPanelSetupForm.CreateSetupForm(AToolPanel: TToolPanel);
