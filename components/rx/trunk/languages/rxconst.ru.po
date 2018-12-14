@@ -142,7 +142,7 @@ msgstr "Общее"
 
 #: rxconst.sgrabkey
 msgid "Grab key"
-msgstr ""
+msgstr "Захватить клавишу"
 
 #: rxconst.shistorydesc
 msgid "History - \"%s\""
@@ -182,7 +182,7 @@ msgstr "За границами диапазона %d %d %d %d"
 
 #: rxconst.spressthekey
 msgid "Press the key"
-msgstr ""
+msgstr "Нажмите клавишу"
 
 #: rxconst.sprevmonth
 msgid "Previous Month|"
@@ -271,11 +271,11 @@ msgstr "Второй квартал"
 
 #: rxconst.sseparator
 msgid "Separator"
-msgstr ""
+msgstr "Разделитель"
 
 #: rxconst.sshortcut
 msgid "ShortCut"
-msgstr ""
+msgstr "Быстрый вызов"
 
 #: rxconst.sshowcaption
 msgid "Show caption"
