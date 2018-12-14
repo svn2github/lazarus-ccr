@@ -246,7 +246,7 @@ begin
   cbFlatBtn.Checked:=tpFlatBtns in FToolPanel.Options;
 
   btnUp.Enabled:=(ListBtnVisible.Items.Count>0) and (ListBtnVisible.ItemIndex>0);
-  btnDown.Enabled:=(ListBtnVisible.Items.Count>0) and (ListBtnVisible.ItemIndex < ListBtnVisible.Items.Count-1);
+  btnDown.Enabled:=(ListBtnVisible.Items.Count>0) and (ListBtnVisible.ItemIndex < ListBtnVisible.Items.Count-1) and (ListBtnVisible.ItemIndex >-1);
 
   if (ListBtnVisible.ItemIndex>=0) and (ListBtnVisible.ItemIndex<ListBtnVisible.Items.Count) then
     cbShowCaption.Enabled:=not (TToolbarItem(ListBtnVisible.Items.Objects[ListBtnVisible.ItemIndex]).ButtonStyle in [tbrSeparator, tbrDivider])
