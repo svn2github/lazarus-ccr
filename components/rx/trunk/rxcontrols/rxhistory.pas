@@ -54,8 +54,8 @@ type
 
   TRXHistory = class(TComponent)
   private
-    FButtonNext: string;
-    FButtonPrior: string;
+    //FButtonNext: string;
+    //FButtonPrior: string;
     FButtonStyle: TToolbarButtonStyleCntrl;
     FNextButton: TToolbarItem;
     FNextButtonName: string;
@@ -138,8 +138,6 @@ begin
 end;
 
 function TRXHistory.SetBtn(const ABtnName: string;var Button:TToolbarItem):boolean;
-var
-  i:integer;
 begin
   Result:=false;
   if not Assigned(FToolPanel) then exit;

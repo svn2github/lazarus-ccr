@@ -83,7 +83,6 @@ type
     procedure FillItems(List:TStrings; AVisible:boolean);
     procedure UpdateStates;
     procedure Localize;
-    procedure UpdateToolbarOrder;
   public
     FToolPanel:TToolPanel;
     constructor CreateSetupForm(AToolPanel:TToolPanel);
@@ -206,13 +205,11 @@ begin
     if Act is TCustomAction then
     begin
       A:=TCustomAction(Act).ShortCut;
-//      Hide;
       if RxSelectShortCut(A) then
       begin
         TCustomAction(Act).ShortCut:=A;
         TListBox(Sender).Invalidate;
       end;
-//      Show;
     end;
   end;
 end;
@@ -281,29 +278,6 @@ begin
   RadioGroup1.Items.Add(sButtonAlign3);
 end;
 
-procedure TToolPanelSetupForm.UpdateToolbarOrder;
-var
-  P, P1: TToolbarItem;
-  i, j: Integer;
-begin
-  FToolPanel.DisableAlign;
-  FToolPanel.Items.BeginUpdate;
-  for i:=0 to ListBtnVisible.Count-1 do
-  begin
-    P:=ListBtnVisible.Items.Objects[i] as TToolbarItem;
-    P1:=FToolPanel.Items[i];
-    if P <> P1 then
-    begin
-      j:=FToolPanel.Items.IndexOf(P);
-      if j>-1 then
-        FToolPanel.Items.Exchange(i, j);
-    end;
-  end;
-  FToolPanel.Items.EndUpdate;
-  FToolPanel.ReAlign;
-  FToolPanel.EnableAlign;
-end;
-
 procedure TToolPanelSetupForm.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
@@ -338,59 +312,49 @@ procedure TToolPanelSetupForm.btnLeftClick(Sender: TObject);
 begin
   BoxMoveSelectedItems(ListBtnAvaliable, ListBtnVisible);
   UpdateStates;
-  UpdateToolbarOrder;
+  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnLeft2Click(Sender: TObject);
 begin
   BoxMoveAllItems(ListBtnAvaliable, ListBtnVisible);
   UpdateStates;
-  UpdateToolbarOrder;
+  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnRightClick(Sender: TObject);
 begin
   BoxMoveSelectedItems(ListBtnVisible, ListBtnAvaliable);
   UpdateStates;
-  UpdateToolbarOrder;
+  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnRight2Click(Sender: TObject);
 begin
   BoxMoveAllItems(ListBtnVisible, ListBtnAvaliable);
   UpdateStates;
-  UpdateToolbarOrder;
+  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnUpClick(Sender: TObject);
 var
   I, J: Integer;
-  S: String;
-  P: TObject;
+  P: TToolbarItem;
 begin
-  ListBtnVisible.Items.BeginUpdate;
   I:=ListBtnVisible.ItemIndex;
   J:=I + TComponent(Sender).Tag;
+  ListBtnVisible.Items.Move(I, J);
 
-  S:=ListBtnVisible.Items[I];
-  P:=ListBtnVisible.Items.Objects[I];
-
-  ListBtnVisible.Items[I]:=ListBtnVisible.Items[J];
-  ListBtnVisible.Items.Objects[I]:=ListBtnVisible.Items.Objects[J];
-
-  ListBtnVisible.Items[J]:=S;
-  ListBtnVisible.Items.Objects[J]:=P;
+  P:=FToolPanel.Items[i];
+  P.Index:=J;
 
   ListBtnVisible.ItemIndex:=J;
-  ListBtnVisible.Items.EndUpdate;
 
   UpdateStates;
-  UpdateToolbarOrder;
+  FToolPanel.ReAlign;
 end;
 
 constructor TToolPanelSetupForm.CreateSetupForm(AToolPanel: TToolPanel);
-var
-  C: TCustomBitmap;
 begin
   inherited Create(AToolPanel);
   Localize;

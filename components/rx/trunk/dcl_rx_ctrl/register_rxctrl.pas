@@ -80,27 +80,48 @@ type
     procedure ExecuteVerb(Index:integer);override;
   end;
 
-(*
-  { TRxAppIcon }
+  { TToolPanelEditor }
 
-  TRxAppIconEditor = class(TComponentEditor)
+  TToolPanelEditor = class(TComponentEditor)
   public
-    DefaultEditor: TBaseComponentEditor;
-    constructor Create(AComponent: TComponent; ADesigner: TComponentEditorDesigner); override;
-    destructor Destroy; override;
     function GetVerbCount:integer;override;
     function GetVerb(Index:integer):string;override;
     procedure ExecuteVerb(Index:integer);override;
   end;
-*)
+
 procedure Register;
 implementation
-uses RxLogin, Dialogs, rxconst, RxHistoryNavigator, rxpopupunit,
+uses RxLogin, Dialogs, rxconst, RxHistoryNavigator, rxpopupunit, rxtoolbar,
   rxceEditLookupFields, rxdbgrid, rxdconst, rxduallist, rxstrutils, Forms;
 
 resourcestring
   sTestTRxLoginDialog = 'Test TRxLoginDialog';
-//  sLoadIcon        = 'Load icon';
+
+{ TToolPanelEditor }
+
+function TToolPanelEditor.GetVerbCount: integer;
+begin
+  Result:=1;
+end;
+
+function TToolPanelEditor.GetVerb(Index: integer): string;
+begin
+  if Index = 0 then Result:=sRxToolPanelEditor
+  else Result:='';
+end;
+
+procedure TToolPanelEditor.ExecuteVerb(Index: integer);
+var
+  ToolPanel: TToolPanel;
+begin
+  if Index = 0 then
+  begin
+    ToolPanel:=GetComponent as TToolPanel;
+    TCollectionPropertyEditor.ShowCollectionEditor(ToolPanel.Items, ToolPanel, 'Items');
+  end
+  else
+    inherited ExecuteVerb(Index);
+end;
 
 
 { TRxLoginDialogEditor }
@@ -154,74 +175,7 @@ begin
     end;
   end;
 end;
-(*
-{ TRxAppIcon }
 
-type
-  PClass = ^TClass;
-
-constructor TRxAppIconEditor.Create(AComponent: TComponent;
-  ADesigner: TComponentEditorDesigner);
-var
-  CompClass: TClass;
-begin
-  inherited Create(AComponent, ADesigner);
-  CompClass := PClass(Acomponent)^;
-  try
-    PClass(AComponent)^ := TComponent;
-    DefaultEditor := GetComponentEditor(AComponent, ADesigner);
-  finally
-    PClass(AComponent)^ := CompClass;
-  end;
-end;
-
-destructor TRxAppIconEditor.Destroy;
-begin
-  DefaultEditor.Free;
-  inherited Destroy;
-end;
-
-function TRxAppIconEditor.GetVerbCount: integer;
-begin
-  Result:=DefaultEditor.GetVerbCount + 1;
-end;
-
-function TRxAppIconEditor.GetVerb(Index: integer): string;
-begin
-  if Index < DefaultEditor.GetVerbCount then
-    Result := DefaultEditor.GetVerb(Index)
-  else
-  begin
-    case Index - DefaultEditor.GetVerbCount of
-      0:Result:=sLoadIcon;
-    end;
-  end;
-end;
-
-procedure TRxAppIconEditor.ExecuteVerb(Index: integer);
-var
-  OpenDialog1: TOpenDialog;
-begin
-  if Index < DefaultEditor.GetVerbCount then
-    DefaultEditor.ExecuteVerb(Index)
-  else
-  begin
-    case Index - DefaultEditor.GetVerbCount of
-      0:begin
-          OpenDialog1:=TOpenDialog.Create(nil);
-          OpenDialog1.Filter:=sWindowsIcoFiles;
-          try
-            if OpenDialog1.Execute then
-              (Component as TRxAppIcon).LoadFromFile(OpenDialog1.FileName);
-          finally
-            OpenDialog1.Free;
-          end;
-          Modified;
-        end;
-    end;
-  end;
-end;
-*)
 { THistoryButtonProperty }
 
 function THistoryButtonProperty.GetAttributes: TPropertyAttributes;
@@ -354,7 +308,8 @@ procedure Register;
 begin
   //
   RegisterComponentEditor(TRxLoginDialog, TRxLoginDialogEditor);
-  //RegisterComponentEditor(TRxAppIcon, TRxAppIconEditor);
+  RegisterComponentEditor(TToolPanel, TToolPanelEditor);
+
   //
   RegisterPropertyEditor(TypeInfo(string), TPopUpColumn, 'FieldName', TPopUpColumnFieldProperty);
   RegisterPropertyEditor(TypeInfo(string), TRxHistoryNavigator, 'BackBtn', THistoryButtonProperty);

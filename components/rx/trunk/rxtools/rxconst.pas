@@ -89,6 +89,7 @@ resourcestring
   sLicense              = 'License';
   SOutOfRange           = 'Out of range %d %d %d %d';
   sSeparator            = 'Separator';
+  sRxToolPanelEditor    = 'Rx toolpanel editor';
 
   { TRxHistoryNavigator }
   sHistoryDesc          = 'History - "%s"';

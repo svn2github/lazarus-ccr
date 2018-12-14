@@ -96,7 +96,6 @@ type
       X, Y: Integer); override;
     procedure MouseLeave; override;
     procedure Paint; override;
-    procedure Click; override;
     procedure UpdateState(InvalidateOnChange: boolean); override;
     procedure SetDesign(AValue:boolean; AToolbarItem:TToolbarItem);
     procedure SetEnabled(NewEnabled: boolean); override;
@@ -105,6 +104,7 @@ type
     procedure CalculatePreferredSize( var PreferredWidth, PreferredHeight: integer; WithThemeSpace: Boolean); override;
   public
     destructor Destroy; override;
+    procedure Click; override;
   end;
 
   { TToolbarItem }
@@ -235,11 +235,11 @@ type
     procedure Loaded; override;
     procedure CalculatePreferredSize( var PreferredWidth, PreferredHeight: integer; WithThemeSpace: Boolean); override;
     function DoAlignChildControls(TheAlign: TAlign; AControl: TControl; AControlList: TFPList; var ARect: TRect): Boolean; override;
-    procedure GetPreferredSize(var PreferredWidth, PreferredHeight: integer; Raw: boolean = false; WithThemeSpace: boolean = true); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Customize(HelpCtx: Longint);
+    procedure GetPreferredSize(var PreferredWidth, PreferredHeight: integer; Raw: boolean = false; WithThemeSpace: boolean = true); override;
     procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
     property DefImgWidth:integer read FDefImgWidth;
     property DefImgHeight:integer read FDefImgHeight;
@@ -301,7 +301,7 @@ type
 
 implementation
 uses Math, RxTBRSetup, LCLProc, rxlclutils, Dialogs, typinfo, rxdconst, GraphType,
-  LResources, LazVersion, LCLVersion;
+  LResources, LCLVersion;
 
 { TToolbarItemsEnumerator }
 
@@ -409,11 +409,8 @@ var
   GlyphWidth, GlyphHeight: Integer;
   Offset, OffsetCap: TPoint;
   ClientSize, TotalSize, TextSize: TSize;
-  M, S , FExternalImageWidth: integer;
+  M, S : integer;
   TXTStyle : TTextStyle;
-  SIndex : Longint;
-  TMP : String;
-  AImageResolution: TScaledImageListResolution;
   FImgN, FImgS: TImageList;
 begin
   if FToolbarButtonStyle in [tbrSeparator, tbrDivider] then
@@ -799,7 +796,9 @@ begin
     FToolPanel.DisableAlign;
   inherited Notify(Item, Action);
   if Action = cnDeleting then
-    FToolPanel.EnableAlign;
+    FToolPanel.EnableAlign
+  else
+    FToolPanel.ReAlignToolBtn;
 end;
 
 constructor TToolbarItems.Create(ToolPanel: TToolPanel);
@@ -866,9 +865,6 @@ begin
 end;
 
 procedure TToolPanel.SetButtonAllign(const AValue: TToolButtonAllign);
-var
-  i:integer;
-  ARect: TRect;
 begin
   if FButtonAllign=AValue then exit;
   FButtonAllign:=AValue;
@@ -877,8 +873,6 @@ begin
 end;
 
 procedure TToolPanel.SetImageList(const AValue: TImageList);
-var
-  i:integer;
 begin
   if FImageList=AValue then exit;
   FImageList:=AValue;
@@ -887,8 +881,6 @@ begin
 end;
 
 procedure TToolPanel.SetImageListSelected(const AValue: TImageList);
-var
-  i:integer;
 begin
   if FImageListSelected=AValue then exit;
   FImageListSelected:=AValue;
@@ -1092,9 +1084,7 @@ begin
 end;
 
 var
-  i, ACount:integer;
-  S1, AActionName, S2:string;
-  AItem:TToolbarItem;
+  ACount:integer;
   tpo:TToolPanelOptions;
   tpo1:integer absolute tpo;
   S: TComponentName;
@@ -1292,7 +1282,6 @@ end;
 function TToolPanel.DoAlignChildControls(TheAlign: TAlign; AControl: TControl;
   AControlList: TFPList; var ARect: TRect): Boolean;
 var
-  R: TRect;
   TI: TToolbarItem;
   I, L: Integer;
 begin
@@ -1611,9 +1600,7 @@ end;
 
 constructor TToolbarItem.Create(ACollection: TCollection);
 var
-  i, W:integer;
   TB:TToolPanel;
-  TI: TToolbarItem;
 begin
   inherited Create(ACollection);
   TB:=TToolbarItems(ACollection).FToolPanel;

@@ -267,6 +267,10 @@ msgstr ""
 msgid "Rx text holder editor"
 msgstr ""
 
+#: rxconst.srxtoolpaneleditor
+msgid "Rx toolpanel editor"
+msgstr ""
+
 #: rxconst.ssecondhalfofyear
 msgid "Second half of year"
 msgstr ""
