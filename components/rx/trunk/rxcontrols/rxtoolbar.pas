@@ -235,6 +235,7 @@ type
     procedure Loaded; override;
     procedure CalculatePreferredSize( var PreferredWidth, PreferredHeight: integer; WithThemeSpace: Boolean); override;
     function DoAlignChildControls(TheAlign: TAlign; AControl: TControl; AControlList: TFPList; var ARect: TRect): Boolean; override;
+    procedure GetPreferredSize(var PreferredWidth, PreferredHeight: integer; Raw: boolean = false; WithThemeSpace: boolean = true); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -1173,6 +1174,11 @@ begin
     FDefImgWidth:=FImageList.Width;
     FDefImgHeight:=FImageList.Height;
     {$ENDIF}
+  end
+  else
+  begin
+    FDefImgWidth:=FInternalDefButtonWidth;
+    FDefImgHeight:=FInternalDefButtonHeight;
   end;
 end;
 
@@ -1185,8 +1191,8 @@ var
   OldFont: HGDIOBJ;
   S: TTranslateString;
 begin
-  MaxHeight:=0;
   InternalCalcImgSize;
+  MaxHeight:=FDefImgHeight;
   DC := GetDC(Handle);
   try
     OldFont := SelectObject(DC, HGDIOBJ(Font.Reference.Handle));
@@ -1325,6 +1331,14 @@ begin
     Result:=inherited DoAlignChildControls(TheAlign, AControl, AControlList, ARect);
 end;
 
+procedure TToolPanel.GetPreferredSize(var PreferredWidth,
+  PreferredHeight: integer; Raw: boolean; WithThemeSpace: boolean);
+begin
+  inherited GetPreferredSize(PreferredWidth, PreferredHeight, Raw, WithThemeSpace);
+  if PreferredHeight < FInternalDefButtonHeight then
+    PreferredHeight:=FInternalDefButtonHeight;
+end;
+
 constructor TToolPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -1389,6 +1403,7 @@ begin
     else
       aHeight:=FInternalDefButtonHeight + BorderWidth * 2;
   end;
+
   inherited SetBounds(aLeft, aTop, aWidth, aHeight);
 end;
 

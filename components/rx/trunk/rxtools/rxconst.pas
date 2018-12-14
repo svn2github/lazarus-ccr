@@ -88,6 +88,7 @@ resourcestring
   sGeneral              = 'General';
   sLicense              = 'License';
   SOutOfRange           = 'Out of range %d %d %d %d';
+  sSeparator            = 'Separator';
 
   { TRxHistoryNavigator }
   sHistoryDesc          = 'History - "%s"';

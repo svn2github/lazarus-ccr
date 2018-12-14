@@ -269,6 +269,10 @@ msgstr "Druga połowa roku"
 msgid "Second quarter"
 msgstr "Drugi kwartał"
 
+#: rxconst.sseparator
+msgid "Separator"
+msgstr ""
+
 #: rxconst.sshortcut
 msgid "ShortCut"
 msgstr ""
@@ -352,3 +356,4 @@ msgstr ""
 #: rxconst.swindowsicofiles
 msgid "Windows Ico files (*.ico)|*.ico|All files (*.*)|*.*"
 msgstr ""
+

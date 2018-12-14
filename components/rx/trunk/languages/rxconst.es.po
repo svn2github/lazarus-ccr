@@ -262,6 +262,10 @@ msgstr ""
 msgid "Second quarter"
 msgstr ""
 
+#: rxconst.sseparator
+msgid "Separator"
+msgstr ""
+
 #: rxconst.sshortcut
 msgid "ShortCut"
 msgstr ""

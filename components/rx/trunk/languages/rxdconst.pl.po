@@ -762,3 +762,4 @@ msgstr "Użyj surowego JPEG"
 #: rxdconst.susernamelabel
 msgid "&User name:"
 msgstr "Nazwa &użytkownika:"
+

@@ -123,16 +123,15 @@ begin
 
   Cnv.FillRect(ARect);       { clear the rectangle }
   P:=TToolbarItem((Control as TListBox).Items.Objects[Index]);
-  SText:=(Control as TListBox).Items[Index];
   if Assigned(P) then
   begin
+    Offset := 2;
     if Assigned(FToolPanel.ImageList) and Assigned(P.Action) then
     begin
       if (P.Action is TCustomAction) and
          (TCustomAction(P.Action).ImageIndex>-1) and
          (TCustomAction(P.Action).ImageIndex < FToolPanel.ImageList.Count) then
       begin
-        Offset := 2;
         BtnRect.Top:=ARect.Top + 2;
         BtnRect.Left:=ARect.Left + Offset;
         BtnRect.Right:=BtnRect.Left + FToolPanel.DefImgWidth * 2;
@@ -141,15 +140,27 @@ begin
         Cnv.FillRect(BtnRect);
         DrawButtonFrame(Cnv, BtnRect, false, false);
         FToolPanel.ImageList.Draw(Cnv, BtnRect.Left + FToolPanel.DefImgWidth div 2,
-                                       BtnRect.Top + FToolPanel.DefImgHeight div 2,
+                                       BtnRect.Top + ((BtnRect.Bottom - BtnRect.Top - FToolPanel.DefImgHeight) div 2),
                                        TCustomAction(P.Action).ImageIndex, True);
         Offset:=BtnRect.Right;
       end;
     end;
 
+    if P.ButtonStyle in [tbrSeparator, tbrDivider] then
+      SText:=sSeparator
+    else
+    if Assigned(P.Action) and (P.Action is TCustomAction) then
+      SText:=TCustomAction(P.Action).Caption
+    else
+      SText:=(Control as TListBox).Items[Index];
+
+
+
+
     Offset := Offset + 6;
     Cnv.Brush.Color:=C;
     Cnv.TextOut(ARect.Left + Offset, (ARect.Top + ARect.Bottom  - TW) div 2, SText);  { display the text }
+
     if (P.Action is TAction) then
       if TAction(P.Action).ShortCut <> 0 then
       begin

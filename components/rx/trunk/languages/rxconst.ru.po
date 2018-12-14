@@ -269,6 +269,10 @@ msgstr "Вторая половина года"
 msgid "Second quarter"
 msgstr "Второй квартал"
 
+#: rxconst.sseparator
+msgid "Separator"
+msgstr ""
+
 #: rxconst.sshortcut
 msgid "ShortCut"
 msgstr ""
