@@ -82,6 +82,7 @@ type
   private
     procedure FillItems(List:TStrings; AVisible:boolean);
     procedure UpdateStates;
+    procedure UpdateButtonIndex;
     procedure Localize;
   public
     FToolPanel:TToolPanel;
@@ -254,6 +255,20 @@ begin
     cbShowCaption.Enabled:=false;
 end;
 
+procedure TToolPanelSetupForm.UpdateButtonIndex;
+var
+  P: TToolbarItem;
+  i: Integer;
+begin
+  FToolPanel.DisableAlign;
+  for i:=0 to ListBtnVisible.Items.Count-1 do
+  begin
+    P:=TToolbarItem(ListBtnVisible.Items.Objects[i]);
+    P.Index:=i;
+  end;
+  FToolPanel.EnableAlign;
+end;
+
 procedure TToolPanelSetupForm.Localize;
 begin
   Caption:=sToolPanelSetup;
@@ -311,29 +326,29 @@ end;
 procedure TToolPanelSetupForm.btnLeftClick(Sender: TObject);
 begin
   BoxMoveSelectedItems(ListBtnAvaliable, ListBtnVisible);
+  UpdateButtonIndex;
   UpdateStates;
-  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnLeft2Click(Sender: TObject);
 begin
   BoxMoveAllItems(ListBtnAvaliable, ListBtnVisible);
+  UpdateButtonIndex;
   UpdateStates;
-  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnRightClick(Sender: TObject);
 begin
   BoxMoveSelectedItems(ListBtnVisible, ListBtnAvaliable);
+  UpdateButtonIndex;
   UpdateStates;
-  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnRight2Click(Sender: TObject);
 begin
   BoxMoveAllItems(ListBtnVisible, ListBtnAvaliable);
+  UpdateButtonIndex;
   UpdateStates;
-  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnUpClick(Sender: TObject);
@@ -351,7 +366,6 @@ begin
   ListBtnVisible.ItemIndex:=J;
 
   UpdateStates;
-  FToolPanel.ReAlign;
   FToolPanel.ReAlign;
 end;
 
