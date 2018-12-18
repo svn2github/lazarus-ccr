@@ -12,6 +12,11 @@
       </element><element name="WarningBox.S"><short>Текст предупрежедения</short>
       </element><element name="ErrorBox.S"><short>Текст сообщения об ошибке</short>
       </element>
+    <element name="rxValueInteger"><short>Check value is integer</short>
+      </element><element name="RxGetKeyboardLayoutName"><short>function return current keyboard layout name</short>
+      </element><element name="InitRxLogs"><short>init handlers for rx loging functions</short>
+      </element><element name="RxDefaultLogFileName"><short>return default logfile name</short>
+      </element>
     </module>
   </package>
 </fpdoc-descriptions>

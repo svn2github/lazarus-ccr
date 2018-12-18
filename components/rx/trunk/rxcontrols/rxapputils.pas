@@ -100,6 +100,7 @@ procedure InitRxLogs;
 function RxGetKeyboardLayoutName:string;
 
 function RxMessageBeep(AStyle:TRxMsgBeepStyle):boolean;
+function rxIsValueInteger(AValue:string):boolean;
 
 implementation
 uses
@@ -316,6 +317,15 @@ begin
     MessageBeep(uType);
   {$ELSE}
   {$ENDIF}
+end;
+
+function rxIsValueInteger(AValue: string): boolean;
+var
+  V:Int64;
+  C:integer;
+begin
+  Val(AValue, V, C);
+  Result:=C = 0;
 end;
 
 
