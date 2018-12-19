@@ -60,11 +60,9 @@ function GetDefaultIniName: string;
 
 type
   TOnGetDefaultIniName = function: string;
-  TRxLoggerEvent = procedure( ALogType:TEventType; const ALogMessage:string);
 
 const
   OnGetDefaultIniName: TOnGetDefaultIniName = nil;
-  OnRxLoggerEvent:TRxLoggerEvent = nil;
 
 //Save to IniFile or TRegIniFile string value
 procedure IniWriteString(IniFile: TObject; const Section, Ident,
@@ -91,12 +89,6 @@ procedure WarningBox(const S:string; Params:array of const); overload;
 procedure ErrorBox(const S:string);
 procedure ErrorBox(const S:string; Params:array of const);
 
-procedure RxWriteLog(ALogType:TEventType; const ALogMessage:string);
-procedure RxWriteLog(ALogType:TEventType; const ALogMessage:string; Params:array of const);
-procedure RxDefaultWriteLog( ALogType:TEventType; const ALogMessage:string);
-function RxDefaultLogFileName:string;
-procedure InitRxLogs;
-
 function RxGetKeyboardLayoutName:string;
 
 function RxMessageBeep(AStyle:TRxMsgBeepStyle):boolean;
@@ -110,7 +102,7 @@ uses
   {$IFDEF LINUX}
   X, XKB, xkblib, xlib,
   {$ENDIF}
-  Registry, Forms, FileUtil, LazUTF8, LazFileUtils, Dialogs;
+  Registry, Forms, FileUtil, LazUTF8, LazFileUtils, Dialogs, rxlogging;
 
 function RxGetAppConfigDir(Global: Boolean): String;
 {$IFDEF WINDOWS}
@@ -134,11 +126,6 @@ begin
 end;
 {$ENDIF}
 
-procedure RxWriteLog(ALogType:TEventType; const ALogMessage:string);
-begin
-  if Assigned(OnRxLoggerEvent) then
-    OnRxLoggerEvent(ALogType, ALogMessage)
-end;
 
 procedure InfoBox(const S: string);
 begin
@@ -176,43 +163,6 @@ begin
   ErrorBox(Format(S, Params));
 end;
 
-procedure RxWriteLog(ALogType: TEventType; const ALogMessage: string;
-  Params: array of const);
-begin
-  RxWriteLog(ALogType, Format(ALogMessage, Params));
-end;
-
-procedure RxDefaultWriteLog(ALogType: TEventType; const ALogMessage: string);
-var
-  F: Text;
-  S: String;
-const
-  sEventNames : array [TEventType] of string =
-    ('CUSTOM','INFO','WARNING','ERROR','DEBUG');
-begin
-  S:=RxDefaultLogFileName;
-  if S<>'' then
-  begin
-    Assign(F, S);
-    if FileExists(S) then
-      Append(F)
-    else
-      Rewrite(F);
-
-    Writeln(F,Format( '|%s| %20s |%s', [sEventNames[ALogType], DateTimeToStr(Now), ALogMessage]));
-    CloseFile(F);
-  end;
-end;
-
-function RxDefaultLogFileName: string;
-begin
-  Result:=AppendPathDelim(GetTempDir) + ExtractFileNameOnly(ParamStr(0)) + '.log';
-end;
-
-procedure InitRxLogs;
-begin
-  OnRxLoggerEvent:=@RxDefaultWriteLog;
-end;
 
 {$IFDEF LINUX}
 function getKeyboardLang(dpy:PDisplay; AGroup:Integer):string;

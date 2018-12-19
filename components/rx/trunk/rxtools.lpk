@@ -15,7 +15,7 @@
 "/>
     <License Value="LGPL"/>
     <Version Minor="4" Build="6"/>
-    <Files Count="10">
+    <Files Count="11">
       <Item1>
         <Filename Value="rxtools/rxcrc.pas"/>
         <UnitName Value="rxCRC"/>
@@ -55,6 +55,10 @@
         <Filename Value="rxtools/rxtextholder.pas"/>
         <UnitName Value="RxTextHolder"/>
       </Item10>
+      <Item11>
+        <Filename Value="rxtools/rxlogging.pas"/>
+        <UnitName Value="rxlogging"/>
+      </Item11>
     </Files>
     <LazDoc Paths="docs;/usr/local/share/lazarus/components/rxnew/docs"/>
     <i18n>
@@ -62,10 +66,13 @@
       <OutDir Value="languages"/>
       <EnableI18NForLFM Value="True"/>
     </i18n>
-    <RequiredPkgs Count="1">
+    <RequiredPkgs Count="2">
       <Item1>
-        <PackageName Value="FCL"/>
+        <PackageName Value="LazUtils"/>
       </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
