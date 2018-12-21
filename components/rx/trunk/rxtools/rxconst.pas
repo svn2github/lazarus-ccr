@@ -90,6 +90,7 @@ resourcestring
   SOutOfRange           = 'Out of range %d %d %d %d';
   sSeparator            = 'Separator';
   sRxToolPanelEditor    = 'Rx toolpanel editor';
+  sRxCloseFormValidatorEditor    = 'Rx close form validator editor';
 
   { TRxHistoryNavigator }
   sHistoryDesc          = 'History - "%s"';

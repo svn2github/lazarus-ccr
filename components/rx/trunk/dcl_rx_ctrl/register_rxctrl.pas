@@ -89,13 +89,48 @@ type
     procedure ExecuteVerb(Index:integer);override;
   end;
 
+  { TRxCloseFormValidatorEditor }
+
+  TRxCloseFormValidatorEditor = class(TComponentEditor)
+  public
+    function GetVerbCount:integer;override;
+    function GetVerb(Index:integer):string;override;
+    procedure ExecuteVerb(Index:integer);override;
+  end;
+
 procedure Register;
 implementation
-uses RxLogin, Dialogs, rxconst, RxHistoryNavigator, rxpopupunit, rxtoolbar,
+uses RxLogin, Dialogs, rxconst, RxHistoryNavigator, rxpopupunit, rxtoolbar, RxCloseFormValidator,
   rxceEditLookupFields, rxdbgrid, rxdconst, rxduallist, rxstrutils, Forms;
 
 resourcestring
   sTestTRxLoginDialog = 'Test TRxLoginDialog';
+
+{ TRxCloseFormValidatorEditor }
+
+function TRxCloseFormValidatorEditor.GetVerbCount: integer;
+begin
+  Result:=1;
+end;
+
+function TRxCloseFormValidatorEditor.GetVerb(Index: integer): string;
+begin
+  if Index = 0 then Result:=sRxCloseFormValidatorEditor
+  else Result:='';
+end;
+
+procedure TRxCloseFormValidatorEditor.ExecuteVerb(Index: integer);
+var
+  FEdt: TRxCloseFormValidator;
+begin
+  if Index = 0 then
+  begin
+    FEdt:=GetComponent as TRxCloseFormValidator;
+    TCollectionPropertyEditor.ShowCollectionEditor(FEdt.Items, FEdt, 'Items');
+  end
+  else
+    inherited ExecuteVerb(Index);
+end;
 
 { TToolPanelEditor }
 
@@ -309,6 +344,7 @@ begin
   //
   RegisterComponentEditor(TRxLoginDialog, TRxLoginDialogEditor);
   RegisterComponentEditor(TToolPanel, TToolPanelEditor);
+  RegisterComponentEditor(TRxCloseFormValidator, TRxCloseFormValidatorEditor);
 
   //
   RegisterPropertyEditor(TypeInfo(string), TPopUpColumn, 'FieldName', TPopUpColumnFieldProperty);

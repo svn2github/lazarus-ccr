@@ -17,7 +17,7 @@
       </Parsing>
     </CompilerOptions>
     <Description Value="Design time packet for rx lib"/>
-    <Version Major="2" Minor="6" Release="5" Build="2"/>
+    <Version Major="3" Minor="3" Release="1" Build="4"/>
     <Files Count="2">
       <Item1>
         <Filename Value="dcl_rx_ctrl/register_rxctrl.pas"/>
@@ -44,7 +44,6 @@
     </UsageOptions>
     <PublishOptions>
       <Version Value="2"/>
-      <IgnoreBinaries Value="False"/>
     </PublishOptions>
   </Package>
 </CONFIG>
