@@ -1,0 +1,50 @@
+object MainForm: TMainForm
+  Left = 282
+  Height = 305
+  Top = 133
+  Width = 248
+  Caption = 'Demo'
+  ClientHeight = 305
+  ClientWidth = 248
+  OnCreate = FormCreate
+  LCLVersion = '2.1.0.0'
+  object Knob: TmKnob
+    Left = 104
+    Height = 96
+    Top = 200
+    Width = 88
+    Position = 0
+    MarkStyle = msCircle
+    OnChange = KnobChange
+  end
+  object OnOffSwitch: TOnOffSwitch
+    Left = 15
+    Height = 30
+    Top = 216
+    Width = 60
+    CaptionOFF = 'OFF'
+    CaptionON = 'ON'
+    Checked = True
+    OnChange = OnOffSwitchChange
+    TabOrder = 1
+  end
+  object AnalogGauge: TA3nalogGauge
+    Left = 8
+    Height = 190
+    Top = 8
+    Width = 232
+    Caption = 'Volts'
+    CaptionFont.Height = -19
+    CaptionFont.Style = [fsBold]
+    Position = 0
+  end
+  object Edit: TEdit
+    Left = 15
+    Height = 23
+    Top = 264
+    Width = 61
+    Alignment = taRightJustify
+    OnEditingDone = EditEditingDone
+    TabOrder = 3
+  end
+end

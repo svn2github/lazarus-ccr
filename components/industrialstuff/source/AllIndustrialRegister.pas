@@ -12,7 +12,7 @@ interface
 
  uses
   Classes, LResources, AdvLed, IndLed, LedNumber, Sensors, IndGnouMeter,
-  A3nalogGauge;
+  A3nalogGauge, MKnob, Switches;
 
 procedure Register;
 
@@ -25,7 +25,7 @@ procedure Register;
 begin
   RegisterComponents ('Industrial',[
     TAdvLed, TIndLed, TLedNumber, TStopLightSensor,
-    TAnalogSensor, TA3nalogGauge, TindGnouMeter
+    TAnalogSensor, TA3nalogGauge, TindGnouMeter, TmKnob, TOnOffSwitch
   ]);
 
 end;

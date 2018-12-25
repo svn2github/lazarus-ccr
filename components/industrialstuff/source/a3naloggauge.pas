@@ -1,6 +1,6 @@
 unit A3nalogGauge;
 
-{$DEFINE TICKER}
+{.$DEFINE TICKER}
 
 {$IFDEF FPC}
   {$MODE DELPHI}
@@ -13,7 +13,7 @@ interface
 
 uses
  {$IFDEF LCL}
-  LCLIntf, LCLType, LCLProc, LMessages,
+  LCLIntf, LCLType, LCLProc, Types,
   {$IFDEF TICKER} Windows,{$ENDIF}      // for QueryPerformanceCounter
  {$ELSE}
   Windows, Messages,
@@ -248,6 +248,7 @@ begin
   FFaceBitmap := TBitmap.Create;
   FAABitmap := nil;
   //*****************************defaults:****************************************
+  (*
   {$IFDEF LCL}
   with GetControlClassDefaultSize do begin
     SetInitialBounds(0, 0, CX, CY);
@@ -255,11 +256,12 @@ begin
     h := CY;
   end;
   {$ELSE}
+  *)
   w := 225;
   h := 180;
   Width := w;
   Height := h;
-  {$ENDIF}
+//  {$ENDIF}
   FBackBitmap.Width := w;
   FBackBitmap.Height := h;
   FBackBitmap.Canvas.Brush.Style := bsClear;
@@ -314,9 +316,11 @@ begin
 end;
 { ------------------------------------------------------------------------- }
 procedure SetPenStyles(Pen: TPen; Width: Integer; Color: TColor);
+{$IFNDEF LCL}
 var
   HP: HPen;
   LB: TLOGBRUSH;
+{$IFEND}
 begin
   {$IFDEF LCL}
   Pen.Width := Width;
@@ -332,7 +336,7 @@ begin
     Pen.Color := Color
   end else
     Pen.Handle := HP;
-  {$ENDIF}
+  {$IFEND}
 end;
 
 procedure TA3nalogGauge.CaptionFontChanged(Sender: TObject);
@@ -366,7 +370,7 @@ begin
     Canvas.Brush.Color := FFaceColor;
     Canvas.FillRect(Canvas.ClipRect);
     Canvas.Font.Assign(Font);
-    GetTextMetrics(Canvas.Handle, tm);
+    GetTextMetrics(Canvas.Handle, tm{%H-});
     hfnt := tm.tmHeight * K;
     Canvas.Font.Height := hFnt;
 

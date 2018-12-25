@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="industrial"/>
     <Type Value="RunAndDesignTime"/>
-    <Author Value="Jurassic Pork; A3nalogGauge by Irnis Haliullin"/>
+    <Author Value="Initial version by Jurassic Pork; various authors (see unit headers)."/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -28,12 +28,15 @@
     <Description Value="Industrial-themed components and gauges:
 - LED indicators
 - LED seven-sigment display
+- Gauges
 - stop-light lamps
 - analog gauges
-- thermometer-like gauge"/>
-    <License Value="MPL  + GPL "/>
-    <Version Minor="2"/>
-    <Files Count="11">
+- thermometer-like gauge
+- knob
+- on/off switch"/>
+    <License Value="MPL  + GPL + modified LGPL (see unit headers)."/>
+    <Version Minor="3"/>
+    <Files Count="13">
       <Item1>
         <Filename Value="source\indled.pas"/>
         <UnitName Value="IndLed"/>
@@ -79,6 +82,14 @@
         <Filename Value="source\a3naloggauge.pas"/>
         <UnitName Value="A3nalogGauge"/>
       </Item11>
+      <Item12>
+        <Filename Value="source\mknob.pas"/>
+        <UnitName Value="MKnob"/>
+      </Item12>
+      <Item13>
+        <Filename Value="source\switches.pas"/>
+        <UnitName Value="switches"/>
+      </Item13>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>

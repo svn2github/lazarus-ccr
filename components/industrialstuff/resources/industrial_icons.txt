@@ -4,4 +4,12 @@ tindgnoumeter.png
 tindled.png
 tlednumber.png
 tstoplightsensor.png
-ta3naloggauge.bmp
+ta3naloggauge.png
+ta3naloggauge_150.png
+ta3naloggauge_200.png
+tmknob.png
+tmknob_150.png
+tmknob_200.png
+tonoffswitch.png
+tonoffswitch_150.png
+tonoffswitch_200.png
