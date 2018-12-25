@@ -48,10 +48,11 @@ unit MKnob;
 interface
 
 uses
-  LclIntf, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, math, ComCtrls;
+  LclIntf, Types, SysUtils, Classes, Graphics, Math,
+  Controls, Forms, Dialogs, ComCtrls;
 
 const
-  DEFAULT_KNOB_FACE_COLOR = $00B5CCBD;
+  DEFAULT_KNOB_FACE_COLOR = clSilver;  //$00B5CCBD;
   DEFAULT_KNOB_MARK_SIZE = 6;
 
 type
@@ -95,6 +96,7 @@ type
     procedure UpdatePosition(X, Y: Integer);
 
   protected  { Protected declarations }
+    class function GetControlClassDefaultSize: TSize; override;
     procedure KnobChange;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -142,9 +144,9 @@ end;
 constructor TmKnob.Create(AOwner : TComponent);
 begin
   inherited Create(AOwner);
+  with GetControlClassDefaultSize do
+    SetInitialBounds(0, 0, CX, CY);
   ControlStyle := ControlStyle + [csOpaque];
-  Width := 60;
-  Height := 60;
   FMaxValue := 100;
   FMinValue := 0;
   FCurValue := 0;
@@ -181,6 +183,12 @@ const
     );
 begin
   Result := DegToRad(ANGLE[FAngleRange]);
+end;
+
+class function TmKnob.GetControlClassDefaultSize: TSize;
+begin
+  Result.CX := 60;
+  Result.CY := 60;
 end;
 
 procedure TmKnob.KnobChange;
@@ -528,24 +536,11 @@ end;
 procedure TmKnob.UpdatePosition(X, Y: Integer);
 var
   CX, CY: integer;
-  R: double;
   Angle: double;
 begin
   CX := Width div 2;
   CY := Height div 2;
-  R := Round(sqrt(sqr(CX-X) + sqr(CY-Y)));
-  if R = 0 then R := 0.0001;
-
-  if Y < CY then
-    Angle := arcsin((X-CX)/R)
-  else
-  begin
-    Angle := arcsin((CX-X)/R);
-    if X > CX then
-      Angle := Angle + Pi
-    else
-      Angle := Angle - Pi;
-  end;
+  Angle := -ArcTan2(CX-X, CY-Y);
   Position := Round((Angle - GetAngleOrigin) * (Max - Min) / GetAngleRange + (Min + Max) / 2);
   Refresh;
 end;

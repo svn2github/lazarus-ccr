@@ -13,6 +13,7 @@ object MainForm: TMainForm
     Height = 96
     Top = 200
     Width = 88
+    TickColor = clCream
     Position = 0
     MarkStyle = msCircle
     OnChange = KnobChange

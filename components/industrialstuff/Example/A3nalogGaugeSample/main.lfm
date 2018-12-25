@@ -10,7 +10,7 @@ object MainForm: TMainForm
   Font.Color = clWindowText
   OnCreate = FormCreate
   Position = poDefaultPosOnly
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   Scaled = False
   object Panel1: TPanel
     Left = 0
@@ -543,10 +543,10 @@ object MainForm: TMainForm
       TabOrder = 0
     end
     object AboutLabel: TLabel
-      Left = 96
+      Left = 199
       Height = 40
       Top = 0
-      Width = 682
+      Width = 579
       Alignment = taCenter
       Anchors = [akLeft, akRight, akBottom]
       AutoSize = False
@@ -555,6 +555,15 @@ object MainForm: TMainForm
       ParentColor = False
       OnClick = AboutLabelClick
       OnMouseMove = AboutLabelMouseMove
+    end
+    object StartStopButton: TButton
+      Left = 104
+      Height = 25
+      Top = 8
+      Width = 75
+      Caption = 'Stop'
+      OnClick = StartStopButtonClick
+      TabOrder = 1
     end
   end
   object Panel3: TPanel

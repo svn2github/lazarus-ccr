@@ -2,22 +2,17 @@ unit A3nalogGauge;
 
 {.$DEFINE TICKER}
 
-{$IFDEF FPC}
-  {$MODE DELPHI}
-  {$IFNDEF WINDOWS}
-   {$UNDEF TICKER}
-  {$ENDIF}
+{$MODE DELPHI}
+
+{$IFNDEF WINDOWS}
+ {$UNDEF TICKER}
 {$ENDIF}
 
 interface
 
 uses
- {$IFDEF LCL}
   LCLIntf, LCLType, LCLProc, Types,
   {$IFDEF TICKER} Windows,{$ENDIF}      // for QueryPerformanceCounter
- {$ELSE}
-  Windows, Messages,
- {$ENDIF}
   SysUtils, Classes, Graphics, Controls;
 
 type
@@ -81,9 +76,7 @@ type
     FBackBitmap: TBitmap;
     FFaceBitmap: TBitmap;
     FAABitmap: TBitmap;
-   {$IFDEF LCL}
     FBitmapsValid: Boolean;
-   {$ENDIF}
    {$IFDEF TICKER}
     // performance tracking
     FTicker: Int64;
@@ -93,33 +86,33 @@ type
    {$ENDIF}
     // set properties
     procedure SetFrameColor(C: TColor);
-    procedure SetFMinColor(C: TColor);
-    procedure SetFMidColor(C: TColor);
-    procedure SetFMaxColor(C: TColor);
-    procedure SetFFaceColor(C: TColor);
-    procedure SetFTicksColor(C: TColor);
-    procedure SetFValueColor(C: TColor);
-    procedure SetFCaptionColor(C: TColor);
-    procedure SetFArrowColor(C: TColor);
-    procedure SetFMarginColor(C: TColor);
-    procedure SetFCenterColor(C: TColor);
-    procedure SetFCircleColor(C: TColor);
-    procedure SetFCenterRadius(I: Integer);
-    procedure SetFCircleRadius(I: Integer);
-    procedure SetFScaleAngle(I: Integer);
-    procedure SetFMargin(I: Integer);
-    procedure SetFStyle(S: TStyle);
-    procedure SetFArrowWidth(I: Integer);
-    procedure SetFNumMainTicks(I: Integer);
-    procedure SetFLengthMainTicks(I: Integer);
-    procedure SetFLengthSubTicks(I: Integer);
-    procedure SetFFaceOptions(O: TFaceOptions);
-    procedure SetFPosition(V: Single);
-    procedure SetFScaleValue(I: Integer);
-    procedure SetFMaximum(I: Integer);
-    procedure SetFMinimum(I: Integer);
-    procedure SetFCaption(const S: string);
-    procedure SetFAntiAliased(V: TAntialiased);
+    procedure SetMinColor(C: TColor);
+    procedure SetMidColor(C: TColor);
+    procedure SetMaxColor(C: TColor);
+    procedure SetFaceColor(C: TColor);
+    procedure SetTicksColor(C: TColor);
+    procedure SetValueColor(C: TColor);
+    procedure SetCaptionColor(C: TColor);
+    procedure SetArrowColor(C: TColor);
+    procedure SetMarginColor(C: TColor);
+    procedure SetCenterColor(C: TColor);
+    procedure SetCircleColor(C: TColor);
+    procedure SetCenterRadius(I: Integer);
+    procedure SetCircleRadius(I: Integer);
+    procedure SetScaleAngle(I: Integer);
+    procedure SetMargin(I: Integer);
+    procedure SetStyle(S: TStyle);
+    procedure SetArrowWidth(I: Integer);
+    procedure SetNumMainTicks(I: Integer);
+    procedure SetLengthMainTicks(I: Integer);
+    procedure SetLengthSubTicks(I: Integer);
+    procedure SetFaceOptions(O: TFaceOptions);
+    procedure SetPosition(V: Single);
+    procedure SetScaleValue(I: Integer);
+    procedure SetMaximum(I: Integer);
+    procedure SetMinimum(I: Integer);
+    procedure SetCaption(const S: string);
+    procedure SetAntiAliased(V: TAntialiased);
     procedure SetCaptionFont(AValue: TFont);
     function GetAAMultiplier: Integer;
 
@@ -133,13 +126,10 @@ type
     procedure RedrawScale;
     procedure Paint; override;
     procedure Resize; override;
-    {$IFDEF LCL}
     procedure FontChanged(Sender: TObject); override;
     class function GetControlClassDefaultSize: TSize; override;
-    {$ELSE}
-    procedure CMFontChanged(var Msg: TMessage); message CM_FontChanged;
-    procedure WMEraseBkGnd(var Msg: TMessage); message WM_ERASEBKGND;
-    {$ENDIF}
+    //procedure CMFontChanged(var Msg: TMessage); message CM_FontChanged;
+    //procedure WMEraseBkGnd(var Msg: TMessage); message WM_ERASEBKGND;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -147,61 +137,63 @@ type
 
   published
     property Angle: Integer
-      read FScaleAngle write SetFScaleAngle default 120;
+      read FScaleAngle write SetScaleAngle default 120;
     property AntiAliased: TAntialiased
-      read FAntiAliased write SetFAntiAliased default aaNone;
+      read FAntiAliased write SetAntiAliased default aaNone;
     property ArrowColor: TColor
-      read FArrowColor write SetFArrowColor default clBlack;
+      read FArrowColor write SetArrowColor default clBlack;
     property ArrowWidth: Integer
-      read FArrowWidth write SetFArrowWidth default 1;
-    property Caption: string read FCaption write SetFCaption;
+      read FArrowWidth write SetArrowWidth default 1;
+    property Caption: string
+      read FCaption write SetCaption;
     property CaptionColor: TColor
-      read FCaptionColor write SetFCaptionColor default clBlack;
+      read FCaptionColor write SetCaptionColor default clBlack;
     property CaptionFont: TFont
       read FCaptionFont write SetCaptionFont;
     property CenterColor: TColor
-      read FCenterColor write SetFCenterColor default clDkGray;
+      read FCenterColor write SetCenterColor default clDkGray;
     property CenterRadius: Integer
-      read FCenterRadius write SetFCenterRadius default 8;
+      read FCenterRadius write SetCenterRadius default 8;
     property CircleColor: TColor
-      read FCircleColor write SetFCircleColor default clBlue;
+      read FCircleColor write SetCircleColor default clBlue;
     property CircleRadius: Integer
-      read FCircleRadius write SetFCircleRadius default 3;
+      read FCircleRadius write SetCircleRadius default 3;
     property FaceColor: TColor
-      read FFaceColor write SetFFaceColor default clBtnFace;
+      read FFaceColor write SetFaceColor default clBtnFace;
     property FaceOptions: TFaceOptions
-      read FFaceOptions write SetFFaceOptions default DEFAULT_FACE_OPTIONS;
+      read FFaceOptions write SetFaceOptions default DEFAULT_FACE_OPTIONS;
     property FrameColor: TColor
       read FFrameColor write SetFramecolor default clBtnShadow;
     property IndMaximum: Integer
-      read FMaximum write SetFMaximum default 80;
+      read FMaximum write SetMaximum default 80;
     property IndMinimum: Integer
-      read FMinimum write SetFMinimum default 20;
+      read FMinimum write SetMinimum default 20;
     property LengthMainTicks: Integer
-      read FLengthMainTicks write SetFLengthMainTicks default 15;
+      read FLengthMainTicks write SetLengthMainTicks default 15;
     property LengthSubTicks: Integer
-      read FLengthSubTicks write SetFLengthSubTicks default 8;
+      read FLengthSubTicks write SetLengthSubTicks default 8;
     property Margin: Integer
-      read FMargin write SetFMargin default 10;
+      read FMargin write SetMargin default 10;
     property MarginColor: TColor
-      read FMarginColor write SetFMarginColor default clSilver;
+      read FMarginColor write SetMarginColor default clSilver;
     property MaxColor: TColor
-      read FMaxColor write SetFMaxColor default clRed;
+      read FMaxColor write SetMaxColor default clRed;
     property MidColor: TColor
-      read FMidColor write SetFMidColor default clYellow;
+      read FMidColor write SetMidColor default clYellow;
     property MinColor: TColor
-      read FMinColor write SetFMinColor default clGreen;
+      read FMinColor write SetMinColor default clGreen;
     property NumberMainTicks: Integer
-      read FNumMainTicks write SetFNumMainTicks default 5;
-    property Position: Single read FPosition write SetFPosition;
+      read FNumMainTicks write SetNumMainTicks default 5;
+    property Position: Single
+      read FPosition write SetPosition;
     property Scale: Integer
-      read FScaleValue write SetFScaleValue default 100;
+      read FScaleValue write SetScaleValue default 100;
     property Style: TStyle
-      read FStyle write SetFStyle default agsCenterStyle;
+      read FStyle write SetStyle default agsCenterStyle;
     property TicksColor: TColor
-      read FTicksColor write SetFTicksColor default clBlack;
+      read FTicksColor write SetTicksColor default clBlack;
     property ValueColor: TColor
-      read FValueColor write SetFValueColor default clBlack;
+      read FValueColor write SetValueColor default clBlack;
     property OnOverMax: TNotifyEvent read FOverMax write FOverMax;
     property OnOverMin: TNotifyEvent read FOverMin write FOverMin;
    {$IFDEF TICKER}
@@ -211,12 +203,8 @@ type
 
     property Align;
     property Anchors;
-   {$IFDEF LCL}
     property BorderSpacing;
-   {$ENDIF}
     property Font;
-    property Height default 180;
-    property Width default 225;
   end;
 
 procedure Register;
@@ -224,17 +212,8 @@ procedure Register;
 implementation
 
 uses
- {$IFDEF LCL}
   IntfGraphics, fpimage,
- {$ENDIF}
   Math;
-
-{$IFNDEF LCL}
-function GetTickCount64: Int64;
-begin
-  Result := GetTickCount;
-end;
-{$ENDIF}
 
 
 { TA3nalogGauge }
@@ -248,20 +227,13 @@ begin
   FFaceBitmap := TBitmap.Create;
   FAABitmap := nil;
   //*****************************defaults:****************************************
-  (*
-  {$IFDEF LCL}
   with GetControlClassDefaultSize do begin
     SetInitialBounds(0, 0, CX, CY);
     w := CX;
     h := CY;
   end;
-  {$ELSE}
-  *)
-  w := 225;
-  h := 180;
   Width := w;
   Height := h;
-//  {$ENDIF}
   FBackBitmap.Width := w;
   FBackBitmap.Height := h;
   FBackBitmap.Canvas.Brush.Style := bsClear;
@@ -314,29 +286,13 @@ begin
   FCaptionFont.Free;
   inherited;
 end;
+
 { ------------------------------------------------------------------------- }
+
 procedure SetPenStyles(Pen: TPen; Width: Integer; Color: TColor);
-{$IFNDEF LCL}
-var
-  HP: HPen;
-  LB: TLOGBRUSH;
-{$IFEND}
 begin
-  {$IFDEF LCL}
   Pen.Width := Width;
   Pen.Color := Color;
-  {$ELSE}
-  LB.lbStyle := BS_SOLID;
-  LB.lbColor := Color;
-  LB.lbHatch := 0;
-  HP := ExtCreatePen(PS_GEOMETRIC or PS_SOLID or PS_ENDCAP_FLAT or
-                     PS_JOIN_ROUND, Width, LB, 0, nil);
-  if HP = 0 then begin
-    Pen.Width := Width;
-    Pen.Color := Color
-  end else
-    Pen.Handle := HP;
-  {$IFEND}
 end;
 
 procedure TA3nalogGauge.CaptionFontChanged(Sender: TObject);
@@ -650,9 +606,8 @@ begin
     if Assigned(FOnFrames) then FOnFrames(Self)
   end;
   FTicker := -1;
-
-  Invalidate;
  {$ENDIF}
+ Invalidate;
 end;
 
 procedure TA3nalogGauge.RedrawScale;
@@ -665,12 +620,9 @@ begin
  {$ENDIF}
   DrawScale(FBackBitmap, GetAAMultiplier);
   RedrawArrow;
- {$IFDEF LCL}
   FBitmapsValid := true;
- {$ENDIF}
 end;
 
-{$IFDEF LCL}
 procedure TA3nalogGauge.FastAntiAliasPicture;
 var
   intfImgAA: TLazIntfImage;
@@ -804,95 +756,17 @@ begin
   end;
 end;
 }
-{$ELSE}
-const
-  MaxPixelCount = MaxInt div SizeOf(TRGBTriple);
-
-type
-  PRGBArray = ^TRGBArray;
-  TRGBArray = array[0..MaxPixelCount-1] of TRGBTriple;
-
-procedure TA3nalogGauge.FastAntiAliasPicture;
-var
-  x, y, cx, cy, cxi: Integer;
-  totr, totg, totb: Integer;
-  Row1, Row2, Row3, Row4, DestRow: PRGBArray;
-  i, k: Integer;
-begin
-  // For each row
-  K := GetAAMultiplier;
-  Row2 := nil;
-  Row3 := nil;
-  Row4 := nil;
-  for Y := 0 to FAABitmap.Height - 1 do begin
-    // We compute samples of K x K pixels
-    cy := y*K;
-    // Get pointers to actual, previous and next rows in supersampled bitmap
-    Row1 := FFaceBitmap.ScanLine[cy];
-    if K > 1 then Row2 := FFaceBitmap.ScanLine[cy+1];
-    if K > 2 then Row3 := FFaceBitmap.ScanLine[cy+2];
-    if K > 3 then Row4 := FFaceBitmap.ScanLine[cy+3];
-    // Get a pointer to destination row in output bitmap
-    DestRow := FAABitmap.ScanLine[y];
-    // For each column...
-    for x := 0 to FAABitmap.Width - 1 do begin
-      // We compute samples of 3 x 3 pixels
-      cx := x*K;
-      // Initialize result color
-      totr := 0; totg := 0; totb := 0;
-      if K > 3 then begin
-        for i := 0 to 3 do begin
-          cxi := cx + i;
-          totr := totr + Row1[cxi].rgbtRed + Row2[cxi].rgbtRed + Row3[cxi].rgbtRed + Row4[cxi].rgbtRed;
-          totg := totg + Row1[cxi].rgbtGreen + Row2[cxi].rgbtGreen + Row3[cxi].rgbtGreen + Row4[cxi].rgbtGreen;
-          totb := totb + Row1[cxi].rgbtBlue + Row2[cxi].rgbtBlue + Row3[cxi].rgbtBlue + Row4[cxi].rgbtBlue;
-        end;
-        DestRow[x].rgbtRed := totr div 16;
-        DestRow[x].rgbtGreen := totg div 16;
-        DestRow[x].rgbtBlue := totb div 16;
-      end else if K > 2 then begin
-        for i := 0 to 2 do begin
-          cxi := cx + i;
-          totr := totr + Row1[cxi].rgbtRed + Row2[cxi].rgbtRed + Row3[cxi].rgbtRed;
-          totg := totg + Row1[cxi].rgbtGreen + Row2[cxi].rgbtGreen + Row3[cxi].rgbtGreen;
-          totb := totb + Row1[cxi].rgbtBlue + Row2[cxi].rgbtBlue + Row3[cxi].rgbtBlue;
-        end;
-        DestRow[x].rgbtRed := totr div 9;
-        DestRow[x].rgbtGreen := totg div 9;
-        DestRow[x].rgbtBlue := totb div 9;
-      end else if K > 1 then begin
-        for i := 0 to 1 do begin
-          cxi := cx + i;
-          totr := totr + Row1[cxi].rgbtRed + Row2[cxi].rgbtRed;
-          totg := totg + Row1[cxi].rgbtGreen + Row2[cxi].rgbtGreen;
-          totb := totb + Row1[cxi].rgbtBlue + Row2[cxi].rgbtBlue;
-        end;
-        DestRow[x].rgbtRed := totr div 4;
-        DestRow[x].rgbtGreen := totg div 4;
-        DestRow[x].rgbtBlue := totb div 4;
-      end else begin
-        DestRow[x].rgbtRed   := Row1[cx].rgbtRed;
-        DestRow[x].rgbtGreen := Row1[cx].rgbtGreen;
-        DestRow[x].rgbtBlue  := Row1[cx].rgbtBlue;
-      end;
-    end;
-  end;
-end;
-{$ENDIF}
 
 procedure TA3nalogGauge.Loaded;
 begin
   inherited;
   RedrawScale;
-  //Invalidate;
 end;
 
 procedure TA3nalogGauge.Paint;
 begin
-  {$IFDEF LCL}
   if not FBitmapsValid then
     RedrawScale;
-  {$ENDIF}
 
   if FAntiAliased = aaNone then
     Canvas.Draw(0, 0, FFaceBitmap)
@@ -900,44 +774,6 @@ begin
     Canvas.Draw(0, 0, FAABitmap);
 end;
 
-{$IFNDEF LCL}  (*
-procedure TA3nalogGauge.WMSize(var Message: TWMSize);
-var
-  K: Integer;
-begin
-  if Width  < 60 then Width := 60;
-  if Height < 50 then Height := 50;
-  if FAntiAliased = aaNone then begin
-    FBackBitmap.Width := Width;
-    FBackBitmap.Height := Height;
-    FFaceBitmap.Width := Width;
-    FFaceBitmap.Height := Height;
-  end else begin
-    K := GetAAMultiplier;
-    FBackBitmap.Width := Width * K;
-    FBackBitmap.Height := Height * K;
-    FFaceBitmap.Width := Width * K;
-    FFaceBitmap.Height := Height * K;
-    FAABitmap.Width := Width;
-    FAABitmap.Height := Height;
-  end;
-  RedrawScale;
-  inherited;
-end;
-*)
-
-procedure TA3nalogGauge.CMFontChanged(var Msg: TMessage);
-begin
-  RedrawScale;
-end;
-
-procedure TA3nalogGauge.WMEraseBkGnd(var Msg: TMessage);
-begin
-  Msg.Result := 1;
-end;
-{$ENDIF}
-
-{$IFDEF LCL}
 procedure TA3nalogGauge.FontChanged(Sender: TObject);
 begin
   inherited;
@@ -946,10 +782,9 @@ end;
 
 class function TA3nalogGauge.GetControlClassDefaultSize: TSize;
 begin
-  Result.CX := 225;
+  Result.CX := 280;
   Result.CY := 180;
 end;
-{$ENDIF}
 
 procedure TA3nalogGauge.Resize;
 var
@@ -974,14 +809,9 @@ begin
     FAABitmap.Width := Width;
     FAABitmap.Height := Height;
   end;
-  {$IFDEF LCL}
   FBitmapsValid := false;
-  {$ELSE}
-  RedrawScale;
-  {$ENDIF}
   inherited;
 end;
-//{$ENDIF}
 
 procedure TA3nalogGauge.SetCaptionFont(AValue: TFont);
 begin
@@ -996,7 +826,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFMinColor(C: TColor);
+procedure TA3nalogGauge.SetMinColor(C: TColor);
 begin
   if C <> FMinColor then begin
     FMinColor := C;
@@ -1004,7 +834,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFMidColor(C: TColor);
+procedure TA3nalogGauge.SetMidColor(C: TColor);
 begin
   if C <> FMidColor then begin
     FMidColor := C;
@@ -1012,7 +842,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFMaxColor(C: TColor);
+procedure TA3nalogGauge.SetMaxColor(C: TColor);
 begin
   if C <> FMaxColor then begin
     FMaxColor := C;
@@ -1020,7 +850,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFFaceColor(C: TColor);
+procedure TA3nalogGauge.SetFaceColor(C: TColor);
 begin
   if C <> FFaceColor then begin
     FFaceColor := C;
@@ -1028,7 +858,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFTicksColor(C: TColor);
+procedure TA3nalogGauge.SetTicksColor(C: TColor);
 begin
   if C <> FTicksColor then begin
     FTicksColor := C;
@@ -1036,7 +866,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFValueColor(C: TColor);
+procedure TA3nalogGauge.SetValueColor(C: TColor);
 begin
   if C <> FValueColor then begin
     FValueColor := C;
@@ -1044,7 +874,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFCaptionColor(C: TColor);
+procedure TA3nalogGauge.SetCaptionColor(C: TColor);
 begin
   if C <> FCaptionColor then begin
     FCaptionColor := C;
@@ -1052,7 +882,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFArrowColor(C: TColor);
+procedure TA3nalogGauge.SetArrowColor(C: TColor);
 begin
   if C <> FArrowColor then begin
     FArrowColor := C;
@@ -1060,7 +890,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFMarginColor(C: TColor);
+procedure TA3nalogGauge.SetMarginColor(C: TColor);
 begin
   if C <> FMarginColor then begin
     FMarginColor := C;
@@ -1068,7 +898,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFCenterColor(C: TColor);
+procedure TA3nalogGauge.SetCenterColor(C: TColor);
 begin
   if C <> FCenterColor then begin
     FCenterColor := C;
@@ -1076,7 +906,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFCircleColor(C: TColor);
+procedure TA3nalogGauge.SetCircleColor(C: TColor);
 begin
   if C <> FCircleColor then begin
     FCircleColor := C;
@@ -1084,7 +914,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFCenterRadius(I: Integer);
+procedure TA3nalogGauge.SetCenterRadius(I: Integer);
 begin
   if I <> FCenterRadius then begin
     FCenterRadius := I;
@@ -1092,7 +922,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFCircleRadius(I: Integer);
+procedure TA3nalogGauge.SetCircleRadius(I: Integer);
 begin
   if I <> FCircleRadius then begin
     FCircleRadius := I;
@@ -1100,7 +930,7 @@ begin
   end
 end;
 
-procedure TA3nalogGauge.SetFScaleAngle(I: Integer);
+procedure TA3nalogGauge.SetScaleAngle(I: Integer);
 begin
   if I <> FScaleAngle then begin
     if (I > 10) and (I <= 360) then
@@ -1109,7 +939,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFMargin(I: Integer);
+procedure TA3nalogGauge.SetMargin(I: Integer);
 begin
   if I <> FMargin then begin
     FMargin := I;
@@ -1117,7 +947,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFStyle(S: TStyle);
+procedure TA3nalogGauge.SetStyle(S: TStyle);
 begin
   if S <> FStyle then begin
     FStyle := S;
@@ -1125,7 +955,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFArrowWidth(I: Integer);
+procedure TA3nalogGauge.SetArrowWidth(I: Integer);
 begin
   if I <> FArrowWidth then begin
     if I < 1 then
@@ -1139,7 +969,7 @@ begin
   end
 end;
 
-procedure TA3nalogGauge.SetFNumMainTicks(I: Integer);
+procedure TA3nalogGauge.SetNumMainTicks(I: Integer);
 begin
   if I <> FNumMainTicks then begin
     FNumMainTicks := I;
@@ -1147,7 +977,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFLengthMainTicks(I: Integer);
+procedure TA3nalogGauge.SetLengthMainTicks(I: Integer);
 begin
   if I <> FLengthMainTicks then begin
     FLengthMainTicks := I;
@@ -1155,7 +985,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFLengthSubTicks(I: Integer);
+procedure TA3nalogGauge.SetLengthSubTicks(I: Integer);
 begin
   if I <> FLengthSubTicks then begin
     FLengthSubTicks := I;
@@ -1163,7 +993,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFFaceOptions(O: TFaceOptions);
+procedure TA3nalogGauge.SetFaceOptions(O: TFaceOptions);
 begin
   if O <> FFaceOptions then begin
     FFaceOptions := O;
@@ -1171,7 +1001,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFPosition(V: Single);
+procedure TA3nalogGauge.SetPosition(V: Single);
 begin
   if V <> FPosition then begin
     FPosition := V;
@@ -1181,7 +1011,7 @@ begin
   end
 end;
 
-procedure TA3nalogGauge.SetFScaleValue(I: Integer);
+procedure TA3nalogGauge.SetScaleValue(I: Integer);
 begin
   if I <> FScaleValue then begin
     if I > 1 then begin
@@ -1193,7 +1023,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFMaximum(I: Integer);
+procedure TA3nalogGauge.SetMaximum(I: Integer);
 begin
   if I <> FMaximum then begin
     if (I > 0) and (I < FScaleValue) then
@@ -1202,7 +1032,7 @@ begin
   end;
 end;
 
-procedure TA3nalogGauge.SetFMinimum(I: Integer);
+procedure TA3nalogGauge.SetMinimum(I: Integer);
 begin
   if I <> FMinimum then begin
     if (I > 0) and (I < FScaleValue) then
@@ -1211,7 +1041,7 @@ begin
   end
 end;
 
-procedure TA3nalogGauge.SetFCaption(const S: string);
+procedure TA3nalogGauge.SetCaption(const S: string);
 begin
   if S <> FCaption then begin
     Canvas.Font := Font;
@@ -1220,7 +1050,7 @@ begin
   end
 end;
 
-procedure TA3nalogGauge.SetFAntiAliased(V: TAntialiased);
+procedure TA3nalogGauge.SetAntiAliased(V: TAntialiased);
 var
   K: Integer;
 begin
@@ -1257,14 +1087,6 @@ end;
 function TA3nalogGauge.GetAAMultiplier: Integer;
 begin
   Result := ord(FAntiAliased) + 1;
-  {
-  case FAntiAliased of
-    aaBiline  : Result := 2;
-    aaTriline : Result := 3;
-    aaQuadral : Result := 4;
-    else        Result := 1
-  end
-  }
 end;
 
 

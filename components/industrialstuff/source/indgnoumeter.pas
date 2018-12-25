@@ -23,7 +23,8 @@ unit indGnouMeter;
 interface
 
 uses
-  Classes, Controls, Graphics, SysUtils, Messages, LMessages, Types, LCLType, LCLIntf;
+  Classes, Controls, Graphics, SysUtils, //Messages,
+  LMessages, Types, LCLType, LCLIntf;
 
 type
   TindGnouMeter = class(TGraphicControl)
@@ -74,7 +75,7 @@ type
     procedure DrawMarker;
   protected
     procedure Paint; override;
-    procedure CMTextChanged(var Message: TMessage); message CM_TEXTCHANGED;
+    procedure CMTextChanged(var Message: TLMessage); message CM_TEXTCHANGED;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -132,7 +133,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TindGnouMeter.CMTextChanged(var Message: TMessage);
+procedure TindGnouMeter.CMTextChanged(var Message: TLMessage);
 begin
   Invalidate;
 end;

@@ -1,6 +1,6 @@
 unit main;
 
-{$DEFINE TICKER}
+//{$DEFINE TICKER}
 
 {$IFDEF LCL}
  {$MODE DELPHI}
@@ -10,7 +10,12 @@ unit main;
 interface
 
 uses
-  Windows, Messages, ShellApi, SysUtils, Classes, Graphics, Controls,
+  {$IFDEF LCL}
+  LCLIntf,
+  {$ELSE}
+  Windows, Messages, ShellApi,
+  {$ENDIF}
+  SysUtils, Classes, Graphics, Controls,
   Forms, Dialogs, ExtCtrls, StdCtrls, Spin, A3nalogGauge;
 
 type
@@ -18,6 +23,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    StartStopButton: TButton;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
@@ -81,6 +87,7 @@ type
     AAModeBox: TComboBox;
     AAModeLabel: TLabel;
     procedure FormCreate(Sender: TObject);
+    procedure StartStopButtonClick(Sender: TObject);
     procedure StyleBoxChange(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
     {$IFDEF TICKER}
@@ -133,6 +140,7 @@ type
     AnalogGauge2: TA3nalogGauge;
     AnalogGauge3: TA3nalogGauge;
     FDelta: Double;
+    FStartTime: TDateTime;
   end;
 
 var
@@ -146,6 +154,9 @@ implementation
  {$R *.dfm}
  {$DEFINE TICKER}
 {$ENDIF}
+
+const
+  BASE_CAPTION = 'AntiAliased Analog Gauge demo';
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
@@ -217,6 +228,21 @@ begin
   {$IFDEF TICKER}
   AnalogGauge1.OnFrames := FramesChanged;
   {$ENDIF}
+
+  FStartTime := Now;
+end;
+
+procedure TMainForm.StartStopButtonClick(Sender: TObject);
+begin
+  Timer.Enabled := not Timer.Enabled;
+  if Timer.Enabled then begin
+    FStartTime := now;
+    StartStopButton.Caption := 'Stop';
+    AnalogGauge1.Position := 0;
+  end else begin
+    Caption := BASE_CAPTION + ' (' + FormatDateTime('n:ss.zzz', Now - FStartTime) + ')';
+    StartStopButton.Caption := 'Start';
+  end;
 end;
 
 procedure TMainForm.StyleBoxChange(Sender: TObject);
@@ -658,14 +684,22 @@ begin
   Control := Sender as TLabel;
   if (X > 0) and (X < Control.Width) and
      (Y > 0) and (Y < Control.Height) then begin
+    {$IFDEF LCL}
+    Screen.Cursor := crHandPoint
+    {$ELSE}
     Control.Font.Style := Control.Font.Style + [fsUnderLine];
     Control.Cursor := crHandPoint;
     Windows.SetCursor(Screen.Cursors[Control.Cursor]);
     SetCaptureControl(Control);
+    {$ENDIF}
   end else begin
+    {$IFDEF LCL}
+    Screen.Cursor := crDefault;
+    {$ELSE}
     Control.Font.Style := Control.Font.Style - [fsUnderLine];
     Control.Cursor := crDefault;
     SetCaptureControl(nil);
+    {$ENDIF}
   end;
 end;
 
@@ -677,7 +711,11 @@ begin
   Control := Sender as TLabel;
   Control.Font.Style := Control.Font.Style - [fsUnderLine];
   Control.Cursor := crDefault; SetCaptureControl(nil);
+  {$IFDEF LCL}
+  OpenURL('http://irnis.net/');
+  {$ELSE}
   ShellExecute(0, nil, PChar('http://www.irnis.net/'), nil, nil, SW_SHOWDEFAULT);
+  {$ENDIF}
 end;
 
 end.
