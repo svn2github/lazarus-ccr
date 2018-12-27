@@ -245,9 +245,7 @@ type
     FCalDrawer: TCalDrawer;
     FColors: TCalColors;
     FDate: TDateTime;
-    FDayNames: TStringList;
     FDisplayTexts: TStringList;
-    FMonthNames: TStringList;
     FOnDateChange: TNotifyEvent;
     FOnMonthChange: TNotifyEvent;
     FOnGetDayText: TCalGetDayTextEvent;
@@ -269,6 +267,7 @@ type
     FClickButton: TMouseButton;
     FLanguage: TLanguage;
     FDblClickTimer: TTimer;
+    FFormatSettings: TFormatSettings;
     function GetDayNames: String;
     function GetDisplayText(aTextIndex: TDisplayText): String;
     function GetDisplayTexts: String;
@@ -932,7 +931,7 @@ begin
   s:= FOwner.GetDisplayText(dtToday);
   if (coShowTodayName in FOwner.Options) then
     s := Format('%s %s',[s, FOwner.GetDayName(TDayOfWeek(DayOfWeek(Date())))]);
-  AppendStr(s, ' ' + FormatDateTime(FOwner.GetDisplayText(dtTodayFormat), Date()));
+  AppendStr(s, ' ' + FormatDateTime(FOwner.GetDisplayText(dtTodayFormat), Date(), FOwner.FFormatSettings));
   w1 := FCanvas.TextWidth('aaa');
   w2 := FCanvas.TextWidth(' ');
   w3 := FCanvas.TextWidth(s);
@@ -1287,6 +1286,7 @@ end;
 constructor TCalendarLite.Create(anOwner: TComponent);
 begin
   inherited Create(anOwner);
+  FFormatSettings := DefaultFormatSettings;
   FSelDates := TCalDateList.Create;
   FColors := TCalColors.Create(self);
   Color := clWhite;
@@ -1297,8 +1297,6 @@ begin
   Constraints.MinWidth := ScaleY(DefMinWidth, DESIGNTIME_PPI);
   Canvas.Brush.Style := bsSolid;
   TabStop := true;
-  FDayNames := TStringList.Create;
-  FMonthNames := TStringList.Create;
   FDisplayTexts := TStringList.Create;
   FDisplayTexts.StrictDelimiter := True;
   FDisplayTexts.Delimiter := ',';
@@ -1321,8 +1319,6 @@ end;
 destructor TCalendarLite.Destroy;
 begin
   FreeAndNil(FSelDates);
-  FreeAndNil(FDayNames);
-  FreeAndNil(FMonthNames);
   FreeAndNil(FDisplayTexts);
   FreeAndNil(FColors);
   SetLength(FCalDrawer.FRowPositions, 0);
@@ -1448,14 +1444,22 @@ end;
 
 function TCalendarLite.GetDayName(ADayOfWeek: TDayOfWeek): String;
 begin
-  Result := SysToUTF8(DefaultFormatSettings.ShortDayNames[integer(ADayOfWeek)]);
-  if Pred(integer(ADayOfWeek)) < FDayNames.Count then
-    Result := FDayNames[Pred(integer(ADayOfWeek))];
+  Result := FFormatSettings.ShortDayNames[integer(ADayOfWeek)];
 end;
 
 function TCalendarLite.GetDayNames: String;
+var
+  L: TStrings;
+  i: Integer;
 begin
-  Result := FDayNames.CommaText;
+  L := TStringList.Create;
+  try
+    for i:= 1 to 7 do
+      L.Add(FFormatSettings.ShortDayNames[i]);
+    Result := L.CommaText;
+  finally
+    L.Free;
+  end;
 end;
 
 function TCalendarLite.GetDisplayText(aTextIndex: TDisplayText): String;
@@ -1470,14 +1474,22 @@ end;
 
 function TCalendarLite.GetMonthName(AMonth: Integer): String;
 begin
-  Result := SysToUTF8(DefaultFormatSettings.LongMonthNames[AMonth]);
-  if pred(AMonth) < FMonthnames.Count then
-    Result := FMonthNames[pred(AMonth)];
+  Result := FFormatSettings.LongMonthNames[AMonth];
 end;
 
 function TCalendarLite.GetMonthNames: String;
+var
+  L: TStrings;
+  i: Integer;
 begin
-  Result := FMonthNames.CommaText;
+  L := TStringList.Create;
+  try
+    for i:=1 to 12 do
+      L.Add(FFormatSettings.ShortMonthNames[i]);
+    Result := L.CommaText;
+  finally
+    L.Free;
+  end;
 end;
 
 procedure TCalendarLite.HolidayMenuItemClicked(Sender: TObject);
@@ -1766,9 +1778,19 @@ begin
 end;
 
 procedure TCalendarLite.SetDayNames(const AValue: String);
+var
+  i: Integer;
+  L: TStrings;
 begin
-  FDayNames.CommaText := AValue;
-  Invalidate;
+  L := TStringList.Create;
+  try
+    L.CommaText := AValue;
+    for i := 1 to 7 do
+      FFormatSettings.ShortDayNames[i] := L[i-1];
+    Invalidate;
+  finally
+    L.Free;
+  end;
 end;
 
 procedure TCalendarLite.SetDefaultDisplayTexts;
@@ -1849,9 +1871,19 @@ begin
 end;
 
 procedure TCalendarLite.SetMonthNames(const AValue: String);
+var
+  i: Integer;
+  L: TStrings;
 begin
-  FMonthNames.CommaText := AValue;
-  Invalidate;
+  L := TStringList.Create;
+  try
+    L.CommaText := AValue;
+    for i:= 1 to 12 do
+      FFormatSettings.ShortMonthNames[i] := L[i-1];
+    Invalidate;
+  finally
+    L.Free;
+  end;
 end;
 
 procedure TCalendarLite.SetMultiSelect(AValue: Boolean);
@@ -1910,7 +1942,7 @@ end;
 
 procedure TCalendarLite.ShowHintWindow(APoint: TPoint; ADate: TDate);
 var
-  txt: String;
+  txt: String = '';
   y, m, d: Word;
 begin
   if Assigned(FOnHint) then begin

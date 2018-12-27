@@ -12,29 +12,28 @@ object Form1: TForm1
   LCLVersion = '2.1.0.0'
   object PSettings: TPanel
     Left = 0
-    Height = 432
+    Height = 448
     Top = 0
     Width = 753
     Align = alTop
-    ClientHeight = 432
+    ClientHeight = 448
     ClientWidth = 753
     TabOrder = 0
     object cgOptions: TCheckGroup
       Left = 24
-      Height = 384
+      Height = 392
       Top = 40
       Width = 160
       AutoFill = True
       Caption = 'Set calendar Options'
       ChildSizing.LeftRightSpacing = 6
-      ChildSizing.TopBottomSpacing = 6
       ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
       ChildSizing.EnlargeVertical = crsHomogenousChildResize
       ChildSizing.ShrinkHorizontal = crsScaleChilds
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 364
+      ClientHeight = 372
       ClientWidth = 156
       Items.Strings = (
         'coBoldDayNames'
@@ -117,20 +116,19 @@ object Form1: TForm1
     end
     object rgLanguage: TRadioGroup
       Left = 200
-      Height = 208
+      Height = 216
       Top = 216
       Width = 160
       AutoFill = True
       Caption = 'Language to use'
       ChildSizing.LeftRightSpacing = 6
-      ChildSizing.TopBottomSpacing = 6
       ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
       ChildSizing.EnlargeVertical = crsHomogenousChildResize
       ChildSizing.ShrinkHorizontal = crsScaleChilds
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 188
+      ClientHeight = 196
       ClientWidth = 156
       ItemIndex = 0
       Items.Strings = (
@@ -155,7 +153,6 @@ object Form1: TForm1
       AutoFill = True
       Caption = 'Starting day of the week'
       ChildSizing.LeftRightSpacing = 6
-      ChildSizing.TopBottomSpacing = 6
       ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
       ChildSizing.EnlargeVertical = crsHomogenousChildResize
       ChildSizing.ShrinkHorizontal = crsScaleChilds
@@ -178,11 +175,11 @@ object Form1: TForm1
     end
     object GroupBox1: TGroupBox
       Left = 376
-      Height = 384
+      Height = 392
       Top = 40
       Width = 160
       Caption = 'Colors'
-      ClientHeight = 364
+      ClientHeight = 372
       ClientWidth = 156
       TabOrder = 6
       object CbArrowBorder: TColorButton
@@ -491,7 +488,7 @@ object Form1: TForm1
     end
     object SelDateListbox: TListBox
       Left = 560
-      Height = 144
+      Height = 152
       Top = 280
       Width = 168
       Columns = 2
