@@ -9,7 +9,7 @@ object Form1: TForm1
   Color = clWindow
   Font.CharSet = ANSI_CHARSET
   OnCreate = FormCreate
-  LCLVersion = '1.7'
+  LCLVersion = '2.1.0.0'
   object PSettings: TPanel
     Left = 0
     Height = 432
@@ -117,8 +117,8 @@ object Form1: TForm1
     end
     object rgLanguage: TRadioGroup
       Left = 200
-      Height = 200
-      Top = 224
+      Height = 208
+      Top = 216
       Width = 160
       AutoFill = True
       Caption = 'Language to use'
@@ -130,7 +130,7 @@ object Form1: TForm1
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 180
+      ClientHeight = 188
       ClientWidth = 156
       ItemIndex = 0
       Items.Strings = (
@@ -142,13 +142,14 @@ object Form1: TForm1
         'Italian'
         'Polish'
         'Finnish'
+        'Greek'
       )
       OnClick = rgLanguageClick
       TabOrder = 4
     end
     object rgStartingDOW: TRadioGroup
       Left = 200
-      Height = 176
+      Height = 168
       Top = 40
       Width = 160
       AutoFill = True
@@ -161,7 +162,7 @@ object Form1: TForm1
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 156
+      ClientHeight = 148
       ClientWidth = 156
       Items.Strings = (
         'Sunday'

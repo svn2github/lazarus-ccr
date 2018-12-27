@@ -95,6 +95,10 @@ const
   FinnishMonths = 'Tammikuu,Helmikuu,Maaliskuu,Huhtikuu,Toukokuu,Kesäkuu,Heinäkuu,Elokuu,Syyskuu,Lokakuu,Marraskuu,Joulukuu';
   FinnishDays = 'Su,Ma,Ti,ke,To,Pe,La';
 
+  GreekDays = 'Κυρ,Δευ,Τρί,Τετ,Πεμ,Παρ,Σαβ';
+  GreekMonths = 'Ιανουάριος,Φεβρουάριος,Μάρτιος,Απρίλος,Μάιος,Ιούνιος,Ιούλιος,Αύγουστος,Σεπτέμβριος,Οκτώβριος,Νοέμβριος,Δεκέμβριος';
+  GreekTexts = 'Σήμερα είναι,"mmm dd"","" yyyy",Καμία γιορτή,Δεν έχει καμία αργία';
+
 type
   TCalendarLite = class;
 
@@ -140,7 +144,7 @@ type
     smFirstWeek, smNextWeek, smNextWeekRange);
 
   TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish, lgItalian,
-               lgPolish, lgFinnish);
+               lgPolish, lgFinnish, lgGreek);
 
 
   { TCalDateList }
@@ -379,7 +383,7 @@ type
     property WeekendDays: TDaysOfWeek read FWeekendDays
       write SetWeekendDays default [dowSunday];
     property Languages: TLanguage read FLanguage
-      write SetLanguage default lgEnglish;
+      write SetLanguage default lgEnglish; deprecated 'Use DayNames, DisplayTexts, and MonthNames instead.';
 
     // new event properties
     property OnDateChange: TNotifyEvent read FOnDateChange write FOnDateChange;
@@ -1831,6 +1835,12 @@ begin
                  DayNames := FinnishDays;
                  MonthNames := FinnishMonths;
                  DisplayTexts := FinnishTexts;
+                 BiDiMode := bdLeftToRight;
+               end;
+    lgGreek:   begin
+                 DayNames := GreekDays;
+                 MonthNames := GreekMonths;
+                 DisplayTexts := GreekTexts;
                  BiDiMode := bdLeftToRight;
                end;
   end;
