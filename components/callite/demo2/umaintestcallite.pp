@@ -147,6 +147,9 @@ begin
   demoCal.Top := PSettings.Height + 10;
   demoCal.Width := seWidth.Value;
   demoCal.Height := seHeight.Value;
+  demoCal.DayNames := 'SUN,MON,TUE,WED,THU,FRI,SAT';
+  demoCal.MonthNames := 'JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC';
+  demoCal.DisplayTexts := 'TODAY: %s,d.m.yy,HOLIDAYS %d,NO HOLIDAYS SET UP IN %d,"dddd d.m.yyyy",mmmm yy';
   demoCal.OnGetHolidays := @GetHolidays;
   demoCal.OnDateChange:= @RespondToDateChange;
   demoCal.OnMonthChange := @RespondToMonthChange;
@@ -201,6 +204,15 @@ procedure TForm1.rgLanguageClick(Sender: TObject);
 begin
   demoCal.Languages := TLanguage(rgLanguage.ItemIndex);
   copyCal.Languages := demoCal.Languages;
+  exit;
+
+
+
+  if demoCal.Languages = lgCustom then begin
+    demoCal.DayNames := 'S,M,T,W,T,F,S';
+    demoCal.MonthNames := 'Ja,Fe,Mr,Ap,Ma,Jn,Jl,Au,Sp,Oc,Nv,Dc';
+    demoCal.DisplayTexts := 'Today,"mmm yyyy",Holidays,"No holidays in"';
+  end;
 end;
 
 procedure TForm1.rgStartingDOWClick(Sender: TObject);

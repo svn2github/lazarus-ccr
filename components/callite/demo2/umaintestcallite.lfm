@@ -142,6 +142,7 @@ object Form1: TForm1
         'Polish'
         'Finnish'
         'Greek'
+        '(custom)'
       )
       OnClick = rgLanguageClick
       TabOrder = 4

@@ -21,6 +21,10 @@
         <UnitName Value="CalendarLite"/>
       </Item1>
     </Files>
+    <i18n>
+      <OutDir Value="languages"/>
+      <EnableI18NForLFM Value="True"/>
+    </i18n>
     <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="LCLBase"/>

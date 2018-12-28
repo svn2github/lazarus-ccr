@@ -45,59 +45,7 @@ uses
   ExtCtrls, Menus;
 
 const
-  TopRow = 0;
-  DayRow = 1;
-  FirstDateRow = 2;
-  LastDateRow = 7;
   LastCol = 7;
-  TodayRow = 8;
-  LastRow: word = 0;
-  DefCalHeight = 160;
-  DefCalWidth = 210;
-  DefMinHeight = 120;
-  DefMinWidth = 120;
-  DefTStyle: TTextStyle = (Alignment  : taCenter; Layout     : tlCenter;
-                           SingleLine : False;    Clipping   : True;
-                           ExpandTabs : False;    ShowPrefix : False;
-                           Wordbreak  : True;     Opaque     : False;
-                           SystemFont : False;    RightToLeft: False;
-                           EndEllipsis: False);
-
-  DefaultDisplayText = 'Today is,"mmm dd"","" yyyy",Holidays during,There are no holidays set for';
-  EnglishDays = 'Sun,Mon,Tue,Wed,Thu,Fri,Sat';
-  EnglishMonths = 'January,February,March,April,May,June,July,August,September,October,November,December';
-
-  HebrewDays = 'א,ב,ג,ד,ה,ו,ש';
-  HebrewMonths = ('ינואר,פברואר,מרץ,אפריל,מאי,יוני,    יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר');
-  HebrewTexts = 'היום הוא,yyyy-mm-dd,במהלך החגים, אין חגים מוגדרים עבור';
-
-  FrenchDays = 'dim,lun,mar,mer,jeu,ven,sam';
-  FrenchMonths = 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre';
-  FrenchTexts = 'Est aujourd''hui,dd/mm/yyyy,vacances pendant,Il n''y a pas de jours fériés fixés pour';
-
-  GermanMonths = 'Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember';
-  GermanDays = 'So,Mo,Di,Mi,Do,Fr,Sa';
-  GermamTexts = 'Heute ist,dd.mm.yyyy,Urlaub während,Es gibt keine Feiertage im';
-
-  SpanishDays = 'dom,lun,mar,mié,jue,vie,sáb';
-  SpanishMonths = 'enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,octubre,noviembre,diciembre';
-  SpanishTexts = 'Hoy es,dd/mm/yyyy,Dias de fiestas,No hay dias feriados establecidos para';
-
-  ItalianDays = 'dom,lun,mar,mer,gio,ven,sab';
-  ItalianMonths = 'gennaio,febbraio,marzo,aprile,maggio,giugno,luglio,agosto,settembre,ottobre,novembre,dicembre';
-  ItalianTexts = 'Oggi è,dd/mmm/yyyy,Vacanze durante,Non ci sono vacanze fissati per';
-
-  PolishDays = 'nie,pon,wto,Śro,czw,pią,sob';
-  PolishMonths = 'Styczeń,Luty,Marzec,Kwiecień,Maj,Czerwiec,Lipiec,Sierpień,Wrzesień,Październik,Listopad,Grudzień';
-  PolishTexts = 'Dziś jest,dd/mmm/yyyy,urlop w czasie,Brak święta określone dla';
-
-  FinnishTexts ='Tänään on,dd.mm.yyyy,Lomapäivät,Lomapäiviä ei ole asetettu';
-  FinnishMonths = 'Tammikuu,Helmikuu,Maaliskuu,Huhtikuu,Toukokuu,Kesäkuu,Heinäkuu,Elokuu,Syyskuu,Lokakuu,Marraskuu,Joulukuu';
-  FinnishDays = 'Su,Ma,Ti,ke,To,Pe,La';
-
-  GreekDays = 'Κυρ,Δευ,Τρί,Τετ,Πεμ,Παρ,Σαβ';
-  GreekMonths = 'Ιανουάριος,Φεβρουάριος,Μάρτιος,Απρίλος,Μάιος,Ιούνιος,Ιούλιος,Αύγουστος,Σεπτέμβριος,Οκτώβριος,Νοέμβριος,Δεκέμβριος';
-  GreekTexts = 'Σήμερα είναι,"mmm dd"","" yyyy",Καμία γιορτή,Δεν έχει καμία αργία';
 
 type
   TCalendarLite = class;
@@ -113,7 +61,8 @@ type
     dowThursday=5, dowFriday=6, dowSaturday=7);
   TDaysOfWeek = set of TDayOfWeek;
 
-  TDisplayText = (dtToday=0, dtTodayFormat=1, dtHolidaysDuring=2, dtNoHolidaysDuring=3);
+  TDisplayText = (dtToday=0, dtTodayFormat=1, dtHolidaysDuring=2,
+    dtNoHolidaysDuring=3, dtTodayFormatLong=4, dtCaptionFormat=5);
 
   THolidays = DWord;
   TGetHolidaysEvent = procedure (Sender: TObject; AMonth, AYear: Integer;
@@ -144,7 +93,7 @@ type
     smFirstWeek, smNextWeek, smNextWeekRange);
 
   TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish, lgItalian,
-               lgPolish, lgFinnish, lgGreek);
+               lgPolish, lgFinnish, lgGreek, lgCustom);
 
 
   { TCalDateList }
@@ -185,7 +134,7 @@ type
     FThisDay: word;
     FThisMonth: word;
     FThisYear: word;
-    FTStyle: TTextStyle;
+    FTextStyle: TTextStyle;
     procedure CalcSettings;
     procedure DrawArrow(ARect: TRect; AHead: TArrowhead; ADirec: TArrowDirection);
     procedure DrawDayCells;
@@ -245,7 +194,10 @@ type
     FCalDrawer: TCalDrawer;
     FColors: TCalColors;
     FDate: TDateTime;
-    FDisplayTexts: TStringList;
+    FCustomDayNames: string;
+    FCustomDisplayTexts: String;
+    FCustomMonthNames: string;
+    FDisplayTexts: array[TDisplayText] of string;
     FOnDateChange: TNotifyEvent;
     FOnMonthChange: TNotifyEvent;
     FOnGetDayText: TCalGetDayTextEvent;
@@ -277,16 +229,19 @@ type
     procedure PopulateHolidayPopupMenu;
     procedure PopulateMonthPopupMenu;
     procedure PopulateYearPopupMenu;
+    procedure SetCustomDayNames(const AValue: String);
+    procedure SetCustomDisplayTexts(const AValue: String);
+    procedure SetCustomMonthNames(const AValue: String);
     procedure SetDate(AValue: TDateTime);
-    procedure SetDayNames(const AValue: String);
+    procedure SetDefaultDayNames;
     procedure SetDefaultDisplayTexts;
+    procedure SetDefaultMonthNames;
     procedure SetDisplayTexts(AValue: String);
-    procedure SetMonthNames(const AValue: String);
+    procedure SetLanguage(AValue: TLanguage);
     procedure SetMultiSelect(AValue: Boolean);
     procedure SetOptions(AValue: TCalOptions);
     procedure SetStartingDayOfWeek(AValue: TDayOfWeek);
     procedure SetWeekendDays(AValue: TDaysOfWeek);
-    procedure SetLanguage(AValue: TLanguage);
     procedure TimerExpired(Sender: TObject);
     procedure YearMenuItemClicked(Sender: TObject);
 
@@ -305,6 +260,11 @@ type
     function SelMode(Shift: TShiftState): TCalSelMode;
 
     procedure Paint; override;
+    procedure UseDayName(ADayOfWeek: TDayOfWeek; const AValue: String);
+    procedure UseDayNames(const AValue: String);
+    procedure UseDisplayTexts(const AValue: String);
+    procedure UseMonthName(AMonth: Integer; const AValue: String);
+    procedure UseMonthNames(const AValue: String);
 
     { Hints }
     procedure ShowHintWindow(APoint: TPoint; ADate: TDate);
@@ -370,9 +330,9 @@ type
     // new properties
     property Colors: TCalColors read FColors write FColors;
     property Date: TDateTime read FDate write SetDate;
-    property DayNames: String read GetDayNames write SetDayNames;
-    property DisplayTexts: String read GetDisplaytexts write SetDisplayTexts;
-    property MonthNames: String read GetMonthnames write SetMonthNames;
+    property DayNames: String read FCustomDayNames write SetCustomDayNames;
+    property DisplayTexts: String read GetDisplayTexts write SetCustomDisplayTexts;
+    property MonthNames: String read FCustomMonthNames write SetCustomMonthNames;
     property MultiSelect: Boolean read FMultiSelect write SetMultiSelect
       default false;
     property Options: TCalOptions read FOptions write SetOptions
@@ -382,7 +342,7 @@ type
     property WeekendDays: TDaysOfWeek read FWeekendDays
       write SetWeekendDays default [dowSunday];
     property Languages: TLanguage read FLanguage
-      write SetLanguage default lgEnglish; deprecated 'Use DayNames, DisplayTexts, and MonthNames instead.';
+      write SetLanguage default lgEnglish;
 
     // new event properties
     property OnDateChange: TNotifyEvent read FOnDateChange write FOnDateChange;
@@ -408,9 +368,106 @@ implementation
 uses
   LCLType, LazUTF8, dateutils, math;
 
+resourcestring
+  rsCalTodayIs = 'Today is %s';
+  rsCalTodayFormat = 'mmm dd, yyyy';
+  rsCalTodayFormatLong = 'dddd mmm dd, yyyy';
+  rsCalCaptionFormat = 'mmmm yyyy';
+  rsCalHolidaysIn = 'Holidays in %d';
+  rsCalNoHolidaysIn = 'There are no holidays set for %d';
+
+  rsCalJanuary = 'January|Jan';
+  rsCalFebruary = 'February|Feb';
+  rsCalMarch = 'March|Mar';
+  rsCalApril = 'April|Apr';
+  rsCalMay = 'May|May';
+  rsCalJune = 'June|Jun';
+  rsCalJuly = 'July|Jul';
+  rsCalAugust = 'August|Aug';
+  rsCalSeptember = 'September|Sp';
+  rsCalOctober = 'October|Oct';
+  rsCalNovember = 'November|Nov';
+  rsCalDecember = 'December|Dec';
+
+  rsCalSunday = 'Sunday|Sun';
+  rsCalMonday = 'Monday|Mon';
+  rsCalTuesday = 'Tuesday|Tue';
+  rsCalWednesday = 'Wesnesday|Wed';
+  rsCalThursday = 'Thursday|Thu';
+  rsCalFriday = 'Friday|Fri';
+  rsCalSaturday = 'Saturday|Sat';
+
+
 const
-   DBLCLICK_INTERVAL = 300;   // Interval (ms) for detection of a double-click
-   DESIGNTIME_PPI = 96;
+  TopRow = 0;
+  DayRow = 1;
+  FirstDateRow = 2;
+  LastDateRow = 7;
+  TodayRow = 8;
+  LastRow: word = 0;
+  DefCalHeight = 160;
+  DefCalWidth = 210;
+  DefMinHeight = 120;
+  DefMinWidth = 120;
+  DefTextStyle: TTextStyle = (
+    Alignment  : taCenter; Layout     : tlCenter;
+    SingleLine : False;    Clipping   : True;
+    ExpandTabs : False;    ShowPrefix : False;
+    Wordbreak  : True;     Opaque     : False;
+    SystemFont : False;    RightToLeft: False;
+    EndEllipsis: False
+  );
+
+  // IMPORTANT NOTE: NO SPACES IN FRONT OF QUOTES !!!
+
+  EnglishDays = 'Sunday|Sun,Monday|Mon,Tuesday|Tue,Wednesday|Wed,Thursday|Thu,Friday|Fri,Saturday|Sat';
+  EnglishMonths = 'January|Jan,February|Feb,March|Mar,April|Apr,May|May,June|Jun,'+
+    'July|Jul,August|Aug,September|Sep,October|Oct,November|Nov,December|Dec';
+  EnglishTexts = 'Today is %s,"mmm dd"", ""yyyy",Holidays in %d,'+
+    'There are no holidays set for %d,"dddd"", "" mmm dd"", ""yyyy",mmmm yyyy';
+
+  HebrewDays = 'א,ב,ג,ד,ה,ו,ש';
+  HebrewMonths = ('ינואר,פברואר,מרץ,אפריל,מאי,יוני,    יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר');
+  HebrewTexts = 'היום הוא,yyyy-mm-dd,במהלך החגים, אין חגים מוגדרים עבור';
+
+  FrenchDays = 'dimanche|dim,lundi|lun,mardi|mar,mercredi|mer,jeudi|jeu,vendredi|ven,samedi|sam';
+  FrenchMonths = 'janvier|janv.,février|févr.,mars|mars,avril|avr.,mai|mai,juin|juin,'+
+    'juillet|juill.,août|août,septembre|sept.,octobre|oct.,novembre|nov.,décembre|déc.';
+  FrenchTexts = 'Est aujourd''hui %s, dd/mm/yyyy, vacances pendant %d, '+
+    'Il n''y a pas de jours fériés fixés pour %d, dddd dd/mm/yyyy, mmmm yyyy';
+
+  GermanDays = 'Sonntag|So,Montag|Mo,Dienstag|Di,Mittwoch|Mi,Donnerstag|Do,Freitag|Fr,Samstag|Sa';
+  GermanMonths = 'Januar|Jan.,Februar|Febr.,März|März,April|Apr.,Mai|Mai,Juni|Jun,'+
+    'Juli|Jul,August|Aug.,September|Sept.,Oktober|Okt.,November|Nov.,Dezember|Dez.';
+  GermamTexts = 'Heute ist %s, dd.mm.yyyy, Feiertage in %d, '+
+    'Keine Feiertage vorbereitet für %d, dddd dd.mm.yyyy, mmmm yyyy';
+
+  SpanishDays = 'dom,lun,mar,mié,jue,vie,sáb';
+  SpanishMonths = 'enero|ene,febrero|feb,marzo|mar,abril|abr,mayo|may,junio|jun,'+
+    'julio|jul,agosto|ago,septiembre|sep,octubre|oct,noviembre|nov,diciembre|dic';
+  SpanishTexts = 'Hoy es %s, dd/mm/yyyy, Dias de fiestas %d, '+
+    'No hay dias feriados establecidos para %d, dddd dd/mm/yyyy, mmmm yyyy';
+
+  ItalianDays = 'domenica|dom,lunedi|lun,martedi|mar,mercoledì|mer,giovedì|gio,venerdì|ven,sabato|sab';
+  ItalianMonths = 'gennaio|gen,febbraio|feb,marzo|mar,aprile|apr,maggio|mag,giugno|giu,'+
+    'luglio|lug,agosto|ago,settembre|set,ottobre|ott,novembre|nov,dicembre|dic';
+  ItalianTexts = 'Oggi è %s, dd/mmm/yyyy, Vacanze durante %d, '+
+    'Non ci sono vacanze fissati per %d,"dddd, dd/mmm/yyyy",mmmm yyyy';
+
+  PolishDays = 'nie,pon,wto,Śro,czw,pią,sob';
+  PolishMonths = 'Styczeń,Luty,Marzec,Kwiecień,Maj,Czerwiec,Lipiec,Sierpień,Wrzesień,Październik,Listopad,Grudzień';
+  PolishTexts = 'Dziś jest,dd/mmm/yyyy,urlop w czasie,Brak święta określone dla';
+
+  FinnishDays = 'Su,Ma,Ti,ke,To,Pe,La';
+  FinnishMonths = 'Tammikuu,Helmikuu,Maaliskuu,Huhtikuu,Toukokuu,Kesäkuu,Heinäkuu,Elokuu,Syyskuu,Lokakuu,Marraskuu,Joulukuu';
+  FinnishTexts ='Tänään on %s, dd.mm.yyyy, Lomapäivät %d, Lomapäiviä ei ole asetettu %d';
+
+  GreekDays = 'Κυρ,Δευ,Τρί,Τετ,Πεμ,Παρ,Σαβ';
+  GreekMonths = 'Ιανουάριος,Φεβρουάριος,Μάρτιος,Απρίλος,Μάιος,Ιούνιος,Ιούλιος,Αύγουστος,Σεπτέμβριος,Οκτώβριος,Νοέμβριος,Δεκέμβριος';
+  GreekTexts = 'Σήμερα είναι,"mmm dd"","" yyyy",Καμία γιορτή,Δεν έχει καμία αργία';
+
+  DBLCLICK_INTERVAL = 300;   // Interval (ms) for detection of a double-click
+  DESIGNTIME_PPI = 96;
 
 
 { Holiday helpers }
@@ -594,7 +651,7 @@ constructor TCalDrawer.Create(ACanvas: TCanvas);
 begin
   inherited Create;
   FCanvas:= ACanvas;
-  FTStyle:= DefTStyle;
+  FTextStyle:= DefTextStyle;
 end;
 
 procedure TCalDrawer.CalcSettings;
@@ -610,9 +667,9 @@ var
   sz: TSize;
 begin
   if (FOwner.BiDiMode = bdLeftToRight) then
-    FTStyle.RightToLeft:= False
+    FTextStyle.RightToLeft:= False
   else
-    FTStyle.RightToLeft:= True;
+    FTextStyle.RightToLeft:= True;
   SetLength(FRowPositions, 0);
   if (coShowTodayRow in FOwner.Options) then
     LastRow := TodayRow
@@ -863,7 +920,7 @@ begin
         s := IntToStr(d);
         if Assigned(FOwner.FOnGetDayText) then
           FOwner.FOnGetDayText(FOwner, y, m, d, s);
-        FCanvas.TextRect(rec, 0, 0, s, FTStyle);
+        FCanvas.TextRect(rec, 0, 0, s, FTextStyle);
       end;
 
       dt:= dt + 1;
@@ -895,7 +952,7 @@ begin
   for c:= Low(FColPositions) to High(FColPositions) do
   begin
     rec := GetCellAtColRow(c, DayRow);
-    FCanvas.TextRect(rec, 0, 0, lbls[c], FTStyle);
+    FCanvas.TextRect(rec, 0, 0, lbls[c], FTextStyle);
   end;
   if (coDayLine in FOwner.Options) then begin
     rec := GetCellAtColRow(GetLeftColIndex, DayRow);
@@ -911,6 +968,7 @@ var
   r1, r2: TRect;
   w1, w2, w3, rem, halfRem: integer;
   s: String;
+  ds: String;
 begin
   if (LastRow <> TodayRow) then Exit;
   r1 := GetCellAtColRow(2, TodayRow);
@@ -929,9 +987,17 @@ begin
     FCanvas.Font.Style := [];
 
   s:= FOwner.GetDisplayText(dtToday);
-  if (coShowTodayName in FOwner.Options) then
-    s := Format('%s %s',[s, FOwner.GetDayName(TDayOfWeek(DayOfWeek(Date())))]);
-  AppendStr(s, ' ' + FormatDateTime(FOwner.GetDisplayText(dtTodayFormat), Date(), FOwner.FFormatSettings));
+  if pos('%s', s) = 0 then begin
+    if (coShowTodayName in FOwner.Options) then
+      s := Format('%s %s',[s, FOwner.GetDayName(TDayOfWeek(DayOfWeek(Date())))]);
+    AppendStr(s, ' ' + FormatDateTime(FOwner.GetDisplayText(dtTodayFormat), Date(), FOwner.FFormatSettings));
+  end else begin
+    if coShowTodayName in FOwner.Options then
+      ds := FormatDateTime(FOwner.GetDisplayText(dtTodayFormatLong), Date(), FOwner.FFormatSettings)
+    else
+      ds := FormatDateTime(FOwner.GetDisplayText(dtTodayFormat), Date(), FOwner.FFormatSettings);
+    s := Format(s, [ds]);
+  end;
   w1 := FCanvas.TextWidth('aaa');
   w2 := FCanvas.TextWidth(' ');
   w3 := FCanvas.TextWidth(s);
@@ -960,13 +1026,14 @@ begin
     FCanvas.Font.Style := [fsBold]
   else
     FCanvas.Font.Style := [];
-  FCanvas.TextRect(r2, 0, 0, s, FTStyle);
+  FCanvas.TextRect(r2, 0, 0, s, FTextStyle);
 end;
 
 procedure TCalDrawer.DrawTopRow;
 var
   r: TRect;
   s: String;
+  dt: TDateTime;
 begin
   if coUseTopRowColors in FOwner.Options then begin
     FCanvas.Font.Color:= FOwner.Colors.TopRowTextColor;
@@ -998,8 +1065,10 @@ begin
             r:= GetCellAtColRow(3, TopRow);
           end;
   end;
-  s := FOwner.GetMonthName(FThisMonth) + ' ' + IntToStr(FThisYear);
-  FCanvas.TextRect(r, 0, 0, s, FTStyle);
+  dt := EncodeDate(FThisYear, FThisMonth, 1);
+  s := FormatDateTime(FOwner.GetDisplayText(dtCaptionFormat), dt, FOwner.FFormatSettings);
+//  s := FOwner.GetMonthName(FThisMonth) + ' ' + IntToStr(FThisYear);
+  FCanvas.TextRect(r, 0, 0, s, FTextStyle);
 end;
 
 function TCalDrawer.GetCellAt(aPoint: TPoint): TSize;
@@ -1297,10 +1366,12 @@ begin
   Constraints.MinWidth := ScaleY(DefMinWidth, DESIGNTIME_PPI);
   Canvas.Brush.Style := bsSolid;
   TabStop := true;
-  FDisplayTexts := TStringList.Create;
-  FDisplayTexts.StrictDelimiter := True;
-  FDisplayTexts.Delimiter := ',';
+  SetDefaultDayNames;
+//  FCustomDayNames := GetDayNames;
+  SetDefaultMonthNames;
+//  FCustomMonthNames := GetMonthNames;
   SetDefaultDisplayTexts;
+  FCustomDisplayTexts := GetDisplayTexts;
   FPopupMenu := TPopupMenu.Create(Self);
   FCalDrawer := TCalDrawer.Create(Canvas);
   FCalDrawer.FOwner:= Self;
@@ -1319,7 +1390,6 @@ end;
 destructor TCalendarLite.Destroy;
 begin
   FreeAndNil(FSelDates);
-  FreeAndNil(FDisplayTexts);
   FreeAndNil(FColors);
   SetLength(FCalDrawer.FRowPositions, 0);
   FreeAndNil(FCalDrawer);
@@ -1455,7 +1525,7 @@ begin
   L := TStringList.Create;
   try
     for i:= 1 to 7 do
-      L.Add(FFormatSettings.ShortDayNames[i]);
+      L.Add(FFormatSettings.LongDayNames[i] + '|' + FFormatSettings.ShortDayNames[i]);
     Result := L.CommaText;
   finally
     L.Free;
@@ -1464,12 +1534,22 @@ end;
 
 function TCalendarLite.GetDisplayText(aTextIndex: TDisplayText): String;
 begin
-  Result := FDisplayTexts[Integer(aTextIndex)];
+  Result := FDisplayTexts[aTextIndex];
 end;
 
 function TCalendarLite.GetDisplayTexts: String;
+var
+  L: TStrings;
+  dt: TDisplayText;
 begin
-  Result := FDisplayTexts.CommaText;
+  L := TStringList.Create;
+  try
+    L.StrictDelimiter := true;
+    for dt in TDisplayText do L.Add(FDisplayTexts[dt]);
+    Result := L.CommaText;
+  finally
+    L.Free;
+  end;
 end;
 
 function TCalendarLite.GetMonthName(AMonth: Integer): String;
@@ -1485,7 +1565,7 @@ begin
   L := TStringList.Create;
   try
     for i:=1 to 12 do
-      L.Add(FFormatSettings.ShortMonthNames[i]);
+      L.Add(FFormatSettings.LongMonthNames[i] + '|' + FFormatSettings.ShortMonthNames[i]);
     Result := L.CommaText;
   finally
     L.Free;
@@ -1624,10 +1704,10 @@ begin
     end;
 
     case (BiDiMode = bdLeftToRight) of
-     False: if not FCalDrawer.FTStyle.RightToLeft then
-              FCalDrawer.FTStyle.RightToLeft := True;
-     True : if FCalDrawer.FTStyle.RightToLeft then
-             FCalDrawer.FTStyle.RightToLeft := False;
+     False: if not FCalDrawer.FTextStyle.RightToLeft then
+              FCalDrawer.FTextStyle.RightToLeft := True;
+     True : if FCalDrawer.FTextStyle.RightToLeft then
+             FCalDrawer.FTextStyle.RightToLeft := False;
     end;
 
     Canvas.Brush.Color:= Colors.BackGroundColor;
@@ -1656,11 +1736,16 @@ var
   population: integer = 0;
   hols: THolidays = 0;
   dt: TDateTime;
+  s: String;
 begin
   with FPopupMenu.Items do begin
     Clear;
     item:= TMenuItem.Create(Self);
-    item.Caption:= Format('%s %d', [GetDisplayText(dtHolidaysDuring), FCalDrawer.FThisYear]);
+    s := GetDisplayText(dtHolidaysDuring);
+    if pos('%d', s) = 0 then
+      item.Caption:= s + ' ' + IntToStr(FCalDrawer.FThisYear)
+    else
+      item.Caption := Format(s, [FCalDrawer.FThisYear]);
     Add(item);
     item:= TMenuItem.Create(Self);
     item.Caption:= '-';
@@ -1688,8 +1773,13 @@ begin
       until d > dayCount;
     end;
     Items[0].Enabled := (population <> 0);
-    if not Items[0].Enabled then
-      Items[0].Caption := Format('%s %d', [GetDisplayText(dtNoHolidaysDuring), FCalDrawer.FThisYear]);
+    if not Items[0].Enabled then begin
+      s := GetDisplayText(dtNoHolidaysDuring);
+      if pos('%d', s) = 0 then
+        Items[0].Caption := s + ' ' + IntToStr(FCalDrawer.FThisYear)
+      else
+        Items[0].Caption := Format(s, [FCalDrawer.FThisYear]);
+    end;
   end;
 end;
 
@@ -1762,6 +1852,27 @@ begin
     Result := smNextSingle;
 end;
 
+procedure TCalendarLite.SetCustomDayNames(const AValue: String);
+begin
+  FCustomDayNames := AValue;
+  if FLanguage = lgCustom then
+    SetLanguage(lgCustom);
+end;
+
+procedure TCalendarLite.SetCustomDisplayTexts(const AValue: String);
+begin
+  FCustomDisplayTexts := AValue;
+  if FLanguage = lgCustom then
+    SetLanguage(lgCustom);
+end;
+
+procedure TCalendarLite.SetCustomMonthNames(const AValue: String);
+begin
+  FCustomMonthNames := AValue;
+  if FLanguage = lgCustom then
+    SetLanguage(lgCustom);
+end;
+
 procedure TCalendarLite.SetDate(AValue: TDateTime);
 var
   oldMonth: Integer;
@@ -1777,30 +1888,63 @@ begin
   Invalidate;
 end;
 
-procedure TCalendarLite.SetDayNames(const AValue: String);
-var
-  i: Integer;
-  L: TStrings;
+procedure TCalendarLite.SetDefaultDayNames;
 begin
-  L := TStringList.Create;
-  try
-    L.CommaText := AValue;
-    for i := 1 to 7 do
-      FFormatSettings.ShortDayNames[i] := L[i-1];
-    Invalidate;
-  finally
-    L.Free;
-  end;
+  UseDayName(dowSunday, rsCalSunday);
+  UseDayName(dowMonday, rsCalMonday);
+  UseDayName(dowTuesday, rsCalTuesday);
+  UseDayName(dowWednesday, rsCalWednesday);
+  UseDayName(dowThursday, rsCalThursday);
+  UseDayName(dowFriday, rsCalFriday);
+  UseDayName(dowSaturday, rsCalSaturday);
 end;
 
 procedure TCalendarLite.SetDefaultDisplayTexts;
 begin
-  FDisplayTexts.CommaText := DefaultDisplayText;
+  FDisplayTexts[dtToday] := rsCalTodayIs;
+  FDisplayTexts[dtHolidaysDuring] := rsCalHolidaysIn;
+  FDisplayTexts[dtNoHolidaysDuring] := rsCalNoHolidaysIn;
+
+  FDisplayTexts[dtTodayFormat] := rsCalTodayFormat;
+  FDisplayTexts[dtTodayFormatLong] := rsCalTodayFormatLong;
+  FDisplayTexts[dtCaptionFormat] := rsCalCaptionFormat;
+
+  FCustomDisplayTexts := GetDisplayTexts;
+end;
+
+procedure TCalendarLite.SetDefaultMonthNames;
+begin
+  UseMonthName(1, rsCalJanuary);
+  UseMonthname(2, rsCalFebruary);
+  UseMonthName( 3, rsCalMarch);
+  UseMonthName( 4, rsCalApril);
+  UseMonthname( 5, rsCalMay);
+  UseMonthname( 6, rsCalJune);
+  UseMonthname( 7, rsCalJuly);
+  UseMonthName( 8, rsCalAugust);
+  UseMonthname( 9, rsCalSeptember);
+  UseMonthName(10, rsCalOctober);
+  UseMonthName(11, rsCalNovember);
+  UseMonthName(12, rsCalDecember);
 end;
 
 procedure TCalendarLite.SetDisplayTexts(AValue: String);
+var
+  L: TStrings;
+  i: Integer;
 begin
-  FDisplayTexts.CommaText := AValue;
+  L := TStringList.Create;
+  try
+    L.StrictDelimiter := True;
+    L.CommaText := AValue;
+    for i:=0 to L.Count - 1 do begin
+      if i >= ord(High(TDisplayText)) then
+        exit;
+      FDisplayTexts[TDisplayText(i)] := trim(L[i]);
+    end;
+  finally
+    L.Free;
+  end;
   Invalidate;
 end;
 
@@ -1812,78 +1956,67 @@ begin
 
   case FLanguage of
     lgEnglish: begin
-                 DayNames := EnglishDays;
-                 MonthNames := EnglishMonths;
-                 DisplayTexts := DefaultDisplayText;
+                 UseDayNames(EnglishDays);
+                 UseMonthNames(EnglishMonths);
+                 UseDisplayTexts(EnglishTexts);
                  BiDiMode:= bdLeftToRight;
                end;
-    lgFrench: begin
-                 DayNames := FrenchDays;
-                 MonthNames := FrenchMonths;
-                 DisplayTexts := FrenchTexts;
-                 BiDiMode:= bdLeftToRight;
-             end;
-    lgGerman: begin
-                 DayNames := GermanDays;
-                 MonthNames := GermanMonths;
-                 DisplayTexts := GermamTexts;
+    lgFrench:  begin
+                 UseDayNames(FrenchDays);
+                 UseMonthNames(FrenchMonths);
+                 UseDisplayTexts(FrenchTexts);
                  BiDiMode:= bdLeftToRight;
                end;
-    lgHebrew: begin
-                 DayNames := HebrewDays;
-                 MonthNames := HebrewMonths;
-                 DisplayTexts := HebrewTexts;
+    lgGerman:  begin
+                 UseDayNames(GermanDays);
+                 UseMonthNames(GermanMonths);
+                 UseDisplayTexts(GermamTexts);
+                 BiDiMode:= bdLeftToRight;
+               end;
+    lgHebrew:  begin
+                 UseDayNames(HebrewDays);
+                 UseMonthNames(HebrewMonths);
+                 UseDisplayTexts(HebrewTexts);
                  BiDiMode:= bdRightToLeft;
                end;
     lgSpanish: begin
-                 DayNames := SpanishDays;
-                 MonthNames := SpanishMonths;
-                 DisplayTexts := SpanishTexts;
+                 UseDayNames(SpanishDays);
+                 UseMonthNames(SpanishMonths);
+                 UseDisplayTexts(SpanishTexts);
                  BiDiMode:= bdLeftToRight;
                end;
     lgItalian: begin
-                 DayNames := ItalianDays;
-                 MonthNames := ItalianMonths;
-                 DisplayTexts := ItalianTexts;
+                 UseDayNames(ItalianDays);
+                 UseMonthNames(ItalianMonths);
+                 UseDisplayTexts(ItalianTexts);
                  BiDiMode:= bdLeftToRight;
                end;
     lgPolish:  begin
-                 DayNames := PolishDays;
-                 MonthNames := PolishMonths;
-                 DisplayTexts := PolishTexts;
+                 UseDayNames(PolishDays);
+                 UseMonthNames(PolishMonths);
+                 UseDisplayTexts(PolishTexts);
                  BiDiMode:= bdLeftToRight;
                end;
     lgFinnish: begin
-                 DayNames := FinnishDays;
-                 MonthNames := FinnishMonths;
-                 DisplayTexts := FinnishTexts;
+                 UseDayNames(FinnishDays);
+                 UseMonthNames(FinnishMonths);
+                 UseDisplayTexts(FinnishTexts);
                  BiDiMode := bdLeftToRight;
                end;
     lgGreek:   begin
-                 DayNames := GreekDays;
-                 MonthNames := GreekMonths;
-                 DisplayTexts := GreekTexts;
+                 UseDayNames(GreekDays);
+                 UseMonthNames(GreekMonths);
+                 UseDisplayTexts(GreekTexts);
                  BiDiMode := bdLeftToRight;
+               end;
+    lgCustom:  begin
+                 UseDayNames(FCustomDayNames);
+                 UseMonthNames(FCustomMonthNames);
+                 UseDisplayTexts(FCustomDisplayTexts);
                end;
   end;
 
   Invalidate;
-end;
-
-procedure TCalendarLite.SetMonthNames(const AValue: String);
-var
-  i: Integer;
-  L: TStrings;
-begin
-  L := TStringList.Create;
-  try
-    L.CommaText := AValue;
-    for i:= 1 to 12 do
-      FFormatSettings.ShortMonthNames[i] := L[i-1];
-    Invalidate;
-  finally
-    L.Free;
-  end;
 end;
 
 procedure TCalendarLite.SetMultiSelect(AValue: Boolean);
@@ -1931,6 +2064,80 @@ procedure TCalendarLite.TimerExpired(Sender: TObject);
 begin
   FDblClickTimer.Enabled := false;
   InternalClick;
+end;
+
+procedure TCalendarlite.UseDayName(ADayOfWeek: TDayOfWeek; const AValue: String);
+var
+  p: Integer;
+  d: Integer;
+begin
+  if AValue = '' then exit;
+  d := ord(ADayOfWeek);
+  p := pos('|', AValue);
+  if p > 0 then begin
+    FFormatSettings.LongDayNames[d] := Trim(Copy(AValue, 1, p-1));
+    FFormatSettings.ShortDayNames[d] := Trim(Copy(AValue, p+1, MaxInt));
+  end else begin
+    FFormatSettings.LongDayNames[d] := Trim(AValue);
+    FFormatSettings.ShortDayNames[d] := FFormatSettings.LongDayNames[d];
+  end;
+end;
+
+procedure TCalendarLite.UseDayNames(const AValue: String);
+var
+  L: TStrings;
+  i, d: Integer;
+begin
+  L := TStringList.Create;
+  try
+    L.CommaText := AValue;
+    for i:=0 to L.Count-1 do begin
+      d := succ(i);
+      if d <= 7 then
+        UseDayName(TDayOfWeek(d), L[i]);
+    end;
+  finally
+    L.Free;
+  end;
+end;
+
+procedure TCalendarLite.UseDisplayTexts(const AValue: String);
+begin
+  SetDisplayTexts(AValue);
+end;
+
+procedure TCalendarLite.UseMonthName(AMonth: Integer; const AValue: String);
+var
+  p: Integer;
+begin
+  if AValue = '' then
+    exit;
+  p := pos('|', AValue);
+  if p <> 0 then begin
+    FFormatSettings.LongMonthNames[AMonth] := Trim(Copy(AValue, 1, p-1));
+    FFormatSettings.ShortMonthNames[AMonth] := Trim(Copy(AValue, p+1, MaxInt));
+  end else begin
+    FFormatSettings.LongMonthNames[AMonth] := Trim(AValue);
+    FFormatSettings.ShortMonthNames[AMonth] := FFormatSettings.LongMonthNames[AMonth];
+  end;
+end;
+
+procedure TCalendarLite.UseMonthNames(const AValue: String);
+var
+  L: TStrings;
+  i, m: Integer;
+begin
+  L := TStringList.Create;
+  try
+    L.CommaText := AValue;
+    for i:=0 to L.Count - 1 do begin
+      m := succ(i);
+      if m <= 12 then
+        UseMonthName(m, L[i]);
+    end;
+  finally
+    L.Free;
+  end;
 end;
 
 procedure TCalendarLite.YearMenuItemClicked(Sender: TObject);
