@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Graphics, ExtCtrls, StdCtrls, Spin, Dialogs,
-  Controls, Menus, CalendarLite;
+  Controls, Menus, Buttons, CalendarLite, LCLVersion;
 
 type
 
@@ -52,10 +52,13 @@ type
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
+    lHeight1: TLabel;
+    LWidth1: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     PopupMenu1: TPopupMenu;
+    seButtonHeight: TSpinEdit;
     SelDateListbox: TListBox;
     LTitle: TLabel;
     LWidth: TLabel;
@@ -65,6 +68,9 @@ type
     rgStartingDOW: TRadioGroup;
     seWidth: TSpinEdit;
     seHeight: TSpinEdit;
+    seButtonWidth: TSpinEdit;
+    sbResetButtonWidth: TSpeedButton;
+    sbResetButtonHeight: TSpeedButton;
     procedure BtnFontClick(Sender: TObject);
     procedure CbAddHolidayNameToCellChange(Sender: TObject);
     procedure CbDrawCellChange(Sender: TObject);
@@ -78,8 +84,12 @@ type
     procedure FormCreate(Sender: TObject);
     procedure rgLanguageClick(Sender: TObject);
     procedure rgStartingDOWClick(Sender: TObject);
+    procedure sbResetButtonHeightClick(Sender: TObject);
+    procedure seButtonHeightChange(Sender: TObject);
     procedure seHeightChange(Sender: TObject);
+    procedure seButtonWidthChange(Sender: TObject);
     procedure seWidthChange(Sender: TObject);
+    procedure sbResetButtonWidthClick(Sender: TObject);
   private
     copyCal, demoCal: TCalendarLite;
     FNoHolidays: boolean;
@@ -220,14 +230,40 @@ begin
   demoCal.StartingDayOfWeek := TDayOfWeek(rgStartingDOW.ItemIndex + 1);
 end;
 
+procedure TForm1.sbResetButtonHeightClick(Sender: TObject);
+begin
+  demoCal.ButtonHeight := 0;
+  seButtonHeight.OnChange := nil;
+  seButtonHeight.Value := 10;
+  seButtonHeight.OnChange := @seButtonHeightChange;
+end;
+
+procedure TForm1.seButtonHeightChange(Sender: TObject);
+begin
+  demoCal.ButtonHeight := seButtonHeight.Value;
+end;
+
 procedure TForm1.seHeightChange(Sender: TObject);
 begin
   demoCal.Height := seHeight.Value;
 end;
 
+procedure TForm1.seButtonWidthChange(Sender: TObject);
+begin
+  demoCal.ButtonWidth := seButtonWidth.Value;
+end;
+
 procedure TForm1.seWidthChange(Sender: TObject);
 begin
   demoCal.Width := seWidth.Value;
+end;
+
+procedure TForm1.sbResetButtonWidthClick(Sender: TObject);
+begin
+  demoCal.ButtonWidth := 0;
+  seButtonWidth.OnChange := nil;
+  seButtonWidth.Value := 10;
+  seButtonWidth.OnChange := @seButtonWidthChange;
 end;
 
 procedure TForm1.ColorButtonChanged(Sender: TObject);

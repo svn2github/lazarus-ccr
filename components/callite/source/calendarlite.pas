@@ -41,8 +41,12 @@ unit CalendarLite;
 interface
 
 uses
-  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, Types,
-  ExtCtrls, Menus;
+  Classes, SysUtils, LResources, LCLVersion,
+  Forms, Controls, Graphics, Dialogs, Types, ExtCtrls, Menus;
+
+{$if lcl_fullversion >= 1080000}
+  {$define lcl_scaling}
+{$ifend}
 
 const
   LastCol = 7;
@@ -220,6 +224,8 @@ type
     FLanguage: TLanguage;
     FDblClickTimer: TTimer;
     FFormatSettings: TFormatSettings;
+    FButtonHeight: Integer;
+    FButtonWidth: Integer;
     function GetDayNames: String;
     function GetDisplayText(aTextIndex: TDisplayText): String;
     function GetDisplayTexts: String;
@@ -229,6 +235,8 @@ type
     procedure PopulateHolidayPopupMenu;
     procedure PopulateMonthPopupMenu;
     procedure PopulateYearPopupMenu;
+    procedure SetButtonHeight(const AValue: Integer);
+    procedure SetButtonWidth(const AValue: Integer);
     procedure SetCustomDayNames(const AValue: String);
     procedure SetCustomDisplayTexts(const AValue: String);
     procedure SetCustomMonthNames(const AValue: String);
@@ -248,6 +256,10 @@ type
   protected
     procedure ChangeDateTo(ADate: TDate; ASelMode: TCalSelMode);
     procedure DateChange; virtual;
+    {$ifdef lcl_scaling}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    {$endif}
     procedure DblClick; override;
     class function GetControlClassDefaultSize: TSize; override;
     procedure InternalClick;
@@ -328,6 +340,8 @@ type
     property OnMouseWheelUp;
 
     // new properties
+    property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default 0;
+    property ButtonHeight: Integer read FButtonHeight write SetButtonHeight default 0;
     property Colors: TCalColors read FColors write FColors;
     property Date: TDateTime read FDate write SetDate;
     property DayNames: String read FCustomDayNames write SetCustomDayNames;
@@ -661,7 +675,7 @@ var
   ch: Integer = 0;
   sp: Integer = 0;
   cw: Integer = 0;
-  bit: integer=0;
+  bit: integer = 0;
   i, cellWidths, totalSpace, cellHeights,
   adjSpace, borderh, borderv, numRows: integer;
   sz: TSize;
@@ -731,7 +745,7 @@ procedure TCalDrawer.DrawArrow(ARect: TRect; AHead: TArrowhead;
   ADirec: TArrowDirection);
 var
   sz: TSize;
-  d, ox, oy, half: integer;
+  dx, dy, ox, oy, halfx, halfy: integer;
   pts: TArrowPoints;
 begin
   FCanvas.Pen.Style := psSolid;
@@ -740,25 +754,33 @@ begin
   if (FCanvas.Pen.Color <> FOwner.Colors.ArrowBorderColor) then
     FCanvas.Pen.Color := FOwner.Colors.ArrowBorderColor;
   sz := Size(aRect);
-  d := Min(sz.cy, sz.cx) div 3;
-  half := d div 2;
-  ox := ARect.Left + (sz.cx - d) div 2;
-  oy := ARect.Top + (sz.cy - d) div 2;
+  if FOwner.ButtonWidth = 0 then
+    dx := Min(sz.cy, sz.cx) div 3
+  else
+    dx := FOwner.ButtonWidth;
+  if FOwner.ButtonHeight = 0 then
+    dy := Min(sz.cy, sz.cx) div 3
+  else
+    dy := FOwner.ButtonHeight;
+  halfx := dx div 2;
+  halfy := dy div 2;
+  ox := ARect.Left + (sz.cx - dx) div 2;
+  oy := ARect.Top + (sz.cy - dy) div 2;
   case AHead of
    ahSingle:
      begin
        case ADirec of
          adLeft:
            begin
-             pts[1]:= Point(ox+d, oy);
-             pts[2]:= Point(ox, oy+half);
-             pts[3]:= Point(ox+d, oy+d);
+             pts[1]:= Point(ox+dx, oy);
+             pts[2]:= Point(ox, oy+halfy);
+             pts[3]:= Point(ox+dx, oy+dy);
            end;
          adRight:
            begin
              pts[1]:= Point(ox, oy);
-             pts[2]:= Point(ox, oy+d);
-             pts[3]:= Point(ox+d, oy+half);
+             pts[2]:= Point(ox, oy+dy);
+             pts[3]:= Point(ox+dx, oy+halfy);
            end;
        end;
        FCanvas.Polygon(pts);
@@ -767,24 +789,24 @@ begin
      case ADirec of
        adLeft:
          begin
-           pts[1]:= Point(ox+half-1, oy);
-           pts[2]:= Point(ox-1, oy+half);
-           pts[3]:= Point(ox+half-1, oy+d);
+           pts[1]:= Point(ox+halfx-1, oy);
+           pts[2]:= Point(ox-1, oy+halfy);
+           pts[3]:= Point(ox+halfx-1, oy+dy);
            FCanvas.Polygon(pts);
-           pts[1]:= Point(ox+d, oy);
-           pts[2]:= Point(ox+half, oy+half);
-           pts[3]:= Point(ox+d, oy+d);
+           pts[1]:= Point(ox+dx, oy);
+           pts[2]:= Point(ox+halfx, oy+halfy);
+           pts[3]:= Point(ox+dx, oy+dy);
            FCanvas.Polygon(pts);
          end;
        adRight:
          begin
            pts[1]:= Point(ox, oy);
-           pts[2]:= Point(ox+half, oy+half);
-           pts[3]:= Point(ox, oy+d);
+           pts[2]:= Point(ox+halfx, oy+halfy);
+           pts[3]:= Point(ox, oy+dy);
            FCanvas.Polygon(pts);
-           pts[1]:= Point(ox+half+1, oy);
-           pts[2]:= Point(ox+d+1, oy+half);
-           pts[3]:= Point(ox+half+1, oy+d);
+           pts[1]:= Point(ox+halfx+1, oy);
+           pts[2]:= Point(ox+dx+1, oy+halfy);
+           pts[3]:= Point(ox+halfx+1, oy+dy);
            FCanvas.Polygon(pts);
          end;
      end;
@@ -1362,8 +1384,13 @@ begin
   FStartingDayOfWeek:= dowSunday;
   with GetControlClassDefaultSize do
     SetInitialBounds(0, 0, cx, cy);
+  {$ifdef lcl_scaling}
+  Constraints.MinHeight := DefMinHeight;
+  Constraints.MinWidth := DefMinWidth;
+  {$else}
   Constraints.MinHeight := ScaleX(DefMinHeight, DESIGNTIME_PPI);
   Constraints.MinWidth := ScaleY(DefMinWidth, DESIGNTIME_PPI);
+  {$endif}
   Canvas.Brush.Style := bsSolid;
   TabStop := true;
   SetDefaultDayNames;
@@ -1506,10 +1533,28 @@ begin
   end;
 end;
 
+{$ifdef lcl_scaling}
+procedure TCalendarLite.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    FButtonWidth := round(FButtonWidth * AXProportion);
+    FButtonHeight := round(FButtonHeight * AYProportion);
+  end;
+end;
+{$endif}
+
 class function TCalendarLite.GetControlClassDefaultSize: TSize;
 begin
+  {$ifdef lcl_scaling}
+  Result.cx := DefCalWidth;
+  Result.cy := DefCalHeight;
+  {$else}
   Result.cx := ScaleX(DefCalWidth, DESIGNTIME_PPI);
   Result.cy := ScaleY(DefCalHeight, DESIGNTIME_PPI);
+  {$endif}
 end;
 
 function TCalendarLite.GetDayName(ADayOfWeek: TDayOfWeek): String;
@@ -1830,26 +1875,18 @@ begin
   Result := FSelDates.AsArray;
 end;
 
-function TCalendarLite.SelMode(Shift: TShiftState): TCalSelMode;
+procedure TCalendarLite.SetButtonHeight(const AValue: Integer);
 begin
-  Result := smFirstSingle;
-  if not FMultiSelect then
-    exit;
+  if FButtonHeight = AValue then exit;
+  FButtonHeight := AValue;
+  Invalidate;
+end;
 
-  if (ssDouble in Shift) then begin
-    Result := smFirstWeek;
-    if (ssCtrl in Shift) and (FPrevDate > 0) then
-      Result := smNextWeek
-    else if (ssShift in Shift) and (FPrevDate > 0) then
-      Result := smNextWeekRange
-  end else
-  if (ssShift in Shift) then begin
-    Result := smFirstRange;
-    if (ssCtrl in Shift) and (FPrevDate > 0) then
-      Result := smNextRange;
-  end else
-  if (ssCtrl in Shift) and (FPrevDate > 0) then
-    Result := smNextSingle;
+procedure TCalendarLite.SetButtonWidth(const AValue: Integer);
+begin
+  if FButtonWidth = AValue then exit;
+  FButtonWidth := AValue;
+  Invalidate;
 end;
 
 procedure TCalendarLite.SetCustomDayNames(const AValue: String);
@@ -2017,6 +2054,28 @@ begin
   end;
 
   Invalidate;
+end;
+
+function TCalendarLite.SelMode(Shift: TShiftState): TCalSelMode;
+begin
+  Result := smFirstSingle;
+  if not FMultiSelect then
+    exit;
+
+  if (ssDouble in Shift) then begin
+    Result := smFirstWeek;
+    if (ssCtrl in Shift) and (FPrevDate > 0) then
+      Result := smNextWeek
+    else if (ssShift in Shift) and (FPrevDate > 0) then
+      Result := smNextWeekRange
+  end else
+  if (ssShift in Shift) then begin
+    Result := smFirstRange;
+    if (ssCtrl in Shift) and (FPrevDate > 0) then
+      Result := smNextRange;
+  end else
+  if (ssCtrl in Shift) and (FPrevDate > 0) then
+    Result := smNextSingle;
 end;
 
 procedure TCalendarLite.SetMultiSelect(AValue: Boolean);
