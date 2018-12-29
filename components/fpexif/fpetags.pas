@@ -1059,7 +1059,8 @@ begin
       else
         raise EFpExif.CreateFmt('Value %d out of range for tag "%s"', [AValue, FName]);
     ttUInt16:
-      if not WithRangeCheck or ((AValue >= 0) and (AValue <= 65535)) then begin
+      if not WithRangeCheck or ((AValue >= 0) and (AValue <= 65535)) then
+      begin
         if BigEndian then
           w := NtoBE(PWord(@AValue)^)
         else
@@ -1069,7 +1070,8 @@ begin
         raise EFpExif.CreateFmt('Value %d out of range for tag "%s"', [AValue, FName]);
     ttUInt32,
     ttIFD:
-      if not WithRangeCheck or (AValue >= 0) then begin
+      if not WithRangeCheck or (AValue >= 0) then
+      begin
         if BigEndian then
           dw := NtoBE(PDWord(@AValue)^)
         else

@@ -8,7 +8,7 @@ object MainForm: TMainForm
   ClientWidth = 926
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object ShellPanel: TPanel
     Left = 0
     Height = 691
@@ -112,7 +112,7 @@ object MainForm: TMainForm
     end
     object PageControl1: TPageControl
       Left = 0
-      Height = 573
+      Height = 539
       Top = 23
       Width = 647
       ActivePage = PgMetadata
@@ -122,11 +122,11 @@ object MainForm: TMainForm
       OnChange = PageControl1Change
       object PgMetadata: TTabSheet
         Caption = 'Meta data'
-        ClientHeight = 545
+        ClientHeight = 511
         ClientWidth = 639
         object TagListView: TListView
           Left = 0
-          Height = 525
+          Height = 491
           Top = 0
           Width = 639
           Align = alClient
@@ -158,7 +158,7 @@ object MainForm: TMainForm
         object Panel1: TPanel
           Left = 0
           Height = 20
-          Top = 525
+          Top = 491
           Width = 639
           Align = alBottom
           AutoSize = True
@@ -201,7 +201,7 @@ object MainForm: TMainForm
     object Messages: TMemo
       Left = 4
       Height = 90
-      Top = 596
+      Top = 567
       Width = 639
       Align = alBottom
       BorderSpacing.Left = 4
@@ -212,10 +212,63 @@ object MainForm: TMainForm
       Cursor = crVSplit
       Left = 0
       Height = 5
-      Top = 686
+      Top = 562
       Width = 647
       Align = alBottom
       ResizeAnchor = akBottom
+    end
+    object DateTimePanel: TPanel
+      Left = 0
+      Height = 34
+      Top = 657
+      Width = 647
+      Align = alBottom
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 34
+      ClientWidth = 647
+      TabOrder = 4
+      object LblChangeDate: TLabel
+        AnchorSideLeft.Control = DateTimePanel
+        AnchorSideTop.Control = EdChangeDate
+        AnchorSideTop.Side = asrCenter
+        Left = 4
+        Height = 15
+        Top = 10
+        Width = 135
+        BorderSpacing.Left = 4
+        Caption = 'Change EXIF date/time to'
+        ParentColor = False
+      end
+      object EdChangeDate: TEdit
+        AnchorSideLeft.Control = LblChangeDate
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = DateTimePanel
+        AnchorSideTop.Side = asrCenter
+        Left = 144
+        Height = 23
+        Top = 6
+        Width = 152
+        BorderSpacing.Left = 5
+        BorderSpacing.Bottom = 4
+        TabOrder = 0
+      end
+      object BtnChangeDate: TButton
+        AnchorSideLeft.Control = EdChangeDate
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = EdChangeDate
+        AnchorSideTop.Side = asrCenter
+        Left = 304
+        Height = 25
+        Top = 5
+        Width = 66
+        AutoSize = True
+        BorderSpacing.Left = 8
+        BorderSpacing.Bottom = 4
+        Caption = 'Execute'
+        OnClick = BtnChangeDateClick
+        TabOrder = 1
+      end
     end
   end
   object StatusBar1: TStatusBar

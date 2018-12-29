@@ -853,10 +853,9 @@ begin
           Continue;
 
         // Offset to the thumbnail image
-        if tag.TagID = FULLTAG_THUMBSTARTOFFSET then begin
-          dw := FixEndian32(thumbStartOffset);
-          tag.AsInteger := dw;
-        end else
+        if tag.TagID = FULLTAG_THUMBSTARTOFFSET then
+          tag.AsInteger := DWord(thumbStartOffset)
+        else
         // Some tags will link to subdirectories. The offset to the start of
         // a subdirectory must be specified in the DataValue field of the
         // written ifd record. Since it is not clear at this moment where the

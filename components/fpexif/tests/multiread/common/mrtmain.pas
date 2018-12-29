@@ -217,6 +217,7 @@ begin
     end else
       node.ImageIndex := IMG_INDEX_EXIF;
     node.SelectedIndex := node.ImageIndex;
+    node.StateIndex := IMG_CHECKED;
     node := node.GetNextSibling;
   end;
 end;

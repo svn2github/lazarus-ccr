@@ -14,14 +14,18 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    BtnChangeDate: TButton;
     CbDecodeMakerNotes: TCheckBox;
+    EdChangeDate: TEdit;
     FilenameInfo: TLabel;
     Image: TImage;
+    LblChangeDate: TLabel;
     Messages: TMemo;
     PageControl1: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
+    DateTimePanel: TPanel;
     PreviewImage: TImage;
     ImageList: TImageList;
     Splitter3: TSplitter;
@@ -34,6 +38,7 @@ type
     ShellTreeView: TShellTreeView;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
+    procedure BtnChangeDateClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
@@ -66,7 +71,7 @@ implementation
 {$R *.lfm}
 
 uses
-  IniFiles, Math, StrUtils,
+  IniFiles, Math, StrUtils, DateUtils,
   fpeGlobal, fpeTags, fpeExifData, fpeIptcData;
 
 
@@ -86,6 +91,37 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   //ShellListView.Parent.DoubleBuffered := true;
+end;
+
+procedure TMainForm.BtnChangeDateClick(Sender: TObject);
+var
+  lTag: TTag;
+  dt: TDateTime;
+  fn: String;
+begin
+  if (FImgInfo = nil) or (FImgInfo.ExifData = nil) then
+    exit;
+
+  if not TryStrToDateTime(EdChangeDate.Text, dt) then begin
+    MessageDlg('No valid date/time. Use your locale settings.', mtError, [mbOK], 0);
+    exit;
+  end;
+
+  lTag := FImgInfo.ExifData.TagByName['DateTimeOriginal'];
+  if lTag <> nil then
+    TDateTimeTag(lTag).AsDateTime := dt;
+
+  lTag := FImgInfo.ExifData.TagByName['DateTimeDigitized'];
+  if lTag <> nil then
+    TDateTimeTag(lTag).AsDateTime := dt;
+
+  lTag := FImgInfo.ExifData.TagByName['DateTime'];
+  if lTag <> nil then
+    TDateTimeTag(lTag).AsDateTime := dt;
+
+  fn := FImgInfo.FileName;
+  fn := ChangeFileExt(fn, '') + '_modified' + ExtractFileExt(fn);
+  FImgInfo.SaveToFile(fn);
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -136,7 +172,16 @@ begin
           item.SubItems.Add(lTag.Description);
           item.SubItems.Add(lTag.AsString);
         end;
-      end;
+
+        lTag := FImgInfo.ExifData.TagByName['DateTimeOriginal'];
+        if lTag <> nil then
+          EdChangeDate.Text := DateTimeToStr(TDateTimeTag(lTag).AsDateTime)
+        else
+          EdChangeDate.Text := '';
+        DateTimePanel.Show;
+      end else
+        DateTimePanel.Hide;
+
       if FImgInfo.HasIptc then begin
         for i := 0 to FImgInfo.IptcData.TagCount-1 do begin
           lTag := FImgInfo.IptcData.TagByIndex[i];
