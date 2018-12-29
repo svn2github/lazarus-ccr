@@ -371,7 +371,7 @@ uses
 resourcestring
   rsCalTodayIs = 'Today is %s';
   rsCalTodayFormat = 'mmm dd, yyyy';
-  rsCalTodayFormatLong = 'dddd mmm dd, yyyy';
+  rsCalTodayFormatLong = 'dddd, mmm dd, yyyy';
   rsCalCaptionFormat = 'mmmm yyyy';
   rsCalHolidaysIn = 'Holidays in %d';
   rsCalNoHolidaysIn = 'There are no holidays set for %d';
