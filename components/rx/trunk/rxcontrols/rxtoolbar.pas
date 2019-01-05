@@ -985,6 +985,7 @@ var
 begin
   ACount:=FPropertyStorageLink.Storage.ReadInteger(ASection+sCount, -1);
   if ACount < 0 then Exit(false);
+  FVisibleItems.Clear;
   Result:=true;
   S:=ASection+sItem;
   St:=TStringList.Create;
@@ -1043,6 +1044,7 @@ begin
   S:=ASection;
   FCnt:=FPropertyStorageLink.Storage.ReadInteger(S+sVersion2, FVersion);
   if FCnt < FVersion then Exit;
+  FVisibleItems.Clear;
   for P in Items do P.Visible:=false;
   St:=TStringList.Create;
   FCnt:=FPropertyStorageLink.Storage.ReadInteger(S+sCount, 0);
@@ -1105,7 +1107,6 @@ var
 begin
   S:=Owner.Name+'.'+Name;
   ACount:=FPropertyStorageLink.Storage.ReadInteger(S+sVersion2, -9999); //Check cfg version
-  FVisibleItems.Clear;
 
   Items.BeginUpdate;
   if ACount = -9999 then
