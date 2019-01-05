@@ -195,6 +195,7 @@ type
     FInternalDefSeparatorWidth:integer;
     FInternalDropDownExtraBtnWidth:integer;
     FInternalSpacing:integer;
+    FVisibleItems:TFPList;
 
     //
     FButtonAllign: TToolButtonAllign;
@@ -225,6 +226,7 @@ type
 
     procedure InternalCalcImgSize;
     procedure InternalCalcButtonsSize(out MaxHeight:Integer);
+    procedure UpdateVisibleItems;
   protected
     FDefImgWidth:integer;
     FDefImgHeight:integer;
@@ -241,6 +243,8 @@ type
     procedure Customize(HelpCtx: Longint);
     procedure GetPreferredSize(var PreferredWidth, PreferredHeight: integer; Raw: boolean = false; WithThemeSpace: boolean = true); override;
     procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
+
+    property VisibleItems:TFPList read FVisibleItems;
     property DefImgWidth:integer read FDefImgWidth;
     property DefImgHeight:integer read FDefImgHeight;
   published
@@ -431,80 +435,75 @@ begin
 
   PaintRect:=ClientRect;
 
+//11
+  FLastDrawFlagsA:=GetDrawFlagsA;
+
+  if not Transparent then
+  begin
+    Canvas.Brush.Color := Color;
+    Canvas.FillRect(PaintRect);
+  end;
+
+  if FLastDrawFlagsA <> 0 then
+  begin
+    if ToolPanel.FToolBarStyle = tbsWindowsXP then
+    begin
+
+      if FToolbarButtonStyle = tbrDropDownExtra then
+      begin
+        PaintRect1:=PaintRect;
+        Dec(PaintRect1.Right, DropDownExtraBtnWidth);
+        if FFullPush then
+          DrawButtonFrameXP(Canvas, PaintRect1, (FLastDrawFlagsA and DFCS_PUSHED) <> 0, (FLastDrawFlagsA and DFCS_FLAT) <> 0)
+        else
+          DrawButtonFrameXP(Canvas, PaintRect1, false, (FLastDrawFlagsA and DFCS_FLAT) <> 0);
+
+        PaintRect1:=PaintRect;
+        PaintRect1.Left:=PaintRect1.Right -  DropDownExtraBtnWidth;
+        DrawButtonFrameXP(Canvas, PaintRect1, (FLastDrawFlagsA and DFCS_PUSHED) <> 0, (FLastDrawFlagsA and DFCS_FLAT) <> 0);
+      end
+      else
+        DrawButtonFrameXP(Canvas, PaintRect, (FLastDrawFlagsA and DFCS_PUSHED) <> 0, (FLastDrawFlagsA and DFCS_FLAT) <> 0);
+    end
+    else
+    begin
+      if FToolbarButtonStyle = tbrDropDownExtra then
+      begin
+        PaintRect1:=PaintRect;
+        Dec(PaintRect1.Right, DropDownExtraBtnWidth);
+
+        if FFullPush then
+        begin
+          DrawButtonFrame(Canvas, PaintRect1, (FLastDrawFlagsA and DFCS_PUSHED) <> 0,
+                                       (FLastDrawFlagsA and DFCS_FLAT) <> 0);
+        end
+        else
+        begin
+          DrawButtonFrame(Canvas, PaintRect1, false,
+                                       (FLastDrawFlagsA and DFCS_FLAT) <> 0);
+        end;
+
+        PaintRect1:=PaintRect;
+        PaintRect1.Left:=PaintRect1.Right - DropDownExtraBtnWidth;
+        DrawButtonFrame(Canvas, PaintRect1, (FLastDrawFlagsA and DFCS_PUSHED) <> 0,
+                                         (FLastDrawFlagsA and DFCS_FLAT) <> 0);
+      end
+      else
+        DrawButtonFrame(Canvas, PaintRect, (FLastDrawFlagsA and DFCS_PUSHED) <> 0,
+                                       (FLastDrawFlagsA and DFCS_FLAT) <> 0);
+    end;
+  end;
+
+  if FToolbarButtonStyle = tbrDropDownExtra then
+  begin
+    Canvas.Draw(PaintRect.Right - 10, Height div 2, ToolPanel.FArrowBmp);
+    Dec(PaintRect.Right, DropDownExtraBtnWidth);
+  end;
+//11
   if (Action is TCustomAction) and Assigned(FImgN) and (TCustomAction(Action).ImageIndex>-1) and (TCustomAction(Action).ImageIndex < FImgN.Count) then
   begin
 
-    FLastDrawFlagsA:=GetDrawFlagsA;
 
-    if not Transparent then
-    begin
-      Canvas.Brush.Color := Color;
-      Canvas.FillRect(PaintRect);
-    end;
-
-    if FLastDrawFlagsA <> 0 then
-    begin
-      if ToolPanel.FToolBarStyle = tbsWindowsXP then
-      begin
-
-        if FToolbarButtonStyle = tbrDropDownExtra then
-        begin
-          PaintRect1:=PaintRect;
-          Dec(PaintRect1.Right, DropDownExtraBtnWidth);
-          if FFullPush then
-          begin
-            DrawButtonFrameXP(Canvas, PaintRect1, (FLastDrawFlagsA and DFCS_PUSHED) <> 0,
-                                          (FLastDrawFlagsA and DFCS_FLAT) <> 0);
-          end
-          else
-            DrawButtonFrameXP(Canvas, PaintRect1, false,
-                                          (FLastDrawFlagsA and DFCS_FLAT) <> 0);
-          ;
-
-          PaintRect1:=PaintRect;
-          PaintRect1.Left:=PaintRect1.Right -  DropDownExtraBtnWidth;
-          DrawButtonFrameXP(Canvas, PaintRect1, (FLastDrawFlagsA and DFCS_PUSHED) <> 0,
-                                           (FLastDrawFlagsA and DFCS_FLAT) <> 0);
-        end
-        else
-          DrawButtonFrameXP(Canvas, PaintRect, (FLastDrawFlagsA and DFCS_PUSHED) <> 0,
-                                         (FLastDrawFlagsA and DFCS_FLAT) <> 0)
-      end
-      else
-      begin
-        if FToolbarButtonStyle = tbrDropDownExtra then
-        begin
-          PaintRect1:=PaintRect;
-          Dec(PaintRect1.Right, DropDownExtraBtnWidth);
-
-          if FFullPush then
-          begin
-            DrawButtonFrame(Canvas, PaintRect1, (FLastDrawFlagsA and DFCS_PUSHED) <> 0,
-                                         (FLastDrawFlagsA and DFCS_FLAT) <> 0);
-          end
-          else
-          begin
-            DrawButtonFrame(Canvas, PaintRect1, false,
-                                         (FLastDrawFlagsA and DFCS_FLAT) <> 0);
-          end;
-          
-          PaintRect1:=PaintRect;
-          PaintRect1.Left:=PaintRect1.Right - DropDownExtraBtnWidth;
-          DrawButtonFrame(Canvas, PaintRect1, (FLastDrawFlagsA and DFCS_PUSHED) <> 0,
-                                           (FLastDrawFlagsA and DFCS_FLAT) <> 0);
-        end
-        else
-          DrawButtonFrame(Canvas, PaintRect, (FLastDrawFlagsA and DFCS_PUSHED) <> 0,
-                                         (FLastDrawFlagsA and DFCS_FLAT) <> 0);
-      end;
-    end;
-
-    if FToolbarButtonStyle = tbrDropDownExtra then
-    begin
-      Canvas.Draw(PaintRect.Right - 10, Height div 2, ToolPanel.FArrowBmp);
-      Dec(PaintRect.Right, DropDownExtraBtnWidth);
-    end;
-      
     GlyphWidth:=ToolPanel.FDefImgWidth;
     GlyphHeight:=ToolPanel.FDefImgHeight;
 
@@ -619,6 +618,11 @@ begin
     {$ELSE}
       FImageList.Draw(Canvas, Offset.X, Offset.Y, TCustomAction(Action).ImageIndex, TCustomAction(Action).Enabled);
     {$ENDIF}
+  end
+  else
+  begin
+    OffsetCap.X:=0;
+    OffsetCap.Y:=0;
   end;
 
   if (Caption <> '') and ShowCaption then
@@ -876,8 +880,11 @@ procedure TToolPanel.SetImageList(const AValue: TImageList);
 begin
   if FImageList=AValue then exit;
   FImageList:=AValue;
-  if not (csLoading in ComponentState) then
-    ReAlignToolBtn;
+
+  InternalCalcImgSize;
+
+  InvalidatePreferredSize;
+  AdjustSize;
 end;
 
 procedure TToolPanel.SetImageListSelected(const AValue: TImageList);
@@ -1050,6 +1057,7 @@ begin
       if Assigned(P) then
       begin
         P.Visible:=true;
+        FVisibleItems.Add(P);
         St.AddObject('S', P);
       end;
     end
@@ -1061,6 +1069,7 @@ begin
       if Assigned(P) then
       begin
         P.Visible:=true;
+        FVisibleItems.Add(P);
         P.ShowCaption:=FPropertyStorageLink.Storage.ReadInteger(S1+sShowCaption, ord(P.ShowCaption))<>0;
         if FCustomizeShortCut and Assigned(P.Action) then
         begin
@@ -1096,6 +1105,7 @@ var
 begin
   S:=Owner.Name+'.'+Name;
   ACount:=FPropertyStorageLink.Storage.ReadInteger(S+sVersion2, -9999); //Check cfg version
+  FVisibleItems.Clear;
 
   Items.BeginUpdate;
   if ACount = -9999 then
@@ -1141,8 +1151,11 @@ procedure TToolPanel.ReAlignToolBtn;
 var
   H: Integer;
 begin
-  if Assigned(Owner) and not (csLoading in ComponentState) then
+  if Assigned(Parent) and not (csLoading in ComponentState) and (not (csDestroying in ComponentState)) then
   begin
+    if csDesigning in ComponentState then
+      UpdateVisibleItems;
+
     InternalCalcButtonsSize(H);
     ReAlign;
   end;
@@ -1183,50 +1196,78 @@ var
   TI: TToolbarItem;
   R: TRect;
   OldFont: HGDIOBJ;
-  S: TTranslateString;
+  S: String;
+  FTH: LongInt;
+  I: Integer;
 begin
   InternalCalcImgSize;
   MaxHeight:=FDefImgHeight;
-  DC := GetDC(Handle);
-  try
-    OldFont := SelectObject(DC, HGDIOBJ(Font.Reference.Handle));
-    Flags := DT_CALCRECT or DT_SINGLELINE or DT_NOPREFIX;
+  if HandleAllocated then
+  begin
+    DC := GetDC(Handle);
+    try
+      OldFont := SelectObject(DC, HGDIOBJ(Font.Reference.Handle));
+      Flags := DT_CALCRECT or DT_SINGLELINE or DT_NOPREFIX;
 
-    for TI in FToolbarItems do
-    begin
       R := Rect(0, 0, 10000, 10000);
+      S:='Wg';
+      DrawText(DC, PChar(S), Length(S), R, Flags);
+      FTH:=R.Bottom - R.Top;
 
-      if Assigned(TI.FButton) and Assigned(TI.Action) and (TI.Action is TCustomAction) then
+
+      for I:=0 to FVisibleItems.Count-1 do
       begin
-        //S:=TCustomAction(TI.Action).Caption;
-        S:=TI.FButton.Caption;
-        DrawText(DC, PChar(S), Length(S), R, Flags);
-        TI.FTextWidth := R.Right - R.Left;
-        TI.FTextHeight := R.Bottom - R.Top;
+        TI:=TToolbarItem(FVisibleItems[i]);
+        TI.FTextWidth := 0;
+        R := Rect(0, 0, 10000, 10000);
+        if Assigned(TI.FButton) then
+        begin
+          S:=TI.FButton.Caption;
+          if S<>'' then
+          begin
+            DrawText(DC, PChar(S), Length(S), R, Flags);
+            TI.FTextWidth := R.Right - R.Left;
+          end
+        end;
+
+        TI.FTextHeight := FTH;
         TI.InternalCalcSize;
       end;
-    end;
-    SelectObject(DC, OldFont);
-  finally
-    ReleaseDC(Parent.Handle, DC);
-  end;
 
-  for TI in FToolbarItems do
-    if Assigned(TI.FButton) then
+      SelectObject(DC, OldFont);
+    finally
+      ReleaseDC(Parent.Handle, DC);
+    end;
+
+    for I:=0 to FVisibleItems.Count-1 do
     begin
-      TI.InternalCalcSize;
-      MaxHeight:=Max(MaxHeight, TI.FIntHeight);
+      TI:=TToolbarItem(FVisibleItems[i]);
+      if Assigned(TI.FButton) then
+      begin
+        //TI.InternalCalcSize;
+        MaxHeight:=Max(MaxHeight, TI.FIntHeight);
+      end;
     end;
-
+  end;
 
   for TI in FToolbarItems do
     if Assigned(TI.FButton) then
       TI.FIntHeight:=MaxHeight;
 end;
 
+procedure TToolPanel.UpdateVisibleItems;
+var
+  P: TToolbarItem;
+begin
+  FVisibleItems.Clear;
+  for P in Items do
+    if P.Visible then
+      FVisibleItems.Add(P);
+end;
+
 procedure TToolPanel.Notification(AComponent: TComponent; Operation: TOperation);
 var
-  i:integer;
+  P: TToolbarItem;
 begin
   inherited Notification(AComponent, Operation);
   if Operation = opRemove then
@@ -1239,16 +1280,16 @@ begin
     else
     if AComponent is TPopupMenu then
     begin
-      for i:=0 to FToolbarItems.Count - 1 do
-        if FToolbarItems[i].DropDownMenu = AComponent then
-          FToolbarItems[i].DropDownMenu:=nil;
+      for P in  FToolbarItems do
+        if P.DropDownMenu = AComponent then
+          P.DropDownMenu:=nil;
     end
     else
     if AComponent is TBasicAction then
     begin
-      for i:=0 to FToolbarItems.Count - 1 do
-        if FToolbarItems[i].Action = AComponent then
-          FToolbarItems[i].Action:=nil;
+      for P in FToolbarItems do
+        if P.Action = AComponent then
+          P.Action:=nil;
     end;
   end;
 end;
@@ -1273,6 +1314,7 @@ procedure TToolPanel.Loaded;
 begin
   inherited Loaded;
   SetCustomizing(false);
+  UpdateVisibleItems;
 end;
 
 procedure TToolPanel.CalculatePreferredSize(var PreferredWidth,
@@ -1297,11 +1339,11 @@ begin
     if FButtonAllign = tbaLeft then
     begin
       L:=BorderWidth;
-      for i:=0 to FToolbarItems.Count-1 do
+
+      for i:=0 to FVisibleItems.Count-1 do
       begin
-        TI:=FToolbarItems[i];
-        S:=TI.GetDisplayName;
-        if TI.Visible and Assigned(TI.FButton) then
+        TI:=TToolbarItem(FVisibleItems[i]);
+        if Assigned(TI.FButton) then
         begin
           TI.FButton.SetBounds(L, FInternalSpacing, TI.FIntWidth, TI.FIntHeight);
           L:=L + TI.FIntWidth;
@@ -1311,10 +1353,10 @@ begin
     else
     begin
       L:=ClientWidth - BorderWidth;
-      for i:=FToolbarItems.Count-1 downto 0 do
+      for i:=FVisibleItems.Count-1 downto 0 do
       begin
-        TI:=FToolbarItems[i];
-        if TI.Visible and Assigned(TI.FButton) then
+        TI:=TToolbarItem(FVisibleItems[i]);
+        if Assigned(TI.FButton) then
         begin
           L:=L - TI.FIntWidth;
           TI.FButton.SetBounds(L, FInternalSpacing, TI.FIntWidth, TI.FIntHeight);
@@ -1337,6 +1379,7 @@ end;
 constructor TToolPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  FVisibleItems:=TFPList.Create;
   FArrowBmp:=CreateArrowBitmap;
   FCustomizeShortCut:=false;
   AutoSize:=true;
@@ -1360,6 +1403,7 @@ begin
   FreeAndNil(FToolbarItems);
   FreeAndNil(FPropertyStorageLink);
   FreeAndNil(FArrowBmp);
+  FreeAndNil(FVisibleItems);
   inherited Destroy;
 end;
 
@@ -1538,6 +1582,12 @@ begin
   begin
     FButton.Visible:=AValue;
     FButton.Invalidate;
+
+    if csDesigning in TToolbarItems(Collection).FToolPanel.ComponentState then
+    begin
+      TToolbarItems(Collection).FToolPanel.UpdateVisibleItems;
+      TToolbarItems(Collection).FToolPanel.ReAlign;
+    end;
   end;
 end;
 
@@ -1548,7 +1598,7 @@ begin
     FIntWidth:=DefSeparatorWidth
   else
   begin
-    FIntWidth:=TToolbarItems(Collection).FToolPanel.FDefImgWidth;
+    FIntWidth:=TToolbarItems(Collection).FToolPanel.FDefImgWidth + 2;
 
     if ButtonStyle = tbrDropDownExtra then
       FIntWidth:=FIntWidth +  TToolbarItems(Collection).FToolPanel.FInternalDropDownExtraBtnWidth + TToolbarItems(Collection).FToolPanel.FInternalSpacing * 2;

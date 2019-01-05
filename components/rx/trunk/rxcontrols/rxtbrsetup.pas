@@ -82,8 +82,8 @@ type
   private
     procedure FillItems(List:TStrings; AVisible:boolean);
     procedure UpdateStates;
-    procedure UpdateButtonIndex;
     procedure Localize;
+    procedure DoMoveItems(ASrc, ADst:TListBox);
   public
     FToolPanel:TToolPanel;
     constructor CreateSetupForm(AToolPanel:TToolPanel);
@@ -93,7 +93,7 @@ var
   ToolPanelSetupForm: TToolPanelSetupForm;
 
 implementation
-uses rxlclutils, ActnList, rxboxprocs, rxconst, LCLProc, rxShortCutUnit;
+uses rxlclutils, Math, ActnList, rxboxprocs, rxconst, LCLProc, rxShortCutUnit;
 
 {$R *.lfm}
 
@@ -238,6 +238,7 @@ begin
   for I:=0 to ListBtnAvaliable.Items.Count - 1 do
     TToolbarItem(ListBtnAvaliable.Items.Objects[i]).Visible:=false;
     
+
   btnRight2.Enabled:=ListBtnVisible.Items.Count>0;
   btnRight.Enabled:=ListBtnVisible.Items.Count>0;
 
@@ -253,20 +254,6 @@ begin
     cbShowCaption.Enabled:=not (TToolbarItem(ListBtnVisible.Items.Objects[ListBtnVisible.ItemIndex]).ButtonStyle in [tbrSeparator, tbrDivider])
   else
     cbShowCaption.Enabled:=false;
-end;
-
-procedure TToolPanelSetupForm.UpdateButtonIndex;
-var
-  P: TToolbarItem;
-  i: Integer;
-begin
-  FToolPanel.DisableAlign;
-  for i:=0 to ListBtnVisible.Items.Count-1 do
-  begin
-    P:=TToolbarItem(ListBtnVisible.Items.Objects[i]);
-    P.Index:=i;
-  end;
-  FToolPanel.EnableAlign;
 end;
 
 procedure TToolPanelSetupForm.Localize;
@@ -291,6 +278,40 @@ begin
   RadioGroup1.Items.Add(sButtonAlign1);
   RadioGroup1.Items.Add(sButtonAlign2);
   RadioGroup1.Items.Add(sButtonAlign3);
+end;
+
+procedure TToolPanelSetupForm.DoMoveItems(ASrc, ADst: TListBox);
+var
+  BtnIndex: Integer;
+  S: String;
+  P: TToolbarItem;
+begin
+  BtnIndex:=ASrc.ItemIndex;
+  if (ASrc.Items.Count>0) and (BtnIndex>=0) and (BtnIndex < ASrc.Items.Count) then
+  begin
+    S:=ASrc.Items[BtnIndex];
+    P:=TToolbarItem(ASrc.Items.Objects[BtnIndex]);
+
+    ADst.Items.AddObject(S, P);
+
+    ASrc.Items.Delete(BtnIndex);
+
+    if ASrc = ListBtnAvaliable then
+    begin
+      FToolPanel.VisibleItems.Add(P);
+      P.Visible:=true;
+    end
+    else
+    begin
+      FToolPanel.VisibleItems.Remove(P);
+      P.Visible:=false;
+    end;
+
+    if ASrc.Items.Count > 0 then
+      ASrc.ItemIndex:=Min(ASrc.Items.Count-1, BtnIndex);
+
+    ADst.ItemIndex:=ADst.Items.Count-1;
+  end;
 end;
 
 procedure TToolPanelSetupForm.FormClose(Sender: TObject;
@@ -325,30 +346,38 @@ end;
 
 procedure TToolPanelSetupForm.btnLeftClick(Sender: TObject);
 begin
-  BoxMoveSelectedItems(ListBtnAvaliable, ListBtnVisible);
-  UpdateButtonIndex;
+  DoMoveItems(ListBtnAvaliable, ListBtnVisible);
   UpdateStates;
+  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnLeft2Click(Sender: TObject);
 begin
-  BoxMoveAllItems(ListBtnAvaliable, ListBtnVisible);
-  UpdateButtonIndex;
+  if (ListBtnAvaliable.Items.Count>0) and (ListBtnAvaliable.ItemIndex<0) then
+    ListBtnAvaliable.ItemIndex:=0;
+
+  while ListBtnAvaliable.Items.Count>0 do
+    DoMoveItems(ListBtnAvaliable, ListBtnVisible);
   UpdateStates;
+  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnRightClick(Sender: TObject);
 begin
-  BoxMoveSelectedItems(ListBtnVisible, ListBtnAvaliable);
-  UpdateButtonIndex;
+  DoMoveItems(ListBtnVisible, ListBtnAvaliable);
   UpdateStates;
+  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnRight2Click(Sender: TObject);
 begin
-  BoxMoveAllItems(ListBtnVisible, ListBtnAvaliable);
-  UpdateButtonIndex;
+  if (ListBtnVisible.Items.Count>0) and (ListBtnVisible.ItemIndex<0) then
+    ListBtnVisible.ItemIndex:=0;
+
+  while ListBtnVisible.Items.Count>0 do
+    DoMoveItems(ListBtnVisible, ListBtnAvaliable);
   UpdateStates;
+  FToolPanel.ReAlign;
 end;
 
 procedure TToolPanelSetupForm.btnUpClick(Sender: TObject);
@@ -358,14 +387,11 @@ var
 begin
   I:=ListBtnVisible.ItemIndex;
   J:=I + TComponent(Sender).Tag;
-  ListBtnVisible.Items.Move(I, J);
-
-  P:=FToolPanel.Items[i];
-  P.Index:=J;
-
   ListBtnVisible.ItemIndex:=J;
 
   UpdateStates;
+
+  FToolPanel.VisibleItems.Exchange(I, J);
   FToolPanel.ReAlign;
 end;
 
