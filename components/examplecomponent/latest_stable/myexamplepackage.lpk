@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="myexamplepackage"/>
+    <Type Value="RunAndDesignTime"/>
+    <Author Value="minesadorada"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Description Value="Example component code to demonstrate how to handle many different types of properties"/>
+    <License Value="LGPL"/>
+    <Version Major="1" Minor="2"/>
+    <Files Count="1">
+      <Item1>
+        <Filename Value="myexamplecontrol.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="MyExampleControl"/>
+      </Item1>
+    </Files>
+    <RequiredPkgs Count="4">
+      <Item1>
+        <PackageName Value="subcomponent"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="IDEIntf"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="FCL"/>
+      </Item4>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
