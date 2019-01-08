@@ -937,6 +937,22 @@ begin
   FPropertyStorageLink.Storage.WriteString(S+sButtonAllign, GetEnumProp(Self, 'ButtonAllign'));
 
   I:=0;
+  for i:=0 to FVisibleItems.Count-1 do
+  begin
+    IT:=TToolbarItem(FVisibleItems[i]);
+    S1:=S + sItem + IntToStr(i);
+    FPropertyStorageLink.Storage.WriteString(S1+sOptions, GetEnumProp(IT, 'ButtonStyle'));
+    FPropertyStorageLink.Storage.WriteInteger(S1+sIndex, IT.Index);
+    if Assigned(IT.Action) then
+    begin
+      FPropertyStorageLink.Storage.WriteString(S1+sAction, IT.Action.Name);
+      FPropertyStorageLink.Storage.WriteInteger(S1+sShowCaption, ord(IT.ShowCaption));
+      if FCustomizeShortCut then
+        FPropertyStorageLink.Storage.WriteString(S1+sShortCut, ShortCutToText(TCustomAction(IT.Action).ShortCut));
+    end;
+  end;
+  FPropertyStorageLink.Storage.WriteInteger(S+sCount, FVisibleItems.Count);
+(*
   for IT in Items do
     if IT.Visible then
     begin
@@ -953,6 +969,8 @@ begin
       Inc(i);
     end;
   FPropertyStorageLink.Storage.WriteInteger(S+sCount, i);
+
+*)
 (*  for i:=0 to FToolbarItems.Count-1 do
   begin
     IT:=FToolbarItems[i];
@@ -1000,6 +1018,7 @@ begin
     begin
       St.AddObject('%0.5d-%s', [FPropertyStorageLink.Storage.ReadInteger(S1+sLeft, -1), AActionName], P);
       P.Visible:=true;
+      FVisibleItems.Add(P);
 
       if FCustomizeShortCut and Assigned(P.Action) then
       begin

@@ -13,7 +13,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
   LCLVersion = '2.1.0.0'
   object PageControl1: TPageControl
     Left = 0
-    Height = 433
+    Height = 429
     Top = 0
     Width = 657
     ActivePage = TabSheet1
@@ -22,16 +22,16 @@ object ToolPanelSetupForm: TToolPanelSetupForm
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Visible buttons'
-      ClientHeight = 400
+      ClientHeight = 398
       ClientWidth = 647
       object Label1: TLabel
         AnchorSideLeft.Control = btnLeft2
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = TabSheet1
-        Left = 337
-        Height = 19
+        Left = 339
+        Height = 17
         Top = 6
-        Width = 113
+        Width = 105
         BorderSpacing.Around = 6
         Caption = 'Avaliable buttons'
         FocusControl = ListBtnAvaliable
@@ -40,9 +40,9 @@ object ToolPanelSetupForm: TToolPanelSetupForm
       object Label2: TLabel
         AnchorSideTop.Control = TabSheet1
         Left = 8
-        Height = 19
+        Height = 17
         Top = 6
-        Width = 96
+        Width = 90
         BorderSpacing.Around = 6
         Caption = 'Visible buttons'
         FocusControl = ListBtnVisible
@@ -54,10 +54,10 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = btnRight2
         AnchorSideRight.Side = asrBottom
-        Left = 315
+        Left = 313
         Height = 30
-        Top = 119
-        Width = 16
+        Top = 125
+        Width = 20
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
         BorderSpacing.InnerBorder = 2
@@ -70,10 +70,10 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = btnRight2
         AnchorSideRight.Side = asrBottom
-        Left = 315
-        Height = 16
-        Top = 97
-        Width = 16
+        Left = 313
+        Height = 20
+        Top = 99
+        Width = 20
         Anchors = [akTop, akLeft, akRight]
         AutoSize = True
         BorderSpacing.Top = 6
@@ -87,10 +87,10 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = btnRight2
         AnchorSideRight.Side = asrBottom
-        Left = 315
+        Left = 313
         Height = 38
-        Top = 53
-        Width = 16
+        Top = 55
+        Width = 20
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
         BorderSpacing.InnerBorder = 2
@@ -101,10 +101,10 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideLeft.Control = TabSheet1
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = ListBtnAvaliable
-        Left = 315
-        Height = 16
-        Top = 31
-        Width = 16
+        Left = 313
+        Height = 20
+        Top = 29
+        Width = 20
         AutoSize = True
         BorderSpacing.InnerBorder = 2
         OnClick = btnRight2Click
@@ -118,10 +118,10 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideRight.Control = TabSheet1
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = cbShowCaption
-        Left = 337
+        Left = 339
         Height = 266
-        Top = 31
-        Width = 304
+        Top = 29
+        Width = 302
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Around = 6
         IntegralHeight = True
@@ -138,7 +138,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         OnClick = ListBtnAvaliableClick
         OnDblClick = ListBtnVisibleDblClick
         OnDrawItem = ListBox1DrawItem
-        ScrollWidth = 302
+        ScrollWidth = 300
         Style = lbOwnerDrawFixed
         TabOrder = 4
       end
@@ -149,17 +149,20 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = btnRight2
         AnchorSideBottom.Control = cbShowCaption
-        Left = 28
+        Left = 32
         Height = 266
-        Top = 31
-        Width = 281
+        Top = 29
+        Width = 275
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Around = 6
+        DragMode = dmAutomatic
         ItemHeight = 0
         OnClick = ListBtnAvaliableClick
         OnDblClick = ListBtnVisibleDblClick
+        OnDragDrop = ListBtnVisibleDragDrop
+        OnDragOver = ListBtnVisibleDragOver
         OnDrawItem = ListBox1DrawItem
-        ScrollWidth = 279
+        ScrollWidth = 273
         Style = lbOwnerDrawFixed
         TabOrder = 5
         TopIndex = -1
@@ -169,7 +172,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideBottom.Side = asrBottom
         Left = 3
         Height = 62
-        Top = 332
+        Top = 330
         Width = 635
         Alignment = taLeftJustify
         Anchors = [akLeft, akRight, akBottom]
@@ -183,8 +186,8 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideBottom.Control = Panel1
         Left = 6
         Height = 23
-        Top = 303
-        Width = 114
+        Top = 301
+        Width = 108
         Anchors = [akLeft, akBottom]
         BorderSpacing.Around = 6
         Caption = 'Show caption'
@@ -199,9 +202,9 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideRight.Control = btnRight2
         AnchorSideRight.Side = asrBottom
         Left = 6
-        Height = 16
-        Top = 31
-        Width = 16
+        Height = 20
+        Top = 29
+        Width = 20
         AutoSize = True
         BorderSpacing.Around = 6
         BorderSpacing.InnerBorder = 2
@@ -216,9 +219,9 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideRight.Control = btnRight2
         AnchorSideRight.Side = asrBottom
         Left = 6
-        Height = 16
-        Top = 53
-        Width = 16
+        Height = 20
+        Top = 55
+        Width = 20
         AutoSize = True
         BorderSpacing.Around = 6
         BorderSpacing.InnerBorder = 2
@@ -228,7 +231,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
     end
     object TabSheet2: TTabSheet
       Caption = 'Options'
-      ClientHeight = 400
+      ClientHeight = 398
       ClientWidth = 647
       object cbShowHint: TCheckBox
         AnchorSideLeft.Control = TabSheet2
@@ -287,7 +290,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 1
-        ClientHeight = 79
+        ClientHeight = 81
         ClientWidth = 308
         Items.Strings = (
           'None'
@@ -318,7 +321,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 1
-        ClientHeight = 79
+        ClientHeight = 81
         ClientWidth = 308
         Items.Strings = (
           'Standart'
@@ -346,8 +349,8 @@ object ToolPanelSetupForm: TToolPanelSetupForm
   end
   object ButtonPanel1: TButtonPanel
     Left = 6
-    Height = 42
-    Top = 439
+    Height = 46
+    Top = 435
     Width = 645
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True

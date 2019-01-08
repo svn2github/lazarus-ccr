@@ -79,6 +79,9 @@ type
     procedure ListBtnAvaliableClick(Sender: TObject);
     procedure cbShowCaptionChange(Sender: TObject);
     procedure ListBtnVisibleDblClick(Sender: TObject);
+    procedure ListBtnVisibleDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure ListBtnVisibleDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
   private
     procedure FillItems(List:TStrings; AVisible:boolean);
     procedure UpdateStates;
@@ -215,13 +218,60 @@ begin
   end;
 end;
 
+procedure TToolPanelSetupForm.ListBtnVisibleDragDrop(Sender, Source: TObject;
+  X, Y: Integer);
+var
+  I1, I2: Integer;
+  P: TObject;
+  S: String;
+begin
+  I1:=ListBtnVisible.ItemIndex;
+  I2:=ListBtnVisible.TopIndex + Y div ListBtnVisible.ItemHeight;
+
+  if (I1 > -1) and (I2 < ListBtnVisible.Items.Count) and (I1<>I2)then
+  begin
+    P:=ListBtnVisible.Items.Objects[I1];
+    S:=ListBtnVisible.Items[I1];
+    ListBtnVisible.Items.Delete(I1);
+    ListBtnVisible.Items.InsertObject(I2, S, P);
+    ListBtnVisible.ItemIndex:=I2;
+
+    //ListBtnVisible.Items.Exchange(I1,I2);
+    //FToolPanel.VisibleItems.Exchange(I1, I2);
+    FToolPanel.VisibleItems.Delete(I1);
+    FToolPanel.VisibleItems.Insert(I2, P);
+    FToolPanel.ReAlign;
+    UpdateStates;
+  end;
+end;
+
+procedure TToolPanelSetupForm.ListBtnVisibleDragOver(Sender, Source: TObject;
+  X, Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  Accept:=Source = ListBtnVisible;
+end;
+
 procedure TToolPanelSetupForm.FillItems(List: TStrings; AVisible: boolean);
 var
   TI: TToolbarItem;
+  i: Integer;
 begin
   List.Clear;
+  if AVisible then
+  begin
+    for i:=0 to FToolPanel.VisibleItems.Count-1 do
+    begin
+      TI:=TToolbarItem(FToolPanel.VisibleItems[i]);
+      if Assigned(TI.Action) then
+        List.AddObject(TI.Action.Name, TI)
+      else
+        List.AddObject('Separator', TI);
+    end;
+  end
+  else
   for TI in FToolPanel.Items do
-    if (TI.Visible = AVisible) then
+    //if (TI.Visible = AVisible) then
+    if FToolPanel.VisibleItems.IndexOf(TI)<0 then
       if Assigned(TI.Action) then
         List.AddObject(TI.Action.Name, TI)
       else
@@ -387,6 +437,7 @@ var
 begin
   I:=ListBtnVisible.ItemIndex;
   J:=I + TComponent(Sender).Tag;
+  ListBtnVisible.Items.Exchange(I, J);
   ListBtnVisible.ItemIndex:=J;
 
   UpdateStates;

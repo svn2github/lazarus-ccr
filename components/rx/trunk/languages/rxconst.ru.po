@@ -364,3 +364,4 @@ msgstr "Интерфейс : "
 #: rxconst.swindowsicofiles
 msgid "Windows Ico files (*.ico)|*.ico|All files (*.*)|*.*"
 msgstr "Файлы иконок Windows (*.ico)|*.ico|Все файлы (*.*)|*.*"
+
