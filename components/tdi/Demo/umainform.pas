@@ -16,6 +16,7 @@ type
     bToggleLog : TButton ;
     Button1 : TButton ;
     cbxBackgroundCorner : TComboBox ;
+    chEmulateFormOnActive: TCheckBox;
     Image1 : TImage ;
     ImageList1 : TImageList ;
     Label1 : TLabel ;
@@ -39,6 +40,7 @@ type
     procedure bToggleLogClick(Sender : TObject) ;
     procedure Button1Click(Sender : TObject) ;
     procedure cbxBackgroundCornerChange(Sender : TObject) ;
+    procedure chEmulateFormOnActiveChange(Sender: TObject);
     procedure FormClose(Sender : TObject ; var CloseAction : TCloseAction) ;
     procedure FormCloseQuery(Sender : TObject ; var CanClose : boolean) ;
     procedure FormCreate(Sender : TObject) ;
@@ -100,6 +102,14 @@ end;
 procedure TfMainForm.cbxBackgroundCornerChange(Sender : TObject) ;
 begin
   TDINoteBook1.BackgroundCorner := TTDIBackgroundCorner( cbxBackgroundCorner.ItemIndex );
+end;
+
+procedure TfMainForm.chEmulateFormOnActiveChange(Sender: TObject);
+begin
+  if chEmulateFormOnActive.Checked then
+    TDINoteBook1.TDIOptions := TDINoteBook1.TDIOptions + [tdiEmulateFormOnActivate]
+  else
+    TDINoteBook1.TDIOptions := TDINoteBook1.TDIOptions - [tdiEmulateFormOnActivate];
 end;
 
 procedure TfMainForm.bToggleLogClick(Sender : TObject) ;

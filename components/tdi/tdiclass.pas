@@ -115,7 +115,7 @@ type
 
 
   TTDIOption = ( tdiMiddleButtomClosePage, tdiRestoreLastActiveControl,
-                 tdiVerifyIfCanChangePage ) ;
+                 tdiVerifyIfCanChangePage, tdiEmulateFormOnActivate ) ;
   TTDIOptions = set of TTDIOption ;
   { TTDINoteBook }
 
@@ -1055,29 +1055,29 @@ begin
     end ;
   end ;
 
-  Result := Result
-    {$if (lcl_major > 0) or (lcl_release > 30)}
-      and (inherited CanChange)
-    {$endif};
+  {$if (lcl_major > 0) or (lcl_release > 30)}
+  Result := Result and (inherited CanChange)
+  {$endif};
 
   // Emulate FormInPage.OnDeactivate //
-  (*
-  if Result and (not FIsRemovingAPage) and
-     ([csDesigning, csDestroying, csFreeNotification] * ComponentState = []) then
+  if Result and (tdiRestoreLastActiveControl in FTDIOptions) then
   begin
-    if (ActivePage is TTDIPage) then
+    if (not FIsRemovingAPage) and
+       ([csDesigning, csDestroying, csFreeNotification] * ComponentState = []) then
     begin
-      with TTDIPage(ActivePage) do
+      if (ActivePage is TTDIPage) then
       begin
-        if Assigned( FormInPage ) then
-          if ([csDesigning, csDestroying, csFreeNotification] * FormInPage.ComponentState = []) then
-            if Assigned( FormInPage.OnDeactivate ) then
-              if FormInPage.Visible then
-                FormInPage.OnDeactivate( Self );
+        with TTDIPage(ActivePage) do
+        begin
+          if Assigned( FormInPage ) then
+            if ([csDesigning, csDestroying, csFreeNotification] * FormInPage.ComponentState = []) then
+              if Assigned( FormInPage.OnDeactivate ) then
+                if FormInPage.Visible then
+                  FormInPage.OnDeactivate( Self );
+        end ;
       end ;
     end ;
-  end ;
-  *)
+  end;
 end ;
 
 procedure TTDINoteBook.DoChange ;
@@ -1087,19 +1087,20 @@ begin
   if ([csDesigning, csDestroying, csFreeNotification] * ComponentState <> []) then exit ;
 
   // Emulate FormInPage.OnActivate //
-  (*
-  if (not FIsRemovingAPage) and (ActivePage is TTDIPage) then
+  if tdiRestoreLastActiveControl in FTDIOptions then
   begin
-    with TTDIPage(ActivePage) do
+    if (not FIsRemovingAPage) and (ActivePage is TTDIPage) then
     begin
-      if Assigned( FormInPage ) then
-        if ([csDesigning, csDestroying, csFreeNotification] * FormInPage.ComponentState = []) then
-          if Assigned( FormInPage.OnActivate ) then
-            if FormInPage.Visible then
-              FormInPage.OnActivate( Self );
-    end;
-  end ;
-  *)
+      with TTDIPage(ActivePage) do
+      begin
+        if Assigned( FormInPage ) then
+          if ([csDesigning, csDestroying, csFreeNotification] * FormInPage.ComponentState = []) then
+            if Assigned( FormInPage.OnActivate ) then
+              if FormInPage.Visible then
+                FormInPage.OnActivate( Self );
+      end;
+    end ;
+  end;
 
   CheckInterface;
 

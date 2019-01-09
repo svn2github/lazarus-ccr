@@ -2,9 +2,9 @@
 <CONFIG>
   <ProjectSession>
     <PathDelim Value="\"/>
-    <Version Value="10"/>
+    <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="77">
+    <Units Count="79">
       <Unit0>
         <Filename Value="TDIDemo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -29,8 +29,8 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uForm1"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="92"/>
-        <CursorPos X="107" Y="107"/>
+        <TopLine Value="73"/>
+        <CursorPos X="74" Y="92"/>
         <UsageCount Value="209"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -45,7 +45,7 @@
         <EditorIndex Value="2"/>
         <TopLine Value="26"/>
         <CursorPos X="19" Y="86"/>
-        <UsageCount Value="176"/>
+        <UsageCount Value="179"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit3>
@@ -55,8 +55,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uMainForm"/>
-        <TopLine Value="17"/>
-        <CursorPos X="72" Y="37"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="91"/>
+        <CursorPos X="112" Y="105"/>
         <UsageCount Value="101"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -65,8 +66,8 @@
         <Filename Value="..\tdiclass.pas"/>
         <UnitName Value="TDIClass"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="1181"/>
-        <CursorPos X="35" Y="1185"/>
+        <TopLine Value="1046"/>
+        <CursorPos X="38" Y="1060"/>
         <UsageCount Value="101"/>
         <Bookmarks Count="7">
           <Item0 Y="348" ID="2"/>
@@ -74,18 +75,17 @@
           <Item2 X="3" Y="282" ID="6"/>
           <Item3 X="3" Y="362" ID="5"/>
           <Item4 X="17" Y="311" ID="7"/>
-          <Item5 X="5" Y="1067" ID="1"/>
+          <Item5 X="7" Y="1067" ID="1"/>
           <Item6 X="40" Y="892" ID="3"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
         <Filename Value="C:\lazarus\lcl\include\customnotebook.inc"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="824"/>
         <CursorPos X="3" Y="829"/>
-        <UsageCount Value="41"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="42"/>
       </Unit6>
       <Unit7>
         <Filename Value="C:\lazarus\lcl\include\control.inc"/>
@@ -137,11 +137,10 @@
       <Unit13>
         <Filename Value="C:\lazarus\lcl\controls.pp"/>
         <UnitName Value="Controls"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="1598"/>
         <CursorPos X="14" Y="1610"/>
-        <UsageCount Value="22"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="23"/>
       </Unit13>
       <Unit14>
         <Filename Value="C:\lazarus\components\lazcontrols\extendednotebook.pas"/>
@@ -153,11 +152,10 @@
       <Unit15>
         <Filename Value="C:\lazarus\lcl\comctrls.pp"/>
         <UnitName Value="ComCtrls"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="481"/>
-        <CursorPos X="14" Y="497"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="648"/>
+        <CursorPos X="14" Y="667"/>
         <UsageCount Value="41"/>
-        <Loaded Value="True"/>
       </Unit15>
       <Unit16>
         <Filename Value="C:\lazarus\lcl\include\pagecontrol.inc"/>
@@ -326,11 +324,10 @@
       <Unit41>
         <Filename Value="C:\lazarus\lcl\forms.pp"/>
         <UnitName Value="Forms"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="623"/>
         <CursorPos X="14" Y="634"/>
-        <UsageCount Value="43"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="44"/>
       </Unit41>
       <Unit42>
         <Filename Value="C:\lazarus\lcl\lclmessageglue.pas"/>
@@ -498,10 +495,10 @@
       </Unit67>
       <Unit68>
         <Filename Value="..\read-me.txt"/>
-        <EditorIndex Value="8"/>
-        <TopLine Value="162"/>
-        <CursorPos X="56" Y="184"/>
-        <UsageCount Value="43"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="151"/>
+        <CursorPos X="64" Y="173"/>
+        <UsageCount Value="45"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="None"/>
       </Unit68>
@@ -546,11 +543,10 @@
       </Unit74>
       <Unit75>
         <Filename Value="..\..\..\..\..\..\Comp\ACBr\trunk2\Fontes\ACBrComum\ACBrUtil.pas"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="7"/>
         <TopLine Value="3067"/>
         <CursorPos X="32" Y="3081"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit75>
       <Unit76>
@@ -561,125 +557,145 @@
         <CursorPos X="78" Y="1181"/>
         <UsageCount Value="10"/>
       </Unit76>
+      <Unit77>
+        <Filename Value="C:\lazarus\lcl\lclversion.pas"/>
+        <UnitName Value="LCLVersion"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="23"/>
+        <CursorPos X="17" Y="40"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit77>
+      <Unit78>
+        <Filename Value="C:\lazarus\components\lazutils\lazversion.pas"/>
+        <UnitName Value="LazVersion"/>
+        <EditorIndex Value="5"/>
+        <CursorPos X="3" Y="23"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit78>
     </Units>
-    <JumpHistory Count="29" HistoryIndex="28">
+    <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1153" Column="49" TopLine="1133"/>
       </Position1>
       <Position2>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1154" Column="7" TopLine="1134"/>
+        <Caret Line="164" Column="36" TopLine="134"/>
       </Position2>
       <Position3>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1155" TopLine="1134"/>
+        <Caret Line="470" Column="27" TopLine="439"/>
       </Position3>
       <Position4>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1163" TopLine="1136"/>
+        <Caret Line="493" Column="27" TopLine="462"/>
       </Position4>
       <Position5>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1155" TopLine="1136"/>
+        <Caret Line="898" Column="49" TopLine="871"/>
       </Position5>
       <Position6>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1160" TopLine="1136"/>
       </Position6>
       <Position7>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1161" TopLine="1136"/>
+        <Caret Line="110" Column="40" TopLine="79"/>
       </Position7>
       <Position8>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1150" Column="28" TopLine="1136"/>
+        <Caret Line="195" Column="40" TopLine="165"/>
       </Position8>
       <Position9>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1159" TopLine="1137"/>
+        <Caret Line="286" Column="45" TopLine="264"/>
       </Position9>
       <Position10>
-        <Filename Value="..\..\..\..\..\..\Comp\ACBr\trunk2\Fontes\ACBrComum\ACBrUtil.pas"/>
-        <Caret Line="19" Column="102"/>
+        <Filename Value="..\tdiclass.pas"/>
       </Position10>
       <Position11>
-        <Filename Value="..\read-me.txt"/>
-        <Caret Column="40"/>
+        <Filename Value="..\tdiclass.pas"/>
+        <Caret Line="110" Column="40" TopLine="79"/>
       </Position11>
       <Position12>
-        <Filename Value="..\read-me.txt"/>
-        <Caret Line="30" Column="78"/>
+        <Filename Value="..\tdiclass.pas"/>
+        <Caret Line="195" Column="40" TopLine="165"/>
       </Position12>
       <Position13>
-        <Filename Value="..\read-me.txt"/>
-        <Caret Line="35" Column="38" TopLine="5"/>
+        <Filename Value="..\tdiclass.pas"/>
+        <Caret Line="286" Column="45" TopLine="255"/>
       </Position13>
       <Position14>
-        <Filename Value="..\read-me.txt"/>
-        <Caret Column="5"/>
+        <Filename Value="..\tdiclass.pas"/>
+        <Caret Line="898" Column="49" TopLine="867"/>
       </Position14>
       <Position15>
-        <Filename Value="..\read-me.txt"/>
-        <Caret Line="27" Column="58"/>
+        <Filename Value="..\tdiclass.pas"/>
+        <Caret Line="1021" Column="55" TopLine="990"/>
       </Position15>
       <Position16>
         <Filename Value="..\read-me.txt"/>
-        <Caret Line="31" Column="5"/>
+        <Caret Line="156" Column="42" TopLine="150"/>
       </Position16>
       <Position17>
-        <Filename Value="..\read-me.txt"/>
-        <Caret Line="46" Column="5" TopLine="16"/>
+        <Filename Value="..\tdiclass.pas"/>
+        <Caret Line="1090" Column="25" TopLine="1079"/>
       </Position17>
       <Position18>
-        <Filename Value="..\read-me.txt"/>
-        <Caret Line="64" Column="7" TopLine="34"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="167" Column="26" TopLine="157"/>
       </Position18>
       <Position19>
-        <Filename Value="..\read-me.txt"/>
-        <Caret Line="68" Column="42" TopLine="38"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="174" Column="26" TopLine="164"/>
       </Position19>
       <Position20>
-        <Filename Value="..\read-me.txt"/>
-        <Caret Line="71" Column="13" TopLine="41"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="112" Column="51" TopLine="107"/>
       </Position20>
       <Position21>
-        <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1028" Column="29" TopLine="1021"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="109" Column="48" TopLine="91"/>
       </Position21>
       <Position22>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="53" Column="16" TopLine="40"/>
+        <Caret Line="1100" Column="38" TopLine="1079"/>
       </Position22>
       <Position23>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="57" Column="51" TopLine="40"/>
+        <Caret Line="1099" Column="38" TopLine="1079"/>
       </Position23>
       <Position24>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1185" TopLine="1164"/>
       </Position24>
       <Position25>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1186" TopLine="1165"/>
+        <Caret Line="1067" Column="8" TopLine="1042"/>
       </Position25>
       <Position26>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1188" TopLine="1167"/>
+        <Caret Line="1058" Column="18" TopLine="1046"/>
       </Position26>
       <Position27>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1185" TopLine="1167"/>
       </Position27>
       <Position28>
         <Filename Value="..\tdiclass.pas"/>
-        <Caret Line="1186" TopLine="1167"/>
+        <Caret Line="169" Column="23" TopLine="148"/>
       </Position28>
       <Position29>
-        <Filename Value="..\read-me.txt"/>
-        <Caret Line="58" Column="50" TopLine="133"/>
+        <Filename Value="..\tdiclass.pas"/>
+        <Caret Line="173" Column="23" TopLine="148"/>
       </Position29>
+      <Position30>
+        <Filename Value="..\tdiclass.pas"/>
+        <Caret Line="606" Column="21" TopLine="585"/>
+      </Position30>
     </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode="default"/>
+    </RunParams>
   </ProjectSession>
   <Debugging>
     <BreakPoints Count="1">
@@ -688,7 +704,7 @@
         <WatchScope Value="wpsLocal"/>
         <WatchKind Value="wpkWrite"/>
         <Source Value="..\tdiclass.pas"/>
-        <Line Value="1185"/>
+        <Line Value="1186"/>
       </Item1>
     </BreakPoints>
   </Debugging>
