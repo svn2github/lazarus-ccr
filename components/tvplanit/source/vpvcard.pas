@@ -192,6 +192,7 @@ procedure TVpVCard.Analyze;
 var
   i: Integer;
   item: TVpVCardItem;
+  fn, ln, t: String;
 begin
   inherited;
 
@@ -200,8 +201,13 @@ begin
     case item.Key of
       'VERSION':
         FVersion := item.Value;
-      'FN':
-        VCardName(item.Value, FLastName, FFirstName, FTitle);
+      'FN', 'N':
+        begin
+          VCardName(item.Value, ln, fn, t);
+          if FLastName = '' then FLastName := ln;
+          if FFirstName = '' then FFirstName := fn;
+          if FTitle = '' then FTitle := t;
+        end;
       'ORG':
         FCompany := item.Value;
       'ADR':

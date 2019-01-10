@@ -38,7 +38,7 @@ type
     FItemClass: TVpFileItemClass;
     function GetValue(const AKey, Attributes: String): String;
   protected
-    FItems: TObjectList;
+    FItems: TFPObjectList;
   public
     constructor Create(AClass: TVpFileItemClass);
     destructor Destroy; override;
@@ -231,7 +231,7 @@ end;
 constructor TVpFileBlock.Create(AClass: TVpFileItemClass);
 begin
   inherited Create;
-  FItems := TObjectList.Create;
+  FItems := TFPObjectList.Create;
   FItemClass := AClass;
 end;
 

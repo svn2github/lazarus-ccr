@@ -58,6 +58,7 @@ type
     procedure QryGridAfterEdit(DataSet: TDataSet);
     procedure QryGridAfterPost(DataSet: TDataSet);
     procedure TabControl1Change(Sender: TObject);
+    procedure VpContactButtonBar1ContactNotFound(Sender: TObject);
   private
     { private declarations }
   public
@@ -184,6 +185,11 @@ begin
   Grid.Datasource.Dataset.Open;
   for i:=0 to Grid.Columns.Count-1 do
     Grid.Columns[i].Width := 100;;
+end;
+
+procedure TForm1.VpContactButtonBar1ContactNotFound(Sender: TObject);
+begin
+  MessageDlg('No matching contact found.', mtInformation, [mbOK], 0);
 end;
 
 end.

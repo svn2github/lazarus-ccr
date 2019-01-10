@@ -7,7 +7,7 @@ object Form1: TForm1
   ClientHeight = 686
   ClientWidth = 980
   OnCreate = FormCreate
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '2.1.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 33
@@ -67,9 +67,9 @@ object Form1: TForm1
     Height = 653
     Top = 33
     Width = 980
-    ActivePage = TabSheet3
+    ActivePage = TabSheet2
     Align = alClient
-    TabIndex = 2
+    TabIndex = 1
     TabOrder = 1
     OnChange = PageControl1Change
     object TabSheet1: TTabSheet
@@ -161,7 +161,6 @@ object Form1: TForm1
           Align = alBottom
           TabStop = True
           TabOrder = 1
-          KBNavigation = True
           DateLabelFormat = 'mmmm yyyy'
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Font.Name = 'Tahoma'
@@ -170,6 +169,7 @@ object Form1: TForm1
           DrawingStyle = dsFlat
           EventDayStyle = []
           HeadAttributes.Color = clBtnFace
+          KBNavigation = True
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
@@ -233,22 +233,24 @@ object Form1: TForm1
     end
     object TabSheet2: TTabSheet
       Caption = 'Contacts'
-      ClientHeight = 594
-      ClientWidth = 928
+      ClientHeight = 625
+      ClientWidth = 972
       object VpContactButtonBar1: TVpContactButtonBar
         Left = 0
-        Height = 594
+        Height = 625
         Top = 0
         Width = 40
+        ContactGrid = VpContactGrid1
         DrawingStyle = dsFlat
-        RadioStyle = False
+        OnContactNotFound = VpContactButtonBar1ContactNotFound
+        RadioStyle = True
         Align = alLeft
       end
       object VpContactGrid1: TVpContactGrid
         Left = 40
-        Height = 594
+        Height = 625
         Top = 0
-        Width = 888
+        Width = 932
         DataStore = VpSqlite3Datastore1
         ControlLink = VpControlLink1
         Color = clWindow
@@ -356,7 +358,7 @@ object Form1: TForm1
     top = 264
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.05'
+    Version = 'v1.12'
     DataStore = VpSqlite3Datastore1
     Options = []
     Placement.Position = mpCenter
@@ -404,7 +406,6 @@ object Form1: TForm1
     LoginPrompt = False
     KeepConnection = False
     Transaction = SQLTransaction1
-    Options = []
     left = 136
     top = 120
   end
@@ -412,7 +413,6 @@ object Form1: TForm1
     Active = False
     Action = caCommitRetaining
     Database = SQLite3Connection1
-    Options = []
     left = 256
     top = 120
   end
