@@ -209,6 +209,7 @@ resourcestring
   sCompressFonts             = 'Compress fonts';
   sCompressImages            = 'Compress images';
   sUseRawJPEG                = 'Use raw JPEG';
+  sShowPreview               = 'Show preview';
 
   sShowTitle                 = 'Show column title';
   sShowFooter                = 'Show footer';

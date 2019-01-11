@@ -515,6 +515,7 @@ begin
   RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[4]:=rxpoShowReportTitle in FOptions;
   RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[5]:=rxpoHideZeroValues in FOptions;
   RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[6]:=rxpoColSpanning in FOptions;
+  RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[7]:=rxpoShowPreview in FOptions;
 
   Result:=RxDBGridPrintGrid_SetupForm.ShowModal = mrOk;
   if Result then
@@ -548,6 +549,9 @@ begin
 
     if RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[6] then
       FOptions:=FOptions + [rxpoColSpanning];
+
+    if RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[7] then
+      FOptions:=FOptions + [rxpoShowPreview];
 
     FShowColumnHeaderOnAllPage:=RxDBGridPrintGrid_SetupForm.CheckBox1.Checked;
   end;

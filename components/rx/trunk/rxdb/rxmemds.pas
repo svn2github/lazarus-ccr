@@ -1747,7 +1747,15 @@ end;
 procedure TRxMemoryData.SortOnFieldsEx(const FieldNames: string;
   CaseInsensitive: Boolean; Asc: array of boolean);
 begin
-
+(*  CreateIndexList(FieldNames);
+  FCaseInsensitiveSort := CaseInsensitive;
+  FDescendingSort := Descending;
+  try
+    Sort;
+  except
+    FreeIndexList;
+    raise;
+  end; *)
 end;
 
 procedure TRxMemoryData.Sort;

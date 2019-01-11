@@ -55,6 +55,7 @@ type
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
+    CLabel: TLabel;
     RadioGroup1: TRadioGroup;
     SpinEdit1: TSpinEdit;
     SpinEdit2: TSpinEdit;
@@ -85,6 +86,7 @@ begin
   CheckGroup1.Items[4]:=sShowReportTitle;
   CheckGroup1.Items[5]:=sHideZeroValues;
   CheckGroup1.Items[6]:=sMergeCells;
+  CheckGroup1.Items[7]:=sShowPreview;
 
 
   GroupBox1.Caption:=sPageMargins;
