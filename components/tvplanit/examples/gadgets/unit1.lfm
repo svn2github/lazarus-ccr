@@ -9,8 +9,8 @@ object Form1: TForm1
   ClientWidth = 473
   Font.Color = clWindowText
   OnShow = FormShow
-  LCLVersion = '1.6.4.0'
-  object VpClock1: TVpClock
+  LCLVersion = '2.1.0.0'
+  object VpClock: TVpClock
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Panel1
     AnchorSideTop.Side = asrBottom
@@ -45,7 +45,7 @@ object Form1: TForm1
     ParentColor = False
     SecondOffset = 0
     HourOffset = 0
-    OnCountdownDone = VpClock1CountdownDone
+    OnCountdownDone = VpClockCountdownDone
     OnSecondChange = VpClockTimeChange
   end
   object BtnStartStop: TButton
@@ -139,7 +139,7 @@ object Form1: TForm1
     ParentColor = False
   end
   object RgDisplayMode: TRadioGroup
-    AnchorSideLeft.Control = VpClock1
+    AnchorSideLeft.Control = VpClock
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Panel1
     AnchorSideTop.Side = asrBottom
