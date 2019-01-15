@@ -1038,7 +1038,7 @@ begin
     else
     if (DataStore.Resource <> nil) then begin
       { otherwise, we must want to create a new event }
-      StartTime := NextFullHour(Now());
+      StartTime := NextFullHour(FActiveDate + Time());
 //      StartTime := trunc(Date) + 0.5; { default to 12:00 noon }
       EndTime := StartTime + 30 / MinutesInDay; { StartTime + 30 minutes }
       ActiveEvent := DataStore.Resource.Schedule.AddEvent(

@@ -580,6 +580,8 @@ procedure TVpFirebirdDatastore.SetConnected(const AValue: Boolean);
 begin
   if (AValue = Connected) or (FConnection = nil) or (FConnectLock > 0) then
     exit;
+  if (FConnection.DatabaseName = '') then
+    exit;
 
   inc(FConnectLock);
   if AValue and AutoCreate then

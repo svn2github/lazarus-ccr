@@ -285,10 +285,10 @@ type
     procedure RefreshTasks; virtual;
     procedure RefreshResource; virtual;
 
-    procedure PurgeResource(Res: TVpResource); virtual; {abstract;}   
-    procedure PurgeEvents(Res: TVpResource); virtual; {abstract;}     
-    procedure PurgeContacts(Res: TVpResource); virtual; {abstract;}   
-    procedure PurgeTasks(Res: TVpResource); virtual; {abstract;}      
+    procedure PurgeResource(Res: TVpResource); virtual;
+    procedure PurgeEvents(Res: TVpResource); virtual;
+    procedure PurgeContacts(Res: TVpResource); virtual;
+    procedure PurgeTasks(Res: TVpResource); virtual;
 
     procedure PostEvents; virtual; abstract;
     procedure PostContacts; virtual; abstract;

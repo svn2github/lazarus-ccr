@@ -143,7 +143,7 @@ implementation
 
 uses
   PropEditUtils, IDEWindowIntf, StrUtils, ImgList,
-  VpConst, VpMisc;
+  {%H-}VpConst, VpMisc;
 
 const
   ITEMS_MARGIN = 2;

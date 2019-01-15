@@ -7,7 +7,7 @@ object Form1: TForm1
   ClientHeight = 686
   ClientWidth = 980
   OnCreate = FormCreate
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '2.0.0.3'
   object Panel1: TPanel
     Left = 0
     Height = 33
@@ -67,9 +67,9 @@ object Form1: TForm1
     Height = 653
     Top = 33
     Width = 980
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Events and tasks'
@@ -283,17 +283,13 @@ object Form1: TForm1
   end
   object VpControlLink1: TVpControlLink
     DataStore = VpXmlDatastore1
-    Printer.BottomMargin = 0
     Printer.DayStart = h_08
     Printer.DayEnd = h_05
     Printer.Granularity = gr30Min
-    Printer.LeftMargin = 0
     Printer.MarginUnits = imAbsolutePixel
     Printer.PrintFormats = <>
-    Printer.RightMargin = 0
-    Printer.TopMargin = 0
-    left = 136
-    top = 264
+    Left = 136
+    Top = 264
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
     Version = 'v1.12'
@@ -304,12 +300,12 @@ object Form1: TForm1
     Placement.Left = 10
     Placement.Height = 250
     Placement.Width = 400
-    left = 136
-    top = 335
+    Left = 136
+    Top = 335
   end
   object PopupMenu1: TPopupMenu
-    left = 129
-    top = 527
+    Left = 129
+    Top = 527
   end
   object VpXmlDatastore1: TVpXmlDatastore
     CategoryColorMap.Category0.Color = clNavy
@@ -338,7 +334,7 @@ object Form1: TForm1
     PlayEventSounds = True
     AutoConnect = True
     FileName = 'data.xml'
-    left = 136
-    top = 202
+    Left = 136
+    Top = 202
   end
 end

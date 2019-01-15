@@ -576,7 +576,6 @@ object Form1: TForm1
     DeleteSQL.Strings = (
       ''
     )
-    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit]
     Params = <>
     left = 136
     top = 428
@@ -771,7 +770,6 @@ object Form1: TForm1
     DeleteSQL.Strings = (
       ''
     )
-    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit]
     Params = <>
     left = 136
     top = 496
@@ -879,7 +877,6 @@ object Form1: TForm1
     DeleteSQL.Strings = (
       ''
     )
-    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit]
     Params = <>
     left = 136
     top = 560
@@ -950,7 +947,6 @@ object Form1: TForm1
     DeleteSQL.Strings = (
       ''
     )
-    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit]
     Params = <>
     left = 136
     top = 621

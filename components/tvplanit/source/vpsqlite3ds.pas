@@ -566,6 +566,9 @@ begin
   if (FConnection = nil) or (FConnection.Transaction = nil) then
     exit;
 
+  if FConnection.DatabaseName = '' then
+    exit;
+
   if AValue = FConnection.Connected then
     exit;
 

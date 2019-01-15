@@ -8,22 +8,22 @@ object Form1: TForm1
   ClientWidth = 895
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  LCLVersion = '1.6.0.4'
+  LCLVersion = '2.1.0.0'
   object Panel1: TPanel
     Left = 0
-    Height = 43
+    Height = 33
     Top = 0
     Width = 895
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 43
+    ClientHeight = 33
     ClientWidth = 895
     TabOrder = 0
     object VpResourceCombo1: TVpResourceCombo
       AnchorSideLeft.Control = Panel1
       Left = 4
-      Height = 33
+      Height = 23
       Top = 5
       Width = 208
       DataStore = VpFirebirdDatastore1
@@ -36,9 +36,9 @@ object Form1: TForm1
       AnchorSideLeft.Control = VpResourceCombo1
       AnchorSideLeft.Side = asrBottom
       Left = 216
-      Height = 35
+      Height = 25
       Top = 4
-      Width = 133
+      Width = 98
       AutoSize = True
       BorderSpacing.Left = 4
       BorderSpacing.Top = 4
@@ -50,10 +50,10 @@ object Form1: TForm1
     object BtnEditRes: TButton
       AnchorSideLeft.Control = BtnNewRes
       AnchorSideLeft.Side = asrBottom
-      Left = 353
-      Height = 35
+      Left = 318
+      Height = 25
       Top = 4
-      Width = 128
+      Width = 94
       AutoSize = True
       BorderSpacing.Left = 4
       BorderSpacing.Top = 4
@@ -65,8 +65,8 @@ object Form1: TForm1
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 643
-    Top = 43
+    Height = 653
+    Top = 33
     Width = 895
     ActivePage = TabSheet1
     Align = alClient
@@ -74,11 +74,11 @@ object Form1: TForm1
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Events and tasks'
-      ClientHeight = 605
+      ClientHeight = 625
       ClientWidth = 887
       object VpDayView1: TVpDayView
         Left = 0
-        Height = 605
+        Height = 625
         Top = 0
         Width = 283
         DataStore = VpFirebirdDatastore1
@@ -114,18 +114,18 @@ object Form1: TForm1
       end
       object Panel2: TPanel
         Left = 288
-        Height = 605
+        Height = 625
         Top = 0
         Width = 339
         Align = alLeft
         BevelOuter = bvNone
         Caption = 'Panel2'
-        ClientHeight = 605
+        ClientHeight = 625
         ClientWidth = 339
         TabOrder = 1
         object VpWeekView1: TVpWeekView
           Left = 0
-          Height = 359
+          Height = 379
           Top = 0
           Width = 339
           DataStore = VpFirebirdDatastore1
@@ -153,7 +153,7 @@ object Form1: TForm1
         object VpMonthView1: TVpMonthView
           Left = 0
           Height = 241
-          Top = 364
+          Top = 384
           Width = 339
           DataStore = VpFirebirdDatastore1
           ControlLink = VpControlLink1
@@ -161,7 +161,6 @@ object Form1: TForm1
           Align = alBottom
           TabStop = True
           TabOrder = 1
-          KBNavigation = True
           DateLabelFormat = 'mmmm yyyy'
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Font.Name = 'Tahoma'
@@ -170,6 +169,7 @@ object Form1: TForm1
           DrawingStyle = dsFlat
           EventDayStyle = []
           HeadAttributes.Color = clBtnFace
+          KBNavigation = True
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
@@ -184,7 +184,7 @@ object Form1: TForm1
           Cursor = crVSplit
           Left = 0
           Height = 5
-          Top = 359
+          Top = 379
           Width = 339
           Align = alBottom
           ResizeAnchor = akBottom
@@ -192,7 +192,7 @@ object Form1: TForm1
       end
       object VpTaskList1: TVpTaskList
         Left = 632
-        Height = 605
+        Height = 625
         Top = 0
         Width = 255
         DataStore = VpFirebirdDatastore1
@@ -220,13 +220,13 @@ object Form1: TForm1
       end
       object Splitter1: TSplitter
         Left = 627
-        Height = 605
+        Height = 625
         Top = 0
         Width = 5
       end
       object Splitter3: TSplitter
         Left = 283
-        Height = 605
+        Height = 625
         Top = 0
         Width = 5
       end
@@ -280,7 +280,7 @@ object Form1: TForm1
     top = 264
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.05'
+    Version = 'v1.12'
     DataStore = VpFirebirdDatastore1
     Options = []
     Placement.Position = mpCenter
@@ -295,7 +295,6 @@ object Form1: TForm1
     Active = False
     Action = caCommitRetaining
     Database = IBConnection1
-    Options = []
     left = 256
     top = 120
   end
@@ -326,7 +325,7 @@ object Form1: TForm1
     PlayEventSounds = True
     Connection = IBConnection1
     AutoConnect = False
-    AutoCreate = True
+    AutoCreate = False
     DayBuffer = 31
     left = 136
     top = 200
@@ -334,15 +333,14 @@ object Form1: TForm1
   object IBConnection1: TIBConnection
     Connected = False
     LoginPrompt = False
-    KeepConnection = True
+    KeepConnection = False
     Transaction = SQLTransaction1
-    Options = []
+    CheckTransactionParams = False
     left = 136
     top = 120
   end
   object SQLQuery1: TSQLQuery
     FieldDefs = <>
-    Options = []
     Params = <>
     left = 149
     top = 512

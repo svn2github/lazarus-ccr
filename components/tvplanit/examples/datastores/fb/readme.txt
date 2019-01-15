@@ -6,5 +6,4 @@ Login parameters for the created database:
   password: masterkey
 
 NOTE:
-The project creates a new database on the fly using above-menitoned login
-parameters.
+The project creates a new database on the fly using these login parameters.
