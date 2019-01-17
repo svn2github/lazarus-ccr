@@ -16,6 +16,7 @@ type
   TMainForm = class(TForm)
     BtnSearch: TButton;
     BtnGoTo: TButton;
+    Button1: TButton;
     CbDoubleBuffer: TCheckBox;
     CbFoundLocations: TComboBox;
     CbLocations: TComboBox;
@@ -25,6 +26,7 @@ type
     GbCenterCoords: TGroupBox;
     InfoCenterLatitude: TLabel;
     InfoCenterLongitude: TLabel;
+    Label1: TLabel;
     Label8: TLabel;
     LblCenterLatitude: TLabel;
     LblPositionLongitude: TLabel;
@@ -40,6 +42,7 @@ type
     ZoomTrackBar: TTrackBar;
     procedure BtnGoToClick(Sender: TObject);
     procedure BtnSearchClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
     procedure CbDoubleBufferChange(Sender: TObject);
     procedure CbFoundLocationsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
@@ -52,6 +55,8 @@ type
       const ALoc: TRealPoint);
     procedure MapViewMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+    procedure MapViewMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure MapViewZoomChange(Sender: TObject);
     procedure ZoomTrackBarChange(Sender: TObject);
 
@@ -74,7 +79,8 @@ implementation
 {$R *.lfm}
 
 uses
-  LCLType, IniFiles, Math;
+  LCLType, IniFiles, Math, mvGpsObj, mvExtraData,
+  gpslistform;
 
 type
   TLocationParam = class
@@ -108,6 +114,19 @@ begin
   //CbFoundLocations.Text := CbFoundLocations.Items[0];
   UpdateDropdownWidth(CbFoundLocations);
   UpdateLocationHistory(CbLocations.Text);
+end;
+
+procedure TMainForm.Button1Click(Sender: TObject);
+var
+  F: TGpsListViewer;
+begin
+  F := TGpsListViewer.Create(nil);
+  try
+    F.MapViewer := MapView;
+    F.ShowModal;
+  finally
+    F.Free;
+  end;
 end;
 
 procedure TMainForm.BtnGoToClick(Sender: TObject);
@@ -243,6 +262,23 @@ begin
   rPt := MapView.Center;
   InfoCenterLongitude.Caption := Format('%.6f°', [rPt.Lon]);
   InfoCenterLatitude.Caption := Format('%.6f°', [rPt.Lat]);
+end;
+
+procedure TMainForm.MapViewMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var
+  rPt: TRealPoint;
+  gpsPt: TGpsPoint;
+  gpsName: String;
+begin
+  if (Button = mbRight) then begin
+    if not InputQuery('Name of GPS location', 'Please enter name', gpsName) then
+      exit;
+    rPt := MapView.ScreenToLonLat(Point(X, Y));
+    gpsPt := TGpsPoint.CreateFrom(rPt);
+    gpsPt.Name := gpsName;
+    MapView.GpsItems.Add(gpsPt, _CLICKED_POINTS_);
+  end;
 end;
 
 procedure TMainForm.MapViewZoomChange(Sender: TObject);

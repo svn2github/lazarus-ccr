@@ -112,12 +112,12 @@ type
 
     TGPSObjectList = Class(TGPSObj)
       private
-        Crit:TCriticalSection;
-        FPending : TObjectList;
-        FRefCount : integer;
+        Crit: TCriticalSection;
+        FPending: TObjectList;
+        FRefCount: integer;
         FOnModified: TModifiedEvent;
-        FUpdating : integer;
-        FItems :  TGPSObjList;
+        FUpdating: integer;
+        FItems: TGPSObjList;
         function Getcount: integer;
       protected
         Procedure _Delete(Idx : Integer;out DelLst : TGPSObjList);

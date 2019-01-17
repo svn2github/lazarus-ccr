@@ -9,7 +9,7 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object Panel1: TPanel
     Left = 632
     Height = 545
@@ -345,6 +345,26 @@ object MainForm: TMainForm
       OnClick = BtnGoToClick
       TabOrder = 9
     end
+    object Label1: TLabel
+      Left = 8
+      Height = 48
+      Top = 400
+      Width = 219
+      AutoSize = False
+      Caption = 'Click with right mouse button to add a GPS point.'
+      ParentColor = False
+      WordWrap = True
+    end
+    object Button1: TButton
+      Left = 8
+      Height = 25
+      Top = 368
+      Width = 92
+      AutoSize = True
+      Caption = 'GPS points...'
+      OnClick = Button1Click
+      TabOrder = 10
+    end
   end
   object MapView: TMapView
     Left = 0
@@ -361,6 +381,7 @@ object MainForm: TMainForm
     Zoom = 0
     OnZoomChange = MapViewZoomChange
     OnMouseMove = MapViewMouseMove
+    OnMouseUp = MapViewMouseUp
   end
   object GeoNames: TMVGeoNames
     OnNameFound = GeoNamesNameFound
