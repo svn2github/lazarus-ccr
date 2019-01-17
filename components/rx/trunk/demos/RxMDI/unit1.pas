@@ -16,6 +16,9 @@ type
     Action1: TAction;
     Action2: TAction;
     Action3: TAction;
+    WindowItems: TMenuItem;
+    MenuItem13: TMenuItem;
+    wndCloseAll: TAction;
     MenuItem11: TMenuItem;
     optHideCloseButton: TAction;
     MenuItem10: TMenuItem;
@@ -49,6 +52,7 @@ type
     procedure RxMDIPanel1ChangeCurrentChild(Sender: TRxMDIPanel; AForm: TForm);
     procedure sysCloseExecute(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure wndCloseAllExecute(Sender: TObject);
   private
     procedure UpdateOptions;
   public
@@ -78,6 +82,11 @@ begin
   else
     StatusBar1.Panels[0].Text:='<NONE>'
     ;
+end;
+
+procedure TForm1.wndCloseAllExecute(Sender: TObject);
+begin
+  RxMDIPanel1.CloseAll;
 end;
 
 procedure TForm1.UpdateOptions;

@@ -6267,14 +6267,20 @@ procedure TRxDBGrid.ErrorPo(DataSet: TDataSet; E: EDatabaseError;
   var DataAction: TDataAction);
 var
   i: integer;
+  F: TRxColumnFooterItem;
+  R: TRxColumn;
 begin
   if FFooterOptions.Active and (DatalinkActive) then
     for i := 0 to Columns.Count - 1 do
+    begin
+      R:=TRxColumn(Columns[i]);
+      F:=TRxColumn(Columns[i]).Footer;
       if not TRxColumn(Columns[i]).Footer.ErrorTestValue then
       begin
         FInProcessCalc := -1;
         Break;
       end;
+    end;
   if Assigned(F_EventOnPostError) then
     F_EventOnPostError(DataSet, E, DataAction);
 end;

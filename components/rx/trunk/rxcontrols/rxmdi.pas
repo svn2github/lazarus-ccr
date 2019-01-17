@@ -153,6 +153,10 @@ type
     FOnChangeCurrentChild: TRxMDIPanelChangeCurrentChild;
     FOptions: TRxMDIPanelOptions;
     FTaskPanel: TRxMDITasks;
+    FWindowMenu: TMenuItem;
+    FWindowMenuSeparator1: TMenuItem;
+    FWindowMenuSeparator2: TMenuItem;
+    FWindowMenuDialogBox: TMenuItem;
     procedure SetCurrentChildWindow(AValue: TForm);
     procedure navCloseButtonClick(Sender: TObject);
     procedure SetHideCloseButton(AValue: boolean);
@@ -163,6 +167,11 @@ type
     procedure ScreenEventRemoveForm(Sender: TObject; Form: TCustomForm);
     procedure DoOnChangeCurrentChild(AForm:TForm);
     procedure DoKeyDownHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure RefreshMDIMenu;
+    procedure ClearMDIMenu;
+    procedure ClearMDIMenuSystemItems;
+    procedure DoMDIMenuClick(Sender: TObject);
+    procedure SetWindowMenu(AValue: TMenuItem);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure Loaded; override;
@@ -189,6 +198,7 @@ type
     property Options:TRxMDIPanelOptions read FOptions write FOptions;
     property HideCloseButton:boolean read FHideCloseButton write SetHideCloseButton;
     property OnChangeCurrentChild:TRxMDIPanelChangeCurrentChild read FOnChangeCurrentChild write FOnChangeCurrentChild;
+    property WindowMenu: TMenuItem read FWindowMenu write SetWindowMenu;
   end;
 
 implementation
@@ -409,7 +419,10 @@ begin
     FCloseButton := nil
   else
   if (AComponent = FTaskPanel) and (Operation = opRemove) then
-    FTaskPanel:=nil;
+    FTaskPanel:=nil
+  else
+  if (AComponent = FWindowMenuSeparator1) and (Operation = opRemove) then
+    FWindowMenuSeparator1:=nil;
 end;
 
 procedure TRxMDIPanel.Loaded;
@@ -434,6 +447,116 @@ begin
         FTaskPanel.SelectNext;
     end;
   end;
+end;
+
+procedure TRxMDIPanel.RefreshMDIMenu;
+
+function GetNextMenuItem(var K:Integer):TMenuItem;
+begin
+  Result:=nil;
+  while K<FWindowMenu.Count-1 do
+  begin
+    Inc(K);
+    Result:=FWindowMenu.Items[K];
+    if Result.OnClick = @DoMDIMenuClick then
+      Exit;
+  end;
+
+  if not Assigned(FWindowMenuSeparator1) then
+  begin
+    Inc(K);
+    FWindowMenuSeparator1:=TMenuItem.Create(FWindowMenu.Owner);
+    FWindowMenu.Add(FWindowMenuSeparator1);
+    FWindowMenuSeparator1.Caption:='-';
+  end;
+
+  Inc(K);
+  Result:=TMenuItem.Create(FWindowMenu.Owner);
+  FWindowMenu.Add(Result);
+  Result.OnClick:=@DoMDIMenuClick;
+end;
+
+var
+  M: TMenuItem;
+  B: TRxMDIButton;
+  K, i, CntItem: Integer;
+begin
+  if (not Assigned(FWindowMenu)) or (not Assigned(FTaskPanel)) then Exit;
+
+  K:=-1;
+  CntItem:=0;
+  for i:=0 to FTaskPanel.ComponentCount-1 do
+  begin
+    if (FTaskPanel.Components[i] is TRxMDIButton) then
+    begin
+      B:=TRxMDIButton(FTaskPanel.Components[i]);
+      M:=GetNextMenuItem(K);
+      M.Caption:=B.Caption;
+      M.Checked:=B.Down;
+      M.Tag:=IntPtr(B);
+      Inc(CntItem);
+    end;
+  end;
+
+  if K < FWindowMenu.Count-1 then
+  begin
+    for i:=FWindowMenu.Count-1 downto K+1 do
+    begin
+      M:=FWindowMenu.Items[i];
+      if M.OnClick = @DoMDIMenuClick then
+        M.Free;
+    end
+  end;
+
+  if CntItem = 0 then
+    ClearMDIMenuSystemItems;
+end;
+
+procedure TRxMDIPanel.ClearMDIMenu;
+var
+  i: Integer;
+  M: TMenuItem;
+begin
+  if not Assigned(FWindowMenu) then Exit;
+  for i:=FWindowMenu.Count-1 downto 0 do
+  begin
+    M:=FWindowMenu.Items[i];
+    if M.OnClick = @DoMDIMenuClick then
+      M.Free;
+  end;
+
+  ClearMDIMenuSystemItems;
+end;
+
+procedure TRxMDIPanel.ClearMDIMenuSystemItems;
+begin
+  if Assigned(FWindowMenuSeparator1) then
+    FreeAndNil(FWindowMenuSeparator1);
+  if Assigned(FWindowMenuSeparator2) then
+    FreeAndNil(FWindowMenuSeparator2);
+  if Assigned(FWindowMenuDialogBox) then
+    FreeAndNil(FWindowMenuDialogBox);
+end;
+
+procedure TRxMDIPanel.DoMDIMenuClick(Sender: TObject);
+var
+  B: TRxMDIButton;
+begin
+  if Sender is TMenuItem then
+  begin
+    B:=TRxMDIButton(PtrInt(TMenuItem(Sender).Tag));
+    if Assigned(B) then
+      B.Click;
+  end;//
+end;
+
+procedure TRxMDIPanel.SetWindowMenu(AValue: TMenuItem);
+begin
+  if FWindowMenu=AValue then Exit;
+  if Assigned(FWindowMenu) then
+    ClearMDIMenu;
+  FWindowMenu:=AValue;
+  RefreshMDIMenu;
 end;
 
 constructor TRxMDIPanel.Create(TheOwner: TComponent);
@@ -471,13 +594,13 @@ begin
   F.Parent:=Self;
   F.Visible:=true;
   F.BringToFront;
-//  if Assigned(Application) and Assigned(Application.MainForm) and (Application.MainForm = Owner) then
-//    Application.MainForm.ActiveControl:=F;
+
   if Assigned(Owner) and (Owner is TForm) then
     TForm(Owner).ActiveControl:=F;
 
   B:=TRxMDIButton.CreateButton(TaskPanel, F);
   DoOnChangeCurrentChild(F);
+  RefreshMDIMenu;
 end;
 
 procedure TRxMDIPanel.ChildWindowsCreate(var AForm; FC: TFormClass);
@@ -942,6 +1065,7 @@ begin
     Owner.RemoveComponent(Self);
   FNavPanel.FMainPanel.RemoveControl(Sender as TCustomForm);
   Application.ReleaseComponent(Self);
+  FNavPanel.FMainPanel.RefreshMDIMenu;
 end;
 
 procedure TRxMDIButton.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
@@ -999,6 +1123,7 @@ begin
       FNavPanel.FMainPanel.DoOnChangeCurrentChild(FNavForm);
   end;
   Down:=true;
+  FNavPanel.FMainPanel.RefreshMDIMenu;
 end;
 
 procedure TRxMDIButton.UpdateCaption;

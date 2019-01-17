@@ -4,12 +4,12 @@ object Form1: TForm1
   Top = 222
   Width = 613
   Caption = 'MainForm'
-  ClientHeight = 407
+  ClientHeight = 410
   ClientWidth = 613
   Menu = MainMenu1
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   WindowState = wsMaximized
   object ToolPanel1: TToolPanel
     Left = 0
@@ -59,7 +59,7 @@ object Form1: TForm1
   object RxMDITasks1: TRxMDITasks
     Left = 0
     Height = 25
-    Top = 360
+    Top = 364
     Width = 613
     Align = alBottom
     FlatButton = True
@@ -67,8 +67,8 @@ object Form1: TForm1
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Height = 22
-    Top = 385
+    Height = 21
+    Top = 389
     Width = 613
     Panels = <    
       item
@@ -81,15 +81,17 @@ object Form1: TForm1
   end
   object RxMDIPanel1: TRxMDIPanel
     Left = 0
-    Height = 329
+    Height = 333
     Top = 31
     Width = 613
     CloseButton = RxMDICloseButton1
     TaskPanel = RxMDITasks1
     Align = alClient
     BevelOuter = bvLowered
+    Options = []
     HideCloseButton = False
     OnChangeCurrentChild = RxMDIPanel1ChangeCurrentChild
+    WindowMenu = WindowItems
   end
   object ActionList1: TActionList
     Left = 440
@@ -132,6 +134,11 @@ object Form1: TForm1
       Checked = True
       OnExecute = optHideCloseButtonExecute
     end
+    object wndCloseAll: TAction
+      Category = 'Windows'
+      Caption = 'Close all...'
+      OnExecute = wndCloseAllExecute
+    end
   end
   object MainMenu1: TMainMenu
     Left = 408
@@ -167,6 +174,12 @@ object Form1: TForm1
       end
       object MenuItem6: TMenuItem
         Action = Action3
+      end
+    end
+    object WindowItems: TMenuItem
+      Caption = 'Window'
+      object MenuItem13: TMenuItem
+        Action = wndCloseAll
       end
     end
   end
