@@ -392,6 +392,7 @@ object MainForm: TMainForm
     UseThreads = True
     Zoom = 0
     OnZoomChange = MapViewZoomChange
+    OnDrawGpsPoint = MapViewDrawGpsPoint
     OnMouseMove = MapViewMouseMove
     OnMouseUp = MapViewMouseUp
   end

@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls,
-  mvGeoNames, mvMapViewer, mvTypes;
+  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj;
 
 type
 
@@ -54,6 +54,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure GeoNamesNameFound(const AName: string; const ADescr: String;
       const ALoc: TRealPoint);
+    procedure MapViewDrawGpsPoint(Sender, ACanvas: TObject; APoint: TGpsPoint);
     procedure MapViewMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure MapViewMouseUp(Sender: TObject; Button: TMouseButton;
@@ -80,7 +81,8 @@ implementation
 {$R *.lfm}
 
 uses
-  LCLType, IniFiles, Math, mvGpsObj, mvExtraData,
+  LCLType, IniFiles, Math, FPCanvas, FPImage, IntfGraphics,
+  mvExtraData,
   gpslistform;
 
 type
@@ -242,6 +244,47 @@ begin
   P.Descr := ADescr;
   P.Loc := ALoc;
   CbFoundLocations.Items.AddObject(AName, P);
+end;
+
+procedure TMainForm.MapViewDrawGpsPoint(Sender, ACanvas: TObject;
+  APoint: TGpsPoint);
+const
+  R = 5;
+var
+  P: TPoint;
+  cnv: TFPCustomCanvas;
+  txt: String;
+  w, h: Integer;
+  bmp: TBitmap;
+  img: TLazIntfImage;
+begin
+  // Screen coordinates of the GPS point
+  P := TMapView(Sender).LonLatToScreen(APoint.RealPoint);
+
+  // Draw the GPS point as a circle
+  cnv := TFPCustomCanvas(ACanvas);
+  cnv.Brush.FPColor := colRed;
+  cnv.Ellipse(P.X-R, P.Y-R, P.X+R, P.Y+R);
+
+  // Draw the "name" of the GPS point. Note: FPCustomCanvas, by default,
+  // does not support text output. Therefore we paint to a bitmap first and
+  // render this on the FPCustomCanvas.
+  txt := APoint.Name;
+  bmp := TBitmap.Create;
+  try
+    bmp.PixelFormat := pf32Bit;
+    w := bmp.Canvas.TextWidth(txt);
+    h := bmp.Canvas.TextHeight(txt);
+    bmp.SetSize(w, h);
+    bmp.Canvas.Brush.Color := clWhite;
+    bmp.Canvas.FillRect(0, 0, w, h);
+    bmp.Canvas.TextOut(0, 0, txt);
+    img := bmp.CreateIntfImage;
+    cnv.Draw(P.X - w div 2, P.Y - h - 2*R, img);
+    img.Free;
+  finally
+    bmp.Free;
+  end;
 end;
 
 procedure TMainForm.MapViewMouseMove(Sender: TObject; Shift: TShiftState;

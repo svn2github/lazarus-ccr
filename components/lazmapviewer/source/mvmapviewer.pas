@@ -39,6 +39,8 @@ uses
 
 Type
 
+  TDrawGpsPointEvent = procedure (Sender, ACanvas: TObject; APoint: TGpsPoint) of object;
+
   { TMapView }
 
   TMapView = class(TCustomControl)
@@ -56,6 +58,7 @@ Type
       FGPSItems: TGPSObjectList;
       FInactiveColor: TColor;
       FPOIImage: TBitmap;
+      FOnDrawGpsPoint: TDrawGpsPointEvent;
       procedure CallAsyncInvalidate;
       procedure DoAsyncInvalidate(Data: PtrInt);
       procedure DrawObjects(const TileId: TTileId; aLeft, aTop, aRight,aBottom: integer);
@@ -131,6 +134,7 @@ Type
       property OnCenterMove: TNotifyEvent  read GetOnCenterMove write SetOnCenterMove;
       property OnZoomChange: TNotifyEvent  read GetOnZoomChange write SetOnZoomChange;
       property OnChange: TNotifyEvent Read GetOnChange write SetOnChange;
+      property OnDrawGpsPoint: TDrawGpsPointEvent read FOnDrawGpsPoint write FOnDrawGpsPoint;
       property OnMouseDown;
       property OnMouseEnter;
       property OnMouseLeave;
@@ -579,6 +583,16 @@ var
   PT : TPoint;
   PtColor : TColor;
 begin
+  if Assigned(FOnDrawGpsPoint) then begin
+    {$IFDEF USE_RGBGRAPHICS}
+    FOnDrawGpsPoint(Self, Buffer, aPOI)
+    {$ENDIF}
+    {$IFDEF USE_LAZINTFIMAGE}
+    FOnDrawGpsPoint(Self, BufferCanvas, aPOI);
+    {$ENDIF}
+    exit;
+  end;
+
   Pt:=Engine.LonLatToScreen(aPOI.RealPoint);
   PtColor:=clRed;
   if aPOI.ExtraData<>nil then
@@ -772,7 +786,7 @@ end;
 
 function TMapView.LonLatToScreen(aPt: TRealPoint): TPoint;
 begin
-  Result:=LonLatToScreen(aPt);
+  Result:=Engine.LonLatToScreen(aPt);
 end;
 
 procedure TMapView.GetMapProviders(lstProviders: TStrings);
