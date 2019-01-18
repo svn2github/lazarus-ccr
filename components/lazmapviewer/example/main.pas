@@ -27,6 +27,7 @@ type
     InfoCenterLatitude: TLabel;
     InfoCenterLongitude: TLabel;
     Label1: TLabel;
+    GPSPointInfo: TLabel;
     Label8: TLabel;
     LblCenterLatitude: TLabel;
     LblPositionLongitude: TLabel;
@@ -38,7 +39,7 @@ type
     LblZoom: TLabel;
     MapView: TMapView;
     GeoNames: TMVGeoNames;
-    Panel1: TPanel;
+    ControlPanel: TPanel;
     ZoomTrackBar: TTrackBar;
     procedure BtnGoToClick(Sender: TObject);
     procedure BtnSearchClick(Sender: TObject);
@@ -214,6 +215,7 @@ begin
   CbProviders.ItemIndex := CbProviders.Items.Indexof(MapView.MapProvider);
   MapView.DoubleBuffered := true;
   MapView.Zoom := 1;
+  ControlPanel.Caption := '';
   CbUseThreads.Checked := MapView.UseThreads;
   CbDoubleBuffer.Checked := MapView.DoubleBuffered;
 
@@ -244,24 +246,43 @@ end;
 
 procedure TMainForm.MapViewMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
+const
+  DELTA = 3;
 var
   rPt: TRealPoint;
+  rArea: TRealArea;
+  gpsList: TGpsObjList;
+  L: TStrings;
+  i: Integer;
 begin
-      (*
-    p := MapView.GetMouseMapPixel(X, Y);
-    LblZoom.Caption := Format('Pixel: %d:%d', [p.X, p.Y]);
-    p := mv.GetMouseMapTile(X, Y);
-    Label3.Caption := Format('Tile: %d:%d', [p.X, p.Y]);
-    r := mv.GetMouseMapLongLat(X, Y);
-    *)
+  rPt := MapView.Center;
+  InfoCenterLongitude.Caption := Format('%.6f°', [rPt.Lon]);
+  InfoCenterLatitude.Caption := Format('%.6f°', [rPt.Lat]);
 
   rPt := MapView.ScreenToLonLat(Point(X, Y));
   InfoPositionLongitude.Caption := Format('%.6f°', [rPt.Lon]);
   InfoPositionLatitude.Caption  := Format('%.6f°', [rPt.Lat]);
 
-  rPt := MapView.Center;
-  InfoCenterLongitude.Caption := Format('%.6f°', [rPt.Lon]);
-  InfoCenterLatitude.Caption := Format('%.6f°', [rPt.Lat]);
+  rArea.TopLeft := MapView.ScreenToLonLat(Point(X-DELTA, Y-DELTA));
+  rArea.BottomRight := MapView.ScreenToLonLat(Point(X+DELTA, Y+DELTA));
+  gpsList := MapView.GpsItems.GetObjectsInArea(rArea);
+  try
+    if gpsList.Count > 0 then begin
+      L := TStringList.Create;
+      try
+        for i:=0 to gpsList.Count-1 do
+          if gpsList[i] is TGpsPoint then
+            with TGpsPoint(gpsList[i]) do
+              L.Add(Format('%s' + Lineending + '  (lat=%.6f°, lon=%.6f°)', [Name, Lat, Lon]));
+        GPSPointInfo.Caption := L.Text;
+      finally
+        L.Free;
+      end;
+    end else
+      GPSPointInfo.Caption := '';
+  finally
+    gpsList.Free;
+  end;
 end;
 
 procedure TMainForm.MapViewMouseUp(Sender: TObject; Button: TMouseButton;

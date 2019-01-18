@@ -9,8 +9,9 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
+  ShowHint = True
   LCLVersion = '2.1.0.0'
-  object Panel1: TPanel
+  object ControlPanel: TPanel
     Left = 632
     Height = 545
     Top = 0
@@ -22,8 +23,8 @@ object MainForm: TMainForm
     object CbProviders: TComboBox
       AnchorSideLeft.Control = LblProviders
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Panel1
-      AnchorSideRight.Control = Panel1
+      AnchorSideTop.Control = ControlPanel
+      AnchorSideRight.Control = ControlPanel
       AnchorSideRight.Side = asrBottom
       Left = 69
       Height = 23
@@ -39,7 +40,7 @@ object MainForm: TMainForm
       TabOrder = 0
     end
     object LblProviders: TLabel
-      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Control = ControlPanel
       AnchorSideTop.Control = CbProviders
       AnchorSideTop.Side = asrCenter
       Left = 9
@@ -82,7 +83,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = CbProviders
       AnchorSideTop.Control = CbDoubleBuffer
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Control = ControlPanel
       AnchorSideRight.Side = asrBottom
       Left = 69
       Height = 40
@@ -97,7 +98,7 @@ object MainForm: TMainForm
       TabOrder = 3
     end
     object LblZoom: TLabel
-      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Control = ControlPanel
       AnchorSideTop.Control = ZoomTrackBar
       AnchorSideTop.Side = asrCenter
       Left = 9
@@ -365,10 +366,21 @@ object MainForm: TMainForm
       OnClick = Button1Click
       TabOrder = 10
     end
+    object GPSPointInfo: TLabel
+      Left = 8
+      Height = 80
+      Top = 456
+      Width = 222
+      AutoSize = False
+      Caption = 'GPSPointInfo'
+      ParentColor = False
+      WordWrap = True
+    end
   end
   object MapView: TMapView
     Left = 0
     Height = 545
+    Hint = 'Displays the map'
     Top = 0
     Width = 632
     Active = False
