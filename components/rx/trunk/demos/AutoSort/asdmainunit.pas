@@ -41,6 +41,7 @@ type
     RxMemoryData1DATE_ENTER: TDateField;
     RxMemoryData1ID: TLongintField;
     RxMemoryData1NAME: TStringField;
+    RxMemoryData1TYPE: TLongintField;
     procedure CheckBox2Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -60,10 +61,10 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   RxMemoryData1.Open;
-  RxMemoryData1.AppendRecord([1, 'Delphi', EncodeDate(1995, 8, 1)]);
-  RxMemoryData1.AppendRecord([2, 'Turbo Pascal', EncodeDate(1983, 8, 1)]);
-  RxMemoryData1.AppendRecord([3, 'Free Pascal', EncodeDate(1993, 1, 1)]);
-  RxMemoryData1.AppendRecord([4, 'Lazarus', Now]);
+  RxMemoryData1.AppendRecord([1, 1, 'Delphi', EncodeDate(1995, 8, 1)]);
+  RxMemoryData1.AppendRecord([2, 1, 'Turbo Pascal', EncodeDate(1983, 8, 1)]);
+  RxMemoryData1.AppendRecord([3, 2, 'Free Pascal', EncodeDate(1993, 1, 1)]);
+  RxMemoryData1.AppendRecord([4, 2, 'Lazarus', Now]);
 
   CheckBox2.Checked:=RxDBGrid1.AutoSort;
   CheckBox1.Checked:=RxDBGrid1.TitleButtons;

@@ -97,7 +97,7 @@ begin
   else
     RxMDITasks1.Options:=RxMDITasks1.Options - [rxtoMidleClickClose];
 
-  RxMDIPanel1.HideCloseButton:=optHideCloseButton.Checked;
+  RxMDIPanel1.HideCloseButton:=optHideCloseButton.Checked; ;
 end;
 
 procedure TForm1.Action1Execute(Sender: TObject);
